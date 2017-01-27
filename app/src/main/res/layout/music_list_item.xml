@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_view"
+    android:layout_width="match_parent"
+    android:layout_height="60dp">
+
+    <TextView
+        android:id="@+id/music_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dimens_20"
+        android:layout_marginTop="@dimen/dimens_8"
+        android:text="七里香"
+        android:textSize="@dimen/text_16" />
+
+    <TextView
+        android:id="@+id/artist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/music_name"
+        android:layout_marginLeft="@dimen/dimens_20"
+        android:layout_marginTop="@dimen/dimens_8"
+        android:text="周杰伦" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/split_color" />
+
+</RelativeLayout>
