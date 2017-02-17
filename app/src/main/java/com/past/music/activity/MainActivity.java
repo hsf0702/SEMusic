@@ -2,15 +2,18 @@ package com.past.music.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.jaeger.library.StatusBarUtil;
 import com.past.music.BaseActivity;
 import com.past.music.Config.BaseConfig;
 import com.past.music.adapter.MusicListAdapter;
@@ -21,10 +24,15 @@ import com.past.music.widget.CircleImageView;
 
 public class MainActivity extends BaseActivity {
 
+    private DrawerLayout mDrawerLayout;
+    private Toolbar mToolbar;
+
     private RecyclerView mRecycleView = null;
     private MusicListAdapter adapter = null;
     private CircleImageView mCircleImageView = null;
-    private SlidingMenu mSlidingMenu = null;
+
+    private int mStatusBarColor;
+    private int mAlpha = StatusBarUtil.DEFAULT_STATUS_BAR_ALPHA;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +41,9 @@ public class MainActivity extends BaseActivity {
 
         mRecycleView = (RecyclerView) findViewById(R.id.music_list);
         mCircleImageView = (CircleImageView) findViewById(R.id.circle_image);
-
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
         adapter = new MusicListAdapter(this);
         mRecycleView.setLayoutManager(new LinearLayoutManager(this));
         mRecycleView.setHasFixedSize(true);
@@ -50,11 +60,22 @@ public class MainActivity extends BaseActivity {
             }
         });
 
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
+        mDrawerLayout.setDrawerListener(toggle);
+        toggle.syncState();
+
         Animation operatingAnim = AnimationUtils.loadAnimation(this, R.anim.rotate_anim);
         LinearInterpolator lin = new LinearInterpolator();
         operatingAnim.setInterpolator(lin);
         if (operatingAnim != null) {
             mCircleImageView.startAnimation(operatingAnim);
         }
+    }
+
+    @Override
+    protected void setStatusBar() {
+        mStatusBarColor = getResources().getColor(R.color.colorPrimary);
+        StatusBarUtil.setColorForDrawerLayout(this, (DrawerLayout) findViewById(R.id.drawer_layout), mStatusBarColor, mAlpha);
     }
 }
