@@ -2,6 +2,8 @@ package com.past.music;/**
  * Created by gaojin on 2017/1/26.
  */
 
+import android.app.Activity;
+
 /**
  * =======================================================
  * 作者：gaojin
@@ -11,5 +13,5 @@ package com.past.music;/**
  * 备注：
  * =======================================================
  */
-public class BaseActivity {
+public class BaseActivity extends Activity {
 }

@@ -8,6 +8,7 @@
         android:id="@+id/music_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/text_bg"
         android:layout_marginLeft="@dimen/dimens_20"
         android:layout_marginTop="@dimen/dimens_8"
         android:text="七里香"
@@ -18,6 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/music_name"
+        android:textColor="@color/text_bg"
         android:layout_marginLeft="@dimen/dimens_20"
         android:layout_marginTop="@dimen/dimens_8"
         android:text="周杰伦" />
