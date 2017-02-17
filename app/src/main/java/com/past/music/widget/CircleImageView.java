@@ -1,4 +1,4 @@
-package com.past.music.view;/**
+package com.past.music.widget;/**
  * Created by gaojin on 2017/1/26.
  */
 
