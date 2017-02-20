@@ -5,6 +5,7 @@
     <dimen name="dimens_3">3dp</dimen>
     <dimen name="dimens_8">8dp</dimen>
     <dimen name="dimens_20">20dp</dimen>
+    <dimen name="dimens_title_pic">25dp</dimen>
 
 
     <dimen name="text_12">12sp</dimen>
@@ -13,4 +14,5 @@
     <dimen name="text_18">18sp</dimen>
     <dimen name="shadow_width">20dp</dimen>
     <dimen name="slidingmenu_offset">70dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>
