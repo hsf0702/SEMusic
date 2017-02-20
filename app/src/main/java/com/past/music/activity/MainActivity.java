@@ -11,7 +11,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -34,7 +33,7 @@ public class MainActivity extends BaseActivity {
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 0x01;
 
     private DrawerLayout mDrawerLayout;
-    private Toolbar mToolbar;
+//    private Toolbar mToolbar;
 
     private RecyclerView mRecycleView = null;
     private MusicListAdapter adapter = null;
@@ -51,13 +50,14 @@ public class MainActivity extends BaseActivity {
         mRecycleView = (RecyclerView) findViewById(R.id.music_list);
         mCircleImageView = (CircleImageView) findViewById(R.id.circle_image);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
+//        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(mToolbar);
         getMusicList();
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open,
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, null, R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
         mDrawerLayout.setDrawerListener(toggle);
+
         toggle.syncState();
 
         Animation operatingAnim = AnimationUtils.loadAnimation(this, R.anim.rotate_anim);
@@ -68,7 +68,6 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    //
     private void getMusicList() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -114,6 +113,6 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void setStatusBar() {
         mStatusBarColor = getResources().getColor(R.color.colorPrimary);
-        StatusBarUtil.setColorForDrawerLayout(this, (DrawerLayout) findViewById(R.id.drawer_layout), mStatusBarColor, mAlpha);
+        StatusBarUtil.setColorForDrawerLayout(this, (DrawerLayout) findViewById(R.id.drawer_layout), mStatusBarColor, 0);
     }
 }

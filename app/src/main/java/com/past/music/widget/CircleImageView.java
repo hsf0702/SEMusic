@@ -62,7 +62,6 @@ public class CircleImageView extends ImageView {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        //view的大小
         mWidth = Math.min(getMeasuredHeight(), getMeasuredWidth());
         mRadius = mWidth / 2;
         setMeasuredDimension(mWidth, mWidth);
@@ -76,8 +75,6 @@ public class CircleImageView extends ImageView {
         if (drawable == null) {
             return;
         }
-
-        //图片转换为bitmap
         BitmapDrawable bd = (BitmapDrawable) drawable;
         Bitmap bitmap = bd.getBitmap();
 
@@ -93,7 +90,6 @@ public class CircleImageView extends ImageView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-//        super.onDraw(canvas);     去掉父类的onDraw()
         if (getDrawable() == null) {
             return;
         }
