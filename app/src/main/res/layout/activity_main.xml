@@ -10,12 +10,35 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:background="@color/colorPrimary"
-            android:orientation="vertical" />
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="8dp"
+                android:gravity="center|bottom">
+
+                <ImageView
+                    android:layout_width="@dimen/dimens_title_pic"
+                    android:layout_height="@dimen/dimens_title_pic"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/neteasy_white" />
+
+                <ImageView
+                    android:layout_width="@dimen/dimens_title_pic"
+                    android:layout_height="@dimen/dimens_title_pic"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/music_white" />
+            </LinearLayout>
+
+
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/rl_bottom"
@@ -31,8 +54,8 @@
                 android:src="@drawable/jay" />
         </RelativeLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/music_list"
+        <android.support.v4.view.ViewPager
+            android:id="@+id/view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/rl_bottom"
@@ -84,7 +107,6 @@
                 android:text="写代码的猴子"
                 android:textColor="@android:color/white"
                 android:textSize="12sp" />
-
         </FrameLayout>
     </LinearLayout>
 </android.support.v4.widget.DrawerLayout>

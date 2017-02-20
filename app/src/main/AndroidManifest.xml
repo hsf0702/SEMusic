@@ -37,7 +37,12 @@
         <service
             android:name="com.past.music.service.PlayerService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity
+            android:name="com.past.music.activity.PlayMusicActivity"
+            android:label="@string/title_activity_play_music"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
