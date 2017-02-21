@@ -12,6 +12,7 @@
     <color name="origin">#ec8b57</color>
     <color name="split_color">#E3E3E3</color>
     <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
     <color name="button_color">#fe7a2f</color>
     <color name="select_gray">#dedede</color>
     <color name="select_color">#f76918</color>

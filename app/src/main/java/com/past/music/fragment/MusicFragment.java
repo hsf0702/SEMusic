@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,6 +20,13 @@ import com.past.music.adapter.MusicListAdapter;
 import com.past.music.entity.Mp3Info;
 import com.past.music.pastmusic.R;
 import com.past.music.service.PlayerService;
+import com.past.music.utils.Mp3Utils;
+
+import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 
 public class MusicFragment extends Fragment {
@@ -63,32 +69,6 @@ public class MusicFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_music, container, false);
         mMusicList = (RecyclerView) view.findViewById(R.id.recycle_music_list);
-        getMusicList();
-        return view;
-    }
-
-    private void getMusicList() {
-        if (ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-        } else {
-            setMusicList();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                setMusicList();
-            } else {
-                Toast.makeText(getActivity(), "Permission Denied", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private void setMusicList() {
         adapter = new MusicListAdapter(getActivity());
         mMusicList.setLayoutManager(new LinearLayoutManager(getActivity()));
         mMusicList.setHasFixedSize(true);
@@ -104,10 +84,63 @@ public class MusicFragment extends Fragment {
                 getActivity().startService(intent);       //启动服务
             }
         });
+
+        getPermission();
+        return view;
+    }
+
+    private void createObservable() {
+        Observable<List<Mp3Info>> listObservable = Observable.just(getMusicList());
+
+        listObservable.subscribe(new Observer<List<Mp3Info>>() {
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<Mp3Info> music) {
+                adapter.setListItem(music);
+            }
+        });
+
+    }
+
+    private List<Mp3Info> getMusicList() {
+        List<Mp3Info> mList;
+        mList = Mp3Utils.getMp3Infos(getContext());
+        return mList;
+    }
+
+    private void getPermission() {
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+        } else {
+            createObservable();
+        }
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                createObservable();
+            } else {
+                Toast.makeText(getActivity(), "Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
