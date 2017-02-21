@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import com.past.music.entity.Mp3Info;
 import com.past.music.pastmusic.R;
-import com.past.music.utils.Mp3Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,12 +27,11 @@ import java.util.List;
  */
 public class MusicListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<Mp3Info> mList = null;
+    private List<Mp3Info> mList = new ArrayList<>();
     private Context mContext = null;
 
     public MusicListAdapter(Context context) {
         this.mContext = context;
-        mList = Mp3Utils.getMp3Infos(context);
     }
 
     private OnItemClickListener clickListener;
@@ -43,6 +42,12 @@ public class MusicListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public interface OnItemClickListener {
         void onClick(View view, Mp3Info mp3Info, int position);
+    }
+
+    public void setListItem(List<Mp3Info> listItem) {
+        mList.clear();
+        mList.addAll(listItem);
+        notifyDataSetChanged();
     }
 
     @Override
