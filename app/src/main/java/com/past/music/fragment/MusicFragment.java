@@ -20,8 +20,11 @@ import com.past.music.adapter.MusicListAdapter;
 import com.past.music.entity.Mp3Info;
 import com.past.music.pastmusic.R;
 import com.past.music.service.PlayerService;
+import com.past.music.utils.FrescoImageLoader;
 import com.past.music.utils.Mp3Utils;
+import com.youth.banner.Banner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -39,12 +42,13 @@ public class MusicFragment extends Fragment {
     private String mParam2;
 
     private RecyclerView mMusicList = null;
+    private Banner banner = null;
     private MusicListAdapter adapter = null;
+    private List<String> images = new ArrayList<>();
 
     public MusicFragment() {
 
     }
-
 
     public static MusicFragment newInstance(String param1, String param2) {
         MusicFragment fragment = new MusicFragment();
@@ -85,8 +89,35 @@ public class MusicFragment extends Fragment {
             }
         });
 
+        images.add("http://cimg2.163.com/catchimg/20090930/8458904_45.jpg");
+        images.add("http://img1.imgtn.bdimg.com/it/u=2119707315,3199660736&fm=23&gp=0.jpg");
+        images.add("http://img1.imgtn.bdimg.com/it/u=2504464883,3611462034&fm=23&gp=0.jpg");
+        images.add("http://www.qqai.net/uploads/i_2_192535384x1019546146_21.jpg");
+
+        banner = (Banner) view.findViewById(R.id.banner);
+        //设置图片加载器
+        banner.setImageLoader(new FrescoImageLoader());
+        //设置图片集合
+        banner.setImages(images);
+        //banner设置方法全部调用完毕时最后调用
+        banner.start();
+
         getPermission();
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        //开始轮播
+        banner.startAutoPlay();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        //结束轮播
+        banner.stopAutoPlay();
     }
 
     private void createObservable() {

@@ -4,6 +4,8 @@ package com.past.music.Config;/**
 
 import android.app.Application;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+
 /**
  * =======================================================
  * 作者：gaojin
@@ -13,5 +15,10 @@ import android.app.Application;
  * 备注：
  * =======================================================
  */
-public class MusicApplication extends Application {
+public class MyApplication extends Application {
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Fresco.initialize(this);
+    }
 }
