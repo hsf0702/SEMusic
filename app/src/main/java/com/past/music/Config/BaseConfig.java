@@ -15,6 +15,10 @@ public class BaseConfig {
     public static final String URL = "URL";
     public static final String MSG = "MSG";
 
+    public static final String SECRET = "0bfb8ffd39e045fcaa90f0f6c2ee4078";
+    public static final String APPID = "32384";
+    public static final String QQ_MUSIC_URL = "http://route.showapi.com/213-4";
+
 
     public static class PlayerMsg {
         public static final int PLAY_MSG = 0x01;

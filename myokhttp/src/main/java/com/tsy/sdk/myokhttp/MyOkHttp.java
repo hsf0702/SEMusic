@@ -51,20 +51,21 @@ public class MyOkHttp {
 
     /**
      * 获取句柄
+     *
      * @return
      */
     public static MyOkHttp get() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new MyOkHttp();
         }
-
         return instance;
     }
 
     /**
      * post 请求
-     * @param url url
-     * @param params 参数
+     *
+     * @param url             url
+     * @param params          参数
      * @param responseHandler 回调
      */
     public void post(final String url, final Map<String, String> params, final IResponseHandler responseHandler) {
@@ -73,15 +74,16 @@ public class MyOkHttp {
 
     /**
      * post 请求
-     * @param context 发起请求的context
-     * @param url url
-     * @param params 参数
+     *
+     * @param context         发起请求的context
+     * @param url             url
+     * @param params          参数
      * @param responseHandler 回调
      */
     public void post(Context context, final String url, final Map<String, String> params, final IResponseHandler responseHandler) {
         //post builder 参数
         FormBody.Builder builder = new FormBody.Builder();
-        if(params != null && params.size() > 0) {
+        if (params != null && params.size() > 0) {
             for (Map.Entry<String, String> entry : params.entrySet()) {
                 builder.add(entry.getKey(), entry.getValue());
             }
@@ -90,7 +92,7 @@ public class MyOkHttp {
         Request request;
 
         //发起request
-        if(context == null) {
+        if (context == null) {
             request = new Request.Builder()
                     .url(url)
                     .post(builder.build())
@@ -109,8 +111,9 @@ public class MyOkHttp {
 
     /**
      * get 请求
-     * @param url url
-     * @param params 参数
+     *
+     * @param url             url
+     * @param params          参数
      * @param responseHandler 回调
      */
     public void get(final String url, final Map<String, String> params, final IResponseHandler responseHandler) {
@@ -119,18 +122,19 @@ public class MyOkHttp {
 
     /**
      * get 请求
-     * @param context 发起请求的context
-     * @param url url
-     * @param params 参数
+     *
+     * @param context         发起请求的context
+     * @param url             url
+     * @param params          参数
      * @param responseHandler 回调
      */
     public void get(Context context, final String url, final Map<String, String> params, final IResponseHandler responseHandler) {
         //拼接url
         String get_url = url;
-        if(params != null && params.size() > 0) {
+        if (params != null && params.size() > 0) {
             int i = 0;
             for (Map.Entry<String, String> entry : params.entrySet()) {
-                if(i++ == 0) {
+                if (i++ == 0) {
                     get_url = get_url + "?" + entry.getKey() + "=" + entry.getValue();
                 } else {
                     get_url = get_url + "&" + entry.getKey() + "=" + entry.getValue();
@@ -141,7 +145,7 @@ public class MyOkHttp {
         Request request;
 
         //发起request
-        if(context == null) {
+        if (context == null) {
             request = new Request.Builder()
                     .url(url)
                     .build();
@@ -157,8 +161,9 @@ public class MyOkHttp {
 
     /**
      * 上传文件
-     * @param url url
-     * @param files 上传的文件files
+     *
+     * @param url             url
+     * @param files           上传的文件files
      * @param responseHandler 回调
      */
     public void upload(String url, Map<String, File> files, final IResponseHandler responseHandler) {
@@ -167,9 +172,10 @@ public class MyOkHttp {
 
     /**
      * 上传文件
-     * @param url url
-     * @param params 参数
-     * @param files 上传的文件files
+     *
+     * @param url             url
+     * @param params          参数
+     * @param files           上传的文件files
      * @param responseHandler 回调
      */
     public void upload(String url, Map<String, String> params, Map<String, File> files, final IResponseHandler responseHandler) {
@@ -178,9 +184,10 @@ public class MyOkHttp {
 
     /**
      * 上传文件
-     * @param context 发起请求的context
-     * @param url url
-     * @param files 上传的文件files
+     *
+     * @param context         发起请求的context
+     * @param url             url
+     * @param files           上传的文件files
      * @param responseHandler 回调
      */
     public void upload(Context context, String url, Map<String, File> files, final IResponseHandler responseHandler) {
@@ -189,10 +196,11 @@ public class MyOkHttp {
 
     /**
      * 上传文件
-     * @param context 发起请求的context
-     * @param url url
-     * @param params 参数
-     * @param files 上传的文件files
+     *
+     * @param context         发起请求的context
+     * @param url             url
+     * @param params          参数
+     * @param files           上传的文件files
      * @param responseHandler 回调
      */
     public void upload(Context context, String url, Map<String, String> params, Map<String, File> files, final IResponseHandler responseHandler) {
@@ -220,15 +228,15 @@ public class MyOkHttp {
         }
 
         Request request;
-        if(context == null) {
+        if (context == null) {
             request = new Request.Builder()
                     .url(url)
-                    .post(new ProgressRequestBody(multipartBuilder.build(),responseHandler))
+                    .post(new ProgressRequestBody(multipartBuilder.build(), responseHandler))
                     .build();
         } else {
             request = new Request.Builder()
                     .url(url)
-                    .post(new ProgressRequestBody(multipartBuilder.build(),responseHandler))
+                    .post(new ProgressRequestBody(multipartBuilder.build(), responseHandler))
                     .tag(context)
                     .build();
         }
@@ -238,9 +246,10 @@ public class MyOkHttp {
 
     /**
      * 下载文件
-     * @param url 下载地址
-     * @param filedir 下载目的目录
-     * @param filename 下载目的文件名
+     *
+     * @param url                     下载地址
+     * @param filedir                 下载目的目录
+     * @param filename                下载目的文件名
      * @param downloadResponseHandler 下载回调
      */
     public void download(String url, String filedir, String filename, final DownloadResponseHandler downloadResponseHandler) {
@@ -249,16 +258,17 @@ public class MyOkHttp {
 
     /**
      * 下载文件
-     * @param context 发起请求的context
-     * @param url 下载地址
-     * @param filedir 下载目的目录
-     * @param filename 下载目的文件名
+     *
+     * @param context                 发起请求的context
+     * @param url                     下载地址
+     * @param filedir                 下载目的目录
+     * @param filename                下载目的文件名
      * @param downloadResponseHandler 下载回调
      */
     public void download(Context context, String url, String filedir, String filename, final DownloadResponseHandler downloadResponseHandler) {
 
         Request request;
-        if(context == null) {
+        if (context == null) {
             request = new Request.Builder()
                     .url(url)
                     .build();
@@ -286,16 +296,17 @@ public class MyOkHttp {
 
     /**
      * 取消当前context的所有请求
+     *
      * @param context
      */
     public void cancel(Context context) {
-        if(client != null) {
-            for(Call call : client.dispatcher().queuedCalls()) {
-                if(call.request().tag().equals(context))
+        if (client != null) {
+            for (Call call : client.dispatcher().queuedCalls()) {
+                if (call.request().tag().equals(context))
                     call.cancel();
             }
-            for(Call call : client.dispatcher().runningCalls()) {
-                if(call.request().tag().equals(context))
+            for (Call call : client.dispatcher().runningCalls()) {
+                if (call.request().tag().equals(context))
                     call.cancel();
             }
         }
@@ -331,7 +342,7 @@ public class MyOkHttp {
 
         @Override
         public void onResponse(Call call, final Response response) throws IOException {
-            if(response.isSuccessful()) {
+            if (response.isSuccessful()) {
                 File file = null;
                 try {
                     file = saveFile(response, mFileDir, mFilename);
@@ -391,16 +402,16 @@ public class MyOkHttp {
 
         @Override
         public void onResponse(Call call, final Response response) throws IOException {
-            if(response.isSuccessful()) {
+            if (response.isSuccessful()) {
                 final String response_body = response.body().string();
 
-                if(mResponseHandler instanceof JsonResponseHandler) {       //json回调
+                if (mResponseHandler instanceof JsonResponseHandler) {       //json回调
                     try {
                         final JSONObject jsonBody = new JSONObject(response_body);
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                ((JsonResponseHandler)mResponseHandler).onSuccess(response.code(), jsonBody);
+                                ((JsonResponseHandler) mResponseHandler).onSuccess(response.code(), jsonBody);
                             }
                         });
                     } catch (JSONException e) {
@@ -412,14 +423,14 @@ public class MyOkHttp {
                             }
                         });
                     }
-                } else if(mResponseHandler instanceof GsonResponseHandler) {    //gson回调
+                } else if (mResponseHandler instanceof GsonResponseHandler) {    //gson回调
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
                             try {
                                 Gson gson = new Gson();
-                                ((GsonResponseHandler)mResponseHandler).onSuccess(response.code(),
-                                        gson.fromJson(response_body, ((GsonResponseHandler)mResponseHandler).getType()));
+                                ((GsonResponseHandler) mResponseHandler).onSuccess(response.code(),
+                                        gson.fromJson(response_body, ((GsonResponseHandler) mResponseHandler).getType()));
                             } catch (Exception e) {
                                 LogUtils.e("onResponse fail parse gson, body=" + response_body, e);
                                 mResponseHandler.onFailure(response.code(), "fail parse gson, body=" + response_body);
@@ -427,11 +438,11 @@ public class MyOkHttp {
 
                         }
                     });
-                } else if(mResponseHandler instanceof RawResponseHandler) {     //raw字符串回调
+                } else if (mResponseHandler instanceof RawResponseHandler) {     //raw字符串回调
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            ((RawResponseHandler)mResponseHandler).onSuccess(response.code(), response_body);
+                            ((RawResponseHandler) mResponseHandler).onSuccess(response.code(), response_body);
                         }
                     });
                 }

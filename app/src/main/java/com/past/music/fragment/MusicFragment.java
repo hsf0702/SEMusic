@@ -1,49 +1,34 @@
 package com.past.music.fragment;
 
-import android.Manifest;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.past.music.Config.BaseConfig;
-import com.past.music.adapter.MusicListAdapter;
-import com.past.music.entity.Mp3Info;
+import com.past.music.api.Test;
 import com.past.music.pastmusic.R;
-import com.past.music.service.PlayerService;
 import com.past.music.utils.FrescoImageLoader;
-import com.past.music.utils.Mp3Utils;
+import com.tsy.sdk.myokhttp.MyOkHttp;
+import com.tsy.sdk.myokhttp.response.GsonResponseHandler;
 import com.youth.banner.Banner;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
+import java.util.Map;
 
 
 public class MusicFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    //权限申请标志码
-    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 0x01;
 
     private String mParam1;
     private String mParam2;
 
-    private RecyclerView mMusicList = null;
     private Banner banner = null;
-    private MusicListAdapter adapter = null;
     private List<String> images = new ArrayList<>();
 
     public MusicFragment() {
@@ -72,23 +57,6 @@ public class MusicFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_music, container, false);
-        mMusicList = (RecyclerView) view.findViewById(R.id.recycle_music_list);
-        adapter = new MusicListAdapter(getActivity());
-        mMusicList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mMusicList.setHasFixedSize(true);
-        mMusicList.setAdapter(adapter);
-        adapter.setClickListener(new MusicListAdapter.OnItemClickListener() {
-            @Override
-            public void onClick(View view, Mp3Info mp3Info, int position) {
-                Log.d("mp3Info-->", mp3Info.toString());
-                Intent intent = new Intent();
-                intent.putExtra(BaseConfig.URL, mp3Info.getUrl());
-                intent.putExtra(BaseConfig.MSG, BaseConfig.PlayerMsg.PLAY_MSG);
-                intent.setClass(getActivity(), PlayerService.class);
-                getActivity().startService(intent);       //启动服务
-            }
-        });
-
         images.add("http://cimg2.163.com/catchimg/20090930/8458904_45.jpg");
         images.add("http://img1.imgtn.bdimg.com/it/u=2119707315,3199660736&fm=23&gp=0.jpg");
         images.add("http://img1.imgtn.bdimg.com/it/u=2504464883,3611462034&fm=23&gp=0.jpg");
@@ -101,8 +69,24 @@ public class MusicFragment extends Fragment {
         banner.setImages(images);
         //banner设置方法全部调用完毕时最后调用
         banner.start();
+        Map<String, String> params = new HashMap<>();
+        params.put("showapi_appid", BaseConfig.APPID);
+        params.put("showapi_sign", BaseConfig.SECRET);
+        params.put("topid", "3");
+        MyOkHttp.get().post(getContext(), BaseConfig.QQ_MUSIC_URL, params, new GsonResponseHandler<Test>() {
 
-        getPermission();
+            @Override
+            public void onFailure(int statusCode, String error_msg) {
+                Log.i("statusCode", statusCode + "");
+                Log.i("error_msg", error_msg);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Test response) {
+                Log.i("statusCode", statusCode + "");
+                Log.i("response", response.getShowapi_res_body().getPagebean().getSonglist().get(0).getSongname());
+            }
+        });
         return view;
     }
 
@@ -118,60 +102,5 @@ public class MusicFragment extends Fragment {
         super.onStop();
         //结束轮播
         banner.stopAutoPlay();
-    }
-
-    private void createObservable() {
-        Observable<List<Mp3Info>> listObservable = Observable.just(getMusicList());
-
-        listObservable.subscribe(new Observer<List<Mp3Info>>() {
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override
-            public void onNext(List<Mp3Info> music) {
-                adapter.setListItem(music);
-            }
-        });
-
-    }
-
-    private List<Mp3Info> getMusicList() {
-        List<Mp3Info> mList;
-        mList = Mp3Utils.getMp3Infos(getContext());
-        return mList;
-    }
-
-    private void getPermission() {
-        if (ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-        } else {
-            createObservable();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                createObservable();
-            } else {
-                Toast.makeText(getActivity(), "Permission Denied", Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 }
