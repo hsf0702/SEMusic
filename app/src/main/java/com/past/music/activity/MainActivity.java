@@ -1,6 +1,7 @@
 package com.past.music.activity;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -22,6 +23,7 @@ public class MainActivity extends BaseActivity {
     private DrawerLayout mDrawerLayout;
 
     private ViewPager mViewPager = null;
+    private TabLayout mTabLayout = null;
     private MainFragmentAdapter mAdapter = null;
     private CircleImageView mCircleImageView = null;
 
@@ -36,12 +38,15 @@ public class MainActivity extends BaseActivity {
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         mCircleImageView = (CircleImageView) findViewById(R.id.circle_image);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        mTabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
 
         FragmentManager fm = getSupportFragmentManager();
         //初始化自定义适配器
         mAdapter = new MainFragmentAdapter(fm);
         //绑定自定义适配器
         mViewPager.setAdapter(mAdapter);
+        mTabLayout.setupWithViewPager(mViewPager);
 
         Animation operatingAnim = AnimationUtils.loadAnimation(this, R.anim.rotate_anim);
         LinearInterpolator lin = new LinearInterpolator();
