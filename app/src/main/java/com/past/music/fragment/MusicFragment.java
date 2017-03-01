@@ -85,11 +85,10 @@ public class MusicFragment extends Fragment {
         mGridView = (GridView) view.findViewById(R.id.grid_view);
         mGridViewAdapter = new GridViewAdapter(getContext(), mData);
         mGridView.setAdapter(mGridViewAdapter);
-
         Map<String, String> params = new HashMap<>();
         params.put("showapi_appid", BaseConfig.APPID);
         params.put("showapi_sign", BaseConfig.SECRET);
-        params.put("topid", "5");
+        params.put("topid", "18");
         MyOkHttp.get().post(getContext(), BaseConfig.QQ_MUSIC_URL, params, new GsonResponseHandler<Test>() {
 
             @Override

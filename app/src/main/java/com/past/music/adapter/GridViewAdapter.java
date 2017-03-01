@@ -3,8 +3,9 @@ package com.past.music.adapter;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
+import android.widget.RelativeLayout;
 
 import com.past.music.api.Test;
 import com.past.music.widget.IconView;
@@ -24,10 +25,13 @@ public class GridViewAdapter extends BaseAdapter {
 
     private List<Test.ShowapiResBodyBean.PagebeanBean.SonglistBean> mData;
     private Context mContext = null;
+    private int width;
 
     public GridViewAdapter(Context context, List<Test.ShowapiResBodyBean.PagebeanBean.SonglistBean> list) {
         mData = list;
         this.mContext = context;
+        WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+        width = wm.getDefaultDisplay().getWidth();
     }
 
     @Override
@@ -53,8 +57,14 @@ public class GridViewAdapter extends BaseAdapter {
         } else {
             iconView = (IconView) convertView;
         }
-
-        iconView.setLayoutParams(new GridView.LayoutParams(200, 200));
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width / 3, width / 3 + 20);
+        iconView.setLayoutParams(layoutParams);
+        if (position == 0 || position == 3) {
+            iconView.setPadding(0, 0, 5, 0);
+        }
+        if (position == 2 || position == 5) {
+            iconView.setPadding(5, 0, 0, 0);
+        }
         iconView.setmHotPic(mData.get(position).getAlbumpic_big());
         iconView.setmTvDes(mData.get(position).getSongname());
         return iconView;
