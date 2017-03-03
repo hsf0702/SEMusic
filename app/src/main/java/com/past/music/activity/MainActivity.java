@@ -13,7 +13,6 @@ import android.view.animation.LinearInterpolator;
 import android.widget.RelativeLayout;
 
 import com.jaeger.library.StatusBarUtil;
-import com.past.music.BaseActivity;
 import com.past.music.fragment.adapter.MainFragmentAdapter;
 import com.past.music.pastmusic.R;
 import com.past.music.widget.CircleImageView;
