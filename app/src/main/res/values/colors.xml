@@ -5,7 +5,7 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="transparent">#00000000</color>
-    <color name="transparent_half">#9effffff</color>
+    <color name="transparent_half">#bfffffff</color>
     <color name="btn_bg">#FAFBFC</color>
     <color name="tv_bg">#F1F3F3</color>
     <color name="text_bg">#181818</color>

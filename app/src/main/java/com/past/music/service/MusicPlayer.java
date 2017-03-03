@@ -1,5 +1,7 @@
 package com.past.music.service;
 
+import com.past.music.pastmusic.IMediaAidlInterface;
+
 /**
  * =======================================================
  * 作者：gaojin
@@ -10,5 +12,23 @@ package com.past.music.service;
  * =======================================================
  */
 public class MusicPlayer {
+
+    public static IMediaAidlInterface mService = null;
+
+    /**
+     * 播放或者暂停音乐
+     */
+    public static void playOrPause() {
+        try {
+            if (mService != null) {
+                if (mService.isPlaying()) {
+                    mService.pause();
+                } else {
+                    mService.play();
+                }
+            }
+        } catch (final Exception ignored) {
+        }
+    }
 
 }
