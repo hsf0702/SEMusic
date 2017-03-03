@@ -40,20 +40,12 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/toolbar" />
 
-        <RelativeLayout
-            android:id="@+id/rl_bottom"
+        <FrameLayout
+            android:id="@+id/bottom_container"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:background="@color/transparent_half"
-            android:layout_alignParentBottom="true">
-
-            <com.past.music.widget.CircleImageView
-                android:id="@+id/circle_image"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:src="@drawable/jay" />
-        </RelativeLayout>
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/transparent" />
     </RelativeLayout>
 
     <LinearLayout
