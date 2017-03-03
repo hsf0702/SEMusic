@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:background="@drawable/bb_meteor"
+        android:scaleType="centerCrop" />
+
+    <com.past.music.widget.CircleImageView
+        android:id="@+id/head_portrait"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="45dp"
+        android:src="@drawable/avatar" />
+
+    <TextView
+        android:id="@+id/left_drawer_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/head_portrait"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="5dp"
+        android:text="Jaeger"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/left_drawer_self_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/left_drawer_name"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="5dp"
+        android:text="写代码的进哥"
+        android:textColor="@android:color/white"
+        android:textSize="12sp" />
+
+</RelativeLayout>

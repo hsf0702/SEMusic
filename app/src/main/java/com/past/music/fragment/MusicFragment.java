@@ -1,9 +1,7 @@
 package com.past.music.fragment;
 
 import android.os.Bundle;
-import android.os.Looper;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,11 +67,13 @@ public class MusicFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_music, container, false);
+
         images.add("http://cimg2.163.com/catchimg/20090930/8458904_45.jpg");
         images.add("http://img1.imgtn.bdimg.com/it/u=2119707315,3199660736&fm=23&gp=0.jpg");
         images.add("http://img1.imgtn.bdimg.com/it/u=2504464883,3611462034&fm=23&gp=0.jpg");
         images.add("http://www.qqai.net/uploads/i_2_192535384x1019546146_21.jpg");
-        Log.i(TAG, "111" + String.valueOf(Looper.myLooper() == Looper.getMainLooper()));
+
+
         banner = (Banner) view.findViewById(R.id.banner);
         //设置图片加载器
         banner.setImageLoader(new FrescoImageLoader());
@@ -97,7 +97,7 @@ public class MusicFragment extends Fragment {
 
             @Override
             public void onSuccess(int statusCode, Test response) {
-                for (int i = 0; i < 6; i++) {
+                for (int i = 0; i < 20; i++) {
                     mData.add(response.getShowapi_res_body().getPagebean().getSonglist().get(i));
                 }
                 mGridViewAdapter.notifyDataSetChanged();

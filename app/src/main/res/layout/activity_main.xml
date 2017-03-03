@@ -34,10 +34,17 @@
 
         </RelativeLayout>
 
+        <android.support.v4.view.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toolbar" />
+
         <RelativeLayout
             android:id="@+id/rl_bottom"
             android:layout_width="match_parent"
             android:layout_height="80dp"
+            android:background="@color/transparent_half"
             android:layout_alignParentBottom="true">
 
             <com.past.music.widget.CircleImageView
@@ -47,60 +54,14 @@
                 android:layout_margin="10dp"
                 android:src="@drawable/jay" />
         </RelativeLayout>
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/view_pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/rl_bottom"
-            android:layout_below="@+id/toolbar" />
     </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/left_drawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="@color/white"
-        android:orientation="vertical">
+        android:layout_gravity="start">
 
-        <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="192dp"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/bb_meteor"
-                android:scaleType="centerCrop" />
-
-            <com.past.music.widget.CircleImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_gravity="bottom"
-                android:layout_marginBottom="64dp"
-                android:layout_marginLeft="16dp"
-                android:src="@drawable/avatar" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginBottom="24dp"
-                android:padding="16dp"
-                android:paddingLeft="48dp"
-                android:text="Jaeger"
-                android:textColor="@android:color/white" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:padding="16dp"
-                android:text="写代码的猴子"
-                android:textColor="@android:color/white"
-                android:textSize="12sp" />
-        </FrameLayout>
+        <include layout="@layout/left_drawer_layout" />
     </LinearLayout>
 </android.support.v4.widget.DrawerLayout>
