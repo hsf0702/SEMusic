@@ -17,4 +17,8 @@
     <color name="button_color">#fe7a2f</color>
     <color name="select_gray">#dedede</color>
     <color name="select_color">#f76918</color>
+
+    <!--底部栏-->
+    <color name="bottomSheetNormalBackground">#f9ffffff</color>
+
 </resources>

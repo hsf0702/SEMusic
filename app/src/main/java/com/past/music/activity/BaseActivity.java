@@ -1,4 +1,4 @@
-package com.past.music;/**
+package com.past.music.activity;/**
  * Created by gaojin on 2017/1/26.
  */
 
