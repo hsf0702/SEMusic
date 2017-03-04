@@ -2,13 +2,18 @@ package com.past.music.activity;/**
  * Created by gaojin on 2017/1/26.
  */
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import com.jaeger.library.StatusBarUtil;
 import com.past.music.fragment.QuickControlsFragment;
+import com.past.music.pastmusic.IMediaAidlInterface;
 import com.past.music.pastmusic.R;
+import com.past.music.service.MusicPlayer;
 
 import butterknife.ButterKnife;
 
@@ -21,14 +26,17 @@ import butterknife.ButterKnife;
  * 备注：
  * =======================================================
  */
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity implements ServiceConnection {
 
+    private MusicPlayer.ServiceToken mToken;
+    public static IMediaAidlInterface mService = null;
     private QuickControlsFragment fragment; //底部播放控制栏
 
     @Override
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
         ButterKnife.bind(this);
+        mToken = MusicPlayer.bindToService(this, this);
         setStatusBar();
     }
 
@@ -87,4 +95,26 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService();
+    }
+
+    public void unbindService() {
+        if (mToken != null) {
+            MusicPlayer.unbindFromService(mToken);
+            mToken = null;
+        }
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+        mService = IMediaAidlInterface.Stub.asInterface(service);
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+        mService = null;
+    }
 }

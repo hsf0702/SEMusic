@@ -5,10 +5,9 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 import com.jaeger.library.StatusBarUtil;
-import com.past.music.Config.BaseConfig;
 import com.past.music.entity.Mp3Info;
 import com.past.music.pastmusic.R;
-import com.past.music.service.PlayerService;
+import com.past.music.service.MusicPlayer;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -37,11 +36,7 @@ public class PlayMusicActivity extends BaseActivity {
 
     @OnClick(R.id.playing_play)
     void play() {
-        Intent intent = new Intent();
-        intent.putExtra(BaseConfig.URL, mMp3Info.getUrl());
-        intent.putExtra(BaseConfig.MSG, BaseConfig.PlayerMsg.PLAY_MSG);
-        intent.setClass(this, PlayerService.class);
-        startService(intent);       //启动服务
+        MusicPlayer.playOrPause();
     }
 
     @Override

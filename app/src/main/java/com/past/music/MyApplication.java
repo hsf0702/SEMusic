@@ -1,4 +1,4 @@
-package com.past.music.Config;/**
+package com.past.music;/**
  * Created by gaojin on 2017/1/26.
  */
 
