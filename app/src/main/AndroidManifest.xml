@@ -49,6 +49,12 @@
             android:enabled="true"
             android:exported="true"
             android:process=":main" />
+
+        <activity android:name="com.past.music.activity.LocalMusicActivity" />
+        <activity android:name="com.past.music.activity.DownloadActivity" />
+        <activity android:name="com.past.music.activity.RecentMusicActivity" />
+        <activity android:name="com.past.music.activity.CollectedActivity" />
+        <activity android:name="com.past.music.activity.MySingersActivity"></activity>
     </application>
 
 </manifest>

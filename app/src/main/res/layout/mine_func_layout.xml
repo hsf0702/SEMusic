@@ -14,6 +14,7 @@
         android:orientation="horizontal">
 
         <com.past.music.widget.MineItemView
+            android:id="@+id/local_music"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -21,6 +22,7 @@
             app:text="本地歌曲" />
 
         <com.past.music.widget.MineItemView
+            android:id="@+id/download_music"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -28,6 +30,7 @@
             app:text="下载歌曲" />
 
         <com.past.music.widget.MineItemView
+            android:id="@+id/recent_music"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -44,6 +47,7 @@
         android:orientation="horizontal">
 
         <com.past.music.widget.MineItemView
+            android:id="@+id/love_music"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -51,6 +55,7 @@
             app:text="我喜欢" />
 
         <com.past.music.widget.MineItemView
+            android:id="@+id/love_singer"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -58,6 +63,7 @@
             app:text="我的歌手" />
 
         <com.past.music.widget.MineItemView
+            android:id="@+id/buy_music"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"

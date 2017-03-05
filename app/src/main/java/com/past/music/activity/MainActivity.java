@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 
 import com.jaeger.library.StatusBarUtil;
+import com.past.music.Config.BaseConfig;
 import com.past.music.fragment.adapter.MainFragmentAdapter;
 import com.past.music.pastmusic.R;
 
@@ -27,7 +28,6 @@ public class MainActivity extends BaseActivity {
     TabLayout mTabLayout = null;
     private MainFragmentAdapter mAdapter = null;
 
-    private int mStatusBarColor;
     private int mAlpha = StatusBarUtil.DEFAULT_STATUS_BAR_ALPHA;
 
     @Override
@@ -46,7 +46,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void setStatusBar() {
-        mStatusBarColor = getResources().getColor(R.color.colorPrimary);
-        StatusBarUtil.setColorForDrawerLayout(this, (DrawerLayout) findViewById(R.id.drawer_layout), mStatusBarColor, 0);
+        int mStatusBarColor = getResources().getColor(R.color.colorPrimary);
+        StatusBarUtil.setColorForDrawerLayout(this, (DrawerLayout) findViewById(R.id.drawer_layout), mStatusBarColor, BaseConfig.Alpha);
     }
 }

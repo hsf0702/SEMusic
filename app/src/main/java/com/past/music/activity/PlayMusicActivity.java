@@ -55,4 +55,10 @@ public class PlayMusicActivity extends BaseActivity {
     protected void setStatusBar() {
         StatusBarUtil.setTranslucent(this);
     }
+
+    @Override
+    public void finish() {
+        super.finish();
+        this.overridePendingTransition(R.anim.push_up_in, R.anim.push_down_out);
+    }
 }

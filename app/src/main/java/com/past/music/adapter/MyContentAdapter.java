@@ -3,16 +3,33 @@ package com.past.music.adapter;/**
  */
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.past.music.activity.BaseActivity;
+import com.past.music.activity.CollectedActivity;
+import com.past.music.activity.DownloadActivity;
+import com.past.music.activity.LocalMusicActivity;
+import com.past.music.activity.MySingersActivity;
+import com.past.music.activity.RecentMusicActivity;
 import com.past.music.entity.Mp3Info;
 import com.past.music.pastmusic.R;
+import com.past.music.widget.CircleImageView;
+import com.past.music.widget.MineItemView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * =======================================================
@@ -36,16 +53,6 @@ public class MyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         this.mContext = context;
     }
 
-    private OnItemClickListener clickListener;
-
-    public void setClickListener(OnItemClickListener clickListener) {
-        this.clickListener = clickListener;
-    }
-
-    public interface OnItemClickListener {
-        void onClick(View view, Mp3Info mp3Info, int position);
-    }
-
     public void setListItem(List<Mp3Info> listItem) {
         mList.clear();
         mList.addAll(listItem);
@@ -57,11 +64,11 @@ public class MyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if (viewType == HEAD_LAYOUT) {
             return new HeadLayoutHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.mine_head_layout, parent, false));
         } else if (viewType == FUNC_LAYOUT) {
-            return new HeadLayoutHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.mine_func_layout, parent, false));
+            return new FuncLayoutHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.mine_func_layout, parent, false));
         } else if (viewType == FAVOR_TITLE_LAYOUT) {
-            return new HeadLayoutHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.mine_favor_title_layout, parent, false));
+            return new FavorTitleLayout(LayoutInflater.from(parent.getContext()).inflate(R.layout.mine_favor_title_layout, parent, false));
         } else {
-            return new HeadLayoutHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.mine_favor_item_layout, parent, false));
+            return new FavorItemLayout(LayoutInflater.from(parent.getContext()).inflate(R.layout.mine_favor_item_layout, parent, false));
         }
     }
 
@@ -89,21 +96,129 @@ public class MyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     class HeadLayoutHolder extends RecyclerView.ViewHolder {
 
-//        @BindView(R.id.mine_head_avatar)
-//        CircleImageView mHeadAvatar;
-//
-//        @BindView(R.id.mine_head_listen_time)
-//        TextView mListenTime;
-//
-//        @BindView(R.id.mine_head_listen_vip)
-//        TextView mListenVip;
-//
-//        @BindView(R.id.mine_head_user_name)
-//        TextView mUserName;
+        @BindView(R.id.mine_head_avatar)
+        CircleImageView mHeadAvatar;
+
+        @BindView(R.id.mine_head_listen_time)
+        TextView mListenTime;
+
+        @BindView(R.id.mine_head_listen_vip)
+        TextView mListenVip;
+
+        @BindView(R.id.mine_head_user_name)
+        TextView mUserName;
 
         public HeadLayoutHolder(View itemView) {
             super(itemView);
-//            ButterKnife.bind(this, itemView);
+            ButterKnife.bind(this, itemView);
+        }
+    }
+
+    class FuncLayoutHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.local_music)
+        MineItemView mLocalMusic;
+
+        @BindView(R.id.download_music)
+        MineItemView mDownMusic;
+
+        @BindView(R.id.recent_music)
+        MineItemView mRecentMusic;
+
+        @BindView(R.id.love_music)
+        MineItemView mLoveMusic;
+
+        @BindView(R.id.love_singer)
+        MineItemView mLoveSinger;
+
+        @BindView(R.id.buy_music)
+        MineItemView mBuyMusic;
+
+        @OnClick(R.id.local_music)
+        void localMusic() {
+            Intent intent = new Intent(mContext, LocalMusicActivity.class);
+            ((BaseActivity) mContext).startActivityByX(intent, true);
+        }
+
+        @OnClick(R.id.download_music)
+        void downloadMusic() {
+            Intent intent = new Intent(mContext, DownloadActivity.class);
+            ((BaseActivity) mContext).startActivityByX(intent, true);
+        }
+
+        @OnClick(R.id.recent_music)
+        void recentMusic() {
+            Intent intent = new Intent(mContext, RecentMusicActivity.class);
+            ((BaseActivity) mContext).startActivityByX(intent, true);
+        }
+
+        @OnClick(R.id.love_music)
+        void loveMusic() {
+            Intent intent = new Intent(mContext, CollectedActivity.class);
+            ((BaseActivity) mContext).startActivityByX(intent, true);
+        }
+
+        @OnClick(R.id.love_singer)
+        void loveSinger() {
+            Intent intent = new Intent(mContext, MySingersActivity.class);
+            ((BaseActivity) mContext).startActivityByX(intent, true);
+        }
+
+        @OnClick(R.id.buy_music)
+        void buyMusic() {
+            Toast.makeText(mContext, "测试", Toast.LENGTH_SHORT).show();
+        }
+
+        public FuncLayoutHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+    }
+
+    class FavorTitleLayout extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.rl_favor_title)
+        RelativeLayout mTitleLayout;
+
+        @BindView(R.id.playlist_count)
+        TextView mPlayListCount;
+
+        @OnClick(R.id.rl_favor_title)
+        void favorTltle() {
+            Toast.makeText(mContext, "测试", Toast.LENGTH_SHORT).show();
+        }
+
+        public FavorTitleLayout(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+    }
+
+    class FavorItemLayout extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.img_album)
+        ImageView mAlbum;
+
+        @BindView(R.id.play_list_title)
+        TextView mPlayListTitle;
+
+        @BindView(R.id.play_list_info)
+        TextView mPlayListInfo;
+
+        @BindView(R.id.img_down)
+        ImageView mImgDown;
+
+        @BindView(R.id.rl_favor_item)
+        RelativeLayout mItemLayout;
+
+        @OnClick(R.id.rl_favor_item)
+        void favorItem() {
+            Toast.makeText(mContext, "测试", Toast.LENGTH_SHORT).show();
+        }
+
+        public FavorItemLayout(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

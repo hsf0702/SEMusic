@@ -64,6 +64,12 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
         }
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        this.overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
+    }
+
 
     /**
      * X轴方向滑动打开Activity
@@ -77,21 +83,6 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
             this.overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
         } else {
             this.overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
-        }
-    }
-
-    /**
-     * Y轴方向滑动打开Activity
-     *
-     * @param intent
-     * @param isInFromBottom
-     */
-    public final void startActivityByY(Intent intent, boolean isInFromBottom) {
-        this.startActivity(intent);
-        if (isInFromBottom) {
-            this.overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.slide_out_to_bottom);
-        } else {
-            this.overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.slide_out_to_bottom);
         }
     }
 

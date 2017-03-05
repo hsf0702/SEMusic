@@ -59,19 +59,4 @@ public class BaseFragment extends Fragment {
             getActivity().overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
         }
     }
-
-    /**
-     * Y轴方向滑动打开Activity
-     *
-     * @param intent
-     * @param isInFromBottom
-     */
-    public final void startActivityByY(Intent intent, boolean isInFromBottom) {
-        this.startActivity(intent);
-        if (isInFromBottom) {
-            getActivity().overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.slide_out_to_bottom);
-        } else {
-            getActivity().overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.slide_out_to_bottom);
-        }
-    }
 }
