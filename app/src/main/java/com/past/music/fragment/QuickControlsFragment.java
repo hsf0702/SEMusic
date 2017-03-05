@@ -57,7 +57,8 @@ public class QuickControlsFragment extends BaseFragment {
     @OnClick(R.id.linear)
     void linear() {
         Intent intent = new Intent(getActivity(), PlayMusicActivity.class);
-        startActivityByY(intent, true);
+        startActivity(intent);
+        getActivity().overridePendingTransition(R.anim.push_down_in, R.anim.push_up_out);
     }
 
     @OnClick(R.id.play_list)

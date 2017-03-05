@@ -21,4 +21,9 @@
         <item name="android:textSize">15sp</item>
     </style>
 
+    <style name="Theme.ToolBar.Base.Title" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
 </resources>

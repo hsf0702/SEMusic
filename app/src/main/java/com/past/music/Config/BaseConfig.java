@@ -19,6 +19,8 @@ public class BaseConfig {
     public static final String APPID = "32384";
     public static final String QQ_MUSIC_URL = "http://route.showapi.com/213-4";
 
+    public static final int Alpha = 0;
+
 
     public static class PlayerMsg {
         public static final int PLAY_MSG = 0x01;
