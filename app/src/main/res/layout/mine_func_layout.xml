@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_func_top"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal">
+
+        <com.past.music.widget.MineItemView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:icon_view="@drawable/item_music"
+            app:text="本地歌曲" />
+
+        <com.past.music.widget.MineItemView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:icon_view="@drawable/item_download"
+            app:text="下载歌曲" />
+
+        <com.past.music.widget.MineItemView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:icon_view="@drawable/item_recent"
+            app:text="最近播放" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_func_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal">
+
+        <com.past.music.widget.MineItemView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:icon_view="@drawable/item_collect"
+            app:text="我喜欢" />
+
+        <com.past.music.widget.MineItemView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:icon_view="@drawable/item_singer"
+            app:text="我的歌手" />
+
+        <com.past.music.widget.MineItemView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:icon_view="@drawable/item_buy"
+            app:text="已购音乐" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/background_gray" />
+
+
+</LinearLayout>

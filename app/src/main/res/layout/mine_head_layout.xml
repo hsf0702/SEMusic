@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp">
+
+        <com.past.music.widget.CircleImageView
+            android:id="@+id/mine_head_avatar"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/avatar" />
+
+        <TextView
+            android:id="@+id/mine_head_listen_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:layout_toLeftOf="@+id/mine_head_avatar"
+            android:text="52分钟" />
+
+        <TextView
+            android:id="@+id/mine_head_listen_vip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/mine_head_avatar"
+            android:text="文案待定" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/mine_head_user_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:text="---  60e分之一  ---" />
+
+</LinearLayout>

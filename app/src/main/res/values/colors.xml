@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#146e6e</color>
-    <color name="colorPrimaryDark">#083939</color>
+    <color name="colorPrimary">#31C27C</color>
+    <color name="colorPrimaryDark">#31C27C</color>
     <color name="colorAccent">#FF4081</color>
 
     <color name="transparent">#00000000</color>
@@ -11,12 +11,17 @@
     <color name="text_bg">#181818</color>
     <color name="btn_text_bg">#595d66</color>
     <color name="origin">#ec8b57</color>
-    <color name="split_color">#E3E3E3</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="button_color">#fe7a2f</color>
     <color name="select_gray">#dedede</color>
     <color name="select_color">#f76918</color>
+    <color name="medium_sea_green">#31C27C</color>
+
+    <!--灰色-->
+    <color name="background_gray">#F7F7F7</color>
+    <color name="split_color">#E3E3E3</color>
+    <color name="text_gray">#959595</color>
 
     <!--底部栏-->
     <color name="bottomSheetNormalBackground">#f9ffffff</color>

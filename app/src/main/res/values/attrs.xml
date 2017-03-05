@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <declare-styleable name="item_view">
+        <attr name="count" format="integer" />
+        <attr name="text" format="string" />
+        <attr name="icon_view" format="reference" />
+    </declare-styleable>
+
 </resources>

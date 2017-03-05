@@ -1,7 +1,6 @@
 package com.past.music.fragment;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,21 +8,20 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.past.music.Config.BaseConfig;
-import com.past.music.adapter.MusicListAdapter;
+import com.past.music.adapter.MyContentAdapter;
 import com.past.music.entity.Mp3Info;
 import com.past.music.pastmusic.R;
-import com.past.music.service.PlayerService;
 import com.past.music.utils.Mp3Utils;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
@@ -38,8 +36,10 @@ public class MineFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private RecyclerView mMusicList = null;
-    private MusicListAdapter adapter = null;
+    @BindView(R.id.recycle_layout)
+    RecyclerView mMusicList = null;
+
+    private MyContentAdapter mAdapter = null;
 
     public MineFragment() {
     }
@@ -66,23 +66,11 @@ public class MineFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_net_easy, container, false);
-        mMusicList = (RecyclerView) view.findViewById(R.id.recycle_music_list);
-        adapter = new MusicListAdapter(getActivity());
+        ButterKnife.bind(this, view);
+        mAdapter = new MyContentAdapter(getActivity());
         mMusicList.setLayoutManager(new LinearLayoutManager(getActivity()));
         mMusicList.setHasFixedSize(true);
-        mMusicList.setAdapter(adapter);
-        adapter.setClickListener(new MusicListAdapter.OnItemClickListener() {
-            @Override
-            public void onClick(View view, Mp3Info mp3Info, int position) {
-                Log.d("mp3Info-->", mp3Info.toString());
-                Intent intent = new Intent();
-                intent.putExtra(BaseConfig.URL, mp3Info.getUrl());
-                intent.putExtra(BaseConfig.MSG, BaseConfig.PlayerMsg.PLAY_MSG);
-                intent.setClass(getActivity(), PlayerService.class);
-                getActivity().startService(intent);       //启动服务
-            }
-        });
-
+        mMusicList.setAdapter(mAdapter);
         getPermission();
         return view;
     }
@@ -109,7 +97,7 @@ public class MineFragment extends Fragment {
 
             @Override
             public void onNext(List<Mp3Info> music) {
-                adapter.setListItem(music);
+                mAdapter.setListItem(music);
             }
         });
 

@@ -5,7 +5,7 @@
     tools:context="com.past.music.fragment.MineFragment">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycle_music_list"
+        android:id="@+id/recycle_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
