@@ -54,6 +54,12 @@ public class MusicUtils implements MConstants {
 
     private static String[] info_folder = new String[]{MediaStore.Files.FileColumns.DATA};
 
+    /**
+     * 获取音频文件的文件夹信息
+     *
+     * @param context
+     * @return
+     */
     public static List<FolderEntity> queryFolder(Context context) {
 
         Uri uri = MediaStore.Files.getContentUri("external");
@@ -88,4 +94,6 @@ public class MusicUtils implements MConstants {
         cursor.close();
         return list;
     }
+
+
 }
