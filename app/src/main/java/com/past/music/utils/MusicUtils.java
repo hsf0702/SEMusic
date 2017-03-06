@@ -1,6 +1,7 @@
 package com.past.music.utils;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -8,6 +9,7 @@ import android.provider.MediaStore;
 
 import com.github.promeg.pinyinhelper.Pinyin;
 import com.past.music.entity.FolderEntity;
+import com.past.music.entity.MusicEntity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -93,6 +95,82 @@ public class MusicUtils implements MConstants {
         //cursor一定一定要关闭
         cursor.close();
         return list;
+    }
+
+    /**
+     * 查询获取本地音乐
+     *
+     * @param context
+     * @param from    不同的界面进来要做不同的查询
+     * @return
+     */
+    public static List<MusicEntity> queryMusic(Context context, int from) {
+        return queryMusic(context, null, from);
+    }
+
+
+    public static ArrayList<MusicEntity> queryMusic(Context context, String id, int from) {
+
+        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        ContentResolver cr = context.getContentResolver();
+
+        StringBuilder select = new StringBuilder(" 1=1 and title != ''");
+        // 查询语句：检索出.mp3为后缀名，时长大于1分钟，文件大小大于1MB的媒体文件
+        select.append(" and " + MediaStore.Audio.Media.SIZE + " > " + FILTER_SIZE);
+        select.append(" and " + MediaStore.Audio.Media.DURATION + " > " + FILTER_DURATION);
+
+        String selectionStatement = "is_music=1 AND title != ''";
+//        final String songSortOrder = PreferencesUtility.getInstance(context).getSongSortOrder();
+
+
+        switch (from) {
+            case START_FROM_LOCAL:
+                ArrayList<MusicEntity> list3 = getMusicListCursor(cr.query(uri, info_music, select.toString(), null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER));
+                return list3;
+            default:
+                return null;
+        }
+
+    }
+
+    public static ArrayList<MusicEntity> getMusicListCursor(Cursor cursor) {
+        if (cursor == null) {
+            return null;
+        }
+
+        ArrayList<MusicEntity> musicList = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            MusicEntity music = new MusicEntity();
+            music.songId = cursor.getInt(cursor
+                    .getColumnIndex(MediaStore.Audio.Media._ID));
+            music.albumId = cursor.getInt(cursor
+                    .getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
+            music.albumName = cursor.getString(cursor
+                    .getColumnIndex(MediaStore.Audio.Albums.ALBUM));
+            music.albumData = getAlbumArtUri(music.albumId) + "";
+            music.duration = cursor.getInt(cursor
+                    .getColumnIndex(MediaStore.Audio.Media.DURATION));
+            music.musicName = cursor.getString(cursor
+                    .getColumnIndex(MediaStore.Audio.Media.TITLE));
+            music.artist = cursor.getString(cursor
+                    .getColumnIndex(MediaStore.Audio.Media.ARTIST));
+            music.artistId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID));
+            String filePath = cursor.getString(cursor
+                    .getColumnIndex(MediaStore.Audio.Media.DATA));
+            music.data = filePath;
+            music.folder = filePath.substring(0, filePath.lastIndexOf(File.separator));
+            music.size = cursor.getInt(cursor
+                    .getColumnIndex(MediaStore.Audio.Media.SIZE));
+            music.islocal = true;
+            music.sort = Pinyin.toPinyin(music.musicName.charAt(0)).substring(0, 1).toUpperCase();
+            musicList.add(music);
+        }
+        cursor.close();
+        return musicList;
+    }
+
+    public static Uri getAlbumArtUri(long albumId) {
+        return ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), albumId);
     }
 
 

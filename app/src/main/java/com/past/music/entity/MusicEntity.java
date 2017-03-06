@@ -14,8 +14,8 @@ public class MusicEntity implements Parcelable {
      */
     public long songId = -1;
     public int albumId = -1;
-    public String albumName;
-    public String albumData;
+    public String albumName;        //专辑名字
+    public String albumData;        //
     public int duration;
     public String musicName;
     public String artist;
@@ -32,6 +32,9 @@ public class MusicEntity implements Parcelable {
      * 0表示没有收藏 1表示收藏
      */
     public int favorite = 0;
+
+    public MusicEntity() {
+    }
 
     protected MusicEntity(Parcel in) {
         songId = in.readLong();

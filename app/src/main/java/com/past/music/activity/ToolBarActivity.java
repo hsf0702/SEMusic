@@ -19,7 +19,7 @@ import com.past.music.pastmusic.R;
 
 public abstract class ToolBarActivity extends BaseActivity {
 
-    private Toolbar mToolbar;
+    protected Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +27,6 @@ public abstract class ToolBarActivity extends BaseActivity {
         setContentView(getLayoutId());
         mToolbar = (Toolbar) findViewById(R.id.base_toolbar);
         setSupportActionBar(mToolbar);
-        mToolbar.setNavigationIcon(R.drawable.back_white);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
