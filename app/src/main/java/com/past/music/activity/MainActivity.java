@@ -34,7 +34,6 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        showQuickControl(true);
         mTabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
         FragmentManager fm = getSupportFragmentManager();
         //初始化自定义适配器
@@ -42,6 +41,12 @@ public class MainActivity extends BaseActivity {
         //绑定自定义适配器
         mViewPager.setAdapter(mAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        this.overridePendingTransition(R.anim.push_up_in, R.anim.push_down_out);
     }
 
     @Override

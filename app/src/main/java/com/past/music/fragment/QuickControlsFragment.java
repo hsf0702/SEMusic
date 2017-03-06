@@ -26,9 +26,8 @@ import butterknife.OnClick;
  * =======================================================
  * 作者：gaojin
  * 日期：2017/3/3 下午4:47
- * 版本：
  * 描述：底部音乐快捷控制栏
- * 备注：
+ * 备注：备注：Copyright © 2010-2017. gaojin All rights reserved.
  * =======================================================
  */
 public class QuickControlsFragment extends BaseFragment {
@@ -78,8 +77,7 @@ public class QuickControlsFragment extends BaseFragment {
 
 
     public static QuickControlsFragment newInstance() {
-        QuickControlsFragment fragment = new QuickControlsFragment();
-        return fragment;
+        return new QuickControlsFragment();
     }
 
     @Override
