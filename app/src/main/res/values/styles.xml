@@ -19,6 +19,12 @@
 
     <style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">
         <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="WhiteTabLayout" parent="Widget.Design.TabLayout">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/text_gray</item>
     </style>
 
     <style name="Theme.ToolBar.Base.Title" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">

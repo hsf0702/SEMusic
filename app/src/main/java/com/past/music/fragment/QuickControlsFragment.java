@@ -96,7 +96,7 @@ public class QuickControlsFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        startAnimation(mAlbum);
+//        startAnimation(mAlbum);
     }
 
     public void startAnimation(View view) {
