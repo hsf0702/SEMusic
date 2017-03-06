@@ -43,6 +43,7 @@ public class PlayMusicActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_music);
+        showQuickControl(false);
         onNewIntent(getIntent());
     }
 
@@ -54,6 +55,10 @@ public class PlayMusicActivity extends BaseActivity {
     @Override
     protected void setStatusBar() {
         StatusBarUtil.setTranslucent(this);
+    }
+
+    @Override
+    protected void showQuickControl(boolean show) {
     }
 
     @Override

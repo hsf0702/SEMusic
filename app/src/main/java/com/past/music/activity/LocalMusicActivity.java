@@ -2,8 +2,6 @@ package com.past.music.activity;
 
 import android.os.Bundle;
 
-import com.jaeger.library.StatusBarUtil;
-import com.past.music.Config.BaseConfig;
 import com.past.music.pastmusic.R;
 
 public class LocalMusicActivity extends ToolBarActivity {

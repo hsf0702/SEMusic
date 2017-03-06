@@ -1,5 +1,6 @@
 package com.past.music.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +19,14 @@ import com.past.music.pastmusic.R;
  * =======================================================
  */
 public class BaseFragment extends Fragment {
+
+    public Activity mContext;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.mContext = activity;
+    }
 
     @Override
     public void onAttach(Context context) {

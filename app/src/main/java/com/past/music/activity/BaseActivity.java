@@ -21,9 +21,8 @@ import butterknife.ButterKnife;
  * =======================================================
  * 作者：gaojin
  * 日期：2017/1/26 上午12:38
- * 版本：
  * 描述：Activity基类
- * 备注：
+ * 备注：Copyright © 2010-2017. gaojin All rights reserved.
  * =======================================================
  */
 public class BaseActivity extends AppCompatActivity implements ServiceConnection {
@@ -38,6 +37,7 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
         ButterKnife.bind(this);
         mToken = MusicPlayer.bindToService(this, this);
         setStatusBar();
+        showQuickControl(true);
     }
 
     protected void setStatusBar() {
@@ -49,7 +49,6 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
      * @param show 显示或关闭底部播放控制栏
      */
     protected void showQuickControl(boolean show) {
-//        Log.d(TAG, MusicPlayer.getQueue().length + "");
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         if (show) {
             if (fragment == null) {
@@ -67,7 +66,8 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
     @Override
     public void finish() {
         super.finish();
-        this.overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
+//        this.overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
+        this.overridePendingTransition(R.anim.empty, R.anim.empty);
     }
 
 
@@ -80,9 +80,11 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
     public final void startActivityByX(Intent intent, boolean isInFromRight) {
         this.startActivity(intent);
         if (isInFromRight) {
-            this.overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
+//            this.overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
+            this.overridePendingTransition(R.anim.empty, R.anim.empty);
         } else {
-            this.overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
+//            this.overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
+            this.overridePendingTransition(R.anim.empty, R.anim.empty);
         }
     }
 
