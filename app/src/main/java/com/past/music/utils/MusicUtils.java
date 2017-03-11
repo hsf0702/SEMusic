@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 
 import com.github.promeg.pinyinhelper.Pinyin;
+import com.past.music.entity.AlbumEntity;
 import com.past.music.entity.ArtistEntity;
 import com.past.music.entity.FolderEntity;
 import com.past.music.entity.MusicEntity;
@@ -121,11 +122,11 @@ public class MusicUtils implements MConstants {
         select.append(" and " + MediaStore.Audio.Media.DURATION + " > " + FILTER_DURATION);
 
         String selectionStatement = "is_music=1 AND title != ''";
-//        final String songSortOrder = PreferencesUtility.getInstance(context).getSongSortOrder();
+        final String songSortOrder = SharePreferencesUtils.getInstance(context).getSongSortOrder();
 
         switch (from) {
             case START_FROM_LOCAL:
-                ArrayList<MusicEntity> list3 = getMusicListCursor(cr.query(uri, info_music, select.toString(), null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER));
+                ArrayList<MusicEntity> list3 = getMusicListCursor(cr.query(uri, info_music, select.toString(), null, songSortOrder));
                 return list3;
             default:
                 return null;
@@ -211,5 +212,47 @@ public class MusicUtils implements MConstants {
         return list;
     }
 
+
+    /**
+     * 获取专辑信息
+     *
+     * @param context
+     * @return
+     */
+    public static List<AlbumEntity> queryAlbums(Context context) {
+
+        ContentResolver cr = context.getContentResolver();
+        StringBuilder where = new StringBuilder(MediaStore.Audio.Albums._ID
+                + " in (select distinct " + MediaStore.Audio.Media.ALBUM_ID
+                + " from audio_meta where (1=1)");
+        where.append(" and " + MediaStore.Audio.Media.SIZE + " > " + FILTER_SIZE);
+        where.append(" and " + MediaStore.Audio.Media.DURATION + " > " + FILTER_DURATION);
+
+        where.append(" )");
+
+        // Media.ALBUM_KEY 按专辑名称排序
+        List<AlbumEntity> list = getAlbumList(cr.query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, info_album,
+                where.toString(), null, SharePreferencesUtils.getInstance(context).getAlbumSortOrder()));
+        return list;
+
+    }
+
+    public static List<AlbumEntity> getAlbumList(Cursor cursor) {
+        List<AlbumEntity> list = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            AlbumEntity info = new AlbumEntity();
+            info.album_name = cursor.getString(cursor
+                    .getColumnIndex(MediaStore.Audio.Albums.ALBUM));
+            info.album_id = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Albums._ID));
+            info.number_of_songs = cursor.getInt(cursor
+                    .getColumnIndex(MediaStore.Audio.Albums.NUMBER_OF_SONGS));
+            info.album_art = getAlbumArtUri(info.album_id) + "";
+            info.album_artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ARTIST));
+            info.album_sort = Pinyin.toPinyin(info.album_name.charAt(0)).substring(0, 1).toUpperCase();
+            list.add(info);
+        }
+        cursor.close();
+        return list;
+    }
 
 }
