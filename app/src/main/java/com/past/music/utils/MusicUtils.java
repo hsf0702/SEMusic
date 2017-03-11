@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 
 import com.github.promeg.pinyinhelper.Pinyin;
+import com.past.music.entity.ArtistEntity;
 import com.past.music.entity.FolderEntity;
 import com.past.music.entity.MusicEntity;
 
@@ -122,7 +123,6 @@ public class MusicUtils implements MConstants {
         String selectionStatement = "is_music=1 AND title != ''";
 //        final String songSortOrder = PreferencesUtility.getInstance(context).getSongSortOrder();
 
-
         switch (from) {
             case START_FROM_LOCAL:
                 ArrayList<MusicEntity> list3 = getMusicListCursor(cr.query(uri, info_music, select.toString(), null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER));
@@ -171,6 +171,44 @@ public class MusicUtils implements MConstants {
 
     public static Uri getAlbumArtUri(long albumId) {
         return ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), albumId);
+    }
+
+    /**
+     * 获取歌手信息
+     *
+     * @param context
+     * @return
+     */
+    public static List<ArtistEntity> queryArtist(Context context) {
+
+        Uri uri = MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI;
+        ContentResolver cr = context.getContentResolver();
+        StringBuilder where = new StringBuilder(MediaStore.Audio.Artists._ID
+                + " in (select distinct " + MediaStore.Audio.Media.ARTIST_ID
+                + " from audio_meta where (1=1 )");
+        where.append(" and " + MediaStore.Audio.Media.SIZE + " > " + FILTER_SIZE);
+        where.append(" and " + MediaStore.Audio.Media.DURATION + " > " + FILTER_DURATION);
+
+        where.append(")");
+
+        List<ArtistEntity> list = getArtistList(cr.query(uri, info_artist,
+                where.toString(), null, SharePreferencesUtils.getInstance(context).getArtistSortOrder()));
+        return list;
+
+    }
+
+    public static List<ArtistEntity> getArtistList(Cursor cursor) {
+        List<ArtistEntity> list = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            ArtistEntity info = new ArtistEntity();
+            info.artist_name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Artists.ARTIST));
+            info.number_of_tracks = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Artists.NUMBER_OF_TRACKS));
+            info.artist_id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Artists._ID));
+            info.artist_sort = Pinyin.toPinyin(info.artist_name.charAt(0)).substring(0, 1).toUpperCase();
+            list.add(info);
+        }
+        cursor.close();
+        return list;
     }
 
 

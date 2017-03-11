@@ -4,11 +4,11 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.view.ViewTreeObserver;
 
 import com.past.music.fragment.adapter.LocalFragmentAdapter;
-import com.past.music.log.MyLog;
 import com.past.music.pastmusic.R;
+import com.past.music.utils.MConstants;
+import com.past.music.utils.MusicUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +33,11 @@ public class LocalMusicActivity extends ToolBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle("本地歌曲");
-        mTabNames.add("歌曲 151");
-        mTabNames.add("歌手 67");
+
+        int localCount = MusicUtils.queryMusic(this, MConstants.START_FROM_LOCAL).size();
+        int singerCount = MusicUtils.queryArtist(this).size();
+        mTabNames.add("歌曲 " + localCount);
+        mTabNames.add("歌手 " + singerCount);
         mTabNames.add("专辑 95");
         mTabNames.add("文件夹 2");
 
@@ -44,17 +47,17 @@ public class LocalMusicActivity extends ToolBarActivity {
         mViewPager.setAdapter(mAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
 
-        final ViewTreeObserver vto = mToolbar.getViewTreeObserver();
-        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                mToolbar.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                int height = mToolbar.getMeasuredHeight();
-                int width = mToolbar.getMeasuredWidth();
-                MyLog.i(TAG + "toolbar-height", height + "");
-                MyLog.i(TAG + "toolbar-width", width + "");
-            }
-        });
+//        final ViewTreeObserver vto = mToolbar.getViewTreeObserver();
+//        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                mToolbar.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+//                int height = mToolbar.getMeasuredHeight();
+//                int width = mToolbar.getMeasuredWidth();
+//                MyLog.i(TAG + "toolbar-height", height + "");
+//                MyLog.i(TAG + "toolbar-width", width + "");
+//            }
+//        });
     }
 
     @Override
