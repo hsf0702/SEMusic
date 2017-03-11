@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.past.music.fragment.LocalAlbumFragment;
 import com.past.music.fragment.LocalMusicFragment;
 import com.past.music.fragment.LocalSingerFragment;
 import com.past.music.fragment.MusicFragment;
@@ -37,7 +38,7 @@ public class LocalFragmentAdapter extends FragmentPagerAdapter {
             case 1:
                 return LocalSingerFragment.newInstance();
             case 2:
-                return MusicFragment.newInstance("", "");
+                return LocalAlbumFragment.newInstance();
             case 3:
                 return MusicFragment.newInstance("", "");
             default:

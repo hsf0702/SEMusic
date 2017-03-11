@@ -36,9 +36,10 @@ public class LocalMusicActivity extends ToolBarActivity {
 
         int localCount = MusicUtils.queryMusic(this, MConstants.START_FROM_LOCAL).size();
         int singerCount = MusicUtils.queryArtist(this).size();
+        int albumCount = MusicUtils.queryAlbums(this).size();
         mTabNames.add("歌曲 " + localCount);
         mTabNames.add("歌手 " + singerCount);
-        mTabNames.add("专辑 95");
+        mTabNames.add("专辑 " + albumCount);
         mTabNames.add("文件夹 2");
 
         mTabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
@@ -46,18 +47,6 @@ public class LocalMusicActivity extends ToolBarActivity {
         mAdapter = new LocalFragmentAdapter(fm, mTabNames);
         mViewPager.setAdapter(mAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
-
-//        final ViewTreeObserver vto = mToolbar.getViewTreeObserver();
-//        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//            @Override
-//            public void onGlobalLayout() {
-//                mToolbar.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-//                int height = mToolbar.getMeasuredHeight();
-//                int width = mToolbar.getMeasuredWidth();
-//                MyLog.i(TAG + "toolbar-height", height + "");
-//                MyLog.i(TAG + "toolbar-width", width + "");
-//            }
-//        });
     }
 
     @Override
