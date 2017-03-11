@@ -1,13 +1,9 @@
 package com.past.music.fragment;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-
-import com.past.music.pastmusic.R;
 
 /**
  * =======================================================
@@ -20,17 +16,13 @@ import com.past.music.pastmusic.R;
  */
 public class BaseFragment extends Fragment {
 
-    public Activity mContext;
+    public Context mContext;
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.mContext = activity;
-    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        this.mContext = context;
     }
 
     @Override
@@ -51,21 +43,5 @@ public class BaseFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-    }
-
-
-    /**
-     * X轴方向滑动打开Activity
-     *
-     * @param intent
-     * @param isInFromRight
-     */
-    public final void startActivityByX(Intent intent, boolean isInFromRight) {
-        this.startActivity(intent);
-        if (isInFromRight) {
-            getActivity().overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
-        } else {
-            getActivity().overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
-        }
     }
 }

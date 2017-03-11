@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.past.music.fragment.LocalMusicFragment;
+import com.past.music.fragment.LocalSingerFragment;
 import com.past.music.fragment.MusicFragment;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class LocalFragmentAdapter extends FragmentPagerAdapter {
             case 0:
                 return LocalMusicFragment.newInstance("", "");
             case 1:
-                return MusicFragment.newInstance("", "");
+                return LocalSingerFragment.newInstance();
             case 2:
                 return MusicFragment.newInstance("", "");
             case 3:
