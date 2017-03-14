@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -13,9 +14,11 @@ import android.os.Message;
 import android.os.PowerManager;
 import android.os.RemoteException;
 
+import com.past.music.MyApplication;
 import com.past.music.log.MyLog;
 import com.past.music.pastmusic.IMediaAidlInterface;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 public class MediaService extends Service {
@@ -29,6 +32,9 @@ public class MediaService extends Service {
     private static final int FOCUSCHANGE = 5;
     private static final int FADEDOWN = 6;
     private static final int FADEUP = 7;
+
+
+    private Context mContext = null;
 
 
     /**
@@ -53,6 +59,7 @@ public class MediaService extends Service {
     public void onCreate() {
         super.onCreate();
         MyLog.i(TAG, "onCreate");
+        mContext = this;
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mHandlerThread = new HandlerThread("MusicPlayerHandler",
                 android.os.Process.THREAD_PRIORITY_BACKGROUND);
@@ -61,12 +68,12 @@ public class MediaService extends Service {
     }
 
     public void play(boolean createNewNextTrack) {
-//        int status = mAudioManager.requestAudioFocus(mAudioFocusListener,
-//                AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
-//
-//        if (status != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-//            return;
-//        }
+        int status = mAudioManager.requestAudioFocus(mAudioFocusListener,
+                AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+
+        if (status != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            return;
+        }
 
         MyLog.i(TAG, "播放音乐");
     }
@@ -137,7 +144,7 @@ public class MediaService extends Service {
             super.handleMessage(msg);
         }
 
-        private static final class MultiPlayer {
+        private static final class MultiPlayer implements MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
             private final WeakReference<MediaService> mService;
 
             private MediaPlayer mCurrentMediaPlayer = new MediaPlayer();
@@ -160,6 +167,50 @@ public class MediaService extends Service {
             public MultiPlayer(final MediaService service) {
                 mService = new WeakReference<MediaService>(service);
                 mCurrentMediaPlayer.setWakeMode(mService.get(), PowerManager.PARTIAL_WAKE_LOCK);
+            }
+
+            boolean mIsTrackPrepared = false;
+            boolean mIsTrackNet = false;
+            boolean mIsNextTrackPrepared = false;
+            boolean mIsNextInitialized = false;
+            boolean mIllegalState = false;
+
+            /**
+             * @param player
+             * @param path
+             * @return
+             */
+            public boolean setDataSourceImpl(MediaPlayer player, String path) {
+                try {
+                    player.reset();
+                    player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                    if (path.startsWith("content://")) {
+                        player.setOnPreparedListener(null);
+                        player.setDataSource(MyApplication.mContext, Uri.parse(path));
+                        player.prepare();
+                        player.setOnCompletionListener(this);
+                    } else {
+                        player.setDataSource(path);
+//                        player.setOnPreparedListener(preparedListener);
+                        player.prepareAsync();
+                        mIsTrackNet = true;
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                player.setOnErrorListener(this);
+//                player.setOnBufferingUpdateListener(bufferingUpdateListener);
+                return true;
+            }
+
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+
+            }
+
+            @Override
+            public boolean onError(MediaPlayer mp, int what, int extra) {
+                return false;
             }
         }
     }

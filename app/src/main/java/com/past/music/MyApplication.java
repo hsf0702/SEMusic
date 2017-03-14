@@ -3,6 +3,7 @@ package com.past.music;/**
  */
 
 import android.app.Application;
+import android.content.Context;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.squareup.leakcanary.LeakCanary;
@@ -17,9 +18,12 @@ import com.squareup.leakcanary.LeakCanary;
  * =======================================================
  */
 public class MyApplication extends Application {
+    public static Context mContext = null;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        mContext = this;
         Fresco.initialize(this);
         LeakCanary.install(this);
     }

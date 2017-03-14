@@ -27,6 +27,8 @@ public class MusicPlayer {
 
     /**
      * 实现规范化Context到ServiceConnection的映射
+     * 一般用weak reference引用的对象是有价值被cache, 而且很容易被重新被构建, 且很消耗内存的对象.
+     * GC执行的时候就会回收weak reference
      */
     private static final WeakHashMap<Context, ServiceConnect> mConnectionMap;
 

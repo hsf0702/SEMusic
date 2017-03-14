@@ -61,6 +61,16 @@ public class MainActivity extends BaseActivity {
         mAdapter = new MainFragmentAdapter(fm);
         mViewPager.setAdapter(mAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
+
+//        ViewTreeObserver vto = view.getViewTreeObserver();
+//        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+//                view.getHeight();
+//                view.getWidth();
+//            }
+//        });
     }
 
     @Override
