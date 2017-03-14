@@ -1,3 +1,4 @@
 # PastMusic
-NeuGaoJin_BiShe
 仿QQ音乐
+
+![] (screenshot/shot_main.png)
