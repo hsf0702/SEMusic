@@ -48,7 +48,7 @@
             android:name="com.past.music.service.MediaService"
             android:enabled="true"
             android:exported="true"
-            android:process=":main" />
+            android:process=":remote" />
 
         <activity android:name="com.past.music.activity.LocalMusicActivity" />
         <activity android:name="com.past.music.activity.DownloadActivity" />

@@ -17,7 +17,7 @@ import java.util.WeakHashMap;
  * 作者：gaojin
  * 日期：2017/3/3 下午4:18
  * 版本：
- * 描述：界面和Service的桥
+ * 描述：界面和Service的桥   MusicPlayer维护着一个WeakHashMap  保存Context和ServiceConnection的键值对
  * 备注：
  * =======================================================
  */
@@ -26,12 +26,12 @@ public class MusicPlayer {
     public static IMediaAidlInterface mService = null;
 
     /**
-     * 实现规范化Context到ServiceBinder的映射
+     * 实现规范化Context到ServiceConnection的映射
      */
-    private static final WeakHashMap<Context, ServiceBinder> mConnectionMap;
+    private static final WeakHashMap<Context, ServiceConnect> mConnectionMap;
 
     static {
-        mConnectionMap = new WeakHashMap<Context, ServiceBinder>();
+        mConnectionMap = new WeakHashMap<Context, ServiceConnect>();
     }
 
 
@@ -46,9 +46,9 @@ public class MusicPlayer {
         }
         final ContextWrapper contextWrapper = new ContextWrapper(realActivity);
         contextWrapper.startService(new Intent(contextWrapper, MediaService.class));
-        final ServiceBinder binder = new ServiceBinder(callback, contextWrapper.getApplicationContext());
-        if (contextWrapper.bindService(new Intent().setClass(contextWrapper, MediaService.class), binder, 0)) {
-            mConnectionMap.put(contextWrapper, binder);
+        final ServiceConnect sc = new ServiceConnect(callback, contextWrapper.getApplicationContext());
+        if (contextWrapper.bindService(new Intent().setClass(contextWrapper, MediaService.class), sc, Context.BIND_AUTO_CREATE)) {
+            mConnectionMap.put(contextWrapper, sc);
             return new ServiceToken(contextWrapper);
         }
         return null;
@@ -59,11 +59,11 @@ public class MusicPlayer {
             return;
         }
         final ContextWrapper mContextWrapper = token.mWrappedContext;
-        final ServiceBinder mBinder = mConnectionMap.remove(mContextWrapper);
-        if (mBinder == null) {
+        final ServiceConnect sc = mConnectionMap.remove(mContextWrapper);
+        if (sc == null) {
             return;
         }
-        mContextWrapper.unbindService(mBinder);
+        mContextWrapper.unbindService(sc);
         if (mConnectionMap.isEmpty()) {
             mService = null;
         }
@@ -74,24 +74,25 @@ public class MusicPlayer {
      */
     public static void playOrPause() {
         try {
-            if (mService != null) {
-                if (mService.isPlaying()) {
-                    mService.pause();
-                } else {
-                    mService.play();
-                }
-            }
+//            if (mService != null) {
+//                if (mService.isPlaying()) {
+//                    mService.pause();
+//                } else {
+//                    mService.play();
+//                }
+//            }
+            mService.play();
         } catch (final Exception ignored) {
         }
     }
 
 
-    public static final class ServiceBinder implements ServiceConnection {
+    public static final class ServiceConnect implements ServiceConnection {
 
         private final ServiceConnection mCallback;
         private final Context mContext;
 
-        public ServiceBinder(ServiceConnection mCallback, Context mContext) {
+        public ServiceConnect(ServiceConnection mCallback, Context mContext) {
             this.mCallback = mCallback;
             this.mContext = mContext;
         }
@@ -114,6 +115,7 @@ public class MusicPlayer {
     }
 
     public static final class ServiceToken {
+        //Service和Activity的父类
         public ContextWrapper mWrappedContext;
 
         public ServiceToken(final ContextWrapper context) {

@@ -12,14 +12,15 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.PowerManager;
 import android.os.RemoteException;
-import android.widget.Toast;
 
+import com.past.music.log.MyLog;
 import com.past.music.pastmusic.IMediaAidlInterface;
 
 import java.lang.ref.WeakReference;
 
 public class MediaService extends Service {
 
+    private static final String TAG = "MediaService";
     private static final int IDCOLIDX = 0;
     private static final int TRACK_ENDED = 1;
     private static final int TRACK_WENT_TO_NEXT = 2;
@@ -44,12 +45,14 @@ public class MediaService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
+        MyLog.i(TAG, "onBind");
         return mBinder;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        MyLog.i(TAG, "onCreate");
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mHandlerThread = new HandlerThread("MusicPlayerHandler",
                 android.os.Process.THREAD_PRIORITY_BACKGROUND);
@@ -58,15 +61,14 @@ public class MediaService extends Service {
     }
 
     public void play(boolean createNewNextTrack) {
-        int status = mAudioManager.requestAudioFocus(mAudioFocusListener,
-                AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+//        int status = mAudioManager.requestAudioFocus(mAudioFocusListener,
+//                AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+//
+//        if (status != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+//            return;
+//        }
 
-        if (status != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-            return;
-        }
-
-        Toast.makeText(getApplicationContext(), "播放音乐", Toast.LENGTH_SHORT).show();
-
+        MyLog.i(TAG, "播放音乐");
     }
 
     public void pause() {
