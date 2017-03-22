@@ -2,8 +2,11 @@ package com.past.music.activity;/**
  * Created by gaojin on 2017/1/26.
  */
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.v4.app.FragmentTransaction;
@@ -13,7 +16,11 @@ import com.jaeger.library.StatusBarUtil;
 import com.past.music.fragment.QuickControlsFragment;
 import com.past.music.pastmusic.IMediaAidlInterface;
 import com.past.music.pastmusic.R;
+import com.past.music.service.MediaService;
 import com.past.music.service.MusicPlayer;
+
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 
@@ -30,6 +37,8 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
     private MusicPlayer.ServiceToken mToken;
     public static IMediaAidlInterface mService = null;
     private QuickControlsFragment fragment; //底部播放控制栏
+    private ArrayList<MusicStateListener> mMusicListener = new ArrayList<>();
+    private PlaybackStatus mPlaybackStatus; //BroadCastReceiver 接受播放状态变化等
 
     @Override
     public void setContentView(int layoutResID) {
@@ -37,6 +46,11 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
         ButterKnife.bind(this);
         mToken = MusicPlayer.bindToService(this, this);
         setStatusBar();
+        mPlaybackStatus = new PlaybackStatus(this);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(MediaService.PLAYSTATE_CHANGED);
+        intentFilter.addAction(MediaService.META_CHANGED);
+        registerReceiver(mPlaybackStatus, intentFilter);
         showQuickControl(true);
     }
 
@@ -60,6 +74,75 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
         } else {
             if (fragment != null)
                 ft.hide(fragment).commitAllowingStateLoss();
+        }
+    }
+
+    public void setMusicStateListenerListener(final MusicStateListener status) {
+        if (status == this) {
+            throw new UnsupportedOperationException("Override the method, don't add a listener");
+        }
+
+        if (status != null) {
+            mMusicListener.add(status);
+        }
+    }
+
+    public void removeMusicStateListenerListener(final MusicStateListener status) {
+        if (status != null) {
+            mMusicListener.remove(status);
+        }
+    }
+
+    public final static class PlaybackStatus extends BroadcastReceiver {
+
+        private final WeakReference<BaseActivity> mReference;
+
+
+        public PlaybackStatus(final BaseActivity activity) {
+            mReference = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            BaseActivity baseActivity = mReference.get();
+            if (baseActivity != null) {
+                if (action.equals(MediaService.META_CHANGED)) {
+                    baseActivity.updatePlayInfo();
+                } else if (action.equals(MediaService.PLAYSTATE_CHANGED)) {
+                }
+            }
+        }
+    }
+
+    /**
+     * 更新歌曲状态信息
+     */
+    public void updatePlayInfo() {
+        for (MusicStateListener listener : mMusicListener) {
+            if (listener != null) {
+                listener.reloadAdapter();
+                listener.updatePlayInfo();
+            }
+        }
+    }
+
+    /**
+     * fragment界面刷新
+     */
+    public void refreshUI() {
+        for (final MusicStateListener listener : mMusicListener) {
+            if (listener != null) {
+                listener.reloadAdapter();
+            }
+        }
+    }
+
+    public void updateTime() {
+        for (final MusicStateListener listener : mMusicListener) {
+            if (listener != null) {
+                listener.updateTime();
+            }
         }
     }
 
@@ -92,6 +175,7 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
     protected void onDestroy() {
         super.onDestroy();
         unbindService();
+        mMusicListener.clear();
     }
 
     public void unbindService() {

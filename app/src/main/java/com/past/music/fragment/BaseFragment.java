@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
+import com.past.music.activity.BaseActivity;
+import com.past.music.activity.MusicStateListener;
+
 /**
  * =======================================================
  * 作者：gaojin
@@ -14,7 +17,7 @@ import android.support.v4.app.Fragment;
  * 备注：
  * =======================================================
  */
-public class BaseFragment extends Fragment {
+public class BaseFragment extends Fragment implements MusicStateListener {
 
     public Context mContext;
 
@@ -33,6 +36,8 @@ public class BaseFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        ((BaseActivity) getActivity()).setMusicStateListenerListener(this);
+        reloadAdapter();
     }
 
     @Override
@@ -43,5 +48,20 @@ public class BaseFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void updatePlayInfo() {
+
+    }
+
+    @Override
+    public void updateTime() {
+
+    }
+
+    @Override
+    public void reloadAdapter() {
+
     }
 }

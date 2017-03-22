@@ -32,6 +32,8 @@ import java.util.Map;
 public class MediaService extends Service {
 
     private static final String TAG = "MediaService";
+    public static final String PLAYSTATE_CHANGED = "com.past.music.play_state_changed";
+    public static final String META_CHANGED = "com.past.music.meta_changed";
     private static final int IDCOLIDX = 0;
     private static final int TRACK_ENDED = 1;
     private static final int TRACK_WENT_TO_NEXT = 2;
@@ -148,7 +150,8 @@ public class MediaService extends Service {
 //        setIsSupposedToBePlaying(true, true);
 //        cancelShutdown();
 //        updateNotification();
-//        notifyChange(META_CHANGED);
+        notifyChange(META_CHANGED);
+        MyLog.i(TAG, "play");
     }
 
     public void pause() {
@@ -384,6 +387,16 @@ public class MediaService extends Service {
         }
     }
 
+    private void notifyChange(final String what) {
+        Intent intent = null;
+        if (what.equals(META_CHANGED)) {
+            intent = new Intent(META_CHANGED);
+//            sendBroadcast(intent);
+            sendStickyBroadcast(intent);
+        }
+
+    }
+
 
     public boolean openFile(final String path) {
         MyLog.i(TAG, "openFile: path = " + path);
@@ -456,7 +469,7 @@ public class MediaService extends Service {
     public String getTrackName() {
         synchronized (this) {
             if (mCursor == null) {
-                return "测试歌名";
+                return null;
             }
             return mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.TITLE));
         }
@@ -465,7 +478,7 @@ public class MediaService extends Service {
     public String getArtistName() {
         synchronized (this) {
             if (mCursor == null) {
-                return "测试歌手";
+                return null;
             }
             return mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ARTIST));
         }

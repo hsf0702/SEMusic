@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.past.music.activity.PlayMusicActivity;
+import com.past.music.log.MyLog;
 import com.past.music.pastmusic.R;
 import com.past.music.service.MusicPlayer;
 
@@ -29,6 +30,8 @@ import butterknife.OnClick;
  * =======================================================
  */
 public class QuickControlsFragment extends BaseFragment {
+
+    private static final String TAG = "QuickControlsFragment";
 
     @BindView(R.id.playbar_img)
     SimpleDraweeView mAlbum;
@@ -88,9 +91,13 @@ public class QuickControlsFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.view_quick_controls, container, false);
         ButterKnife.bind(this, rootView);
-        mPlaybarInfo.setText(MusicPlayer.getTrackName());
-        mPlaybarSinger.setText(MusicPlayer.getArtistName());
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateFragment();
     }
 
     @Override
@@ -98,5 +105,16 @@ public class QuickControlsFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
     }
 
+    public void updateFragment() {
+//        MyLog.i(TAG, MusicPlayer.getTrackName() + "111");
+//        MyLog.i(TAG, MusicPlayer.getArtistName() + "111");
+        mPlaybarInfo.setText(MusicPlayer.getTrackName());
+        mPlaybarSinger.setText(MusicPlayer.getArtistName());
+    }
+
+    @Override
+    public void updatePlayInfo() {
+        updateFragment();
+    }
 }
 
