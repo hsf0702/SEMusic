@@ -6,17 +6,15 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.past.music.activity.PlayMusicActivity;
 import com.past.music.pastmusic.R;
+import com.past.music.service.MusicPlayer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,8 +33,8 @@ public class QuickControlsFragment extends BaseFragment {
     @BindView(R.id.playbar_img)
     SimpleDraweeView mAlbum;
 
-    @BindView(R.id.linear)
-    LinearLayout mLinear = null;
+    @BindView(R.id.rl_layout)
+    RelativeLayout relativeLayout = null;
 
     @BindView(R.id.playbar_info)
     TextView mPlaybarInfo;
@@ -53,8 +51,8 @@ public class QuickControlsFragment extends BaseFragment {
     @BindView(R.id.play_next)
     ImageView mPlayNext;
 
-    @OnClick(R.id.linear)
-    void linear() {
+    @OnClick(R.id.rl_layout)
+    void rlLayout() {
         Intent intent = new Intent(getActivity(), PlayMusicActivity.class);
         startActivity(intent);
         getActivity().overridePendingTransition(R.anim.push_down_in, R.anim.push_up_out);
@@ -90,24 +88,14 @@ public class QuickControlsFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.view_quick_controls, container, false);
         ButterKnife.bind(this, rootView);
+        mPlaybarInfo.setText(MusicPlayer.getTrackName());
+        mPlaybarSinger.setText(MusicPlayer.getArtistName());
         return rootView;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        startAnimation(mAlbum);
-    }
-
-    public void startAnimation(View view) {
-        Animation operatingAnim = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_anim);
-        LinearInterpolator lin = new LinearInterpolator();
-        operatingAnim.setInterpolator(lin);
-        view.startAnimation(operatingAnim);
-    }
-
-    public void stopAnimation(View view) {
-        view.clearAnimation();
     }
 
 }

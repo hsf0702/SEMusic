@@ -3,6 +3,7 @@ package com.past.music.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,10 +14,13 @@ import android.widget.TextView;
 
 import com.past.music.entity.MusicEntity;
 import com.past.music.pastmusic.R;
+import com.past.music.service.MusicPlayer;
+import com.past.music.utils.HandlerUtil;
 import com.past.music.utils.MConstants;
 import com.past.music.utils.MusicUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -88,8 +92,11 @@ public class LocalMusicFragment extends BaseFragment {
         public static final int CONTENT_LAYOUT = 0X02;
 
         ArrayList<MusicEntity> mList;
+        PlayMusic playMusic;
+        Handler handler;
 
         public LocalMusicFragmentAdapter() {
+            handler = HandlerUtil.getInstance(mContext);
         }
 
         //更新adpter的数据
@@ -149,7 +156,12 @@ public class LocalMusicFragment extends BaseFragment {
 
             @Override
             public void onClick(View v) {
-
+                if (playMusic != null)
+                    handler.removeCallbacks(playMusic);
+                if (getAdapterPosition() > -1) {
+                    playMusic = new PlayMusic(0);
+                    handler.postDelayed(playMusic, 70);
+                }
             }
         }
 
@@ -182,6 +194,29 @@ public class LocalMusicFragment extends BaseFragment {
             public void onBindData(MusicEntity musicEntity) {
                 mMusicName.setText(musicEntity.getMusicName());
                 mMusicInfo.setText(musicEntity.getArtist());
+            }
+        }
+
+        class PlayMusic implements Runnable {
+            int position;
+
+            public PlayMusic(int position) {
+                this.position = position;
+            }
+
+            @Override
+            public void run() {
+                long[] list = new long[mList.size()];
+                HashMap<Long, MusicEntity> infos = new HashMap();
+                for (int i = 0; i < mList.size(); i++) {
+                    MusicEntity info = mList.get(i);
+                    list[i] = info.songId;
+                    info.islocal = true;
+                    info.albumData = MusicUtils.getAlbumArtUri(info.albumId) + "";
+                    infos.put(list[i], mList.get(i));
+                }
+                if (position > -1)
+                    MusicPlayer.playAll(infos, list, position, false);
             }
         }
     }

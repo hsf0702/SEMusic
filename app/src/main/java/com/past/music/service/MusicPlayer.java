@@ -7,9 +7,13 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.os.RemoteException;
 
+import com.past.music.entity.MusicEntity;
+import com.past.music.log.MyLog;
 import com.past.music.pastmusic.IMediaAidlInterface;
 
+import java.util.HashMap;
 import java.util.WeakHashMap;
 
 /**
@@ -22,6 +26,8 @@ import java.util.WeakHashMap;
  * =======================================================
  */
 public class MusicPlayer {
+
+    public static final String TAG = "MusicPlayer";
 
     public static IMediaAidlInterface mService = null;
 
@@ -86,6 +92,74 @@ public class MusicPlayer {
             mService.play();
         } catch (final Exception ignored) {
         }
+    }
+
+    public static synchronized void playAll(final HashMap<Long, MusicEntity> infos, final long[] list, int position, final boolean forceShuffle) {
+        MyLog.i(TAG, "playAll");
+        if (list == null || list.length == 0 || mService == null) {
+            return;
+        }
+        try {
+//            if (forceShuffle) {
+//                mService.setShuffleMode(MediaService.SHUFFLE_NORMAL);
+//            }
+//            final long currentId = mService.getAudioId();
+            long playId = list[position];
+//            Log.e("currentId", currentId + "");
+//            final int currentQueuePosition = getQueuePosition();
+//            if (position != -1) {
+////                final long[] playlist = getQueue();
+//                if (Arrays.equals(list, playlist)) {
+//                    if (currentQueuePosition == position && currentId == list[position]) {
+//                        mService.play();
+//                        return;
+//                    } else {
+//                        mService.setQueuePosition(position);
+//                        return;
+//                    }
+//
+//                }
+//            }
+            if (position < 0) {
+                position = 0;
+            }
+            mService.open(infos, list, forceShuffle ? -1 : position);
+            mService.play();
+        } catch (final RemoteException ignored) {
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 获取当前播放的音乐的名字
+     *
+     * @return
+     */
+    public static final String getTrackName() {
+        if (mService != null) {
+            try {
+                return mService.getTrackName();
+            } catch (final RemoteException ignored) {
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取当前音乐歌手的名字
+     *
+     * @return
+     */
+    public static final String getArtistName() {
+        if (mService != null) {
+            try {
+                return mService.getArtistName();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
 

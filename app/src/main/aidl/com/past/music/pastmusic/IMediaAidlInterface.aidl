@@ -15,4 +15,12 @@ interface IMediaAidlInterface {
     void stop();
     void pause();
     void play();
+    void openFile(String path);
+    void open(in Map infos, in long [] list, int position);
+    String getArtistName();
+    String getTrackName();
+    String getAlbumName();
+    String getAlbumPath();
+    String[] getAlbumPathtAll();
+    String getPath();
 }
