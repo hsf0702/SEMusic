@@ -108,7 +108,7 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
             BaseActivity baseActivity = mReference.get();
             if (baseActivity != null) {
                 if (action.equals(MediaService.META_CHANGED)) {
-                    baseActivity.updatePlayInfo();
+                    baseActivity.baseUpdatePlayInfo();
                 } else if (action.equals(MediaService.PLAYSTATE_CHANGED)) {
                 }
             }
@@ -118,7 +118,7 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
     /**
      * 更新歌曲状态信息
      */
-    public void updatePlayInfo() {
+    public void baseUpdatePlayInfo() {
         for (MusicStateListener listener : mMusicListener) {
             if (listener != null) {
                 listener.reloadAdapter();

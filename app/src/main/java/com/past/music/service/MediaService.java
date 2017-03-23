@@ -17,6 +17,7 @@ import android.os.PowerManager;
 import android.os.RemoteException;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.past.music.MyApplication;
 import com.past.music.entity.MusicEntity;
@@ -34,6 +35,7 @@ public class MediaService extends Service {
     private static final String TAG = "MediaService";
     public static final String PLAYSTATE_CHANGED = "com.past.music.play_state_changed";
     public static final String META_CHANGED = "com.past.music.meta_changed";
+    public static final String MUSIC_CHANGED = "com.past.music.change_music";
     private static final int IDCOLIDX = 0;
     private static final int TRACK_ENDED = 1;
     private static final int TRACK_WENT_TO_NEXT = 2;
@@ -79,8 +81,14 @@ public class MediaService extends Service {
 
     private int mCardId;
 
+    /**
+     * 当前播放音乐的下标
+     */
     private int mPlayPos = -1;
 
+    /**
+     * 下一首歌的下标
+     */
     private int mNextPlayPos = -1;
 
     private int mOpenFailedCounter = 0;
@@ -114,9 +122,10 @@ public class MediaService extends Service {
         mHandlerThread.start();
         mPlayerHandler = new MusicPlayerHandler(this, mHandlerThread.getLooper());
         mPlayer = new MultiPlayer(this);
+        mPlayer.setHandler(mPlayerHandler);
     }
 
-    public void play(boolean createNewNextTrack) {
+    public void play(boolean createNewNextSong) {
         int status = mAudioManager.requestAudioFocus(mAudioFocusListener,
                 AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
 
@@ -132,11 +141,11 @@ public class MediaService extends Service {
 //                MediaButtonIntentReceiver.class.getName()));
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
 //            mSession.setActive(true);
-//        if (createNewNextTrack) {
-//            setNextTrack();
-//        } else {
-//            setNextTrack(mNextPlayPos);
-//        }
+        if (createNewNextSong) {
+            setNextTrack();
+        } else {
+            setNextTrack(mNextPlayPos);
+        }
 //        if (mPlayer.isTrackPrepared()) {
 //            final long duration = mPlayer.duration();
 //            if (mRepeatMode != REPEAT_CURRENT && duration > 2000
@@ -258,7 +267,6 @@ public class MediaService extends Service {
     }
 
     public void open(final HashMap<Long, MusicEntity> infos, final long[] list, final int position) {
-        MyLog.i(TAG, "open" + list.length);
         synchronized (this) {
             mPlaylistInfo = infos;
 //            if (mShuffleMode == SHUFFLE_AUTO) {
@@ -267,6 +275,7 @@ public class MediaService extends Service {
 //            final long oldId = getAudioId();
             final int listlength = list.length;
             boolean newlist = true;
+            //是否新建一个播放列表
             if (mPlaylist.size() == listlength) {
                 newlist = false;
                 for (int i = 0; i < listlength; i++) {
@@ -283,7 +292,6 @@ public class MediaService extends Service {
             if (position >= 0) {
                 mPlayPos = position;
             } else {
-                mPlayPos++;
 //                mPlayPos = mShuffler.nextInt(mPlaylist.size());
             }
 //            mHistory.clear();
@@ -313,7 +321,6 @@ public class MediaService extends Service {
         mPlaylist.addAll(position, arrayList);
         if (mPlaylist.size() == 0) {
             closeCursor();
-//            notifyChange(META_CHANGED);
         }
     }
 
@@ -346,17 +353,13 @@ public class MediaService extends Service {
 //                mUrlHandler.postDelayed(mRequestUrl, 70);
             } else {
                 while (true) {
-                    MyLog.i(TAG, "------执行了else后面");
                     if (mCursor != null && openFile(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI + "/"
                             + mCursor.getLong(IDCOLIDX))) {
-                        MyLog.i(TAG, "------break出去了");
                         break;
                     }
                     closeCursor();
-                    MyLog.i(TAG, "------关闭了Cursor");
                     if (mOpenFailedCounter++ < 10 && mPlaylist.size() > 1) {
-//                        final int pos = getNextPosition(false);
-                        final int pos = 0;
+                        final int pos = getNextPosition(false);
                         if (pos < 0) {
                             shutdown = true;
                             break;
@@ -365,25 +368,13 @@ public class MediaService extends Service {
 //                        stop(false);
                         mPlayPos = pos;
                         updateCursor(mPlaylist.get(mPlayPos).mId);
-                        MyLog.i(TAG, "------执行了updateCursor");
                     } else {
                         mOpenFailedCounter = 0;
                         MyLog.w(TAG, "Failed to open file for playback");
-                        shutdown = true;
                         break;
                     }
                 }
             }
-
-//            if (shutdown) {
-//                scheduleDelayedShutdown();
-//                if (mIsSupposedToBePlaying) {
-//                    mIsSupposedToBePlaying = false;
-//                    notifyChange(PLAYSTATE_CHANGED);
-//                }
-//            } else if (openNext) {
-//                setNextTrack();
-//            }
         }
     }
 
@@ -391,10 +382,41 @@ public class MediaService extends Service {
         Intent intent = null;
         if (what.equals(META_CHANGED)) {
             intent = new Intent(META_CHANGED);
-//            sendBroadcast(intent);
             sendStickyBroadcast(intent);
         }
+        if (what.equals(MUSIC_CHANGED)) {
+            play(true);
+        }
 
+    }
+
+    private int getNextPosition(final boolean force) {
+        if (mPlaylist == null || mPlaylist.isEmpty()) {
+            return -1;
+        } else {
+            return mPlayPos + 1;
+        }
+    }
+
+    private void setNextTrack() {
+        setNextTrack(getNextPosition(false));
+    }
+
+    private void setNextTrack(int position) {
+        mNextPlayPos = position;
+        if (mNextPlayPos >= 0 && mPlaylist != null && mNextPlayPos < mPlaylist.size()) {
+            final long id = mPlaylist.get(mNextPlayPos).mId;
+            if (mPlaylistInfo.get(id) != null) {
+                if (mPlaylistInfo.get(id).islocal) {
+                    mPlayer.setNextDataSource(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI + "/" + id);
+                } else {
+                    mPlayer.setNextDataSource(null);
+                }
+
+            }
+        } else {
+            mPlayer.setNextDataSource(null);
+        }
     }
 
 
@@ -421,7 +443,6 @@ public class MediaService extends Service {
                     String mpUri = getValueForDownloadedFile(this, uri, "mediaprovider_uri");
                     if (!TextUtils.isEmpty(mpUri)) {
                         if (openFile(mpUri)) {
-//                            notifyChange(META_CHANGED);
                             return true;
                         } else {
                             return false;
@@ -437,14 +458,9 @@ public class MediaService extends Service {
                 }
                 try {
                     if (mCursor != null && shouldAddToPlaylist) {
-//                        mPlaylist.clear();
-//                        mPlaylist.add(new MusicTrack(mCursor.getLong(IDCOLIDX), -1));
-//                        notifyChange(QUEUE_CHANGED);
                         mPlayPos = 0;
-//                        mHistory.clear();
                     }
                 } catch (final UnsupportedOperationException ex) {
-                    // Ignore
                 }
             }
 
@@ -454,14 +470,6 @@ public class MediaService extends Service {
                 mOpenFailedCounter = 0;
                 return true;
             }
-//
-//            String trackName = getTrackName();
-//            if (TextUtils.isEmpty(trackName)) {
-//                trackName = path;
-//            }
-//            sendErrorMessage(trackName);
-//
-//            stop(true);
             return false;
         }
     }
@@ -481,6 +489,12 @@ public class MediaService extends Service {
                 return null;
             }
             return mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ARTIST));
+        }
+    }
+
+    public void setAndRecordPlayPos(int nextPos) {
+        synchronized (this) {
+            mPlayPos = nextPos;
         }
     }
 
@@ -579,7 +593,7 @@ public class MediaService extends Service {
         }
 
         public boolean ismIsTrackPrepared() {
-            return mIsTrackPrepared;
+            return mIsSongPrepared;
         }
 
         public boolean ismIsTrackNet() {
@@ -603,16 +617,40 @@ public class MediaService extends Service {
             mCurrentMediaPlayer.setWakeMode(mService.get(), PowerManager.PARTIAL_WAKE_LOCK);
         }
 
+        public void setHandler(final Handler handler) {
+            mHandler = handler;
+        }
+
         public void setDataSource(final String path) {
 
             mIsInitialized = setDataSourceImpl(mCurrentMediaPlayer, path);
             if (mIsInitialized) {
-//                    setNextDataSource(null);
+//                setNextDataSource(null);
             }
         }
 
+        public void setNextDataSource(final String path) {
+            try {
+                mCurrentMediaPlayer.setNextMediaPlayer(null);
+            } catch (IllegalArgumentException e) {
+                Log.i(TAG, "Next media player is current one, continuing");
+            } catch (IllegalStateException e) {
+                Log.e(TAG, "Media player not initialized!");
+                return;
+            }
+            if (mNextMediaPlayer != null) {
+                mNextMediaPlayer.release();
+                mNextMediaPlayer = null;
+            }
+            if (path == null) {
+                return;
+            }
+            mNextMediaPlayer = new MediaPlayer();
+            mNextMediaPlayer.setWakeMode(mService.get(), PowerManager.PARTIAL_WAKE_LOCK);
+            mIsInitialized = setNextDataSourceImpl(mNextMediaPlayer, path);
+        }
 
-        boolean mIsTrackPrepared = false;
+        boolean mIsSongPrepared = false;
         boolean mIsTrackNet = false;
         boolean mIsNextTrackPrepared = false;
         boolean mIsNextInitialized = false;
@@ -624,6 +662,7 @@ public class MediaService extends Service {
          * @return
          */
         public boolean setDataSourceImpl(MediaPlayer player, String path) {
+            MyLog.i(TAG, path);
             try {
                 player.reset();
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -634,7 +673,6 @@ public class MediaService extends Service {
                     player.setOnCompletionListener(this);
                 } else {
                     player.setDataSource(path);
-//                        player.setOnPreparedListener(preparedListener);
                     player.prepareAsync();
                     mIsTrackNet = true;
                 }
@@ -642,26 +680,57 @@ public class MediaService extends Service {
                 e.printStackTrace();
             }
             player.setOnErrorListener(this);
-//                player.setOnBufferingUpdateListener(bufferingUpdateListener);
+            return true;
+        }
+
+        private boolean setNextDataSourceImpl(final MediaPlayer player, final String path) {
+            mIsNextTrackPrepared = false;
+            try {
+                player.reset();
+                player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                if (path.startsWith("content://")) {
+                    player.setDataSource(MyApplication.mContext, Uri.parse(path));
+                    player.prepare();
+                } else {
+                    player.setDataSource(path);
+                    player.prepare();
+                    mIsNextTrackPrepared = false;
+                }
+
+            } catch (final IOException todo) {
+                return false;
+            } catch (final IllegalArgumentException todo) {
+                return false;
+            }
+            player.setOnCompletionListener(this);
+            player.setOnErrorListener(this);
             return true;
         }
 
         public void start() {
             if (!mIsTrackNet) {
-//                mService.get().sendUpdateBuffer(100);
                 sencondaryPosition = 100;
                 mCurrentMediaPlayer.start();
             } else {
-//                sencondaryPosition = 0;
-//                mService.get().loading(true);
-//                handler.postDelayed(startMediaPlayerIfPrepared, 50);
                 mCurrentMediaPlayer.start();
             }
-//            mService.get().notifyChange(MUSIC_CHANGED);
         }
+
 
         @Override
         public void onCompletion(MediaPlayer mp) {
+
+            if (mp == mCurrentMediaPlayer && mNextMediaPlayer != null) {
+                mCurrentMediaPlayer.release();
+                mCurrentMediaPlayer = mNextMediaPlayer;
+                mNextMediaPath = null;
+                mNextMediaPlayer = null;
+                mHandler.sendEmptyMessage(TRACK_WENT_TO_NEXT);
+            } else {
+//                mService.get().mWakeLock.acquire(30000);
+                mHandler.sendEmptyMessage(TRACK_ENDED);
+                mHandler.sendEmptyMessage(RELEASE_WAKELOCK);
+            }
 
         }
 
@@ -674,7 +743,6 @@ public class MediaService extends Service {
     private static final class MusicPlayerHandler extends Handler {
 
         private final WeakReference<MediaService> mService;
-        private float mCurrentVolume = 1.0f;
 
         private MusicPlayerHandler(final MediaService service, final Looper looper) {
             super(looper);
@@ -687,7 +755,20 @@ public class MediaService extends Service {
             if (service == null) {
                 return;
             }
-            super.handleMessage(msg);
+            synchronized (service) {
+                switch (msg.what) {
+                    case TRACK_WENT_TO_NEXT:
+                        service.setAndRecordPlayPos(service.mNextPlayPos);
+                        service.setNextTrack();
+                        if (service.mCursor != null) {
+                            service.mCursor.close();
+                            service.mCursor = null;
+                        }
+                        service.updateCursor(service.mPlaylist.get(service.mPlayPos).mId);
+                        service.notifyChange(MUSIC_CHANGED);
+                        break;
+                }
+            }
         }
     }
 }

@@ -17,9 +17,6 @@ public class MusicTrack implements Parcelable {
 
     public long mId;
     public int mSourcePosition;
-//    public String mTitle;
-//    public String mAlbum;
-//    public String mArtist;
 
 
     public MusicTrack(long id, int sourcePosition) {

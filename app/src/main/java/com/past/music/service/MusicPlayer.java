@@ -100,30 +100,10 @@ public class MusicPlayer {
             return;
         }
         try {
-//            if (forceShuffle) {
-//                mService.setShuffleMode(MediaService.SHUFFLE_NORMAL);
-//            }
-//            final long currentId = mService.getAudioId();
-            long playId = list[position];
-//            Log.e("currentId", currentId + "");
-//            final int currentQueuePosition = getQueuePosition();
-//            if (position != -1) {
-////                final long[] playlist = getQueue();
-//                if (Arrays.equals(list, playlist)) {
-//                    if (currentQueuePosition == position && currentId == list[position]) {
-//                        mService.play();
-//                        return;
-//                    } else {
-//                        mService.setQueuePosition(position);
-//                        return;
-//                    }
-//
-//                }
-//            }
             if (position < 0) {
                 position = 0;
             }
-            mService.open(infos, list, forceShuffle ? -1 : position);
+            mService.open(infos, list, position);
             mService.play();
         } catch (final RemoteException ignored) {
         } catch (IllegalStateException e) {

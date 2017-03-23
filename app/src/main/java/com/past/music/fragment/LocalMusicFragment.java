@@ -52,6 +52,7 @@ public class LocalMusicFragment extends BaseFragment {
     }
 
     public LocalMusicFragment() {
+       
     }
 
 
@@ -118,7 +119,7 @@ public class LocalMusicFragment extends BaseFragment {
             if (holder instanceof CommonItemViewHolder) {
 
             } else {
-                ((ListItemViewHolder) holder).onBindData(mList.get(position - 1));
+                ((ListItemViewHolder) holder).onBindData(mList.get(position - 1), position);
             }
         }
 
@@ -188,10 +189,15 @@ public class LocalMusicFragment extends BaseFragment {
 
             @Override
             public void onClick(View v) {
-
+                if (playMusic != null)
+                    handler.removeCallbacks(playMusic);
+                if (getAdapterPosition() > -1) {
+                    playMusic = new PlayMusic(getAdapterPosition() - 1);
+                    handler.postDelayed(playMusic, 70);
+                }
             }
 
-            public void onBindData(MusicEntity musicEntity) {
+            public void onBindData(MusicEntity musicEntity, int position) {
                 mMusicName.setText(musicEntity.getMusicName());
                 mMusicInfo.setText(musicEntity.getArtist());
             }
