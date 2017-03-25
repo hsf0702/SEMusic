@@ -210,6 +210,9 @@ public class LocalMusicFragment extends BaseFragment {
                 this.position = position;
             }
 
+            /**
+             * 运行在主线程
+             */
             @Override
             public void run() {
                 long[] list = new long[mList.size()];

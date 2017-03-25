@@ -405,6 +405,11 @@ public class MediaService extends Service {
         setNextTrack(getNextPosition(false));
     }
 
+    /**
+     * 设置下一首将要播放的音乐的信息
+     *
+     * @param position
+     */
     private void setNextTrack(int position) {
         mNextPlayPos = position;
         if (mNextPlayPos >= 0 && mPlaylist != null && mNextPlayPos < mPlaylist.size()) {
@@ -492,6 +497,12 @@ public class MediaService extends Service {
                 return null;
             }
             return mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ARTIST));
+        }
+    }
+
+    public HashMap<Long, MusicEntity> getPlaylistInfo() {
+        synchronized (this) {
+            return mPlaylistInfo;
         }
     }
 
@@ -596,6 +607,11 @@ public class MediaService extends Service {
         @Override
         public String getPath() throws RemoteException {
             return null;
+        }
+
+        @Override
+        public Map getPlaylistInfo() throws RemoteException {
+            return mService.get().getPlaylistInfo();
         }
     }
 

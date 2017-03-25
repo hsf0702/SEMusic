@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.past.music.activity.PlayMusicActivity;
+import com.past.music.dialog.MusicListDialog;
 import com.past.music.log.MyLog;
 import com.past.music.pastmusic.R;
 import com.past.music.service.MusicPlayer;
@@ -53,6 +54,8 @@ public class QuickControlsFragment extends BaseFragment {
     @BindView(R.id.play_next)
     ImageView mPlayNext;
 
+    private MusicListDialog musicListDialog;
+
     @OnClick(R.id.rl_layout)
     void rlLayout() {
         Intent intent = new Intent(getActivity(), PlayMusicActivity.class);
@@ -62,6 +65,7 @@ public class QuickControlsFragment extends BaseFragment {
 
     @OnClick(R.id.play_list)
     void playList() {
+        musicListDialog.show();
     }
 
     @OnClick(R.id.control)
@@ -90,6 +94,7 @@ public class QuickControlsFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.view_quick_controls, container, false);
         ButterKnife.bind(this, rootView);
+        musicListDialog = new MusicListDialog(getContext());
         return rootView;
     }
 

@@ -18,6 +18,7 @@
     <color name="select_color">#f76918</color>
     <color name="medium_sea_green">#31C27C</color>
     <color name="background_material_light_1">#fafafa</color>
+    <color name="content_bg">#F5F5F5</color>
 
     <!--灰色-->
     <color name="background_gray">#F7F7F7</color>

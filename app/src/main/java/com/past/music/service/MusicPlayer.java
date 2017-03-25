@@ -140,12 +140,12 @@ public class MusicPlayer {
      *
      * @return
      */
-    public static final String getTrackName() {
-        if (mService != null) {
-            try {
+    public static String getTrackName() {
+        try {
+            if (mService != null) {
                 return mService.getTrackName();
-            } catch (final RemoteException ignored) {
             }
+        } catch (final RemoteException ignored) {
         }
         return null;
     }
@@ -155,13 +155,23 @@ public class MusicPlayer {
      *
      * @return
      */
-    public static final String getArtistName() {
-        if (mService != null) {
-            try {
+    public static String getArtistName() {
+        try {
+            if (mService != null) {
                 return mService.getArtistName();
-            } catch (RemoteException e) {
-                e.printStackTrace();
             }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static HashMap<Long, MusicEntity> getPlayinfos() {
+        try {
+            if (mService != null) {
+                return (HashMap<Long, MusicEntity>) mService.getPlaylistInfo();
+            }
+        } catch (final RemoteException ignored) {
         }
         return null;
     }
