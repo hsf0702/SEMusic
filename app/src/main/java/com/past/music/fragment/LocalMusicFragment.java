@@ -52,7 +52,7 @@ public class LocalMusicFragment extends BaseFragment {
     }
 
     public LocalMusicFragment() {
-       
+
     }
 
 

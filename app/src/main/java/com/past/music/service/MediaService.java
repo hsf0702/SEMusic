@@ -95,10 +95,6 @@ public class MediaService extends Service {
 
     private int mMediaMountedCount = 0;
 
-//    private int mShuffleMode = SHUFFLE_NONE;
-//
-//    private int mRepeatMode = REPEAT_ALL;
-
     private int mServiceStartId = -1;
 
     private final IBinder mBinder = new ServiceStub(this);
@@ -159,11 +155,18 @@ public class MediaService extends Service {
 //        setIsSupposedToBePlaying(true, true);
 //        cancelShutdown();
 //        updateNotification();
+        isPlaying = true;
         notifyChange(META_CHANGED);
         MyLog.i(TAG, "play");
     }
 
     public void pause() {
+        synchronized (this) {
+            mPlayerHandler.removeMessages(FADEUP);
+            mPlayer.pause();
+            isPlaying = false;
+            notifyChange(META_CHANGED);
+        }
     }
 
     public void stop() {
@@ -492,9 +495,32 @@ public class MediaService extends Service {
         }
     }
 
+    /**
+     * 设置当前播放的位置mPlayPos
+     *
+     * @param nextPos
+     */
     public void setAndRecordPlayPos(int nextPos) {
         synchronized (this) {
             mPlayPos = nextPos;
+        }
+    }
+
+    public void nextPlay() {
+        MyLog.i(TAG, "nextPlay");
+        synchronized (this) {
+            int pos = mNextPlayPos;
+            if (pos < 0) {
+                pos = getNextPosition(true);
+            }
+            if (pos < 0) {
+                isPlaying = false;
+                return;
+            }
+            setAndRecordPlayPos(pos);
+            openCurrentAndNextPlay(true);
+            play(true);
+            notifyChange(META_CHANGED);
         }
     }
 
@@ -525,6 +551,11 @@ public class MediaService extends Service {
         @Override
         public void play() throws RemoteException {
             mService.get().play(true);
+        }
+
+        @Override
+        public void nextPlay() throws RemoteException {
+            mService.get().nextPlay();
         }
 
         @Override
@@ -716,10 +747,15 @@ public class MediaService extends Service {
             }
         }
 
+        public void pause() {
+//            handler.removeCallbacks(startMediaPlayerIfPrepared);
+            MyLog.i(TAG, "执行了pause");
+            mCurrentMediaPlayer.pause();
+        }
+
 
         @Override
         public void onCompletion(MediaPlayer mp) {
-
             if (mp == mCurrentMediaPlayer && mNextMediaPlayer != null) {
                 mCurrentMediaPlayer.release();
                 mCurrentMediaPlayer = mNextMediaPlayer;
@@ -731,7 +767,6 @@ public class MediaService extends Service {
                 mHandler.sendEmptyMessage(TRACK_ENDED);
                 mHandler.sendEmptyMessage(RELEASE_WAKELOCK);
             }
-
         }
 
         @Override

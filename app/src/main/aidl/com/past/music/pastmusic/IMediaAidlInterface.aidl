@@ -15,6 +15,7 @@ interface IMediaAidlInterface {
     void stop();
     void pause();
     void play();
+    void nextPlay();
     void openFile(String path);
     void open(in Map infos, in long [] list, int position);
     String getArtistName();

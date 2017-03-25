@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.past.music.activity.PlayMusicActivity;
@@ -63,17 +62,17 @@ public class QuickControlsFragment extends BaseFragment {
 
     @OnClick(R.id.play_list)
     void playList() {
-        Toast.makeText(getContext(), "play_list", Toast.LENGTH_SHORT).show();
     }
 
     @OnClick(R.id.control)
     void control() {
-        Toast.makeText(getContext(), "control", Toast.LENGTH_SHORT).show();
+        MusicPlayer.playOrPause();
+        MyLog.i(TAG, "control");
     }
 
     @OnClick(R.id.play_next)
     void playNext() {
-        Toast.makeText(getContext(), "play_next", Toast.LENGTH_SHORT).show();
+        MusicPlayer.nextPlay();
     }
 
 
@@ -110,6 +109,11 @@ public class QuickControlsFragment extends BaseFragment {
 //        MyLog.i(TAG, MusicPlayer.getArtistName() + "111");
         mPlaybarInfo.setText(MusicPlayer.getTrackName());
         mPlaybarSinger.setText(MusicPlayer.getArtistName());
+        if (MusicPlayer.getIsPlaying()) {
+            mControl.setImageResource(R.drawable.playbar_btn_pause);
+        } else {
+            mControl.setImageResource(R.drawable.playbar_btn_play);
+        }
     }
 
     @Override

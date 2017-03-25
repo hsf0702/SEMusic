@@ -82,15 +82,27 @@ public class MusicPlayer {
      */
     public static void playOrPause() {
         try {
-//            if (mService != null) {
-//                if (mService.isPlaying()) {
-//                    mService.pause();
-//                } else {
-//                    mService.play();
-//                }
-//            }
-            mService.play();
+            if (mService != null) {
+                if (mService.isPlaying()) {
+                    mService.pause();
+                } else {
+                    mService.play();
+                }
+            }
         } catch (final Exception ignored) {
+        }
+    }
+
+    public static boolean getIsPlaying() {
+        try {
+            if (mService != null) {
+                return mService.isPlaying();
+            } else {
+                return false;
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
@@ -109,6 +121,18 @@ public class MusicPlayer {
         } catch (IllegalStateException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void nextPlay() {
+        try {
+            if (mService != null) {
+                MyLog.i(TAG, "nextPlay");
+                mService.nextPlay();
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
