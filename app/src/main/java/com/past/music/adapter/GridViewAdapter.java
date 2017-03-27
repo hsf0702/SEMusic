@@ -53,7 +53,8 @@ public class GridViewAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         IconView iconView = null;
         if (convertView == null) {
-            iconView = new IconView(mContext);
+            convertView = new IconView(mContext);
+            iconView = (IconView) convertView;
         } else {
             iconView = (IconView) convertView;
         }
@@ -67,6 +68,6 @@ public class GridViewAdapter extends BaseAdapter {
         }
         iconView.setmHotPic(mData.get(position).getAlbumpic_big());
         iconView.setmTvDes(mData.get(position).getSongname());
-        return iconView;
+        return convertView;
     }
 }

@@ -48,11 +48,7 @@ public class MineItemView extends RelativeLayout {
     }
 
     public MineItemView(Context context, AttributeSet attrs, int defStyleAttr) {
-        this(context, attrs, defStyleAttr, 0);
-    }
-
-    public MineItemView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
+        super(context, attrs, defStyleAttr);
         inial(context, attrs);
         initView();
     }

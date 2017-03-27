@@ -25,4 +25,6 @@ interface IMediaAidlInterface {
     String[] getAlbumPathtAll();
     String getPath();
     Map getPlaylistInfo();
+    long [] getQueue();
+    void setQueuePosition(int index);
 }

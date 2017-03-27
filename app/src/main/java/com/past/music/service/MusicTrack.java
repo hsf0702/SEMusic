@@ -14,8 +14,13 @@ import android.os.Parcelable;
  */
 public class MusicTrack implements Parcelable {
 
-
+    /**
+     * 音乐的ID
+     */
     public long mId;
+    /**
+     * 此首歌在播放列表中的位置
+     */
     public int mSourcePosition;
 
 

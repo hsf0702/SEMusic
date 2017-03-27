@@ -65,6 +65,10 @@ public class MediaService extends Service {
     private Context mContext = null;
     //传进来的歌单
     private HashMap<Long, MusicEntity> mPlaylistInfo = new HashMap<>();
+
+    /**
+     * 播放列表
+     */
     private ArrayList<MusicTrack> mPlaylist = new ArrayList<MusicTrack>(100);
 
 
@@ -121,6 +125,12 @@ public class MediaService extends Service {
         mPlayer.setHandler(mPlayerHandler);
     }
 
+
+    /**
+     * 播放歌曲
+     *
+     * @param createNewNextSong 是否准备下一首歌
+     */
     public void play(boolean createNewNextSong) {
         int status = mAudioManager.requestAudioFocus(mAudioFocusListener,
                 AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
@@ -160,6 +170,9 @@ public class MediaService extends Service {
         MyLog.i(TAG, "play");
     }
 
+    /**
+     * 歌曲暂停
+     */
     public void pause() {
         synchronized (this) {
             mPlayerHandler.removeMessages(FADEUP);
@@ -184,6 +197,12 @@ public class MediaService extends Service {
         }
     };
 
+    /**
+     * 为下载的音乐更新游标
+     *
+     * @param context
+     * @param uri
+     */
     private void updateCursorForDownloadedFile(Context context, Uri uri) {
         synchronized (this) {
             closeCursor();
@@ -221,10 +240,18 @@ public class MediaService extends Service {
         return null;
     }
 
+    /**
+     * 打开游标并指向第一个
+     *
+     * @param uri
+     * @param projection
+     * @param selection
+     * @param selectionArgs
+     * @return
+     */
     private Cursor openCursorAndGoToFirst(Uri uri, String[] projection,
                                           String selection, String[] selectionArgs) {
-        Cursor c = getContentResolver().query(uri, projection,
-                selection, selectionArgs, null);
+        Cursor c = getContentResolver().query(uri, projection, selection, selectionArgs, null);
         if (c == null) {
             return null;
         }
@@ -242,6 +269,11 @@ public class MediaService extends Service {
         }
     }
 
+    /**
+     * 根据Uri更新游标
+     *
+     * @param uri
+     */
     private void updateCursor(final Uri uri) {
         synchronized (this) {
             closeCursor();
@@ -249,6 +281,11 @@ public class MediaService extends Service {
         }
     }
 
+    /**
+     * 根据ID更新游标
+     *
+     * @param trackId
+     */
     private void updateCursor(final long trackId) {
         MusicEntity info = mPlaylistInfo.get(trackId);
         if (mPlaylistInfo.get(trackId) != null) {
@@ -305,6 +342,12 @@ public class MediaService extends Service {
         }
     }
 
+    /**
+     * 音乐加入播放列表
+     *
+     * @param list
+     * @param position
+     */
     private void addToPlayList(final long[] list, int position) {
         final int addlen = list.length;
         if (position < 0) {
@@ -325,6 +368,10 @@ public class MediaService extends Service {
         if (mPlaylist.size() == 0) {
             closeCursor();
         }
+    }
+
+    private void openCurrentAndNext() {
+        openCurrentAndMaybeNext(false, true);
     }
 
 
@@ -507,6 +554,36 @@ public class MediaService extends Service {
     }
 
     /**
+     * 获得播放音乐的队列
+     *
+     * @return
+     */
+    public long[] getQueue() {
+        synchronized (this) {
+            final int len = mPlaylist.size();
+            final long[] list = new long[len];
+            for (int i = 0; i < len; i++) {
+                list[i] = mPlaylist.get(i).mId;
+            }
+            return list;
+        }
+    }
+
+    /**
+     * 设置当前播放队列播放的歌曲
+     *
+     * @param index
+     */
+    public void setQueuePosition(int index) {
+        synchronized (this) {
+            mPlayPos = index;
+            openCurrentAndNext();
+            play(true);
+            notifyChange(META_CHANGED);
+        }
+    }
+
+    /**
      * 设置当前播放的位置mPlayPos
      *
      * @param nextPos
@@ -612,6 +689,16 @@ public class MediaService extends Service {
         @Override
         public Map getPlaylistInfo() throws RemoteException {
             return mService.get().getPlaylistInfo();
+        }
+
+        @Override
+        public long[] getQueue() throws RemoteException {
+            return mService.get().getQueue();
+        }
+
+        @Override
+        public void setQueuePosition(int index) throws RemoteException {
+            mService.get().setQueuePosition(index);
         }
     }
 

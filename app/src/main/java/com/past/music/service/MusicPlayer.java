@@ -106,6 +106,14 @@ public class MusicPlayer {
         }
     }
 
+    /**
+     * 播放所有音乐
+     *
+     * @param infos        ID到音乐实体的映射
+     * @param list         音乐ID的集合
+     * @param position     当前播放的音乐的位置
+     * @param forceShuffle
+     */
     public static synchronized void playAll(final HashMap<Long, MusicEntity> infos, final long[] list, int position, final boolean forceShuffle) {
         MyLog.i(TAG, "playAll");
         if (list == null || list.length == 0 || mService == null) {
@@ -123,6 +131,9 @@ public class MusicPlayer {
         }
     }
 
+    /**
+     * 播放下一首音乐
+     */
     public static void nextPlay() {
         try {
             if (mService != null) {
@@ -166,12 +177,33 @@ public class MusicPlayer {
         return null;
     }
 
+    /**
+     * 返回播放列表ID到音乐实体的映射
+     *
+     * @return
+     */
     public static HashMap<Long, MusicEntity> getPlayinfos() {
         try {
             if (mService != null) {
                 return (HashMap<Long, MusicEntity>) mService.getPlaylistInfo();
             }
         } catch (final RemoteException ignored) {
+        }
+        return null;
+    }
+
+    /**
+     * 返回播放列表的ID
+     *
+     * @return
+     */
+    public static long[] getQueue() {
+        try {
+            if (mService != null) {
+                return mService.getQueue();
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
         return null;
     }

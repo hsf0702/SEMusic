@@ -34,15 +34,10 @@ public class IconView extends RelativeLayout {
     }
 
     public IconView(Context context, AttributeSet attrs, int defStyleAttr) {
-        this(context, attrs, defStyleAttr, 0);
-    }
-
-    public IconView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
+        super(context, attrs, defStyleAttr);
         this.mContext = context;
         initView();
     }
-
 
     private void initView() {
         View.inflate(getContext(), R.layout.view_icon_view, this);
