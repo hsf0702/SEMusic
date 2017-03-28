@@ -208,6 +208,27 @@ public class MusicPlayer {
         return null;
     }
 
+    public static void setQueue(int index) {
+        try {
+            if (mService != null) {
+                mService.setQueuePosition(index);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static long getCurrentAudioId() {
+        try {
+            if (mService != null) {
+                return mService.getAudioId();
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
 
     public static final class ServiceConnect implements ServiceConnection {
 

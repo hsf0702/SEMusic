@@ -110,8 +110,6 @@ public class QuickControlsFragment extends BaseFragment {
     }
 
     public void updateFragment() {
-//        MyLog.i(TAG, MusicPlayer.getTrackName() + "111");
-//        MyLog.i(TAG, MusicPlayer.getArtistName() + "111");
         mPlaybarInfo.setText(MusicPlayer.getTrackName());
         mPlaybarSinger.setText(MusicPlayer.getArtistName());
         if (MusicPlayer.getIsPlaying()) {

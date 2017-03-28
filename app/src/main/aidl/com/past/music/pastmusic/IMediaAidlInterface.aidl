@@ -27,4 +27,5 @@ interface IMediaAidlInterface {
     Map getPlaylistInfo();
     long [] getQueue();
     void setQueuePosition(int index);
+    long getAudioId();
 }

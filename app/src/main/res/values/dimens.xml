@@ -16,4 +16,5 @@
     <dimen name="slidingmenu_offset">70dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="divider_1">0.1dp</dimen>
+    <dimen name="divider_5">0.5dp</dimen>
 </resources>

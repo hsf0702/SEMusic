@@ -183,6 +183,11 @@ public class MediaService extends Service {
     }
 
     public void stop() {
+        if (mPlayer.isInitialized()) {
+            mPlayer.stop();
+        }
+        mFileToPlay = null;
+        closeCursor();
     }
 
     public boolean isPlaying() {
@@ -440,6 +445,12 @@ public class MediaService extends Service {
 
     }
 
+    /**
+     * 获取下一首音乐的位置
+     *
+     * @param force
+     * @return
+     */
     private int getNextPosition(final boolean force) {
         if (mPlaylist == null || mPlaylist.isEmpty()) {
             return -1;
@@ -550,6 +561,12 @@ public class MediaService extends Service {
     public HashMap<Long, MusicEntity> getPlaylistInfo() {
         synchronized (this) {
             return mPlaylistInfo;
+        }
+    }
+
+    public long getAudioId() {
+        synchronized (this) {
+            return mPlaylist.get(mPlayPos).mId;
         }
     }
 
@@ -700,6 +717,11 @@ public class MediaService extends Service {
         public void setQueuePosition(int index) throws RemoteException {
             mService.get().setQueuePosition(index);
         }
+
+        @Override
+        public long getAudioId() throws RemoteException {
+            return mService.get().getAudioId();
+        }
     }
 
     private static final class MultiPlayer implements MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
@@ -726,10 +748,6 @@ public class MediaService extends Service {
             return mIsInitialized;
         }
 
-        public boolean ismIsTrackPrepared() {
-            return mIsSongPrepared;
-        }
-
         public boolean ismIsTrackNet() {
             return mIsTrackNet;
         }
@@ -753,6 +771,14 @@ public class MediaService extends Service {
 
         public void setHandler(final Handler handler) {
             mHandler = handler;
+        }
+
+        public boolean isInitialized() {
+            return mIsInitialized;
+        }
+
+        public boolean isTrackPrepared() {
+            return mIsTrackPrepared;
         }
 
         public void setDataSource(final String path) {
@@ -784,7 +810,7 @@ public class MediaService extends Service {
             mIsInitialized = setNextDataSourceImpl(mNextMediaPlayer, path);
         }
 
-        boolean mIsSongPrepared = false;
+        boolean mIsTrackPrepared = false;
         boolean mIsTrackNet = false;
         boolean mIsNextTrackPrepared = false;
         boolean mIsNextInitialized = false;
@@ -796,7 +822,8 @@ public class MediaService extends Service {
          * @return
          */
         public boolean setDataSourceImpl(MediaPlayer player, String path) {
-            MyLog.i(TAG, path);
+            mIsTrackNet = false;
+            mIsTrackPrepared = false;
             try {
                 player.reset();
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -804,6 +831,7 @@ public class MediaService extends Service {
                     player.setOnPreparedListener(null);
                     player.setDataSource(MyApplication.mContext, Uri.parse(path));
                     player.prepare();
+                    mIsTrackPrepared = true;
                     player.setOnCompletionListener(this);
                 } else {
                     player.setDataSource(path);
@@ -848,6 +876,14 @@ public class MediaService extends Service {
             } else {
                 mCurrentMediaPlayer.start();
             }
+        }
+
+        public void stop() {
+//            handler.removeCallbacks(setNextMediaPlayerIfPrepared);
+//            handler.removeCallbacks(startMediaPlayerIfPrepared);
+            mCurrentMediaPlayer.reset();
+            mIsInitialized = false;
+            mIsTrackPrepared = false;
         }
 
         public void pause() {

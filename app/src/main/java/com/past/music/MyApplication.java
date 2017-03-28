@@ -1,12 +1,9 @@
-package com.past.music;/**
- * Created by gaojin on 2017/1/26.
- */
+package com.past.music;
 
 import android.app.Application;
 import android.content.Context;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.squareup.leakcanary.LeakCanary;
 
 /**
  * =======================================================
@@ -25,6 +22,6 @@ public class MyApplication extends Application {
         super.onCreate();
         mContext = this;
         Fresco.initialize(this);
-        LeakCanary.install(this);
+//        LeakCanary.install(this);
     }
 }

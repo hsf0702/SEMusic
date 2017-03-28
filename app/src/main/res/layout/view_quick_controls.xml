@@ -6,6 +6,11 @@
     android:layout_height="50dp"
     android:background="@color/transparent_half">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/split_color" />
+
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/playbar_img"
         android:layout_width="43dp"

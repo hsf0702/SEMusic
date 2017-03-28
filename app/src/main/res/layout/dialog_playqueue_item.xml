@@ -16,6 +16,7 @@
         android:textSize="15sp" />
 
     <View
+        android:id="@+id/view_line"
         android:layout_width="8dp"
         android:layout_height="1dp"
         android:layout_gravity="center"
@@ -31,5 +32,16 @@
         android:text="测试"
         android:textColor="@color/text_gray"
         android:textSize="13sp" />
+
+    <ImageView
+        android:id="@+id/img_dance"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/music_dance"
+        android:visibility="gone" />
 
 </LinearLayout>

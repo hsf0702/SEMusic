@@ -55,7 +55,8 @@
         <activity android:name="com.past.music.activity.DownloadActivity" />
         <activity android:name="com.past.music.activity.RecentMusicActivity" />
         <activity android:name="com.past.music.activity.CollectedActivity" />
-        <activity android:name="com.past.music.activity.MySingersActivity"></activity>
+        <activity android:name="com.past.music.activity.MySingersActivity" />
+        <activity android:name="com.past.music.activity.PlayListInfoActivity"></activity>
     </application>
 
 </manifest>

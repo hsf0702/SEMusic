@@ -3,6 +3,7 @@ package com.past.music.dialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,12 +15,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.past.music.entity.MusicEntity;
 import com.past.music.pastmusic.R;
 import com.past.music.service.MusicPlayer;
+import com.past.music.utils.HandlerUtil;
 import com.past.music.widget.DividerItemDecoration;
 
 import java.util.ArrayList;
@@ -40,6 +43,9 @@ public class MusicListDialog extends AlertDialog {
     private ArrayList<MusicEntity> playlist = new ArrayList<>();
     private PlayListAdapter mAdapter = null;
     private RecyclerView.ItemDecoration itemDecoration;
+    private Handler mHandler;
+    private int currentlyPlayingPosition = 0;
+    private MusicEntity musicEntity = null;
 
     @BindView(R.id.recycle_view)
     RecyclerView mRecyclerView;
@@ -69,6 +75,7 @@ public class MusicListDialog extends AlertDialog {
         window.setGravity(Gravity.BOTTOM);
         window.setWindowAnimations(R.style.bottom_dialog_in_style);
         ButterKnife.bind(this);
+        mHandler = HandlerUtil.getInstance(mContext);
         itemDecoration = new DividerItemDecoration(mContext.getResources(), R.color.text_gray, R.dimen.divider_1, DividerItemDecoration.VERTICAL_LIST);
         mAdapter = new PlayListAdapter();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
@@ -123,40 +130,81 @@ public class MusicListDialog extends AlertDialog {
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            ((ItemViewHolder) holder).onBindData(playlist.get(position), position);
+            musicEntity = playlist.get(position);
+            if (MusicPlayer.getCurrentAudioId() == musicEntity.getSongId()) {
+                currentlyPlayingPosition = position;
+                ((ItemViewHolder) holder).onBindData(playlist.get(position), position, true);
+            } else {
+                ((ItemViewHolder) holder).onBindData(playlist.get(position), position, false);
+            }
+
         }
 
         @Override
         public int getItemCount() {
-            return playlist.size();
-        }
-    }
-
-    class ItemViewHolder extends RecyclerView.ViewHolder {
-
-        @BindView(R.id.music_name)
-        TextView mMusicName;
-
-        @BindView(R.id.music_singer)
-        TextView mMusicSinger;
-
-        @BindView(R.id.recycle_item)
-        LinearLayout mRecycleItem;
-
-        public ItemViewHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
+            return playlist == null ? 0 : playlist.size();
         }
 
-        public void onBindData(MusicEntity musicEntity, int position) {
-            mMusicName.setText(musicEntity.getMusicName());
-            mMusicSinger.setText(musicEntity.getArtist());
-            mRecycleItem.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+            @BindView(R.id.music_name)
+            TextView mMusicName;
+
+            @BindView(R.id.music_singer)
+            TextView mMusicSinger;
+
+            @BindView(R.id.view_line)
+            View viewLine;
+
+            @BindView(R.id.img_dance)
+            ImageView imageView;
+
+            @BindView(R.id.recycle_item)
+            LinearLayout mRecycleItem;
+
+            public ItemViewHolder(View itemView) {
+                super(itemView);
+                ButterKnife.bind(this, itemView);
+                itemView.setOnClickListener(this);
+            }
+
+            public void onBindData(MusicEntity musicEntity, int position, boolean isPlaying) {
+                if (isPlaying) {
+                    mMusicName.setTextColor(mContext.getResources().getColor(R.color.medium_sea_green));
+                    mMusicSinger.setTextColor(mContext.getResources().getColor(R.color.medium_sea_green));
+                    viewLine.setBackgroundResource(R.color.medium_sea_green);
+                    mMusicName.setText(musicEntity.getMusicName());
+                    mMusicSinger.setText(musicEntity.getArtist());
+                    imageView.setVisibility(View.VISIBLE);
+                } else {
+                    mMusicName.setTextColor(mContext.getResources().getColor(R.color.white));
+                    mMusicSinger.setTextColor(mContext.getResources().getColor(R.color.text_gray));
+                    viewLine.setBackgroundResource(R.color.text_gray);
+                    mMusicName.setText(musicEntity.getMusicName());
+                    mMusicSinger.setText(musicEntity.getArtist());
+                    imageView.setVisibility(View.GONE);
                 }
-            });
+
+            }
+
+            @Override
+            public void onClick(View v) {
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        final int position = getAdapterPosition();
+                        if (position == -1) {
+                            return;
+                        } else {
+                            long[] ids = new long[1];
+                            ids[0] = playlist.get(position).songId;
+                            MusicPlayer.setQueue(position);
+                            notifyItemChanged(currentlyPlayingPosition);
+                            notifyItemChanged(position);
+                        }
+                    }
+                }, 70);
+            }
         }
     }
 }

@@ -1,12 +1,15 @@
 package com.past.music.activity;
 
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.jaeger.library.StatusBarUtil;
 import com.past.music.Config.BaseConfig;
 import com.past.music.pastmusic.R;
+
+import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * =======================================================
@@ -19,24 +22,29 @@ import com.past.music.pastmusic.R;
 
 public abstract class ToolBarActivity extends BaseActivity {
 
-    protected Toolbar mToolbar;
+    @BindView(R.id.title)
+    protected TextView mTitle;
+
+    @BindView(R.id.back)
+    protected ImageView mBack;
+
+    @OnClick(R.id.back)
+    void back() {
+        finish();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
-        mToolbar = (Toolbar) findViewById(R.id.base_toolbar);
-        setSupportActionBar(mToolbar);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
     }
 
     protected abstract int getLayoutId();
 
+    @Override
+    public void setTitle(CharSequence title) {
+        mTitle.setText(title);
+    }
 
     @Override
     protected void setStatusBar() {

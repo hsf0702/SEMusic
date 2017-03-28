@@ -5,15 +5,16 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.jaeger.library.StatusBarUtil;
 import com.past.music.Config.BaseConfig;
 import com.past.music.fragment.adapter.MainFragmentAdapter;
 import com.past.music.pastmusic.R;
+import com.past.music.utils.SysUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -23,9 +24,6 @@ public class MainActivity extends BaseActivity {
     private static final String TAG = "MainActivity";
     //权限申请标志码
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 0x01;
-
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
 
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
@@ -42,6 +40,10 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.img_end)
     ImageView mImgEnd;
 
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
+
     @OnClick(R.id.img_start)
     void openDrawer() {
         mDrawerLayout.openDrawer(Gravity.LEFT);
@@ -49,28 +51,20 @@ public class MainActivity extends BaseActivity {
 
     private MainFragmentAdapter mAdapter = null;
 
-    private ActionBar ab;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         mTabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
         FragmentManager fm = getSupportFragmentManager();
         mAdapter = new MainFragmentAdapter(fm);
         mViewPager.setAdapter(mAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
+        int statusBarHeight = SysUtils.getStatusBarHeight(this);
 
-//        ViewTreeObserver vto = view.getViewTreeObserver();
-//        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//            @Override
-//            public void onGlobalLayout() {
-//                view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-//                view.getHeight();
-//                view.getWidth();
-//            }
-//        });
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) toolbar.getLayoutParams();
+        layoutParams.height += statusBarHeight;
+        toolbar.setLayoutParams(layoutParams);
     }
 
     @Override
