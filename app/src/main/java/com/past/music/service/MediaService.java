@@ -15,6 +15,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.PowerManager;
 import android.os.RemoteException;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
@@ -116,6 +117,7 @@ public class MediaService extends Service {
     public void onCreate() {
         super.onCreate();
         MyLog.i(TAG, "onCreate");
+        SystemClock.sleep(6000);
         mContext = this;
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mHandlerThread = new HandlerThread("MusicPlayerHandler", android.os.Process.THREAD_PRIORITY_BACKGROUND);
@@ -125,6 +127,10 @@ public class MediaService extends Service {
         mPlayer.setHandler(mPlayerHandler);
     }
 
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return super.onStartCommand(intent, flags, startId);
+    }
 
     /**
      * 播放歌曲

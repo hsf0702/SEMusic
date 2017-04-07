@@ -44,6 +44,7 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
         ButterKnife.bind(this);
+        //每次新建一个activity都会连接一次，然后把上下文和Sc保存在一个WeakHashMap中
         mToken = MusicPlayer.bindToService(this, this);
         setStatusBar();
         mPlaybackStatus = new PlaybackStatus(this);

@@ -244,6 +244,7 @@ public class MusicPlayer {
         public void onServiceConnected(ComponentName name, IBinder service) {
             mService = IMediaAidlInterface.Stub.asInterface(service);
             if (mCallback != null) {
+                //调用baseActivity的回调方法
                 mCallback.onServiceConnected(name, service);
             }
         }
@@ -251,6 +252,7 @@ public class MusicPlayer {
         @Override
         public void onServiceDisconnected(ComponentName name) {
             if (mCallback != null) {
+                //调用baseActivity的回调方法
                 mCallback.onServiceDisconnected(name);
             }
             mService = null;

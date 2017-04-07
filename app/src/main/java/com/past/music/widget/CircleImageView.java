@@ -1,6 +1,4 @@
-package com.past.music.widget;/**
- * Created by gaojin on 2017/1/26.
- */
+package com.past.music.widget;
 
 import android.content.Context;
 import android.graphics.Bitmap;
