@@ -70,7 +70,7 @@ public class MediaService extends Service {
     /**
      * 播放列表
      */
-    private ArrayList<MusicTrack> mPlaylist = new ArrayList<MusicTrack>(100);
+    private ArrayList<MusicTrack> mPlaylist = new ArrayList<>(100);
 
 
     /**
@@ -83,6 +83,7 @@ public class MediaService extends Service {
     private MultiPlayer mPlayer;
     private String mFileToPlay;
     private Cursor mCursor;
+    private boolean mServiceInUse = false;
 
     private int mCardId;
 
@@ -110,6 +111,8 @@ public class MediaService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         MyLog.i(TAG, "onBind");
+        cancelShutdown();
+        mServiceInUse = true;
         return mBinder;
     }
 
@@ -426,7 +429,7 @@ public class MediaService extends Service {
                             break;
                         }
                         mPlayPos = pos;
-//                        stop(false);
+                        stop();
                         mPlayPos = pos;
                         updateCursor(mPlaylist.get(mPlayPos).mId);
                     } else {
@@ -542,6 +545,7 @@ public class MediaService extends Service {
                 mOpenFailedCounter = 0;
                 return true;
             }
+            stop();
             return false;
         }
     }
@@ -633,6 +637,13 @@ public class MediaService extends Service {
             play(true);
             notifyChange(META_CHANGED);
         }
+    }
+
+    private void cancelShutdown() {
+//        if (mShutdownScheduled) {
+//            mAlarmManager.cancel(mShutdownIntent);
+//            mShutdownScheduled = false;
+//        }
     }
 
 

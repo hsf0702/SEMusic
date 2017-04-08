@@ -177,6 +177,7 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
         super.onDestroy();
         unbindService();
         mMusicListener.clear();
+        unregisterReceiver(mPlaybackStatus);
     }
 
     public void unbindService() {

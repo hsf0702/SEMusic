@@ -10,8 +10,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.past.music.activity.PlayListInfoActivity;
 import com.past.music.entity.AlbumEntity;
 import com.past.music.pastmusic.R;
+import com.past.music.utils.MConstants;
 import com.past.music.utils.MusicUtils;
 
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class LocalAlbumFragment extends BaseFragment {
 
@@ -99,6 +102,12 @@ public class LocalAlbumFragment extends BaseFragment {
 
         @BindView(R.id.singer_list_info)
         TextView mInfo;
+
+        @OnClick(R.id.rl_singer_item)
+        void click() {
+            PlayListInfoActivity.startActivity(getContext(), list.get(getAdapterPosition()).album_name
+                    , String.valueOf(list.get(getAdapterPosition()).album_id), MConstants.START_FROM_ALBUM);
+        }
 
         public SingerItemViewHolder(View itemView) {
             super(itemView);

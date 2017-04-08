@@ -120,7 +120,6 @@ public class MusicUtils implements MConstants {
         // 查询语句：检索出.mp3为后缀名，时长大于1分钟，文件大小大于1MB的媒体文件
         select.append(" and " + MediaStore.Audio.Media.SIZE + " > " + FILTER_SIZE);
         select.append(" and " + MediaStore.Audio.Media.DURATION + " > " + FILTER_DURATION);
-
         String selectionStatement = "is_music=1 AND title != ''";
         final String songSortOrder = SharePreferencesUtils.getInstance(context).getSongSortOrder();
 
@@ -128,6 +127,14 @@ public class MusicUtils implements MConstants {
             case START_FROM_LOCAL:
                 ArrayList<MusicEntity> list3 = getMusicListCursor(cr.query(uri, info_music, select.toString(), null, songSortOrder));
                 return list3;
+            case START_FROM_ARTIST:
+                select.append(" and " + MediaStore.Audio.Media.ARTIST_ID + " = " + id);
+                return getMusicListCursor(cr.query(uri, info_music, select.toString(), null,
+                        SharePreferencesUtils.getInstance(context).getArtistSortOrder()));
+            case START_FROM_ALBUM:
+                select.append(" and " + MediaStore.Audio.Media.ALBUM_ID + " = " + id);
+                return getMusicListCursor(cr.query(uri, info_music, select.toString(), null,
+                        SharePreferencesUtils.getInstance(context).getAlbumSortOrder()));
             default:
                 return null;
         }
