@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.past.music.entity.FolderEntity;
 import com.past.music.pastmusic.R;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by gaojin on 2017/4/7.
@@ -78,7 +80,7 @@ public class FolderFragment extends BaseFragment {
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
+            ((FolderViewHolder) holder).onBind(list.get(position));
         }
 
         @Override
@@ -89,12 +91,25 @@ public class FolderFragment extends BaseFragment {
 
     class FolderViewHolder extends RecyclerView.ViewHolder {
 
+        @BindView(R.id.folder_name)
+        TextView mFolderName;
+
+        @BindView(R.id.folder_info)
+        TextView mFolderInfo;
+
+        @OnClick(R.id.rl_folder_item)
+        void click() {
+
+        }
+
         public FolderViewHolder(View itemView) {
             super(itemView);
+            ButterKnife.bind(this, itemView);
         }
 
         public void onBind(FolderEntity folderEntity) {
-
+            mFolderName.setText(folderEntity.getFolder_name());
+            mFolderInfo.setText(folderEntity.getFolder_count() + "," + folderEntity.getFolder_path());
         }
     }
 }

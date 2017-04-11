@@ -90,7 +90,6 @@ public class MyOkHttp {
         }
 
         Request request;
-
         //发起request
         if (context == null) {
             request = new Request.Builder()
@@ -143,7 +142,6 @@ public class MyOkHttp {
         }
 
         Request request;
-
         //发起request
         if (context == null) {
             request = new Request.Builder()

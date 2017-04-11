@@ -5,10 +5,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.past.music.fragment.FolderFragment;
 import com.past.music.fragment.LocalAlbumFragment;
 import com.past.music.fragment.LocalMusicFragment;
 import com.past.music.fragment.LocalSingerFragment;
-import com.past.music.fragment.MusicFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,7 @@ public class LocalFragmentAdapter extends FragmentPagerAdapter {
             case 2:
                 return LocalAlbumFragment.newInstance();
             case 3:
-                return MusicFragment.newInstance("", "");
+                return FolderFragment.newInstance();
             default:
                 return null;
         }

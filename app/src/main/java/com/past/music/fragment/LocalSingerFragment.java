@@ -10,7 +10,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.neu.gaojin.MyOkHttpClient;
+import com.neu.gaojin.response.BaseSuccessCallback;
+import com.past.music.MyApplication;
 import com.past.music.activity.PlayListInfoActivity;
+import com.past.music.api.AvatarRequest;
+import com.past.music.api.AvatarResponse;
 import com.past.music.entity.ArtistEntity;
 import com.past.music.pastmusic.R;
 import com.past.music.utils.MConstants;
@@ -52,8 +57,12 @@ public class LocalSingerFragment extends BaseFragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mAdapter);
-        reloadAdapter();
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -61,6 +70,7 @@ public class LocalSingerFragment extends BaseFragment {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(final Void... unused) {
+                list.clear();
                 list.addAll(MusicUtils.queryArtist(mContext));
                 return null;
             }
@@ -112,9 +122,22 @@ public class LocalSingerFragment extends BaseFragment {
             ButterKnife.bind(this, itemView);
         }
 
-        public void onBindData(ArtistEntity artistEntity) {
+        public void onBindData(final ArtistEntity artistEntity) {
             mTitle.setText(artistEntity.artist_name);
             mInfo.setText(artistEntity.getNumber_of_tracks() + "首");
+            AvatarRequest avatarRequest = new AvatarRequest();
+            avatarRequest.setArtist(artistEntity.getArtist_name());
+            if (MyApplication.dbService.query(artistEntity.getArtist_name()) == null) {
+                MyOkHttpClient.getInstance(getContext()).sendNet(avatarRequest, new BaseSuccessCallback<AvatarResponse>() {
+                    @Override
+                    public void onSuccess(int statusCode, final AvatarResponse response) {
+                        MyApplication.dbService.insert(artistEntity.getArtist_name(), response.getArtist().getImage().get(2).get_$Text112());
+                        simpleDraweeView.setImageURI(response.getArtist().getImage().get(2).get_$Text112());
+                    }
+                });
+            } else {
+                simpleDraweeView.setImageURI(MyApplication.dbService.query(artistEntity.getArtist_name()));
+            }
         }
     }
 }

@@ -7,7 +7,7 @@ import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.RelativeLayout;
 
-import com.past.music.api.Test;
+import com.past.music.lastfmapi.Test;
 import com.past.music.widget.IconView;
 
 import java.util.List;

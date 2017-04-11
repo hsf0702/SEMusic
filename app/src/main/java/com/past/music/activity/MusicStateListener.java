@@ -15,6 +15,4 @@ public interface MusicStateListener {
     void updateTime();
 
     void reloadAdapter();
-
-
 }

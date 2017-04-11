@@ -1,4 +1,4 @@
-package com.past.music.api;
+package com.past.music.lastfmapi;
 
 import java.util.List;
 

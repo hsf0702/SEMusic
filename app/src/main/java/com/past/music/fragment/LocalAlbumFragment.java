@@ -54,11 +54,11 @@ public class LocalAlbumFragment extends BaseFragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mAdapter);
-        reloadAdapter();
         return view;
     }
 
     //更新adapter界面
+    @Override
     public void reloadAdapter() {
         new AsyncTask<Void, Void, Void>() {
             @Override

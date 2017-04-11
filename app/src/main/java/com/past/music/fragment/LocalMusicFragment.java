@@ -59,10 +59,10 @@ public class LocalMusicFragment extends BaseFragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mAdapter);
-        reloadAdapter();
         return view;
     }
 
+    //重写更新adapter的方法
     @Override
     public void reloadAdapter() {
         new AsyncTask<Void, Void, Void>() {

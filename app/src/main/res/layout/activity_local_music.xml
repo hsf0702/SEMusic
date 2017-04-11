@@ -22,6 +22,13 @@
         app:tabSelectedTextColor="@color/medium_sea_green"
         app:tabTextAppearance="@style/WhiteTabLayout" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/local_tab_layout"
+        android:layout_marginTop="-0.5dp"
+        android:background="@color/split_color" />
+
     <android.support.v4.view.ViewPager
         android:id="@+id/local_view_pager"
         android:layout_width="match_parent"

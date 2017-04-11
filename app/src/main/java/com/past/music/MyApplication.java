@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.past.music.database.service.DBService;
 
 /**
  * =======================================================
@@ -17,11 +18,14 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 public class MyApplication extends Application {
     public static Context mContext = null;
 
+    public static DBService dbService = null;
+
     @Override
     public void onCreate() {
         super.onCreate();
         mContext = this;
         Fresco.initialize(this);
+        dbService = new DBService(this);
 //        LeakCanary.install(this);
     }
 }

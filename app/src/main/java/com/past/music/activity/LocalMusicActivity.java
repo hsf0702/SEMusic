@@ -33,14 +33,14 @@ public class LocalMusicActivity extends ToolBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle("本地歌曲");
-
         int localCount = MusicUtils.queryMusic(this, MConstants.START_FROM_LOCAL).size();
         int singerCount = MusicUtils.queryArtist(this).size();
         int albumCount = MusicUtils.queryAlbums(this).size();
+        int folderCount = MusicUtils.queryFolder(this).size();
         mTabNames.add("歌曲 " + localCount);
         mTabNames.add("歌手 " + singerCount);
         mTabNames.add("专辑 " + albumCount);
-        mTabNames.add("文件夹 2");
+        mTabNames.add("文件夹 " + folderCount);
 
         mTabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
         FragmentManager fm = getSupportFragmentManager();

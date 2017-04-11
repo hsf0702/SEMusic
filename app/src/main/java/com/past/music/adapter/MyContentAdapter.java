@@ -21,6 +21,8 @@ import com.past.music.activity.MySingersActivity;
 import com.past.music.activity.RecentMusicActivity;
 import com.past.music.entity.Mp3Info;
 import com.past.music.pastmusic.R;
+import com.past.music.utils.MConstants;
+import com.past.music.utils.MusicUtils;
 import com.past.music.widget.CircleImageView;
 import com.past.music.widget.MineItemView;
 
@@ -74,6 +76,15 @@ public class MyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof HeadLayoutHolder) {
+
+        } else if (holder instanceof FuncLayoutHolder) {
+            ((FuncLayoutHolder) holder).onBind();
+        } else if (holder instanceof FavorTitleLayout) {
+
+        } else {
+
+        }
     }
 
     @Override
@@ -172,6 +183,16 @@ public class MyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         public FuncLayoutHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        public void onBind() {
+            int localCount = MusicUtils.queryMusic(mContext, MConstants.START_FROM_LOCAL).size();
+//            int singerCount = MusicUtils.queryArtist(mContext).size();
+//            int albumCount = MusicUtils.queryAlbums(mContext).size();
+//            int folderCount = MusicUtils.queryFolder(mContext).size();
+
+            mLocalMusic.setmItemCount(String.valueOf(localCount));
+
         }
     }
 

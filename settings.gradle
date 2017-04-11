@@ -1,1 +1,1 @@
-include ':app', ':myokhttp', ':myokhttp2'
+include ':app', ':myokhttp2'

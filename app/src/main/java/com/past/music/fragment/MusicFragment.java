@@ -7,21 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
-import com.past.music.Config.BaseConfig;
 import com.past.music.adapter.GridViewAdapter;
-import com.past.music.api.Test;
+import com.past.music.lastfmapi.Test;
 import com.past.music.pastmusic.R;
 import com.past.music.utils.FrescoImageLoader;
-import com.tsy.sdk.myokhttp.MyOkHttp;
-import com.tsy.sdk.myokhttp.response.GsonResponseHandler;
 import com.youth.banner.Banner;
 
 import org.reactivestreams.Subscription;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class MusicFragment extends Fragment {
@@ -85,24 +80,6 @@ public class MusicFragment extends Fragment {
         mGridView = (GridView) view.findViewById(R.id.grid_view);
         mGridViewAdapter = new GridViewAdapter(getContext(), mData);
         mGridView.setAdapter(mGridViewAdapter);
-        Map<String, String> params = new HashMap<>();
-        params.put("showapi_appid", BaseConfig.APPID);
-        params.put("showapi_sign", BaseConfig.SECRET);
-        params.put("topid", "18");
-        MyOkHttp.get().post(getContext(), BaseConfig.QQ_MUSIC_URL, params, new GsonResponseHandler<Test>() {
-
-            @Override
-            public void onFailure(int statusCode, String error_msg) {
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Test response) {
-                for (int i = 0; i < 20; i++) {
-                    mData.add(response.getShowapi_res_body().getPagebean().getSonglist().get(i));
-                }
-                mGridViewAdapter.notifyDataSetChanged();
-            }
-        });
         return view;
     }
 

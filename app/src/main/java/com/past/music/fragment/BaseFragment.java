@@ -37,11 +37,13 @@ public class BaseFragment extends Fragment implements MusicStateListener {
     public void onResume() {
         super.onResume();
         ((BaseActivity) getActivity()).setMusicStateListenerListener(this);
+        reloadAdapter();
     }
 
     @Override
     public void onStop() {
         super.onStop();
+        ((BaseActivity) getActivity()).removeMusicStateListenerListener(this);
     }
 
     @Override
