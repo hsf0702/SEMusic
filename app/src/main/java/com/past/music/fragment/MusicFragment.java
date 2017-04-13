@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 
 import com.past.music.adapter.GridViewAdapter;
-import com.past.music.lastfmapi.Test;
 import com.past.music.pastmusic.R;
 import com.past.music.utils.FrescoImageLoader;
 import com.youth.banner.Banner;
@@ -32,7 +31,6 @@ public class MusicFragment extends Fragment {
     private Banner banner;
     private GridView mGridView;
     private List<String> images = new ArrayList<>();
-    private List<Test.ShowapiResBodyBean.PagebeanBean.SonglistBean> mData = new ArrayList<>();
 
     private GridViewAdapter mGridViewAdapter;
 
@@ -67,8 +65,6 @@ public class MusicFragment extends Fragment {
         images.add("http://img1.imgtn.bdimg.com/it/u=2119707315,3199660736&fm=23&gp=0.jpg");
         images.add("http://img1.imgtn.bdimg.com/it/u=2504464883,3611462034&fm=23&gp=0.jpg");
         images.add("http://www.qqai.net/uploads/i_2_192535384x1019546146_21.jpg");
-
-
         banner = (Banner) view.findViewById(R.id.banner);
         //设置图片加载器
         banner.setImageLoader(new FrescoImageLoader());
@@ -78,7 +74,7 @@ public class MusicFragment extends Fragment {
         banner.start();
 
         mGridView = (GridView) view.findViewById(R.id.grid_view);
-        mGridViewAdapter = new GridViewAdapter(getContext(), mData);
+//        mGridViewAdapter = new GridViewAdapter(getContext(), mData);
         mGridView.setAdapter(mGridViewAdapter);
         return view;
     }

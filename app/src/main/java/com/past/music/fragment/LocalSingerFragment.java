@@ -17,6 +17,7 @@ import com.past.music.activity.PlayListInfoActivity;
 import com.past.music.api.AvatarRequest;
 import com.past.music.api.AvatarResponse;
 import com.past.music.entity.ArtistEntity;
+import com.past.music.log.MyLog;
 import com.past.music.pastmusic.R;
 import com.past.music.utils.MConstants;
 import com.past.music.utils.MusicUtils;
@@ -131,6 +132,7 @@ public class LocalSingerFragment extends BaseFragment {
                 MyOkHttpClient.getInstance(getContext()).sendNet(avatarRequest, new BaseSuccessCallback<AvatarResponse>() {
                     @Override
                     public void onSuccess(int statusCode, final AvatarResponse response) {
+                        MyLog.i("onSuccess", statusCode + "");
                         MyApplication.dbService.insert(artistEntity.getArtist_name(), response.getArtist().getImage().get(2).get_$Text112());
                         simpleDraweeView.setImageURI(response.getArtist().getImage().get(2).get_$Text112());
                     }

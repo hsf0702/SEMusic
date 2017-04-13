@@ -11,7 +11,7 @@ import com.neu.gaojin.request.RequestBase;
 public class BaseLastFmApi<T> extends RequestBase<T> {
 
     @HttpUrlParams("URL")
-    String URL = "http://ws.audioscrobbler.com/2.0";
+    String URL = "https://ws.audioscrobbler.com/2.0";
 
     @RequiredParam("api_key")
     String api_key = "269ac032c31a44b7f3ef3c8d661747d0";
