@@ -127,13 +127,13 @@ public class LocalSingerFragment extends BaseFragment {
             mTitle.setText(artistEntity.artist_name);
             mInfo.setText(artistEntity.getNumber_of_tracks() + "首");
             AvatarRequest avatarRequest = new AvatarRequest();
-            avatarRequest.setArtist(artistEntity.getArtist_name());
-            if (MyApplication.dbService.query(artistEntity.getArtist_name()) == null) {
+            avatarRequest.setArtist(artistEntity.getArtist_name().replace(";", " "));
+            if (MyApplication.dbService.query(artistEntity.getArtist_name().replace(";", "")) == null) {
                 MyOkHttpClient.getInstance(getContext()).sendNet(avatarRequest, new BaseSuccessCallback<AvatarResponse>() {
                     @Override
                     public void onSuccess(int statusCode, final AvatarResponse response) {
                         MyLog.i("onSuccess", statusCode + "");
-                        MyApplication.dbService.insert(artistEntity.getArtist_name(), response.getArtist().getImage().get(2).get_$Text112());
+                        MyApplication.dbService.insert(artistEntity.getArtist_name().replace(";", ""), response.getArtist().getImage().get(2).get_$Text112());
                         simpleDraweeView.setImageURI(response.getArtist().getImage().get(2).get_$Text112());
                     }
                 });

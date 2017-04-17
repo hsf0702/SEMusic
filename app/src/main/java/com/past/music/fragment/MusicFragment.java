@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
-import com.past.music.adapter.GridViewAdapter;
 import com.past.music.pastmusic.R;
 import com.past.music.utils.FrescoImageLoader;
 import com.youth.banner.Banner;
@@ -31,8 +30,6 @@ public class MusicFragment extends Fragment {
     private Banner banner;
     private GridView mGridView;
     private List<String> images = new ArrayList<>();
-
-    private GridViewAdapter mGridViewAdapter;
 
     public MusicFragment() {
 
@@ -75,7 +72,6 @@ public class MusicFragment extends Fragment {
 
         mGridView = (GridView) view.findViewById(R.id.grid_view);
 //        mGridViewAdapter = new GridViewAdapter(getContext(), mData);
-        mGridView.setAdapter(mGridViewAdapter);
         return view;
     }
 

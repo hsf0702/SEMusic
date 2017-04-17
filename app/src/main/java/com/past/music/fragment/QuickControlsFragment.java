@@ -11,7 +11,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.neu.gaojin.MyOkHttpClient;
+import com.neu.gaojin.response.BaseSuccessCallback;
+import com.past.music.MyApplication;
 import com.past.music.activity.PlayMusicActivity;
+import com.past.music.api.AvatarRequest;
+import com.past.music.api.AvatarResponse;
 import com.past.music.dialog.MusicQueueFragment;
 import com.past.music.log.MyLog;
 import com.past.music.pastmusic.R;
@@ -113,6 +118,22 @@ public class QuickControlsFragment extends BaseFragment {
             mControl.setImageResource(R.drawable.playbar_btn_pause);
         } else {
             mControl.setImageResource(R.drawable.playbar_btn_play);
+        }
+        if (MusicPlayer.getArtistName() != null) {
+            AvatarRequest avatarRequest = new AvatarRequest();
+            avatarRequest.setArtist(MusicPlayer.getArtistName().replace(";", " "));
+            if (MyApplication.dbService.query(MusicPlayer.getArtistName().replace(";", "")) == null) {
+                MyOkHttpClient.getInstance(getContext()).sendNet(avatarRequest, new BaseSuccessCallback<AvatarResponse>() {
+                    @Override
+                    public void onSuccess(int statusCode, final AvatarResponse response) {
+                        MyLog.i("onSuccess", statusCode + "");
+                        MyApplication.dbService.insert(MusicPlayer.getArtistName().replace(";", ""), response.getArtist().getImage().get(2).get_$Text112());
+                        mAlbum.setImageURI(response.getArtist().getImage().get(2).get_$Text112());
+                    }
+                });
+            } else {
+                mAlbum.setImageURI(MyApplication.dbService.query(MusicPlayer.getArtistName().replace(";", "")));
+            }
         }
     }
 

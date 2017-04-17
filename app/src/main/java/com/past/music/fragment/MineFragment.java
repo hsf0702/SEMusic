@@ -14,17 +14,10 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.past.music.adapter.MyContentAdapter;
-import com.past.music.entity.Mp3Info;
 import com.past.music.pastmusic.R;
-import com.past.music.utils.Mp3Utils;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 
 public class MineFragment extends Fragment {
 
@@ -75,47 +68,13 @@ public class MineFragment extends Fragment {
         return view;
     }
 
-    private void createObservable() {
-        Observable<List<Mp3Info>> listObservable = Observable.just(getMusicList());
-
-        listObservable.subscribe(new Observer<List<Mp3Info>>() {
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override
-            public void onNext(List<Mp3Info> music) {
-                mAdapter.setListItem(music);
-            }
-        });
-
-    }
-
-    private List<Mp3Info> getMusicList() {
-        List<Mp3Info> mList;
-        mList = Mp3Utils.getMp3Infos(getContext());
-        return mList;
-    }
-
     private void getPermission() {
         if (ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
         } else {
-            createObservable();
+
         }
     }
 
@@ -123,7 +82,7 @@ public class MineFragment extends Fragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                createObservable();
+
             } else {
                 Toast.makeText(getActivity(), "Permission Denied", Toast.LENGTH_SHORT).show();
             }

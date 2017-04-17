@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/remote_img"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_centerVertical="true"
+        android:scaleType="fitXY" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        android:layout_toLeftOf="@+id/img_play"
+        android:layout_toRightOf="@+id/remote_img"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fadingEdge="horizontal"
+            android:fadingEdgeLength="10dp"
+            android:maxLines="1"
+            android:text=""
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title"
+            android:ellipsize="end"
+            android:fadingEdge="horizontal"
+            android:fadingEdgeLength="10dp"
+            android:maxLines="1"
+            android:textColor="@color/text_gray"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/img_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:padding="7dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/icon_cancel" />
+
+    <ImageView
+        android:id="@+id/img_next_play"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginRight="3dp"
+        android:layout_toLeftOf="@+id/img_cancel"
+        android:padding="7dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/icon_remote_next_play" />
+
+    <ImageView
+        android:id="@+id/img_play"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginRight="3dp"
+        android:layout_toLeftOf="@+id/img_next_play"
+        android:padding="7dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/icon_remote_play" />
+
+
+</RelativeLayout>
