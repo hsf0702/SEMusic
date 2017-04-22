@@ -60,8 +60,7 @@ public class ImageUtils {
                 // and pass that to sBitmapOptionsCache.inSampleSize, which will
                 // result in faster decoding and better quality
                 sBitmapOptionsCache.inJustDecodeBounds = true;
-                BitmapFactory.decodeFileDescriptor(fd.getFileDescriptor(),
-                        null, sBitmapOptionsCache);
+                BitmapFactory.decodeFileDescriptor(fd.getFileDescriptor(), null, sBitmapOptionsCache);
                 int nextWidth = sBitmapOptionsCache.outWidth >> 1;
                 int nextHeight = sBitmapOptionsCache.outHeight >> 1;
                 while (nextWidth > w && nextHeight > h) {

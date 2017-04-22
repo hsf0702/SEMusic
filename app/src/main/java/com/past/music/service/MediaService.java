@@ -184,6 +184,12 @@ public class MediaService extends Service {
     }
 
     @Override
+    public void onRebind(Intent intent) {
+        cancelShutdown();
+        mServiceInUse = true;
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
         MyLog.i(TAG, "onCreate");
@@ -195,14 +201,13 @@ public class MediaService extends Service {
         mPlayer = new MultiPlayer(this);
         mPlayer.setHandler(mPlayerHandler);
 
-        // Initialize the intent filter and each action
         final IntentFilter filter = new IntentFilter();
 //        filter.addAction(SERVICECMD);
         filter.addAction(TOGGLEPAUSE_ACTION);
         filter.addAction(STOP_ACTION);
         filter.addAction(NEXT_ACTION);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
-        // Attach the broadcast listener
+
         registerReceiver(mIntentReceiver, filter);
 
 
@@ -261,12 +266,18 @@ public class MediaService extends Service {
 //        mPlayerHandler.removeMessages(FADEDOWN);
 //        mPlayerHandler.sendEmptyMessage(FADEUP);
 //        cancelShutdown();
-        updateNotification();
         setIsPlaying(true, true);
+        updateNotification();
         notifyChange(META_CHANGED);
         MyLog.i(TAG, "play");
     }
 
+    /**
+     * 设置isPlaying标志位 并更新notification
+     *
+     * @param value
+     * @param notify
+     */
     private void setIsPlaying(boolean value, boolean notify) {
         if (isPlaying != value) {
             isPlaying = value;
@@ -831,26 +842,37 @@ public class MediaService extends Service {
 
     private void updateNotification() {
         final int notifyMode;
-        if (isPlaying) {
+        if (isPlaying()) {
             notifyMode = NOTIFY_MODE_FOREGROUND;
-        } else if (recentlyPlayed()) {
-            notifyMode = NOTIFY_MODE_BACKGROUND;
         } else {
             notifyMode = NOTIFY_MODE_NONE;
         }
+//
+//        if (mNotifyMode != notifyMode) {
+//            if (mNotifyMode == NOTIFY_MODE_FOREGROUND) {
+//                stopForeground(notifyMode == NOTIFY_MODE_NONE || notifyMode == NOTIFY_MODE_BACKGROUND);
+//            } else if (notifyMode == NOTIFY_MODE_NONE) {
+//                mNotificationManager.cancel(mNotificationId);
+//                mNotificationPostTime = 0;
+//            }
+//        }
+//        if (notifyMode == NOTIFY_MODE_FOREGROUND) {
+//            MyLog.i(TAG, "NOTIFY_MODE_FOREGROUND");
+////            startForeground(mNotificationId, getNotification());
+//            mNotificationManager.notify(mNotificationId, getNotification());
+//        } else if (notifyMode == NOTIFY_MODE_BACKGROUND) {
+//            MyLog.i(TAG, "NOTIFY_MODE_BACKGROUND");
+//            mNotificationManager.notify(mNotificationId, getNotification());
+//        }
 
-        if (mNotifyMode != notifyMode) {
-            if (mNotifyMode == NOTIFY_MODE_FOREGROUND) {
-                stopForeground(notifyMode == NOTIFY_MODE_NONE || notifyMode == NOTIFY_MODE_BACKGROUND);
-            } else if (notifyMode == NOTIFY_MODE_NONE) {
-                mNotificationManager.cancel(mNotificationId);
-            }
-        }
-        if (notifyMode == NOTIFY_MODE_FOREGROUND) {
-            startForeground(mNotificationId, getNotification());
-
-        } else if (notifyMode == NOTIFY_MODE_BACKGROUND) {
+        if (notifyMode == mNotifyMode) {
             mNotificationManager.notify(mNotificationId, getNotification());
+        } else {
+            if (notifyMode == NOTIFY_MODE_FOREGROUND) {
+                startForeground(mNotificationId, getNotification());
+            } else {
+                mNotificationManager.notify(mNotificationId, getNotification());
+            }
         }
         mNotifyMode = notifyMode;
     }
@@ -898,7 +920,7 @@ public class MediaService extends Service {
         final Intent mMainIntent = new Intent(this, MainActivity.class);
         PendingIntent mainIntent = PendingIntent.getActivity(this, 0, mMainIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        final Bitmap bitmap = ImageUtils.getArtworkQuick(this, getArtistId(), 160, 160);
+        final Bitmap bitmap = ImageUtils.getArtworkQuick(this, getAlbumId(), 160, 160);
         if (bitmap != null) {
             remoteViews.setImageViewBitmap(R.id.image, bitmap);
             mNoBit = null;
@@ -951,6 +973,8 @@ public class MediaService extends Service {
         } else {
             remoteViews.setImageViewResource(R.id.image, R.drawable.placeholder_disk_210);
         }
+
+
         if (mNotificationPostTime == 0) {
             mNotificationPostTime = System.currentTimeMillis();
         }

@@ -8,14 +8,15 @@
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_centerVertical="true"
-        android:scaleType="fitXY" />
+        android:scaleType="centerCrop"
+        android:src="@drawable/placeholder_disk_210" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="8dp"
-        android:layout_toLeftOf="@+id/img_play"
+        android:layout_toLeftOf="@+id/action"
         android:layout_toRightOf="@+id/remote_img"
         android:orientation="vertical">
 
@@ -44,35 +45,44 @@
             android:textSize="12sp" />
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/img_cancel"
+
+    <LinearLayout
+        android:id="@+id/action"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="41dp"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="20dp"
-        android:padding="7dp"
-        android:scaleType="centerInside"
-        android:src="@drawable/icon_cancel" />
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:orientation="horizontal">
 
-    <ImageView
-        android:id="@+id/img_next_play"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginRight="3dp"
-        android:layout_toLeftOf="@+id/img_cancel"
-        android:padding="7dp"
-        android:scaleType="centerInside"
-        android:src="@drawable/icon_remote_next_play" />
+        <ImageView
+            android:id="@+id/img_play"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="3dp"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/icon_remote_play" />
 
-    <ImageView
-        android:id="@+id/img_play"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginRight="3dp"
-        android:layout_toLeftOf="@+id/img_next_play"
-        android:padding="7dp"
-        android:scaleType="centerInside"
-        android:src="@drawable/icon_remote_play" />
+        <ImageView
+            android:id="@+id/img_next_play"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="3dp"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/icon_remote_next_play" />
 
+        <ImageView
+            android:id="@+id/img_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/icon_cancel" />
+    </LinearLayout>
 
 </RelativeLayout>
