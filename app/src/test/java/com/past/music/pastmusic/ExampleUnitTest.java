@@ -14,4 +14,11 @@ public class ExampleUnitTest {
     public void addition_isCorrect() throws Exception {
         assertEquals(4, 2 + 2);
     }
+
+    @Test
+    public void testColor() {
+        String s = Integer.toHexString(4334209);
+        System.out.println(s);
+        assertEquals(4, 2 + 2);
+    }
 }

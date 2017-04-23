@@ -5,7 +5,12 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /**
- * Created by gaojin on 2017/4/11.
+ * =======================================================
+ * 作者：GaoJin
+ * 日期：2017/4/23 13:56
+ * 描述：
+ * 备注：
+ * =======================================================
  */
 
 public class AvatarResponse {

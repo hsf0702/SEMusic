@@ -12,7 +12,6 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -25,7 +24,6 @@ import android.os.PowerManager;
 import android.os.RemoteException;
 import android.os.SystemClock;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
@@ -46,7 +44,6 @@ import com.past.music.entity.MusicEntity;
 import com.past.music.log.MyLog;
 import com.past.music.pastmusic.IMediaAidlInterface;
 import com.past.music.pastmusic.R;
-import com.past.music.utils.ImageUtils;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -887,7 +884,7 @@ public class MediaService extends Service {
 
 
     private Notification getNotification() {
-        RemoteViews remoteViews;
+        final RemoteViews remoteViews;
         final int PAUSE_FLAG = 0x1;
         final int NEXT_FLAG = 0x2;
         final int STOP_FLAG = 0x3;
@@ -920,61 +917,31 @@ public class MediaService extends Service {
         final Intent mMainIntent = new Intent(this, MainActivity.class);
         PendingIntent mainIntent = PendingIntent.getActivity(this, 0, mMainIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        final Bitmap bitmap = ImageUtils.getArtworkQuick(this, getAlbumId(), 160, 160);
-        if (bitmap != null) {
-            remoteViews.setImageViewBitmap(R.id.image, bitmap);
-            mNoBit = null;
-        } else if (!isTrackLocal()) {
-            if (mNoBit != null) {
-                remoteViews.setImageViewBitmap(R.id.image, mNoBit);
-                mNoBit = null;
-            } else {
-                Uri uri = null;
-                if (getAlbumPath() != null) {
-                    try {
-                        uri = Uri.parse(getAlbumPath());
-                    } catch (Exception e) {
-                        e.printStackTrace();
+        if (MyApplication.dbService.query(getArtistName().replace(";", "")) != null) {
+            ImagePipeline imagePipeline = Fresco.getImagePipeline();
+            Uri uri = Uri.parse(MyApplication.dbService.query(getArtistName().replace(";", "")));
+            ImageRequest imageRequest = ImageRequestBuilder
+                    .newBuilderWithSource(uri)
+                    .setProgressiveRenderingEnabled(true)
+                    .build();
+            DataSource<CloseableReference<CloseableImage>> dataSource = imagePipeline.fetchDecodedImage(imageRequest, MediaService.this);
+            dataSource.subscribe(new BaseBitmapDataSubscriber() {
+                @Override
+                protected void onNewResultImpl(Bitmap bitmap) {
+                    // You can use the bitmap in only limited ways
+                    // No need to do any cleanup.
+                    if (bitmap != null) {
+                        remoteViews.setImageViewBitmap(R.id.remote_img, bitmap);
+                        updateNotification();
                     }
                 }
 
-                if (getAlbumPath() == null || uri == null) {
-                    mNoBit = BitmapFactory.decodeResource(getResources(), R.drawable.placeholder_disk_210);
-                    updateNotification();
-                } else {
-                    ImageRequest imageRequest = ImageRequestBuilder
-                            .newBuilderWithSource(uri)
-                            .setProgressiveRenderingEnabled(true)
-                            .build();
-                    ImagePipeline imagePipeline = Fresco.getImagePipeline();
-                    DataSource<CloseableReference<CloseableImage>>
-                            dataSource = imagePipeline.fetchDecodedImage(imageRequest, MediaService.this);
-                    dataSource.subscribe(new BaseBitmapDataSubscriber() {
+                @Override
+                protected void onFailureImpl(DataSource<CloseableReference<CloseableImage>> dataSource) {
 
-                        @Override
-                        public void onNewResultImpl(@Nullable Bitmap bitmap) {
-                            // You can use the bitmap in only limited ways
-                            // No need to do any cleanup.
-                            if (bitmap != null) {
-                                mNoBit = bitmap;
-                            }
-                            updateNotification();
-                        }
-
-                        @Override
-                        public void onFailureImpl(DataSource dataSource) {
-                            // No cleanup required here.
-                            mNoBit = BitmapFactory.decodeResource(getResources(), R.drawable.placeholder_disk_210);
-                            updateNotification();
-                        }
-                    }, CallerThreadExecutor.getInstance());
                 }
-            }
-        } else {
-            remoteViews.setImageViewResource(R.id.image, R.drawable.placeholder_disk_210);
+            }, CallerThreadExecutor.getInstance());
         }
-
-
         if (mNotificationPostTime == 0) {
             mNotificationPostTime = System.currentTimeMillis();
         }

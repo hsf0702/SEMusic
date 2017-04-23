@@ -2,19 +2,27 @@ package com.past.music.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 
+import com.neu.gaojin.MyOkHttpClient;
+import com.neu.gaojin.response.BaseCallback;
+import com.past.music.adapter.MusicContentAdapter;
+import com.past.music.api.HotListResponse;
+import com.past.music.api.HotListResquest;
+import com.past.music.log.MyLog;
 import com.past.music.pastmusic.R;
-import com.past.music.utils.FrescoImageLoader;
-import com.youth.banner.Banner;
 
 import org.reactivestreams.Subscription;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 public class MusicFragment extends Fragment {
@@ -27,9 +35,13 @@ public class MusicFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private Banner banner;
-    private GridView mGridView;
+    @BindView(R.id.music_recycle_view)
+    RecyclerView mMusicList = null;
+
     private List<String> images = new ArrayList<>();
+    private List<HotListResponse.ShowapiResBodyBean.PagebeanBean.SonglistBean> mRecommendList;
+
+    private MusicContentAdapter mAdapter;
 
     public MusicFragment() {
 
@@ -57,21 +69,29 @@ public class MusicFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_music, container, false);
+        ButterKnife.bind(this, view);
+        mAdapter = new MusicContentAdapter(getActivity());
+        mMusicList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mMusicList.setHasFixedSize(true);
+        mMusicList.setAdapter(mAdapter);
+        HotListResquest hotListResquest = new HotListResquest("26");
+        MyOkHttpClient.getInstance(getContext()).sendNet(hotListResquest, new BaseCallback<HotListResponse>() {
+            @Override
+            public void onSuccess(int statusCode, HotListResponse response) {
+                if (response.getShowapi_res_code() == 0) {
+                    MyLog.i(TAG, "请求成功");
+                    mRecommendList = response.getShowapi_res_body().getPagebean().getSonglist();
+                    mAdapter.updateRecommendList(mRecommendList);
+                } else {
+                    MyLog.i(TAG, "请求失败" + response.getShowapi_res_code() + response.getShowapi_res_error());
+                }
+            }
 
-        images.add("http://cimg2.163.com/catchimg/20090930/8458904_45.jpg");
-        images.add("http://img1.imgtn.bdimg.com/it/u=2119707315,3199660736&fm=23&gp=0.jpg");
-        images.add("http://img1.imgtn.bdimg.com/it/u=2504464883,3611462034&fm=23&gp=0.jpg");
-        images.add("http://www.qqai.net/uploads/i_2_192535384x1019546146_21.jpg");
-        banner = (Banner) view.findViewById(R.id.banner);
-        //设置图片加载器
-        banner.setImageLoader(new FrescoImageLoader());
-        //设置图片集合
-        banner.setImages(images);
-        //banner设置方法全部调用完毕时最后调用
-        banner.start();
-
-        mGridView = (GridView) view.findViewById(R.id.grid_view);
-//        mGridViewAdapter = new GridViewAdapter(getContext(), mData);
+            @Override
+            public void onFailure(int code, String error_msg) {
+                int a = 10;
+            }
+        });
         return view;
     }
 
@@ -79,14 +99,14 @@ public class MusicFragment extends Fragment {
     public void onStart() {
         super.onStart();
         //开始轮播
-        banner.startAutoPlay();
+//        banner.startAutoPlay();
     }
 
     @Override
     public void onStop() {
         super.onStop();
         //结束轮播
-        banner.stopAutoPlay();
+//        banner.stopAutoPlay();
     }
 
     @Override

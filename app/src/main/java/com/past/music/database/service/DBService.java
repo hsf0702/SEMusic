@@ -21,12 +21,10 @@ public class DBService {
 
     public synchronized void insert(String artistName, String imageUrl) {
         SQLiteDatabase db = imageCacheDBHelper.getWritableDatabase();
-//        db.beginTransaction();
         ContentValues contentValues = new ContentValues();
         contentValues.put(ImageCache.NAME, artistName);
         contentValues.put(ImageCache.URL, imageUrl);
         db.insert(ImageCacheDBHelper.DB_TABLE, null, contentValues);
-//        db.setTransactionSuccessful();
     }
 
     public synchronized String query(String artistName) {
