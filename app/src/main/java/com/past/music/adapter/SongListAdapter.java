@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -64,6 +65,9 @@ public class SongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         @BindView(R.id.recommend_singer_list_info)
         TextView mInfo;
 
+        @BindView(R.id.rl_recommend_singer_item)
+        RelativeLayout relativeLayout;
+
 
         public RecommendListHolder(View itemView) {
             super(itemView);
@@ -73,6 +77,7 @@ public class SongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public void onBind(final HotListResponse.ShowapiResBodyBean.PagebeanBean.SonglistBean songlistBean) {
             mTitle.setText(songlistBean.getSongname());
             mTitle.setTextColor(0xffffffff);
+            relativeLayout.setBackgroundResource(R.color.test);
             mInfo.setText(songlistBean.getSingername() + " • " + "专辑");
             mImgSong.setImageURI(songlistBean.getAlbumpic_big());
         }

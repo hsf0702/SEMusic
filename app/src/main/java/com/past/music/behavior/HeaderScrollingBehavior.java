@@ -1,5 +1,6 @@
 package com.past.music.behavior;
 
+import android.animation.ArgbEvaluator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Handler;
@@ -35,10 +36,13 @@ public class HeaderScrollingBehavior extends CoordinatorLayout.Behavior<Recycler
     /** 用来驱动Scroller的运行 */
     private Handler handler;
 
+    private ArgbEvaluator argbEvaluator;
+
     public HeaderScrollingBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
         scroller = new Scroller(context);
         handler = new Handler();
+        argbEvaluator = new ArgbEvaluator();
     }
 
     public boolean isExpanded() {
@@ -84,7 +88,13 @@ public class HeaderScrollingBehavior extends CoordinatorLayout.Behavior<Recycler
         float scale = 1 + 0.4f * (1.f - progress);
         dependency.setScaleX(scale);
         dependency.setScaleY(scale);
-        dependency.setAlpha(progress);
+//        dependency.setAlpha(progress);
+
+        // Background
+        dependency.setBackgroundColor((int) argbEvaluator.evaluate(
+                progress,
+                resources.getColor(R.color.colorCollapsedFloatBackground),
+                resources.getColor(R.color.test)));
 
         return true;
     }

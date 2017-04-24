@@ -2,7 +2,6 @@ package com.past.music.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -69,7 +68,6 @@ public class SongListActivity extends BaseActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        mToolbar.setBackgroundColor(0x422281);
         onNewIntent(getIntent());
     }
 
