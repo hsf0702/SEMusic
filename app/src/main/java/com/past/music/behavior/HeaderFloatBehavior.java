@@ -23,6 +23,7 @@ public class HeaderFloatBehavior extends CoordinatorLayout.Behavior<View> {
 
     private WeakReference<View> dependentView;
     private ArgbEvaluator argbEvaluator;
+    private View title;
 
     public HeaderFloatBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -34,6 +35,7 @@ public class HeaderFloatBehavior extends CoordinatorLayout.Behavior<View> {
     public boolean layoutDependsOn(CoordinatorLayout parent, View child, View dependency) {
         if (dependency != null && dependency.getId() == R.id.head_image) {
             dependentView = new WeakReference<>(dependency);
+            title = child.findViewById(R.id.hot_list_title);
             return true;
         }
         return false;
@@ -43,27 +45,19 @@ public class HeaderFloatBehavior extends CoordinatorLayout.Behavior<View> {
     public boolean onDependentViewChanged(CoordinatorLayout parent, View child, View dependency) {
         Resources resources = getDependentView().getResources();
         final float progress = 1.f -
-                Math.abs(dependency.getTranslationY() / (dependency.getHeight() - R.attr.actionBarSize));
+                Math.abs(dependency.getTranslationY() / (dependency.getHeight() - resources.getDimension(R.dimen.collapsed_header_height)));
 
         // Translation
-        final float collapsedOffset = resources.getDimension(R.dimen.collapsed_float_offset_y);
-        final float initOffset = resources.getDimension(R.dimen.init_float_offset_y);
-        final float translateY = collapsedOffset + (initOffset - collapsedOffset) * progress;
-        child.setTranslationY(translateY);
+//        final float collapsedOffset = resources.getDimension(R.dimen.collapsed_float_offset_y);
+//        final float initOffset = resources.getDimension(R.dimen.init_float_offset_y);
+//        final float translateY = collapsedOffset + (initOffset - collapsedOffset) * progress;
+//        child.setTranslationY(translateY);
 
         // Background
-        child.setBackgroundColor((int) argbEvaluator.evaluate(
-                progress,
-                resources.getColor(R.color.colorCollapsedFloatBackground),
-                resources.getColor(R.color.colorInitFloatBackground)));
-
-        // Margins
-        final float collapsedMargin = resources.getDimension(R.dimen.collapsed_float_margin);
-        final float initMargin = resources.getDimension(R.dimen.init_float_margin);
-        final int margin = (int) (collapsedMargin + (initMargin - collapsedMargin) * progress);
-        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) child.getLayoutParams();
-        lp.setMargins(margin, 0, margin, 0);
-        child.setLayoutParams(lp);
+//        child.setBackgroundColor((int) argbEvaluator.evaluate(progress,
+//                resources.getColor(R.color.colorInitFloatBackground),
+//                resources.getColor(R.color.colorCollapsedFloatBackground)));
+        title.setAlpha((float) (1.0 - progress));
 
         return true;
     }

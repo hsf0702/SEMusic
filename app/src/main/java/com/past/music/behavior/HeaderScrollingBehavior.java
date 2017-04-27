@@ -11,6 +11,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Scroller;
 
+import com.past.music.log.MyLog;
 import com.past.music.pastmusic.R;
 
 import java.lang.ref.WeakReference;
@@ -82,20 +83,13 @@ public class HeaderScrollingBehavior extends CoordinatorLayout.Behavior<Recycler
         Resources resources = getDependentView().getResources();
         final float progress = 1.f -
                 Math.abs(dependency.getTranslationY() / (dependency.getHeight() - resources.getDimension(R.dimen.collapsed_header_height)));
-
+        MyLog.i("progress", progress + "");
         child.setTranslationY(dependency.getHeight() + dependency.getTranslationY());
 
         float scale = 1 + 0.4f * (1.f - progress);
         dependency.setScaleX(scale);
         dependency.setScaleY(scale);
-//        dependency.setAlpha(progress);
-
-        // Background
-        dependency.setBackgroundColor((int) argbEvaluator.evaluate(
-                progress,
-                resources.getColor(R.color.colorCollapsedFloatBackground),
-                resources.getColor(R.color.test)));
-
+        dependency.setAlpha((float) (0.3 + progress * 0.7));
         return true;
     }
 

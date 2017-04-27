@@ -2,12 +2,13 @@ package com.past.music.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.jaeger.library.StatusBarUtil;
@@ -22,14 +23,16 @@ import com.past.music.pastmusic.R;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class SongListActivity extends BaseActivity {
 
     public static final String TAG = "SongListActivity";
     public static final String TOPID = "TOPID";
     public static final String TITLE = "TITLE";
-    @BindView(R.id.view_need_offset)
-    View mViewNeedOffset;
+
+    @BindView(R.id.rl_hot_list)
+    RelativeLayout relativeLayout;
 
     @BindView(R.id.head_image)
     SimpleDraweeView headView;
@@ -37,8 +40,13 @@ public class SongListActivity extends BaseActivity {
     @BindView(R.id.nested_recycle_view)
     RecyclerView mRecyclerView;
 
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    @BindView(R.id.hot_list_title)
+    TextView mTitle;
+
+    @OnClick(R.id.hot_list_back)
+    void back() {
+        finish();
+    }
 
     @BindView(R.id.parent_view)
     CoordinatorLayout mCoordinatorLayout;
@@ -63,11 +71,6 @@ public class SongListActivity extends BaseActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(adapter);
-
-        setSupportActionBar(mToolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
         onNewIntent(getIntent());
     }
 
@@ -76,7 +79,7 @@ public class SongListActivity extends BaseActivity {
         super.onNewIntent(intent);
         String topid = intent.getStringExtra(TOPID);
         String title = intent.getStringExtra(TITLE);
-        setTitle(title);
+        mTitle.setText(title);
         HotListResquest hotListResquest = new HotListResquest(topid);
         MyOkHttpClient.getInstance(this).sendNet(hotListResquest, new BaseCallback<HotListResponse>() {
             @Override
@@ -84,13 +87,21 @@ public class SongListActivity extends BaseActivity {
                 if (response.getShowapi_res_code() == 0) {
                     mHotList = response.getShowapi_res_body().getPagebean().getSonglist();
                     headView.setImageURI(mHotList.get(0).getAlbumpic_big());
-                    MyLog.i(TAG, mHotList.size() + "ff");
                     adapter.updateList(mHotList);
-//                    mCoordinatorLayout.setBackgroundColor();
-                    // TODO: 2017/4/24
-//                    mRecyclerView.setBackgroundColor(Color.parseColor("0x" + Integer.toHexString(response.getShowapi_res_body().getPagebean().getColor())));
-
-//                    mRecyclerView.setBackgroundColor(response.getShowapi_res_body().getPagebean().getColor());
+                    String color_hex = Integer.toHexString(response.getShowapi_res_body().getPagebean().getColor());
+                    String color = null;
+                    if (color_hex.length() < 6) {
+                        color = color_hex;
+                        for (int i = 0; i < 6 - color_hex.length(); i++) {
+                            color = "0" + color;
+                        }
+                        color = "#ff" + color;
+                    } else if (color_hex.length() == 6) {
+                        color = "#ff" + Integer.toHexString(response.getShowapi_res_body().getPagebean().getColor());
+                    }
+                    MyLog.i(TAG, color + "---" + response.getShowapi_res_body().getPagebean().getColor());
+                    mRecyclerView.setBackgroundColor(Color.parseColor(color));
+                    relativeLayout.setBackgroundColor(Color.parseColor(color));
 
                 }
             }
@@ -104,7 +115,6 @@ public class SongListActivity extends BaseActivity {
 
     @Override
     protected void setStatusBar() {
-        mViewNeedOffset = findViewById(R.id.view_need_offset);
-        StatusBarUtil.setTranslucentForImageView(this, 0, mViewNeedOffset);
+        StatusBarUtil.setTranslucentForImageView(this, 0, findViewById(R.id.view_need_offset));
     }
 }

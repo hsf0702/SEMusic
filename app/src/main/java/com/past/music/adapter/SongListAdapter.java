@@ -41,7 +41,7 @@ public class SongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new RecommendListHolder(LayoutInflater.from(mContext).inflate(R.layout.recommend_song_item, parent, false));
+        return new RecommendListHolder(LayoutInflater.from(mContext).inflate(R.layout.hot_list_item, parent, false));
     }
 
     @Override
@@ -56,16 +56,16 @@ public class SongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     class RecommendListHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.recommend_img_singer)
+        @BindView(R.id.hot_img_singer)
         SimpleDraweeView mImgSong;
 
-        @BindView(R.id.recommend_singer_list_title)
+        @BindView(R.id.hot_singer_list_title)
         TextView mTitle;
 
-        @BindView(R.id.recommend_singer_list_info)
+        @BindView(R.id.hot_singer_list_info)
         TextView mInfo;
 
-        @BindView(R.id.rl_recommend_singer_item)
+        @BindView(R.id.rl_hot_singer_item)
         RelativeLayout relativeLayout;
 
 
@@ -77,7 +77,6 @@ public class SongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public void onBind(final HotListResponse.ShowapiResBodyBean.PagebeanBean.SonglistBean songlistBean) {
             mTitle.setText(songlistBean.getSongname());
             mTitle.setTextColor(0xffffffff);
-            relativeLayout.setBackgroundResource(R.color.test);
             mInfo.setText(songlistBean.getSingername() + " • " + "专辑");
             mImgSong.setImageURI(songlistBean.getAlbumpic_big());
         }

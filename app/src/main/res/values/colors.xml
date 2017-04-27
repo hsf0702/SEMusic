@@ -27,8 +27,8 @@
 
     <!--底部栏-->
     <color name="bottomSheetNormalBackground">#f9ffffff</color>
-    <color name="colorCollapsedFloatBackground">#e4e4e4</color>
-    <color name="colorInitFloatBackground">#b0ffffff</color>
-    <color name="test">#422281</color>
+    <color name="colorCollapsedFloatBackground">#001b1919</color>
+    <color name="colorInitFloatBackground">#e0282525</color>
+    <color name="test">#ff023b3d</color>
 
 </resources>

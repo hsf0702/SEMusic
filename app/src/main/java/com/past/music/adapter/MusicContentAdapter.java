@@ -143,17 +143,42 @@ public class MusicContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         @BindView(R.id.icon_view_2)
         IconView mIconView2;
 
+        @OnClick(R.id.icon_view_2)
+        void click2() {
+            SongListActivity.startActivity(mContext, "6", "巅峰榜 • 港台");
+        }
+
         @BindView(R.id.icon_view_3)
         IconView mIconView3;
+
+        @OnClick(R.id.icon_view_3)
+        void click3() {
+            SongListActivity.startActivity(mContext, "5", "巅峰榜 • 内地");
+        }
 
         @BindView(R.id.icon_view_4)
         IconView mIconView4;
 
+        @OnClick(R.id.icon_view_4)
+        void click4() {
+            SongListActivity.startActivity(mContext, "3", "巅峰榜 • 欧美");
+        }
+
         @BindView(R.id.icon_view_5)
         IconView mIconView5;
 
+        @OnClick(R.id.icon_view_5)
+        void click5() {
+            SongListActivity.startActivity(mContext, "17", "巅峰榜 • 日本");
+        }
+
         @BindView(R.id.icon_view_6)
         IconView mIconView6;
+
+        @OnClick(R.id.icon_view_6)
+        void click6() {
+            SongListActivity.startActivity(mContext, "28", "巅峰榜 • 网络歌曲");
+        }
 
         public HotListHolder(View itemView) {
             super(itemView);
@@ -173,8 +198,8 @@ public class MusicContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mIconView5.setmHotPic("https://y.gtimg.cn/music/common/upload/iphone_order_channel/toplist_17_300_200559528.jpg?");
             mIconView5.setmTvDes("巅峰榜 • 日本");
 
-            mIconView6.setmHotPic("https://y.gtimg.cn/music/common/upload/iphone_order_channel/toplist_27_300_201932121.jpg");
-            mIconView6.setmTvDes("巅峰榜 • 新歌");
+            mIconView6.setmHotPic("https://y.gtimg.cn/music/common/upload/iphone_order_channel/toplist_28_300_201644796.jpg");
+            mIconView6.setmTvDes("巅峰榜 • 网络歌曲");
         }
     }
 
