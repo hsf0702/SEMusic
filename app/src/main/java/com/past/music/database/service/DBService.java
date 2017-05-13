@@ -5,31 +5,36 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.past.music.database.ImageCacheDBHelper;
+import com.past.music.database.PastMusicDBHelper;
 import com.past.music.database.entity.ImageCache;
 
 /**
- * Created by gaojin on 2017/4/11.
+ * =======================================================
+ * 作者：GaoJin
+ * 日期：2017/4/28 15:39
+ * 描述：
+ * 备注：
+ * =======================================================
  */
 
 public class DBService {
-    ImageCacheDBHelper imageCacheDBHelper;
+    PastMusicDBHelper pastMusicDBHelper;
 
     public DBService(Context context) {
-        imageCacheDBHelper = new ImageCacheDBHelper(context);
+        pastMusicDBHelper = new PastMusicDBHelper(context);
     }
 
     public synchronized void insert(String artistName, String imageUrl) {
-        SQLiteDatabase db = imageCacheDBHelper.getWritableDatabase();
+        SQLiteDatabase db = pastMusicDBHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(ImageCache.NAME, artistName);
         contentValues.put(ImageCache.URL, imageUrl);
-        db.insert(ImageCacheDBHelper.DB_TABLE, null, contentValues);
+        db.insert(PastMusicDBHelper.DB_TABLE, null, contentValues);
     }
 
     public synchronized String query(String artistName) {
-        SQLiteDatabase db = imageCacheDBHelper.getReadableDatabase();
-        Cursor cursor = db.query(ImageCacheDBHelper.DB_TABLE, new String[]{ImageCache.URL}, ImageCache.NAME + "=?", new String[]{artistName}, null, null, null);
+        SQLiteDatabase db = pastMusicDBHelper.getReadableDatabase();
+        Cursor cursor = db.query(PastMusicDBHelper.DB_TABLE, new String[]{ImageCache.URL}, ImageCache.NAME + "=?", new String[]{artistName}, null, null, null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             return cursor.getString(0);

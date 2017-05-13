@@ -17,13 +17,25 @@ import com.neu.gaojin.response.BaseCallback;
 import com.past.music.adapter.SongListAdapter;
 import com.past.music.api.HotListResponse;
 import com.past.music.api.HotListResquest;
+import com.past.music.api.SonglistBean;
+import com.past.music.entity.MusicEntity;
 import com.past.music.log.MyLog;
 import com.past.music.pastmusic.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+
+/**
+ * =======================================================
+ * 作者：GaoJin
+ * 日期：2017/5/10 11:47
+ * 描述：热门歌单界面
+ * 备注：
+ * =======================================================
+ */
 
 public class SongListActivity extends BaseActivity {
 
@@ -51,7 +63,8 @@ public class SongListActivity extends BaseActivity {
     @BindView(R.id.parent_view)
     CoordinatorLayout mCoordinatorLayout;
 
-    private List<HotListResponse.ShowapiResBodyBean.PagebeanBean.SonglistBean> mHotList;
+    private List<SonglistBean> mHotList;
+    private List<MusicEntity> mList = new ArrayList<>();
     private SongListAdapter adapter = null;
 
 
@@ -87,7 +100,6 @@ public class SongListActivity extends BaseActivity {
                 if (response.getShowapi_res_code() == 0) {
                     mHotList = response.getShowapi_res_body().getPagebean().getSonglist();
                     headView.setImageURI(mHotList.get(0).getAlbumpic_big());
-                    adapter.updateList(mHotList);
                     String color_hex = Integer.toHexString(response.getShowapi_res_body().getPagebean().getColor());
                     String color = null;
                     if (color_hex.length() < 6) {
@@ -103,6 +115,19 @@ public class SongListActivity extends BaseActivity {
                     mRecyclerView.setBackgroundColor(Color.parseColor(color));
                     relativeLayout.setBackgroundColor(Color.parseColor(color));
 
+                    for (int i = 0; i < mHotList.size(); i++) {
+                        MusicEntity musicInfo = new MusicEntity();
+                        musicInfo.songId = mHotList.get(i).getSongid();
+                        musicInfo.musicName = mHotList.get(i).getSongname();
+                        musicInfo.artist = mHotList.get(i).getSingername();
+                        musicInfo.islocal = false;
+                        musicInfo.albumName = mHotList.get(i).getAlbummid();
+                        musicInfo.albumId = mHotList.get(i).getAlbumid();
+                        musicInfo.artistId = mHotList.get(i).getSingerid();
+                        musicInfo.albumData = mHotList.get(i).getAlbumpic_big();
+                        mList.add(musicInfo);
+                    }
+                    adapter.updateList(mList);
                 }
             }
 

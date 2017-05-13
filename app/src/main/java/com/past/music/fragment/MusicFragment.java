@@ -13,6 +13,7 @@ import com.neu.gaojin.response.BaseCallback;
 import com.past.music.adapter.MusicContentAdapter;
 import com.past.music.api.HotListResponse;
 import com.past.music.api.HotListResquest;
+import com.past.music.api.SonglistBean;
 import com.past.music.log.MyLog;
 import com.past.music.pastmusic.R;
 
@@ -39,7 +40,7 @@ public class MusicFragment extends Fragment {
     RecyclerView mMusicList = null;
 
     private List<String> images = new ArrayList<>();
-    private List<HotListResponse.ShowapiResBodyBean.PagebeanBean.SonglistBean> mRecommendList;
+    private List<SonglistBean> mRecommendList;
 
     private MusicContentAdapter mAdapter;
 

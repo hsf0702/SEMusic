@@ -10,9 +10,9 @@ import com.past.music.database.entity.ImageCache;
  * Created by gaojin on 2017/4/11.
  */
 
-public class ImageCacheDBHelper extends SQLiteOpenHelper {
+public class PastMusicDBHelper extends SQLiteOpenHelper {
 
-    public static final String DB_NAME = "ImageCache.db";
+    public static final String DB_NAME = "PastMusic.db";
     public static final String DB_TABLE = "ImageCacheTable";
     private static final int DB_VERSION = 1;
 
@@ -21,7 +21,7 @@ public class ImageCacheDBHelper extends SQLiteOpenHelper {
             ImageCache.NAME + " text not null, " +
             ImageCache.URL + " text not null);";
 
-    public ImageCacheDBHelper(Context context) {
+    public PastMusicDBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
 
     }

@@ -39,6 +39,10 @@ public class MyOkHttpClient implements mConstant {
     private static MyOkHttpClient instance;
     private Context mContext;
 
+    public OkHttpClient getClient() {
+        return client;
+    }
+
     private MyOkHttpClient(Context context) {
         this.mContext = context;
         client = new OkHttpClient();
@@ -117,6 +121,26 @@ public class MyOkHttpClient implements mConstant {
         } catch (NetWorkException e) {
             e.printStackTrace();
         }
+    }
+
+    public void test() {
+        String url = "http://tingapi.ting.baidu.com/v1/restserver/ting?from=android&version=5.8.1.0&channel=ppzs&operator=3&method=baidu.ting.plaza.index&cuid=89CF1E1A06826F9AB95A34DC0F6AAA14";
+        Request request = null;
+        request = new Request.Builder()
+                .url(url)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Log.i("MyOkHttp", response.toString());
+            }
+        });
+
     }
 
     //callback

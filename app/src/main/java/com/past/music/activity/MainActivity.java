@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.jaeger.library.StatusBarUtil;
+import com.neu.gaojin.MyOkHttpClient;
 import com.past.music.Config.BaseConfig;
 import com.past.music.fragment.adapter.MainFragmentAdapter;
 import com.past.music.pastmusic.R;
@@ -65,6 +66,8 @@ public class MainActivity extends BaseActivity {
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) toolbar.getLayoutParams();
         layoutParams.height += statusBarHeight;
         toolbar.setLayoutParams(layoutParams);
+
+        MyOkHttpClient.getInstance(this).test();
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.google.gson.Gson;
 import com.past.music.database.service.DBService;
 
 /**
@@ -19,6 +20,7 @@ public class MyApplication extends Application {
     public static Context mContext = null;
 
     public static DBService dbService = null;
+    private static Gson gson;
 
     @Override
     public void onCreate() {
@@ -27,5 +29,12 @@ public class MyApplication extends Application {
         Fresco.initialize(this);
         dbService = new DBService(this);
 //        LeakCanary.install(this);
+    }
+
+    public static Gson gsonInstance() {
+        if (gson == null) {
+            gson = new Gson();
+        }
+        return gson;
     }
 }

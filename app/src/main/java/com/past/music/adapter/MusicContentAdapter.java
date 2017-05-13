@@ -9,11 +9,13 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.past.music.activity.SongListActivity;
-import com.past.music.api.HotListResponse;
+import com.past.music.activity.WebViewActivity;
+import com.past.music.api.SonglistBean;
 import com.past.music.pastmusic.R;
 import com.past.music.utils.FrescoImageLoader;
 import com.past.music.widget.IconView;
 import com.youth.banner.Banner;
+import com.youth.banner.listener.OnBannerListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +41,7 @@ public class MusicContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private Context mContext = null;
     private ArrayList<String> mHotList = null;
-    private List<HotListResponse.ShowapiResBodyBean.PagebeanBean.SonglistBean> mRecommendList = null;
+    private List<SonglistBean> mRecommendList = null;
 
     public MusicContentAdapter(Context context) {
         this.mContext = context;
@@ -50,7 +52,7 @@ public class MusicContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         notifyItemChanged(1);
     }
 
-    public void updateRecommendList(List<HotListResponse.ShowapiResBodyBean.PagebeanBean.SonglistBean> arrayList) {
+    public void updateRecommendList(List<SonglistBean> arrayList) {
         this.mRecommendList = arrayList;
         notifyItemRangeChanged(2, 5);
 
@@ -97,7 +99,7 @@ public class MusicContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    class BannerLayoutHolder extends RecyclerView.ViewHolder {
+    class BannerLayoutHolder extends RecyclerView.ViewHolder implements OnBannerListener {
 
         private List<String> images = new ArrayList<>();
 
@@ -119,6 +121,8 @@ public class MusicContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             banner.setImages(images);
             //banner设置方法全部调用完毕时最后调用
             banner.start();
+
+            banner.setOnBannerListener(this);
         }
 
         public void startAutoPlay() {
@@ -127,6 +131,12 @@ public class MusicContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         public void stopAutoPlay() {
             banner.stopAutoPlay();
+        }
+
+
+        @Override
+        public void OnBannerClick(int position) {
+            WebViewActivity.startWebViewActivity(mContext, "", "https://y.qq.com/msa/226/0_3046.html?ADTAG=myqq&from=myqq&channel=10007100");
         }
     }
 
@@ -220,7 +230,7 @@ public class MusicContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ButterKnife.bind(this, itemView);
         }
 
-        public void onBind(final HotListResponse.ShowapiResBodyBean.PagebeanBean.SonglistBean songlistBean) {
+        public void onBind(final SonglistBean songlistBean) {
             mTitle.setText(songlistBean.getSongname());
             mInfo.setText(songlistBean.getSingername() + " • " + "专辑");
             mImgSong.setImageURI(songlistBean.getAlbumpic_big());

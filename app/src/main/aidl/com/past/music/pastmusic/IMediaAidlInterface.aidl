@@ -28,4 +28,5 @@ interface IMediaAidlInterface {
     long [] getQueue();
     void setQueuePosition(int index);
     long getAudioId();
+    int getQueuePosition();
 }

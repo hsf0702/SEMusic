@@ -89,7 +89,7 @@ public class HeaderScrollingBehavior extends CoordinatorLayout.Behavior<Recycler
         float scale = 1 + 0.4f * (1.f - progress);
         dependency.setScaleX(scale);
         dependency.setScaleY(scale);
-        dependency.setAlpha((float) (0.3 + progress * 0.7));
+        dependency.setAlpha(progress);
         return true;
     }
 

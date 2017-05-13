@@ -13,6 +13,7 @@ import com.past.music.entity.MusicEntity;
 import com.past.music.log.MyLog;
 import com.past.music.pastmusic.IMediaAidlInterface;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.WeakHashMap;
 
@@ -106,6 +107,16 @@ public class MusicPlayer {
         }
     }
 
+    public static final int getQueuePosition() {
+        try {
+            if (mService != null) {
+                return mService.getQueuePosition();
+            }
+        } catch (final RemoteException ignored) {
+        }
+        return 0;
+    }
+
     /**
      * 播放所有音乐
      *
@@ -115,16 +126,29 @@ public class MusicPlayer {
      * @param forceShuffle
      */
     public static synchronized void playAll(final HashMap<Long, MusicEntity> infos, final long[] list, int position, final boolean forceShuffle) {
-        MyLog.i(TAG, "playAll");
         if (list == null || list.length == 0 || mService == null) {
             return;
         }
         try {
+            final long currentId = mService.getAudioId();
+            final int currentQueuePosition = getQueuePosition();
+            if (position != -1) {
+                final long[] playlist = getQueue();
+                if (Arrays.equals(list, playlist)) {
+                    if (currentQueuePosition == position && currentId == list[position]) {
+                        mService.play();
+                        return;
+                    } else {
+                        mService.setQueuePosition(position);
+                        return;
+                    }
+
+                }
+            }
             if (position < 0) {
                 position = 0;
             }
             mService.open(infos, list, position);
-            mService.play();
         } catch (final RemoteException ignored) {
         } catch (IllegalStateException e) {
             e.printStackTrace();

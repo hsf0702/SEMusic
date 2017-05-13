@@ -43,4 +43,14 @@ public class SharePreferencesUtils {
         return mPreferences.getString(ALBUM_SORT_ORDER, SortOrder.AlbumSortOrder.ALBUM_A_Z);
     }
 
+    public void setPlayLink(long id, String link) {
+        final SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putString(id + "", link);
+        editor.apply();
+    }
+
+    public String getPlayLink(long id) {
+        return mPreferences.getString(id + "", null);
+    }
+
 }
