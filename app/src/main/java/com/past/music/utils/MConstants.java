@@ -10,6 +10,12 @@ package com.past.music.utils;
  */
 public interface MConstants {
 
+    String MUSIC_COUNT_CHANGED = "com.past.music.musiccountchanged";
+    String PLAYLIST_ITEM_MOVED = "com.past.music.moved";
+    String PLAYLIST_COUNT_CHANGED = "com.past.music.playlistcountchanged";
+    String EMPTY_LIST = "com.past.music.emptyplaylist";
+    String PACKAGE = "com.past.music";
+
     //歌手和专辑列表点击都会进入MyMusic 此时要传递参数表明是从哪里进入的
     int START_FROM_ARTIST = 1;
     int START_FROM_ALBUM = 2;

@@ -22,6 +22,7 @@ interface IMediaAidlInterface {
     String getTrackName();
     String getAlbumName();
     String getAlbumPath();
+    String getAlbumPic();
     String[] getAlbumPathtAll();
     String getPath();
     Map getPlaylistInfo();

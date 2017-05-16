@@ -60,6 +60,8 @@
         </activity>
         <activity android:name="com.past.music.activity.WebViewActivity">
         </activity>
+        <activity android:name="com.past.music.activity.CreateSongListActivity">
+        </activity>
     </application>
 
 </manifest>

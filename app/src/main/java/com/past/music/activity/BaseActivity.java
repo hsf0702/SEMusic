@@ -11,6 +11,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.jaeger.library.StatusBarUtil;
 import com.past.music.fragment.QuickControlsFragment;
@@ -18,6 +19,7 @@ import com.past.music.pastmusic.IMediaAidlInterface;
 import com.past.music.pastmusic.R;
 import com.past.music.service.MediaService;
 import com.past.music.service.MusicPlayer;
+import com.past.music.utils.MConstants;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -78,6 +80,35 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
         }
     }
 
+    /**
+     * @param p 更新歌曲缓冲进度值，p取值从0~100
+     */
+    public void updateBuffer(int p) {
+
+    }
+
+    /**
+     * @param l 歌曲是否加载中
+     */
+    public void loading(boolean l) {
+
+    }
+
+    /**
+     * 更新播放队列
+     */
+    public void updateQueue() {
+
+    }
+
+    /**
+     * 歌曲切换
+     */
+    public void updateTrack() {
+
+    }
+
+
     public void setMusicStateListenerListener(final MusicStateListener status) {
         if (status == this) {
             throw new UnsupportedOperationException("Override the method, don't add a listener");
@@ -104,14 +135,34 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
         }
 
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(final Context context, final Intent intent) {
             final String action = intent.getAction();
             BaseActivity baseActivity = mReference.get();
             if (baseActivity != null) {
                 if (action.equals(MediaService.META_CHANGED)) {
                     baseActivity.baseUpdatePlayInfo();
                 } else if (action.equals(MediaService.PLAYSTATE_CHANGED)) {
+
+                } else if (action.equals(MediaService.TRACK_PREPARED)) {
+                    baseActivity.updateTime();
+                } else if (action.equals(MediaService.BUFFER_UP)) {
+                    baseActivity.updateBuffer(intent.getIntExtra("progress", 0));
+                } else if (action.equals(MediaService.MUSIC_LODING)) {
+                    baseActivity.loading(intent.getBooleanExtra("isloading", false));
+                } else if (action.equals(MediaService.REFRESH)) {
+
+                } else if (action.equals(MConstants.MUSIC_COUNT_CHANGED)) {
+                    baseActivity.refreshUI();
+                } else if (action.equals(MConstants.PLAYLIST_COUNT_CHANGED)) {
+                    baseActivity.refreshUI();
+                } else if (action.equals(MediaService.QUEUE_CHANGED)) {
+                    baseActivity.updateQueue();
+                } else if (action.equals(MediaService.TRACK_ERROR)) {
+                    Toast.makeText(baseActivity, "错误了嘤嘤嘤", Toast.LENGTH_SHORT).show();
+                } else if (action.equals(MediaService.MUSIC_CHANGED)) {
+                    baseActivity.updateTrack();
                 }
+
             }
         }
     }

@@ -124,7 +124,7 @@ public class SongListActivity extends BaseActivity {
                         musicInfo.albumName = mHotList.get(i).getAlbummid();
                         musicInfo.albumId = mHotList.get(i).getAlbumid();
                         musicInfo.artistId = mHotList.get(i).getSingerid();
-                        musicInfo.albumData = mHotList.get(i).getAlbumpic_big();
+                        musicInfo.albumPic = mHotList.get(i).getAlbumpic_big();
                         mList.add(musicInfo);
                     }
                     adapter.updateList(mList);

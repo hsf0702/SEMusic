@@ -64,10 +64,18 @@ public class MediaService extends Service {
 
     private static final String TAG = "MediaService";
     public static final String PLAYSTATE_CHANGED = "com.past.music.play_state_changed";
+    public static final String POSITION_CHANGED = "com.past.music.positionchanged";
+    public static final String SEND_PROGRESS = "com.past.music.progress";
     public static final String META_CHANGED = "com.past.music.meta_changed";
     public static final String MUSIC_CHANGED = "com.past.music.change_music";
     public static final String QUEUE_CHANGED = "com.past.music.queuechanged";
     public static final String TRACK_ERROR = "com.past.music.trackerror";
+    public static final String TRACK_PREPARED = "com.past.music.prepared";
+    public static final String REFRESH = "com.past.music.refresh";
+
+    public static final String TIMBER_PACKAGE_NAME = "com.past.music";
+    public static final String MUSIC_PACKAGE_NAME = "com.android.music";
+
 
     public static final String TOGGLEPAUSE_ACTION = "com.past.music.togglepause";
     public static final String NEXT_ACTION = "com.past.music.next";
@@ -76,6 +84,7 @@ public class MediaService extends Service {
     public static final String BUFFER_UP = "com.past.music.bufferup";
     public static final String MUSIC_LODING = "com.past.music.loading";
     private static final String TRACK_NAME = "trackname";
+    private static final String ALNUM_PIC = "album_pic";
     public static final int NEXT = 2;
     public static final int LAST = 3;
     private static final int IDCOLIDX = 0;
@@ -108,7 +117,7 @@ public class MediaService extends Service {
             "audio._id AS _id", MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.ALBUM,
             MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.DATA,
             MediaStore.Audio.Media.MIME_TYPE, MediaStore.Audio.Media.ALBUM_ID,
-            MediaStore.Audio.Media.ARTIST_ID
+            MediaStore.Audio.Media.ARTIST_ID, ALNUM_PIC
     };
 
     private static final String[] PROJECTION_MATRIX = new String[]{
@@ -459,17 +468,17 @@ public class MediaService extends Service {
      * @param context
      * @param uri
      */
-    private void updateCursorForDownloadedFile(Context context, Uri uri) {
-        synchronized (this) {
-            closeCursor();
-            //模拟一个cursor
-            MatrixCursor cursor = new MatrixCursor(PROJECTION_MATRIX);
-            String title = getValueForDownloadedFile(this, uri, MediaStore.Audio.Media.TITLE);
-            cursor.addRow(new Object[]{null, null, null, title, null, null, null, null});
-            mCursor = cursor;
-            mCursor.moveToFirst();
-        }
-    }
+//    private void updateCursorForDownloadedFile(Context context, Uri uri) {
+//        synchronized (this) {
+//            closeCursor();
+//            //模拟一个cursor
+//            MatrixCursor cursor = new MatrixCursor(PROJECTION_MATRIX);
+//            String title = getValueForDownloadedFile(this, uri, MediaStore.Audio.Media.TITLE);
+//            cursor.addRow(new Object[]{null, null, null, title, null, null, null, null});
+//            mCursor = cursor;
+//            mCursor.moveToFirst();
+//        }
+//    }
 
     /**
      * 根据URI查找本地音乐文件的相应的column的值
@@ -547,7 +556,7 @@ public class MediaService extends Service {
         if (mPlaylistInfo.get(trackId) != null) {
             MatrixCursor cursor = new MatrixCursor(PROJECTION);
             cursor.addRow(new Object[]{info.songId, info.artist, info.albumName, info.musicName
-                    , info.data, info.albumData, info.albumId, info.artistId});
+                    , info.data, info.albumData, info.albumId, info.artistId, info.albumPic});
             cursor.moveToFirst();
             mCursor = cursor;
             cursor.close();
@@ -755,19 +764,42 @@ public class MediaService extends Service {
         }
     }
 
+    public long duration() {
+        if (mPlayer.isInitialized() && mPlayer.isTrackPrepared()) {
+            return mPlayer.duration();
+        }
+        return -1;
+    }
+
     public int getShuffleMode() {
         return mShuffleMode;
     }
 
     private void notifyChange(final String what) {
-        Intent intent = null;
-        if (what.equals(META_CHANGED)) {
-            intent = new Intent(META_CHANGED);
+        if (SEND_PROGRESS.equals(what)) {
+            final Intent intent = new Intent(what);
+            intent.putExtra("position", position());
+            intent.putExtra("duration", duration());
             sendStickyBroadcast(intent);
-        } else if (what.equals(MUSIC_CHANGED)) {
-//            play(true);
-        } else if (what.equals(PLAYSTATE_CHANGED)) {
-            updateNotification();
+            return;
+        }
+        if (what.equals(POSITION_CHANGED)) {
+            return;
+        }
+        final Intent intent = new Intent(what);
+        intent.putExtra("id", getAudioId());
+        intent.putExtra("artist", getArtistName());
+        intent.putExtra("album", getAlbumName());
+        intent.putExtra("track", getTrackName());
+        intent.putExtra("playing", isPlaying());
+        intent.putExtra("albumuri", getAlbumPath());
+        intent.putExtra("islocal", isTrackLocal());
+        sendStickyBroadcast(intent);
+        final Intent musicIntent = new Intent(intent);
+        musicIntent.setAction(what.replace(TIMBER_PACKAGE_NAME, MUSIC_PACKAGE_NAME));
+        sendStickyBroadcast(musicIntent);
+        if (what.equals(META_CHANGED)) {
+
         } else if (what.equals(QUEUE_CHANGED)) {
             Intent intent1 = new Intent("com.past.music.emptyplaylist");
             intent.putExtra("showorhide", "show");
@@ -780,9 +812,14 @@ public class MediaService extends Service {
                 } else {
                     setNextTrack();
                 }
-                setNextTrack();
             }
+        } else {
+            saveQueue(false);
         }
+        if (what.equals(PLAYSTATE_CHANGED)) {
+            updateNotification();
+        }
+
 
     }
 
@@ -887,7 +924,7 @@ public class MediaService extends Service {
                             return false;
                         }
                     } else {
-                        updateCursorForDownloadedFile(this, uri);
+//                        updateCursorForDownloadedFile(this, uri);
                         shouldAddToPlaylist = false;
                     }
                 } else {
@@ -944,6 +981,15 @@ public class MediaService extends Service {
                 return null;
             }
             return mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.TITLE));
+        }
+    }
+
+    public String getAlbumPic() {
+        synchronized (this) {
+            if (mCursor == null) {
+                return null;
+            }
+            return mCursor.getString(mCursor.getColumnIndexOrThrow(ALNUM_PIC));
         }
     }
 
@@ -1086,6 +1132,7 @@ public class MediaService extends Service {
             openCurrentAndNextPlay(true);
             play();
             notifyChange(META_CHANGED);
+            notifyChange(MUSIC_CHANGED);
         }
     }
 
@@ -1244,9 +1291,9 @@ public class MediaService extends Service {
         final Intent mMainIntent = new Intent(this, MainActivity.class);
         PendingIntent mainIntent = PendingIntent.getActivity(this, 0, mMainIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        if (MyApplication.dbService.query(getArtistName().replace(";", "")) != null) {
+        if (MyApplication.imageDBService.query(getArtistName().replace(";", "")) != null) {
             ImagePipeline imagePipeline = Fresco.getImagePipeline();
-            Uri uri = Uri.parse(MyApplication.dbService.query(getArtistName().replace(";", "")));
+            Uri uri = Uri.parse(MyApplication.imageDBService.query(getArtistName().replace(";", "")));
             ImageRequest imageRequest = ImageRequestBuilder
                     .newBuilderWithSource(uri)
                     .setProgressiveRenderingEnabled(true)
@@ -1359,6 +1406,11 @@ public class MediaService extends Service {
         @Override
         public String getAlbumPath() throws RemoteException {
             return null;
+        }
+
+        @Override
+        public String getAlbumPic() throws RemoteException {
+            return mService.get().getAlbumPic();
         }
 
         @Override
@@ -1755,12 +1807,14 @@ public class MediaService extends Service {
         public void onCompletion(final MediaPlayer mp) {
             Log.w(TAG, "completion");
             if (mp == mCurrentMediaPlayer && mNextMediaPlayer != null) {
+                MyLog.i(TAG, "completion---mNextMediaPlayer != null");
                 mCurrentMediaPlayer.release();
                 mCurrentMediaPlayer = mNextMediaPlayer;
                 mNextMediaPath = null;
                 mNextMediaPlayer = null;
                 mHandler.sendEmptyMessage(TRACK_WENT_TO_NEXT);
             } else {
+                MyLog.i(TAG, "completion---mNextMediaPlayer == null");
 //                mService.get().mWakeLock.acquire(30000);
                 mHandler.sendEmptyMessage(TRACK_ENDED);
                 mHandler.sendEmptyMessage(RELEASE_WAKELOCK);
@@ -1807,6 +1861,14 @@ public class MediaService extends Service {
                         service.notifyChange(META_CHANGED);
                         service.notifyChange(MUSIC_CHANGED);
                         service.updateNotification();
+                        break;
+                    case TRACK_ENDED:
+                        if (service.mRepeatMode == REPEAT_CURRENT) {
+                            service.seek(0);
+                            service.play();
+                        } else {
+                            service.nextPlay(false);
+                        }
                         break;
                 }
             }

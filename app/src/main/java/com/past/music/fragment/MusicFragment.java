@@ -80,7 +80,6 @@ public class MusicFragment extends Fragment {
             @Override
             public void onSuccess(int statusCode, HotListResponse response) {
                 if (response.getShowapi_res_code() == 0) {
-                    MyLog.i(TAG, "请求成功");
                     mRecommendList = response.getShowapi_res_body().getPagebean().getSonglist();
                     mAdapter.updateRecommendList(mRecommendList);
                 } else {

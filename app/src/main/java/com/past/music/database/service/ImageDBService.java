@@ -17,10 +17,10 @@ import com.past.music.database.entity.ImageCache;
  * =======================================================
  */
 
-public class DBService {
+public class ImageDBService {
     PastMusicDBHelper pastMusicDBHelper;
 
-    public DBService(Context context) {
+    public ImageDBService(Context context) {
         pastMusicDBHelper = new PastMusicDBHelper(context);
     }
 
@@ -29,12 +29,12 @@ public class DBService {
         ContentValues contentValues = new ContentValues();
         contentValues.put(ImageCache.NAME, artistName);
         contentValues.put(ImageCache.URL, imageUrl);
-        db.insert(PastMusicDBHelper.DB_TABLE, null, contentValues);
+        db.insert(PastMusicDBHelper.IMAGE_TABLE, null, contentValues);
     }
 
     public synchronized String query(String artistName) {
         SQLiteDatabase db = pastMusicDBHelper.getReadableDatabase();
-        Cursor cursor = db.query(PastMusicDBHelper.DB_TABLE, new String[]{ImageCache.URL}, ImageCache.NAME + "=?", new String[]{artistName}, null, null, null);
+        Cursor cursor = db.query(PastMusicDBHelper.IMAGE_TABLE, new String[]{ImageCache.URL}, ImageCache.NAME + "=?", new String[]{artistName}, null, null, null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             return cursor.getString(0);

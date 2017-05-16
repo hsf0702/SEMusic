@@ -13,20 +13,23 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.past.music.MyApplication;
 import com.past.music.activity.BaseActivity;
 import com.past.music.activity.CollectedActivity;
+import com.past.music.activity.CreateSongListActivity;
 import com.past.music.activity.DownloadActivity;
 import com.past.music.activity.LocalMusicActivity;
 import com.past.music.activity.MySingersActivity;
 import com.past.music.activity.RecentMusicActivity;
-import com.past.music.entity.Mp3Info;
+import com.past.music.database.service.SongListDBService;
+import com.past.music.entity.SongListEntity;
 import com.past.music.pastmusic.R;
 import com.past.music.utils.MConstants;
 import com.past.music.utils.MusicUtils;
 import com.past.music.widget.CircleImageView;
 import com.past.music.widget.MineItemView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -47,17 +50,18 @@ public class MyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private static final int FUNC_LAYOUT = 0X02;
     private static final int FAVOR_TITLE_LAYOUT = 0X03;
     private static final int FAVOR_ITEM_LAYOUT = 0X04;
+    private static final int MANAGE_SONG_LIST_LAYOUT = 0X05;
 
-    private List<Mp3Info> mList = new ArrayList<>();
+    private List<SongListEntity> mList;
     private Context mContext = null;
 
     public MyContentAdapter(Context context) {
         this.mContext = context;
+        mList = MyApplication.songListDBService.query();
     }
 
-    public void setListItem(List<Mp3Info> listItem) {
-        mList.clear();
-        mList.addAll(listItem);
+    public void setSongList(List<SongListEntity> listItem) {
+        this.mList = listItem;
         notifyDataSetChanged();
     }
 
@@ -69,6 +73,8 @@ public class MyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             return new FuncLayoutHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.mine_func_layout, parent, false));
         } else if (viewType == FAVOR_TITLE_LAYOUT) {
             return new FavorTitleLayout(LayoutInflater.from(parent.getContext()).inflate(R.layout.mine_favor_title_layout, parent, false));
+        } else if (viewType == MANAGE_SONG_LIST_LAYOUT) {
+            return new ManageSongList(LayoutInflater.from(parent.getContext()).inflate(R.layout.manage_songlist_layout, parent, false));
         } else {
             return new FavorItemLayout(LayoutInflater.from(parent.getContext()).inflate(R.layout.mine_favor_item_layout, parent, false));
         }
@@ -82,14 +88,18 @@ public class MyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             ((FuncLayoutHolder) holder).onBind();
         } else if (holder instanceof FavorTitleLayout) {
 
-        } else {
-
+        } else if (holder instanceof FavorItemLayout) {
+            ((FavorItemLayout) holder).onBind(mList.get(position - 3));
         }
     }
 
     @Override
     public int getItemCount() {
-        return mList.size() + 3;
+        if (mList == null) {
+            return 4;
+        } else {
+            return mList.size() + 4;
+        }
     }
 
     @Override
@@ -101,7 +111,11 @@ public class MyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         } else if (position == 2) {
             return FAVOR_TITLE_LAYOUT;
         } else {
-            return FAVOR_ITEM_LAYOUT;
+            if (position == mList.size() + 3) {
+                return MANAGE_SONG_LIST_LAYOUT;
+            } else {
+                return FAVOR_ITEM_LAYOUT;
+            }
         }
     }
 
@@ -218,7 +232,7 @@ public class MyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     class FavorItemLayout extends RecyclerView.ViewHolder {
 
         @BindView(R.id.img_album)
-        ImageView mAlbum;
+        SimpleDraweeView songList_pic;
 
         @BindView(R.id.play_list_title)
         TextView mPlayListTitle;
@@ -240,6 +254,25 @@ public class MyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         public FavorItemLayout(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        public void onBind(SongListEntity songListEntity) {
+            songList_pic.setImageURI(songListEntity.getList_pic());
+            mPlayListTitle.setText(songListEntity.getName());
+            mPlayListInfo.setText(songListEntity.getCreator() + songListEntity.getInfo());
+        }
+    }
+
+    class ManageSongList extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public ManageSongList(View itemView) {
+            super(itemView);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(mContext, CreateSongListActivity.class);
+            ((BaseActivity) mContext).startActivityByX(intent, false);
         }
     }
 }

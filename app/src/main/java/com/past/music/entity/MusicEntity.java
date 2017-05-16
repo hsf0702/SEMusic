@@ -16,6 +16,7 @@ public class MusicEntity implements Parcelable {
     public int albumId = -1;
     public String albumName;        //专辑名字
     public String albumData;        //
+    public String albumPic;
     public int duration;
     public String musicName;
     public String artist;
@@ -52,6 +53,7 @@ public class MusicEntity implements Parcelable {
         sort = in.readString();
         size = in.readInt();
         favorite = in.readInt();
+        albumPic = in.readString();
     }
 
     public static final Creator<MusicEntity> CREATOR = new Creator<MusicEntity>() {
@@ -88,6 +90,7 @@ public class MusicEntity implements Parcelable {
         dest.writeString(sort);
         dest.writeInt(size);
         dest.writeInt(favorite);
+        dest.writeString(albumPic);
     }
 
     public long getSongId() {
@@ -208,5 +211,13 @@ public class MusicEntity implements Parcelable {
 
     public void setFavorite(int favorite) {
         this.favorite = favorite;
+    }
+
+    public String getAlbumPic() {
+        return albumPic;
+    }
+
+    public void setAlbumPic(String albumPic) {
+        this.albumPic = albumPic;
     }
 }

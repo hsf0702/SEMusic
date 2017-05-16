@@ -201,6 +201,17 @@ public class MusicPlayer {
         return null;
     }
 
+    public static String getAlbumPic() {
+        try {
+            if (mService != null) {
+                return mService.getAlbumPic();
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /**
      * 返回播放列表ID到音乐实体的映射
      *

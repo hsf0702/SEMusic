@@ -85,7 +85,7 @@ public class SongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             mTitle.setText(musicEntity.getMusicName());
             mTitle.setTextColor(0xffffffff);
             mInfo.setText(musicEntity.getArtist() + " • " + "专辑");
-            mImgSong.setImageURI(musicEntity.getAlbumData());
+            mImgSong.setImageURI(musicEntity.getAlbumPic());
         }
 
         @Override
@@ -93,7 +93,7 @@ public class SongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    HashMap<Long, MusicEntity> infos = new HashMap<Long, MusicEntity>();
+                    HashMap<Long, MusicEntity> infos = new HashMap<>();
 //                    int len = 10;
                     int len = mList.size();
                     long[] list = new long[len];
