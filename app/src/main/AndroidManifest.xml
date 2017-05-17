@@ -56,11 +56,15 @@
         <activity android:name="com.past.music.activity.CollectedActivity"/>
         <activity android:name="com.past.music.activity.MySingersActivity"/>
         <activity android:name="com.past.music.activity.PlayListInfoActivity"/>
-        <activity android:name="com.past.music.activity.SongListActivity">
+        <activity android:name="com.past.music.activity.NetSongListActivity">
         </activity>
         <activity android:name="com.past.music.activity.WebViewActivity">
         </activity>
-        <activity android:name="com.past.music.activity.CreateSongListActivity">
+        <activity android:name="com.past.music.activity.SongListActivity">
+        </activity>
+        <activity
+            android:name="com.past.music.activity.CreateSongListActivity"
+            android:windowSoftInputMode="stateAlwaysVisible">
         </activity>
     </application>
 

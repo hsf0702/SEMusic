@@ -29,7 +29,7 @@ public class PastMusicDBHelper extends SQLiteOpenHelper {
             " (" + SongListCache.ID + " varchar(128), " +
             SongListCache.NAME + " varchar(50) NOT NULL," +
             SongListCache.COUNT + " int," +
-            SongListCache.CREATOR + " varchar(20) NOT NULL," +
+            SongListCache.CREATOR + " varchar(20)," +
             SongListCache.CREATE_TIME + " varchar(30) NOT NULL," +
             SongListCache.LIST_PIC + " varchar(50)," +
             SongListCache.INFO + " varchar(50)," +

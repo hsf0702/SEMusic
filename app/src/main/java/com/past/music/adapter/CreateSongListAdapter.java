@@ -1,6 +1,8 @@
 package com.past.music.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.past.music.MyApplication;
+import com.past.music.activity.CreateSongListActivity;
 import com.past.music.entity.SongListEntity;
 import com.past.music.pastmusic.R;
 
@@ -87,7 +90,9 @@ public class CreateSongListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         @OnClick(R.id.create_song_list)
         void create() {
-            Toast.makeText(mContext, "创建歌单", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(mContext, CreateSongListActivity.class);
+            mContext.startActivity(intent);
+            ((Activity) mContext).overridePendingTransition(R.anim.push_down_in, R.anim.push_up_out);
         }
 
         @BindView(R.id.tv_manage)

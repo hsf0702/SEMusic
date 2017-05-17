@@ -16,9 +16,6 @@ import com.past.music.api.HotListResquest;
 import com.past.music.api.SonglistBean;
 import com.past.music.log.MyLog;
 import com.past.music.pastmusic.R;
-
-import org.reactivestreams.Subscription;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,8 +28,6 @@ public class MusicFragment extends Fragment {
     private static final String TAG = "MusicFragment";
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    private Subscription mSubscription;
     private String mParam1;
     private String mParam2;
 

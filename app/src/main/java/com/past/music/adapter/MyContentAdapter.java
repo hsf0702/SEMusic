@@ -17,12 +17,11 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.past.music.MyApplication;
 import com.past.music.activity.BaseActivity;
 import com.past.music.activity.CollectedActivity;
-import com.past.music.activity.CreateSongListActivity;
+import com.past.music.activity.SongListActivity;
 import com.past.music.activity.DownloadActivity;
 import com.past.music.activity.LocalMusicActivity;
 import com.past.music.activity.MySingersActivity;
 import com.past.music.activity.RecentMusicActivity;
-import com.past.music.database.service.SongListDBService;
 import com.past.music.entity.SongListEntity;
 import com.past.music.pastmusic.R;
 import com.past.music.utils.MConstants;
@@ -271,7 +270,7 @@ public class MyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(mContext, CreateSongListActivity.class);
+            Intent intent = new Intent(mContext, SongListActivity.class);
             ((BaseActivity) mContext).startActivityByX(intent, false);
         }
     }

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.past.music.activity.SongListActivity;
+import com.past.music.activity.NetSongListActivity;
 import com.past.music.activity.WebViewActivity;
 import com.past.music.api.SonglistBean;
 import com.past.music.pastmusic.R;
@@ -147,7 +147,7 @@ public class MusicContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         @OnClick(R.id.icon_view_1)
         void click1() {
-            SongListActivity.startActivity(mContext, "26", "巅峰榜 • 热歌");
+            NetSongListActivity.startActivity(mContext, "26", "巅峰榜 • 热歌");
         }
 
         @BindView(R.id.icon_view_2)
@@ -155,7 +155,7 @@ public class MusicContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         @OnClick(R.id.icon_view_2)
         void click2() {
-            SongListActivity.startActivity(mContext, "6", "巅峰榜 • 港台");
+            NetSongListActivity.startActivity(mContext, "6", "巅峰榜 • 港台");
         }
 
         @BindView(R.id.icon_view_3)
@@ -163,7 +163,7 @@ public class MusicContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         @OnClick(R.id.icon_view_3)
         void click3() {
-            SongListActivity.startActivity(mContext, "5", "巅峰榜 • 内地");
+            NetSongListActivity.startActivity(mContext, "5", "巅峰榜 • 内地");
         }
 
         @BindView(R.id.icon_view_4)
@@ -171,7 +171,7 @@ public class MusicContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         @OnClick(R.id.icon_view_4)
         void click4() {
-            SongListActivity.startActivity(mContext, "3", "巅峰榜 • 欧美");
+            NetSongListActivity.startActivity(mContext, "3", "巅峰榜 • 欧美");
         }
 
         @BindView(R.id.icon_view_5)
@@ -179,7 +179,7 @@ public class MusicContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         @OnClick(R.id.icon_view_5)
         void click5() {
-            SongListActivity.startActivity(mContext, "17", "巅峰榜 • 日本");
+            NetSongListActivity.startActivity(mContext, "17", "巅峰榜 • 日本");
         }
 
         @BindView(R.id.icon_view_6)
@@ -187,7 +187,7 @@ public class MusicContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         @OnClick(R.id.icon_view_6)
         void click6() {
-            SongListActivity.startActivity(mContext, "28", "巅峰榜 • 网络歌曲");
+            NetSongListActivity.startActivity(mContext, "28", "巅峰榜 • 网络歌曲");
         }
 
         public HotListHolder(View itemView) {

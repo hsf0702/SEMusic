@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_hot_list"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.past.music.activity.NetSongListActivity">
+
+    <FrameLayout
+        android:id="@+id/bottom_container"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:background="@color/white"/>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/parent_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_container">
+
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/head_image"
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:scaleType="centerCrop"/>
+
+        <RelativeLayout
+            android:id="@+id/view_need_offset"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/header_float_behavior">
+
+            <ImageView
+                android:id="@+id/hot_list_back"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:paddingBottom="7dp"
+                android:paddingLeft="20dp"
+                android:paddingTop="7dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/back_white"/>
+
+            <TextView
+                android:id="@+id/hot_list_title"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"/>
+
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/nested_recycle_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/header_scrolling_behavior"/>
+
+    </android.support.design.widget.CoordinatorLayout>
+
+</RelativeLayout>

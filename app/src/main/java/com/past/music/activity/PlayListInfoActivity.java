@@ -31,9 +31,7 @@ public class PlayListInfoActivity extends ToolBarActivity implements MConstants 
     @BindView(R.id.recycle_view)
     RecyclerView mRecyclerView;
 
-
     private LocalMusicAdapter mAdapter;
-
 
     public static void startActivity(Context context, String title, String searchId, int mark) {
         Intent intent = new Intent(context, PlayListInfoActivity.class);

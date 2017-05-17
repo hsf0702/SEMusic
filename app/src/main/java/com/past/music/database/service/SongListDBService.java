@@ -48,6 +48,17 @@ public class SongListDBService {
         db.insert(PastMusicDBHelper.SONGLIST_TABLE, null, contentValues);
     }
 
+    public synchronized void insert(String songListName,String info) {
+        SQLiteDatabase db = pastMusicDBHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SongListCache.ID, UUID.randomUUID().toString());
+        contentValues.put(SongListCache.NAME, songListName);
+        contentValues.put(SongListCache.CREATE_TIME, System.currentTimeMillis());
+        contentValues.put(SongListCache.INFO, info);
+        db.insert(PastMusicDBHelper.SONGLIST_TABLE, null, contentValues);
+    }
+
+
     public synchronized List<SongListEntity> query() {
         SQLiteDatabase db = pastMusicDBHelper.getReadableDatabase();
         List<SongListEntity> list = new ArrayList<>();
