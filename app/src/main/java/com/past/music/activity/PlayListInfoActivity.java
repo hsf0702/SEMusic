@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.past.music.adapter.LocalMusicAdapter;
+import com.past.music.adapter.MusicListAdapter;
 import com.past.music.entity.MusicEntity;
 import com.past.music.pastmusic.R;
 import com.past.music.utils.MConstants;
@@ -31,7 +31,7 @@ public class PlayListInfoActivity extends ToolBarActivity implements MConstants 
     @BindView(R.id.recycle_view)
     RecyclerView mRecyclerView;
 
-    private LocalMusicAdapter mAdapter;
+    private MusicListAdapter mAdapter;
 
     public static void startActivity(Context context, String title, String searchId, int mark) {
         Intent intent = new Intent(context, PlayListInfoActivity.class);
@@ -47,7 +47,7 @@ public class PlayListInfoActivity extends ToolBarActivity implements MConstants 
         super.onCreate(savedInstanceState);
         onNewIntent(getIntent());
         setTitle(mTitle);
-        mAdapter = new LocalMusicAdapter(this);
+        mAdapter = new MusicListAdapter(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mAdapter);

@@ -107,6 +107,17 @@ public class MusicPlayer {
         }
     }
 
+    public static final int getQueueSize() {
+        try {
+            if (mService != null) {
+                return mService.getQueueSize();
+            } else {
+            }
+        } catch (final RemoteException ignored) {
+        }
+        return 0;
+    }
+
     public static final int getQueuePosition() {
         try {
             if (mService != null) {
@@ -149,6 +160,7 @@ public class MusicPlayer {
                 position = 0;
             }
             mService.open(infos, list, position);
+            mService.play();
         } catch (final RemoteException ignored) {
         } catch (IllegalStateException e) {
             e.printStackTrace();
@@ -167,8 +179,40 @@ public class MusicPlayer {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-
     }
+
+    public static void previous(final Context context, final boolean force) {
+        final Intent previous = new Intent(context, MediaService.class);
+        if (force) {
+            previous.setAction(MediaService.PREVIOUS_FORCE_ACTION);
+        } else {
+            previous.setAction(MediaService.PREVIOUS_ACTION);
+        }
+        context.startService(previous);
+    }
+
+    public static void playNext(Context context, final HashMap<Long, MusicEntity> map, final long[] list) {
+//        if (mService == null) {
+//            return;
+//        }
+//        try {
+//            int current = -1;
+//            long[] result = list;
+//
+//            for (int i = 0; i < list.length; i++) {
+//                if (MusicPlayer.getCurrentAudioId() == list[i]) {
+//                    current = i;
+//                } else {
+//                    MusicPlayer.removeTrack(list[i]);
+//                }
+//            }
+//            mService.enqueue(list, map, MediaService.NEXT);
+//
+//            Toast.makeText(context, "已加入下一首播放", Toast.LENGTH_SHORT).show();
+//        } catch (final RemoteException ignored) {
+//        }
+    }
+
 
     /**
      * 获取当前播放的音乐的名字

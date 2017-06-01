@@ -9,8 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.past.music.adapter.LocalMusicAdapter;
+import com.past.music.adapter.MusicListAdapter;
 import com.past.music.entity.MusicEntity;
+import com.past.music.log.MyLog;
 import com.past.music.pastmusic.R;
 import com.past.music.utils.MConstants;
 import com.past.music.utils.MusicUtils;
@@ -35,7 +36,7 @@ public class LocalMusicFragment extends BaseFragment {
     @BindView(R.id.local_music_recycle)
     RecyclerView mRecyclerView;
 
-    private LocalMusicAdapter mAdapter;
+    private MusicListAdapter mAdapter;
 
 
     public static LocalMusicFragment newInstance(String param1, String param2) {
@@ -55,7 +56,7 @@ public class LocalMusicFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_local_music, container, false);
         ButterKnife.bind(this, view);
-        mAdapter = new LocalMusicAdapter(getContext());
+        mAdapter = new MusicListAdapter(getContext());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mAdapter);
@@ -65,6 +66,7 @@ public class LocalMusicFragment extends BaseFragment {
     //重写更新adapter的方法
     @Override
     public void reloadAdapter() {
+        MyLog.i("20160523", "reloadAdapter执行");
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(final Void... unused) {

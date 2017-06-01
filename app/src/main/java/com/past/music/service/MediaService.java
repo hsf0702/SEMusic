@@ -47,6 +47,7 @@ import com.past.music.entity.MusicEntity;
 import com.past.music.log.MyLog;
 import com.past.music.pastmusic.IMediaAidlInterface;
 import com.past.music.pastmusic.R;
+import com.past.music.provider.RecentStore;
 import com.past.music.proxy.utils.MediaPlayerProxy;
 import com.past.music.utils.SharePreferencesUtils;
 
@@ -58,6 +59,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.ListIterator;
 import java.util.Map;
 
 public class MediaService extends Service {
@@ -72,6 +74,9 @@ public class MediaService extends Service {
     public static final String TRACK_ERROR = "com.past.music.trackerror";
     public static final String TRACK_PREPARED = "com.past.music.prepared";
     public static final String REFRESH = "com.past.music.refresh";
+    public static final String PREVIOUS_FORCE_ACTION = "com.past.music.previous.force";
+    public static final String PREVIOUS_ACTION = "com.past.music.previous";
+
 
     public static final String TIMBER_PACKAGE_NAME = "com.past.music";
     public static final String MUSIC_PACKAGE_NAME = "com.android.music";
@@ -190,6 +195,8 @@ public class MediaService extends Service {
     private boolean mPausedByTransientLossOfFocus = false;
     private MediaSession mSession;
 
+    private RecentStore mRecentStore;
+
     public MediaService() {
     }
 
@@ -241,6 +248,7 @@ public class MediaService extends Service {
         mPlayer = new MultiPlayer(this);
         mPlayer.setHandler(mPlayerHandler);
         mPreferences = getSharedPreferences("Service", 0);
+        mRecentStore = RecentStore.getInstance(this);
 
         final IntentFilter filter = new IntentFilter();
 //        filter.addAction(SERVICECMD);
@@ -799,7 +807,7 @@ public class MediaService extends Service {
         musicIntent.setAction(what.replace(TIMBER_PACKAGE_NAME, MUSIC_PACKAGE_NAME));
         sendStickyBroadcast(musicIntent);
         if (what.equals(META_CHANGED)) {
-
+            mRecentStore.addSongId(getAudioId());
         } else if (what.equals(QUEUE_CHANGED)) {
             Intent intent1 = new Intent("com.past.music.emptyplaylist");
             intent.putExtra("showorhide", "show");
@@ -1011,6 +1019,13 @@ public class MediaService extends Service {
         }
     }
 
+    public int getQueueSize() {
+        synchronized (this) {
+            return mPlaylist.size();
+        }
+    }
+
+
     public HashMap<Long, MusicEntity> getPlaylistInfo() {
         synchronized (this) {
             return mPlaylistInfo;
@@ -1040,7 +1055,6 @@ public class MediaService extends Service {
         if (track != null) {
             return track.mId;
         }
-
         return -1;
     }
 
@@ -1131,7 +1145,6 @@ public class MediaService extends Service {
             setAndRecordPlayPos(pos);
             openCurrentAndNextPlay(true);
             play();
-            notifyChange(META_CHANGED);
             notifyChange(MUSIC_CHANGED);
         }
     }
@@ -1226,6 +1239,91 @@ public class MediaService extends Service {
         Intent intent = new Intent(MUSIC_LODING);
         intent.putExtra("isloading", l);
         sendBroadcast(intent);
+    }
+
+    public int removeTrack(final long id) {
+        int numremoved = 0;
+        synchronized (this) {
+            for (int i = 0; i < mPlaylist.size(); i++) {
+                if (mPlaylist.get(i).mId == id) {
+                    numremoved += removeTracksInternal(i, i);
+                    i--;
+                }
+            }
+
+            mPlaylistInfo.remove(id);
+        }
+
+
+        if (numremoved > 0) {
+            notifyChange(QUEUE_CHANGED);
+        }
+        return numremoved;
+    }
+
+    private int removeTracksInternal(int first, int last) {
+        synchronized (this) {
+            if (last < first) {
+                return 0;
+            } else if (first < 0) {
+                first = 0;
+            } else if (last >= mPlaylist.size()) {
+                last = mPlaylist.size() - 1;
+            }
+
+            boolean gotonext = false;
+            if (first <= mPlayPos && mPlayPos <= last) {
+                mPlayPos = first;
+                gotonext = true;
+            } else if (mPlayPos > last) {
+                mPlayPos -= last - first + 1;
+            }
+            final int numToRemove = last - first + 1;
+
+            if (first == 0 && last == mPlaylist.size() - 1) {
+                mPlayPos = -1;
+                mNextPlayPos = -1;
+                mPlaylist.clear();
+                mHistory.clear();
+            } else {
+                for (int i = 0; i < numToRemove; i++) {
+                    mPlaylistInfo.remove(mPlaylist.get(first).mId);
+                    mPlaylist.remove(first);
+
+                }
+
+                ListIterator<Integer> positionIterator = mHistory.listIterator();
+                while (positionIterator.hasNext()) {
+                    int pos = positionIterator.next();
+                    if (pos >= first && pos <= last) {
+                        positionIterator.remove();
+                    } else if (pos > last) {
+                        positionIterator.set(pos - numToRemove);
+                    }
+                }
+            }
+            if (gotonext) {
+                if (mPlaylist.size() == 0) {
+                    stop(true);
+                    mPlayPos = -1;
+                    closeCursor();
+                } else {
+                    if (mShuffleMode != SHUFFLE_NONE) {
+                        mPlayPos = getNextPosition(true);
+                    } else if (mPlayPos >= mPlaylist.size()) {
+                        mPlayPos = 0;
+                    }
+                    final boolean wasPlaying = isPlaying();
+                    stop(false);
+                    openCurrentAndNext();
+                    if (wasPlaying) {
+                        play();
+                    }
+                }
+                notifyChange(META_CHANGED);
+            }
+            return last - first + 1;
+        }
     }
 
     public void enqueue(final long[] list, final HashMap<Long, MusicEntity> map, final int action) {
@@ -1444,8 +1542,23 @@ public class MediaService extends Service {
         }
 
         @Override
+        public int getQueueSize() throws RemoteException {
+            return mService.get().getQueueSize();
+        }
+
+        @Override
         public int getQueuePosition() throws RemoteException {
             return mService.get().getQueuePosition();
+        }
+
+        @Override
+        public int removeTrack(long id) throws RemoteException {
+            return mService.get().removeTrack(id);
+        }
+
+        @Override
+        public void enqueue(long[] list, Map infos, int action) throws RemoteException {
+
         }
 
         @Override

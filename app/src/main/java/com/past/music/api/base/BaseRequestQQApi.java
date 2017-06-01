@@ -14,13 +14,6 @@ import com.neu.gaojin.request.RequestBase;
  */
 public class BaseRequestQQApi<T> extends RequestBase<T> {
 
-    /**
-     * http://route.showapi.com/213-4?showapi_appid=32384&topid=18&showapi_sign=0bfb8ffd39e045fcaa90f0f6c2ee4078
-     */
-
-    @HttpUrlParams("URL")
-    String URL = "http://route.showapi.com/213-4";
-
     @RequiredParam("showapi_appid")
     String showapi_appid = "32384";
 

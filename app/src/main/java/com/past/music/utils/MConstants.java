@@ -16,6 +16,11 @@ public interface MConstants {
     String EMPTY_LIST = "com.past.music.emptyplaylist";
     String PACKAGE = "com.past.music";
 
+    int MUSICOVERFLOW = 0;
+    int ARTISTOVERFLOW = 1;
+    int ALBUMOVERFLOW = 2;
+    int FOLDEROVERFLOW = 3;
+
     //歌手和专辑列表点击都会进入MyMusic 此时要传递参数表明是从哪里进入的
     int START_FROM_ARTIST = 1;
     int START_FROM_ALBUM = 2;

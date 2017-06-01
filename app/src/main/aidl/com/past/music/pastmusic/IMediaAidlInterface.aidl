@@ -29,5 +29,8 @@ interface IMediaAidlInterface {
     long [] getQueue();
     void setQueuePosition(int index);
     long getAudioId();
+    int getQueueSize();
     int getQueuePosition();
+    int removeTrack(long id);
+    void enqueue(in long [] list,in Map infos, int action);
 }

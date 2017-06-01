@@ -2,6 +2,7 @@ package com.past.music.activity;
 
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jaeger.library.StatusBarUtil;
@@ -27,6 +28,9 @@ public abstract class ToolBarActivity extends BaseActivity {
 
     @BindView(R.id.back)
     protected ImageView mBack;
+
+    @BindView(R.id.base_toolbar)
+    RelativeLayout relativeLayout;
 
     @OnClick(R.id.back)
     void back() {

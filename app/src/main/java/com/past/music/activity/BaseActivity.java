@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.jaeger.library.StatusBarUtil;
 import com.past.music.fragment.QuickControlsFragment;
+import com.past.music.log.MyLog;
 import com.past.music.pastmusic.IMediaAidlInterface;
 import com.past.music.pastmusic.R;
 import com.past.music.service.MediaService;
@@ -140,6 +141,7 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
             BaseActivity baseActivity = mReference.get();
             if (baseActivity != null) {
                 if (action.equals(MediaService.META_CHANGED)) {
+                    MyLog.i("20160523", "MediaService.META_CHANGED--调用reloadAdapter");
                     baseActivity.baseUpdatePlayInfo();
                 } else if (action.equals(MediaService.PLAYSTATE_CHANGED)) {
 
@@ -173,6 +175,7 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
     public void baseUpdatePlayInfo() {
         for (MusicStateListener listener : mMusicListener) {
             if (listener != null) {
+                MyLog.i("20160523", "baseUpdatePlayInfo--调用reloadAdapter");
                 listener.reloadAdapter();
                 listener.updatePlayInfo();
             }
@@ -185,6 +188,7 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
     public void refreshUI() {
         for (final MusicStateListener listener : mMusicListener) {
             if (listener != null) {
+                MyLog.i("20160523", "refreshUI--调用reloadAdapter");
                 listener.reloadAdapter();
             }
         }
@@ -215,10 +219,8 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
     public final void startActivityByX(Intent intent, boolean isInFromRight) {
         this.startActivity(intent);
         if (isInFromRight) {
-//            this.overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
             this.overridePendingTransition(R.anim.empty, R.anim.empty);
         } else {
-//            this.overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
             this.overridePendingTransition(R.anim.empty, R.anim.empty);
         }
     }

@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.past.music.database.entity.ImageCache;
 import com.past.music.database.entity.MusicInfoCache;
 import com.past.music.database.entity.SongListCache;
+import com.past.music.provider.RecentStore;
 
 /**
  * Created by gaojin on 2017/4/11.
@@ -50,9 +51,21 @@ public class PastMusicDBHelper extends SQLiteOpenHelper {
             "PRIMARY KEY (" + MusicInfoCache.ID + ")" +
             ");";
 
+    private Context mContext = null;
+
+    private static PastMusicDBHelper sInstance = null;
+
     public PastMusicDBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
+        this.mContext = context;
 
+    }
+
+    public static final synchronized PastMusicDBHelper getInstance(final Context context) {
+        if (sInstance == null) {
+            sInstance = new PastMusicDBHelper(context.getApplicationContext());
+        }
+        return sInstance;
     }
 
     @Override
@@ -60,6 +73,7 @@ public class PastMusicDBHelper extends SQLiteOpenHelper {
         db.execSQL(IMAGE_TABLE_CREATE);
         db.execSQL(SONGLIST_TABLE_CREATE);
         db.execSQL(MUSICINFO_TABLE_CREATE);
+        RecentStore.getInstance(mContext).onCreate(db);
     }
 
     @Override
@@ -67,6 +81,7 @@ public class PastMusicDBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + IMAGE_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + SONGLIST_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + MUSICINFO_TABLE);
+        RecentStore.getInstance(mContext).onUpgrade(db, oldVersion, newVersion);
         onCreate(db);
     }
 }

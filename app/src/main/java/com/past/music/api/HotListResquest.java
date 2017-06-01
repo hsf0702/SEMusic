@@ -1,5 +1,6 @@
 package com.past.music.api;
 
+import com.neu.gaojin.annotation.HttpUrlParams;
 import com.neu.gaojin.annotation.RequiredParam;
 import com.past.music.api.base.BaseRequestQQApi;
 
@@ -15,6 +16,9 @@ public class HotListResquest extends BaseRequestQQApi<HotListResponse> {
     public HotListResquest(String topid) {
         this.topid = topid;
     }
+
+    @HttpUrlParams("URL")
+    String URL = "http://route.showapi.com/213-4";
 
     @RequiredParam("topid")
     String topid;

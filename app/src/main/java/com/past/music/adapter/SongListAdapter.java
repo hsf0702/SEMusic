@@ -1,6 +1,7 @@
 package com.past.music.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,16 +11,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.past.music.dialog.SongOperationDialog;
 import com.past.music.entity.MusicEntity;
 import com.past.music.pastmusic.R;
 import com.past.music.service.MusicPlayer;
 import com.past.music.utils.HandlerUtil;
+import com.past.music.utils.ImageUtils;
+import com.past.music.utils.MConstants;
 
 import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * =======================================================
@@ -34,10 +39,18 @@ public class SongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private Context mContext;
     private List<MusicEntity> mList;
     private Handler mHandler;
+    private boolean isLight = true;
+    private SongOperationDialog songOperationDialog;
 
     public SongListAdapter(Context context) {
         this.mContext = context;
         mHandler = HandlerUtil.getInstance(context);
+    }
+
+    public SongListAdapter(Context context, boolean isLight) {
+        this.mContext = context;
+        mHandler = HandlerUtil.getInstance(context);
+        this.isLight = isLight;
     }
 
     public void updateList(List<MusicEntity> list) {
@@ -74,6 +87,14 @@ public class SongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         @BindView(R.id.rl_hot_singer_item)
         RelativeLayout relativeLayout;
 
+        @BindView(R.id.line)
+        View mLine;
+
+        @OnClick(R.id.three_more)
+        void more() {
+            songOperationDialog = new SongOperationDialog(mContext, mList.get(getAdapterPosition()), MConstants.MUSICOVERFLOW);
+            songOperationDialog.show();
+        }
 
         public RecommendListHolder(View itemView) {
             super(itemView);
@@ -82,10 +103,17 @@ public class SongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
         public void onBind(final MusicEntity musicEntity) {
+            if (isLight) {
+                mTitle.setTextColor(Color.WHITE);
+                mLine.setVisibility(View.GONE);
+            } else {
+                mTitle.setTextColor(Color.BLACK);
+                relativeLayout.setBackgroundColor(Color.WHITE);
+                mLine.setVisibility(View.VISIBLE);
+            }
             mTitle.setText(musicEntity.getMusicName());
-            mTitle.setTextColor(0xffffffff);
-            mInfo.setText(musicEntity.getArtist() + " • " + "专辑");
-            mImgSong.setImageURI(musicEntity.getAlbumPic());
+            mInfo.setText(musicEntity.getArtist());
+            ImageUtils.setImageSource(mContext, mImgSong, musicEntity);
         }
 
         @Override
@@ -94,7 +122,6 @@ public class SongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 @Override
                 public void run() {
                     HashMap<Long, MusicEntity> infos = new HashMap<>();
-//                    int len = 10;
                     int len = mList.size();
                     long[] list = new long[len];
                     for (int i = 0; i < len; i++) {
@@ -102,7 +129,7 @@ public class SongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         list[i] = info.songId;
                         infos.put(list[i], info);
                     }
-                    if (getAdapterPosition() > 0)
+                    if (getAdapterPosition() >= 0)
                         MusicPlayer.playAll(infos, list, getAdapterPosition(), false);
                 }
             }, 70);

@@ -8,6 +8,14 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.neu.gaojin.MyOkHttpClient;
+import com.neu.gaojin.response.BaseCallback;
+import com.past.music.MyApplication;
+import com.past.music.api.AvatarRequest;
+import com.past.music.api.AvatarResponse;
+import com.past.music.entity.MusicEntity;
+
 import java.io.IOException;
 
 /**
@@ -99,5 +107,31 @@ public class ImageUtils {
             }
         }
         return null;
+    }
+
+    public static void setImageSource(Context context, final SimpleDraweeView simpleDraweeView, final MusicEntity musicEntity) {
+        if (musicEntity.getAlbumPic() == null) {
+            if (MyApplication.imageDBService.query(musicEntity.getArtist().replace(";", "")) == null) {
+                AvatarRequest avatarRequest = new AvatarRequest();
+                avatarRequest.setArtist(musicEntity.getArtist().replace(";", ""));
+                MyOkHttpClient.getInstance(context).sendNet(avatarRequest, new BaseCallback<AvatarResponse>() {
+                    @Override
+                    public void onFailure(int code, String error_msg) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, final AvatarResponse response) {
+                        MyApplication.imageDBService.insert(musicEntity.getArtist().replace(";", ""), response.getArtist().getImage().get(2).get_$Text112());
+                        simpleDraweeView.setImageURI(response.getArtist().getImage().get(2).get_$Text112());
+                    }
+                });
+            } else {
+                simpleDraweeView.setImageURI(MyApplication.imageDBService.query(musicEntity.getArtist().replace(";", "")));
+            }
+        } else {
+            simpleDraweeView.setImageURI(musicEntity.getAlbumPic());
+        }
+
     }
 }

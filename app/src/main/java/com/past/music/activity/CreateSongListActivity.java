@@ -9,7 +9,10 @@ import android.widget.TextView;
 import com.jaeger.library.StatusBarUtil;
 import com.past.music.Config.BaseConfig;
 import com.past.music.MyApplication;
+import com.past.music.event.CreateSongListEvent;
 import com.past.music.pastmusic.R;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,6 +43,7 @@ public class CreateSongListActivity extends AppCompatActivity {
         listInfo = infoInput.getText().toString();
         if (!TextUtils.isEmpty(listName)) {
             MyApplication.songListDBService.insert(listName, listInfo);
+            EventBus.getDefault().post(new CreateSongListEvent());
         }
         finish();
     }

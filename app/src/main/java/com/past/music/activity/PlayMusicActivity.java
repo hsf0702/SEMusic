@@ -15,28 +15,35 @@ import butterknife.OnClick;
 public class PlayMusicActivity extends BaseActivity {
     private Mp3Info mMp3Info = null;
 
-    @BindView(R.id.playing_next)
-    ImageView mNext;
-
-    @BindView(R.id.playing_pre)
-    ImageView mPre;
+//    @BindView(R.id.playing_next)
+//    ImageView mNext;
+//
+//    @BindView(R.id.playing_pre)
+//    ImageView mPre;
 
     @BindView(R.id.playing_play)
     ImageView mPlay;
 
     @OnClick(R.id.playing_next)
     void next() {
-
+        MusicPlayer.nextPlay();
     }
 
     @OnClick(R.id.playing_pre)
     void pre() {
-
+        MusicPlayer.previous(PlayMusicActivity.this, true);
     }
 
     @OnClick(R.id.playing_play)
     void play() {
-        MusicPlayer.playOrPause();
+        if (MusicPlayer.getIsPlaying()) {
+            mPlay.setImageResource(R.drawable.play_rdi_btn_pause);
+        } else {
+            mPlay.setImageResource(R.drawable.play_rdi_btn_play);
+        }
+        if (MusicPlayer.getQueueSize() != 0) {
+            MusicPlayer.playOrPause();
+        }
     }
 
     @Override
@@ -59,6 +66,15 @@ public class PlayMusicActivity extends BaseActivity {
 
     @Override
     protected void showQuickControl(boolean show) {
+    }
+
+    @Override
+    public void baseUpdatePlayInfo() {
+        if (MusicPlayer.getIsPlaying()) {
+            mPlay.setImageResource(R.drawable.play_rdi_btn_pause);
+        } else {
+            mPlay.setImageResource(R.drawable.play_rdi_btn_play);
+        }
     }
 
     @Override

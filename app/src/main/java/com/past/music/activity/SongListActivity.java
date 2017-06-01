@@ -27,6 +27,12 @@ public class SongListActivity extends ToolBarActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        mAdapter.update();
+    }
+
+    @Override
     protected int getLayoutId() {
         return R.layout.activity_song_list;
     }

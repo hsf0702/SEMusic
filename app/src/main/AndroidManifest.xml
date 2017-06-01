@@ -66,6 +66,10 @@
             android:name="com.past.music.activity.CreateSongListActivity"
             android:windowSoftInputMode="stateAlwaysVisible">
         </activity>
+        <activity android:name="com.past.music.activity.SongListInfoActivity">
+        </activity>
+        <activity android:name="com.past.music.activity.SelectSongListActivity">
+        </activity>
     </application>
 
 </manifest>

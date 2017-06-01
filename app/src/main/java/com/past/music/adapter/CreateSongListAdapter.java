@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.past.music.MyApplication;
 import com.past.music.activity.CreateSongListActivity;
+import com.past.music.activity.SongListInfoActivity;
 import com.past.music.entity.SongListEntity;
 import com.past.music.pastmusic.R;
 
@@ -46,6 +47,11 @@ public class CreateSongListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         mList = MyApplication.songListDBService.query();
     }
 
+    public void update() {
+        mList = MyApplication.songListDBService.query();
+        notifyDataSetChanged();
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == HEADLAYOUT) {
@@ -62,7 +68,6 @@ public class CreateSongListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         if (holder instanceof SongListLayout) {
             ((SongListLayout) holder).onBind(mList.get(position - 1));
         }
-
     }
 
     @Override
@@ -127,7 +132,7 @@ public class CreateSongListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         @OnClick(R.id.rl_favor_item)
         void favorItem() {
-            Toast.makeText(mContext, "测试", Toast.LENGTH_SHORT).show();
+            SongListInfoActivity.startActivity(mContext, mList.get(getAdapterPosition() - 1).getId(), mList.get(getAdapterPosition() - 1).getName());
         }
 
         public SongListLayout(View itemView) {

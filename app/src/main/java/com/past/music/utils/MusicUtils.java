@@ -44,6 +44,12 @@ public class MusicUtils implements MConstants {
             , MediaStore.Audio.Media.DURATION   //音乐时长
             , MediaStore.Audio.Media.SIZE};     //音乐大小
 
+    private static String[] proj_music = new String[]{
+            MediaStore.Audio.Media._ID, MediaStore.Audio.Media.TITLE,
+            MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.ALBUM_ID,
+            MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.ARTIST,
+            MediaStore.Audio.Media.ARTIST_ID, MediaStore.Audio.Media.DURATION, MediaStore.Audio.Media.SIZE};
+
     private static String[] info_album = new String[]{
             MediaStore.Audio.Albums._ID
             , MediaStore.Audio.Albums.ALBUM_ART
@@ -260,6 +266,41 @@ public class MusicUtils implements MConstants {
         }
         cursor.close();
         return list;
+    }
+
+    public static MusicEntity getMusicInfo(Context context, long id) {
+        ContentResolver cr = context.getContentResolver();
+        Cursor cursor = cr.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, proj_music, "_id = " + String.valueOf(id), null, null);
+        if (cursor == null) {
+            return null;
+        }
+        MusicEntity music = new MusicEntity();
+        while (cursor.moveToNext()) {
+            music.songId = cursor.getInt(cursor
+                    .getColumnIndex(MediaStore.Audio.Media._ID));
+            music.albumId = cursor.getInt(cursor
+                    .getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
+            music.albumName = cursor.getString(cursor
+                    .getColumnIndex(MediaStore.Audio.Albums.ALBUM));
+            music.albumData = getAlbumArtUri(music.albumId) + "";
+            music.duration = cursor.getInt(cursor
+                    .getColumnIndex(MediaStore.Audio.Media.DURATION));
+            music.musicName = cursor.getString(cursor
+                    .getColumnIndex(MediaStore.Audio.Media.TITLE));
+            music.size = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
+            music.artist = cursor.getString(cursor
+                    .getColumnIndex(MediaStore.Audio.Media.ARTIST));
+            music.artistId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID));
+            String filePath = cursor.getString(cursor
+                    .getColumnIndex(MediaStore.Audio.Media.DATA));
+            music.data = filePath;
+            String folderPath = filePath.substring(0,
+                    filePath.lastIndexOf(File.separator));
+            music.folder = folderPath;
+            music.sort = Pinyin.toPinyin(music.musicName.charAt(0)).substring(0, 1).toUpperCase();
+        }
+        cursor.close();
+        return music;
     }
 
 }

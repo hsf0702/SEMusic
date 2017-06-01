@@ -9,4 +9,5 @@
 
     <string name="header_scrolling_behavior">com.past.music.behavior.HeaderScrollingBehavior</string>
     <string name="header_float_behavior">com.past.music.behavior.HeaderFloatBehavior</string>
+    <string name="view_behavior">com.past.music.behavior.SongListInfoHeadBehavior</string>
 </resources>

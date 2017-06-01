@@ -9,10 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.past.music.dialog.SongOperationDialog;
 import com.past.music.entity.MusicEntity;
 import com.past.music.pastmusic.R;
 import com.past.music.service.MusicPlayer;
 import com.past.music.utils.HandlerUtil;
+import com.past.music.utils.MConstants;
 import com.past.music.utils.MusicUtils;
 
 import java.util.ArrayList;
@@ -26,7 +28,7 @@ import butterknife.OnClick;
  * Created by gaojin on 2017/4/7.
  */
 
-public class LocalMusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class MusicListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public static final int HEAD_LAYOUT = 0X01;
     public static final int CONTENT_LAYOUT = 0X02;
@@ -35,13 +37,14 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private PlayMusic playMusic;
     private Handler handler;
     private Context mContext;
+    SongOperationDialog songOperationDialog;
 
-    public LocalMusicAdapter(Context context) {
+    public MusicListAdapter(Context context) {
         this.mContext = context;
         handler = HandlerUtil.getInstance(context);
     }
 
-    public LocalMusicAdapter(Context context, ArrayList<MusicEntity> list) {
+    public MusicListAdapter(Context context, ArrayList<MusicEntity> list) {
         this.mList = list;
         this.mContext = context;
         handler = HandlerUtil.getInstance(context);
@@ -127,6 +130,8 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         @OnClick(R.id.viewpager_list_button)
         void setmListButton() {
+            songOperationDialog = new SongOperationDialog(mContext, mList.get(getAdapterPosition() - 1), MConstants.MUSICOVERFLOW);
+            songOperationDialog.show();
         }
 
         ListItemViewHolder(View view) {

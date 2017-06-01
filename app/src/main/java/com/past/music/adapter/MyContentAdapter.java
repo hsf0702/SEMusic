@@ -14,15 +14,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.neu.gaojin.MyOkHttpClient;
+import com.neu.gaojin.response.BaseCallback;
 import com.past.music.MyApplication;
 import com.past.music.activity.BaseActivity;
 import com.past.music.activity.CollectedActivity;
-import com.past.music.activity.SongListActivity;
 import com.past.music.activity.DownloadActivity;
 import com.past.music.activity.LocalMusicActivity;
-import com.past.music.activity.MySingersActivity;
 import com.past.music.activity.RecentMusicActivity;
+import com.past.music.activity.SongListActivity;
+import com.past.music.activity.SongListInfoActivity;
+import com.past.music.api.AvatarRequest;
+import com.past.music.api.AvatarResponse;
+import com.past.music.entity.MusicEntity;
 import com.past.music.entity.SongListEntity;
+import com.past.music.log.MyLog;
 import com.past.music.pastmusic.R;
 import com.past.music.utils.MConstants;
 import com.past.music.utils.MusicUtils;
@@ -61,7 +67,7 @@ public class MyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public void setSongList(List<SongListEntity> listItem) {
         this.mList = listItem;
-        notifyDataSetChanged();
+        notifyItemRangeChanged(3, listItem.size() + 1);
     }
 
     @Override
@@ -160,8 +166,7 @@ public class MyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @OnClick(R.id.local_music)
         void localMusic() {
-            Intent intent = new Intent(mContext, LocalMusicActivity.class);
-            ((BaseActivity) mContext).startActivityByX(intent, true);
+            LocalMusicActivity.startActivity(mContext, 0);
         }
 
         @OnClick(R.id.download_music)
@@ -184,8 +189,7 @@ public class MyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @OnClick(R.id.love_singer)
         void loveSinger() {
-            Intent intent = new Intent(mContext, MySingersActivity.class);
-            ((BaseActivity) mContext).startActivityByX(intent, true);
+            LocalMusicActivity.startActivity(mContext, 1);
         }
 
         @OnClick(R.id.buy_music)
@@ -219,7 +223,8 @@ public class MyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @OnClick(R.id.rl_favor_title)
         void favorTltle() {
-            Toast.makeText(mContext, "测试", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(mContext, SongListActivity.class);
+            ((BaseActivity) mContext).startActivityByX(intent, false);
         }
 
         public FavorTitleLayout(View itemView) {
@@ -247,7 +252,7 @@ public class MyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @OnClick(R.id.rl_favor_item)
         void favorItem() {
-            Toast.makeText(mContext, "测试", Toast.LENGTH_SHORT).show();
+            SongListInfoActivity.startActivity(mContext, mList.get(getAdapterPosition() - 3).getId(), mList.get(getAdapterPosition() - 3).getName());
         }
 
         public FavorItemLayout(View itemView) {
@@ -255,8 +260,34 @@ public class MyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             ButterKnife.bind(this, itemView);
         }
 
-        public void onBind(SongListEntity songListEntity) {
-            songList_pic.setImageURI(songListEntity.getList_pic());
+        public void onBind(final SongListEntity songListEntity) {
+            MyLog.i("onBind", songListEntity.getId());
+            final MusicEntity musicEntity = MyApplication.musicInfoDBService.firstEntity(songListEntity.getId());
+            if (musicEntity != null && musicEntity.getAlbumPic() != null) {
+                MyApplication.songListDBService.updatePic(songListEntity.getId(), musicEntity.getAlbumPic());
+                songList_pic.setImageURI(musicEntity.getAlbumPic());
+            } else if (musicEntity != null) {
+                if (MyApplication.imageDBService.query(musicEntity.getArtist().replace(";", "")) == null) {
+                    AvatarRequest avatarRequest = new AvatarRequest();
+                    avatarRequest.setArtist(musicEntity.getArtist().replace(";", ""));
+                    MyOkHttpClient.getInstance(mContext).sendNet(avatarRequest, new BaseCallback<AvatarResponse>() {
+                        @Override
+                        public void onFailure(int code, String error_msg) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(int statusCode, final AvatarResponse response) {
+                            MyApplication.imageDBService.insert(musicEntity.getArtist().replace(";", ""), response.getArtist().getImage().get(2).get_$Text112());
+                            MyApplication.songListDBService.updatePic(songListEntity.getId(), response.getArtist().getImage().get(3).get_$Text112());
+                            songList_pic.setImageURI(response.getArtist().getImage().get(2).get_$Text112());
+                        }
+                    });
+                } else {
+                    MyApplication.songListDBService.updatePic(songListEntity.getId(), MyApplication.imageDBService.query(musicEntity.getArtist().replace(";", "")));
+                    songList_pic.setImageURI(MyApplication.imageDBService.query(musicEntity.getArtist().replace(";", "")));
+                }
+            }
             mPlayListTitle.setText(songListEntity.getName());
             mPlayListInfo.setText(songListEntity.getCreator() + songListEntity.getInfo());
         }

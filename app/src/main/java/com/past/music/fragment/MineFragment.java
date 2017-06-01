@@ -13,8 +13,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.past.music.MyApplication;
 import com.past.music.adapter.MyContentAdapter;
+import com.past.music.entity.SongListEntity;
+import com.past.music.event.CreateSongListEvent;
+import com.past.music.log.MyLog;
 import com.past.music.pastmusic.R;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,6 +63,7 @@ public class MineFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -68,6 +79,12 @@ public class MineFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
     private void getPermission() {
         if (ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -76,6 +93,12 @@ public class MineFragment extends Fragment {
         } else {
 
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(CreateSongListEvent event) {
+        List<SongListEntity> mList = MyApplication.songListDBService.query();
+        mAdapter.setSongList(mList);
     }
 
     @Override
