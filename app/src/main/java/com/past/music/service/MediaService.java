@@ -15,8 +15,10 @@ import android.database.MatrixCursor;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.audiofx.AudioEffect;
 import android.media.session.MediaSession;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -41,17 +43,23 @@ import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.neu.gaojin.MyOkHttpClient;
+import com.neu.gaojin.response.BaseCallback;
 import com.past.music.MyApplication;
 import com.past.music.activity.MainActivity;
+import com.past.music.api.LrcRequest;
+import com.past.music.api.LrcResponse;
 import com.past.music.entity.MusicEntity;
 import com.past.music.log.MyLog;
 import com.past.music.pastmusic.IMediaAidlInterface;
 import com.past.music.pastmusic.R;
 import com.past.music.provider.RecentStore;
-import com.past.music.proxy.utils.MediaPlayerProxy;
 import com.past.music.utils.SharePreferencesUtils;
+import com.past.music.utils.SysUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
@@ -61,6 +69,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Random;
+import java.util.TreeSet;
 
 public class MediaService extends Service {
 
@@ -76,7 +86,11 @@ public class MediaService extends Service {
     public static final String REFRESH = "com.past.music.refresh";
     public static final String PREVIOUS_FORCE_ACTION = "com.past.music.previous.force";
     public static final String PREVIOUS_ACTION = "com.past.music.previous";
+    public static final String REPEATMODE_CHANGED = "com.past.music.repeatmodechanged";
+    public static final String SHUFFLEMODE_CHANGED = "com.past.music.shufflemodechanged";
+    public static final String LRC_UPDATED = "com.past.music.updatelrc";
 
+    public static final String TRY_GET_TRACKINFO = "com.past.music.gettrackinfo";
 
     public static final String TIMBER_PACKAGE_NAME = "com.past.music";
     public static final String MUSIC_PACKAGE_NAME = "com.android.music";
@@ -88,6 +102,8 @@ public class MediaService extends Service {
     private static final String SHUTDOWN = "com.past.music.shutdown";
     public static final String BUFFER_UP = "com.past.music.bufferup";
     public static final String MUSIC_LODING = "com.past.music.loading";
+    public static final String REPEAT_ACTION = "com.past.music.repeat";
+    public static final String SHUFFLE_ACTION = "com.past.music.shuffle";
     private static final String TRACK_NAME = "trackname";
     private static final String ALNUM_PIC = "album_pic";
     public static final int NEXT = 2;
@@ -107,12 +123,15 @@ public class MediaService extends Service {
     public static final int REPEAT_CURRENT = 1;
     public static final int REPEAT_ALL = 2;
 
+    private static final int LRC_DOWNLOADED = -10;
+
     private static final int NOTIFY_MODE_NONE = 0;
     private static final int NOTIFY_MODE_FOREGROUND = 1;
     private static final int NOTIFY_MODE_BACKGROUND = 2;
 
     private static final int IDLE_DELAY = 5 * 60 * 1000;
     private static final long REWIND_INSTEAD_PREVIOUS_THRESHOLD = 3000;
+    public static final int MAX_HISTORY_SIZE = 1000;
     private int mCardId;
 
     private int mRepeatMode = REPEAT_ALL;
@@ -144,6 +163,7 @@ public class MediaService extends Service {
     private boolean isPlaying = false;
     private int mNotificationId = 1000;
 
+    public static final String LRC_PATH = "/pastmusic/lrc/";
 
     private Context mContext = null;
     //传进来的歌单
@@ -152,6 +172,8 @@ public class MediaService extends Service {
     private static LinkedList<Integer> mHistory = new LinkedList<>();
     //播放列表
     private ArrayList<MusicTrack> mPlaylist = new ArrayList<>(100);
+
+    private long[] mAutoShuffleList = null;
 
 
     private MusicPlayerHandler mPlayerHandler;
@@ -186,9 +208,10 @@ public class MediaService extends Service {
     private Notification mNotification;
     private long mNotificationPostTime = 0;
     private long mLastSeekPos = 0;
-    private MediaPlayerProxy mProxy;
     private RequestPlayUrl mRequestUrl;
+    private RequestLrc mRequestLrc;
     private static Handler mUrlHandler;
+    private static Handler mLrcHandler;
     private final IBinder mBinder = new ServiceStub(this);
     private SharedPreferences mPreferences;
     private boolean mQueueIsSaveable = true;
@@ -197,8 +220,19 @@ public class MediaService extends Service {
 
     private RecentStore mRecentStore;
 
+    private static final Shuffler mShuffler = new Shuffler();
+
     public MediaService() {
     }
+
+    private Thread mLrcThread = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            Looper.prepare();
+            mLrcHandler = new Handler();
+            Looper.loop();
+        }
+    });
 
     private Thread mGetUrlThread = new Thread(new Runnable() {
         @Override
@@ -240,6 +274,7 @@ public class MediaService extends Service {
     public void onCreate() {
         super.onCreate();
         mGetUrlThread.start();
+        mLrcThread.start();
         MyLog.i(TAG, "onCreate");
         mContext = this;
         mHandlerThread = new HandlerThread("MusicPlayerHandler", android.os.Process.THREAD_PRIORITY_BACKGROUND);
@@ -251,14 +286,21 @@ public class MediaService extends Service {
         mRecentStore = RecentStore.getInstance(this);
 
         final IntentFilter filter = new IntentFilter();
-//        filter.addAction(SERVICECMD);
+//         filter.addAction(SERVICECMD);
         filter.addAction(TOGGLEPAUSE_ACTION);
+//        filter.addAction(PAUSE_ACTION);
         filter.addAction(STOP_ACTION);
         filter.addAction(NEXT_ACTION);
+        filter.addAction(PREVIOUS_ACTION);
+        filter.addAction(PREVIOUS_FORCE_ACTION);
+        filter.addAction(REPEAT_ACTION);
+        filter.addAction(SHUFFLE_ACTION);
+        filter.addAction(TRY_GET_TRACKINFO);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
-
+//        filter.addAction(LOCK_SCREEN);
+        filter.addAction(SEND_PROGRESS);
+//        filter.addAction(SETQUEUE);
         registerReceiver(mIntentReceiver, filter);
-
 
         final Intent shutdownIntent = new Intent(this, MediaService.class);
         shutdownIntent.setAction(SHUTDOWN);
@@ -322,7 +364,7 @@ public class MediaService extends Service {
                 position = mPlayer.duration();
             }
             long result = mPlayer.seek(position);
-//            notifyChange(POSITION_CHANGED);
+            notifyChange(POSITION_CHANGED);
             return result;
         }
         return -1;
@@ -339,16 +381,35 @@ public class MediaService extends Service {
         return -1;
     }
 
+    public int getSecondPosition() {
+        if (mPlayer.isInitialized()) {
+            return mPlayer.sencondaryPosition;
+        }
+        return -1;
+    }
+
     public int getRepeatMode() {
         return mRepeatMode;
     }
 
     public int getPreviousPlayPosition(boolean removeFromHistory) {
         synchronized (this) {
-            if (mPlayPos > 0) {
-                return mPlayPos - 1;
+            if (mShuffleMode == SHUFFLE_NORMAL) {
+                final int histsize = mHistory.size();
+                if (histsize == 0) {
+                    return -1;
+                }
+                final Integer pos = mHistory.get(histsize - 1);
+                if (removeFromHistory) {
+                    mHistory.remove(histsize - 1);
+                }
+                return pos.intValue();
             } else {
-                return mPlaylist.size() - 1;
+                if (mPlayPos > 0) {
+                    return mPlayPos - 1;
+                } else {
+                    return mPlaylist.size() - 1;
+                }
             }
         }
     }
@@ -387,11 +448,22 @@ public class MediaService extends Service {
     /**
      * 播放歌曲
      *
-     * @param createNewNextSong 是否准备下一首歌
+     * @param createNewNextTrack 是否准备下一首歌
      */
-    public void play(boolean createNewNextSong) {
-        MyLog.i("play", "执行了play");
-        if (createNewNextSong) {
+    public void play(boolean createNewNextTrack) {
+        int status = mAudioManager.requestAudioFocus(mAudioFocusListener,
+                AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+
+        if (status != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            return;
+        }
+
+        final Intent intent = new Intent(AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION);
+        intent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, getAudioSessionId());
+        intent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, getPackageName());
+        sendBroadcast(intent);
+
+        if (createNewNextTrack) {
             setNextTrack();
         } else {
             setNextTrack(mNextPlayPos);
@@ -404,13 +476,12 @@ public class MediaService extends Service {
             }
         }
         mPlayer.start();
-//        mPlayerHandler.removeMessages(FADEDOWN);
-//        mPlayerHandler.sendEmptyMessage(FADEUP);
-//        cancelShutdown();
+        mPlayerHandler.removeMessages(FADEDOWN);
+        mPlayerHandler.sendEmptyMessage(FADEUP);
         setIsPlaying(true, true);
+        cancelShutdown();
         updateNotification();
         notifyChange(META_CHANGED);
-        MyLog.i(TAG, "play");
     }
 
     /**
@@ -582,13 +653,12 @@ public class MediaService extends Service {
     public void open(final HashMap<Long, MusicEntity> infos, final long[] list, final int position) {
         synchronized (this) {
             mPlaylistInfo = infos;
-//            if (mShuffleMode == SHUFFLE_AUTO) {
-//                mShuffleMode = SHUFFLE_NORMAL;
-//            }
+            if (mShuffleMode == SHUFFLE_AUTO) {
+                mShuffleMode = SHUFFLE_NORMAL;
+            }
             final long oldId = getAudioId();
             final int listlength = list.length;
             boolean newlist = true;
-            //是否新建一个播放列表
             if (mPlaylist.size() == listlength) {
                 newlist = false;
                 for (int i = 0; i < listlength; i++) {
@@ -600,12 +670,12 @@ public class MediaService extends Service {
             }
             if (newlist) {
                 addToPlayList(list, -1);
-//                notifyChange(QUEUE_CHANGED);
+                notifyChange(QUEUE_CHANGED);
             }
             if (position >= 0) {
                 mPlayPos = position;
             } else {
-//                mPlayPos = mShuffler.nextInt(mPlaylist.size());
+                mPlayPos = mShuffler.nextInt(mPlaylist.size());
             }
             mHistory.clear();
             openCurrentAndNextPlay(true);
@@ -671,7 +741,7 @@ public class MediaService extends Service {
             }
             final long id = mPlaylist.get(mPlayPos).mId;
             updateCursor(id);
-//            getLrc(id);
+            getLrc(id);
             if (mPlaylistInfo.get(id) == null) {
                 return;
             }
@@ -764,14 +834,6 @@ public class MediaService extends Service {
         }
     }
 
-    private void startProxy() {
-        if (mProxy == null) {
-            mProxy = new MediaPlayerProxy(this);
-            mProxy.init();
-            mProxy.start();
-        }
-    }
-
     public long duration() {
         if (mPlayer.isInitialized() && mPlayer.isTrackPrepared()) {
             return mPlayer.duration();
@@ -827,14 +889,13 @@ public class MediaService extends Service {
         if (what.equals(PLAYSTATE_CHANGED)) {
             updateNotification();
         }
-
-
     }
 
     private void saveQueue(final boolean full) {
         if (!mQueueIsSaveable) {
             return;
         }
+
         final SharedPreferences.Editor editor = mPreferences.edit();
         if (full) {
 //            mPlaybackStateStore.saveState(mPlaylist, mShuffleMode != SHUFFLE_NONE ? mHistory : null);
@@ -849,15 +910,15 @@ public class MediaService extends Service {
                     e.printStackTrace();
                 }
             }
-//            editor.putInt("cardid", mCardId);
+            editor.putInt("cardid", mCardId);
 
         }
         editor.putInt("curpos", mPlayPos);
         if (mPlayer.isInitialized()) {
             editor.putLong("seekpos", mPlayer.position());
         }
-//        editor.putInt("repeatmode", mRepeatMode);
-//        editor.putInt("shufflemode", mShuffleMode);
+        editor.putInt("repeatmode", mRepeatMode);
+        editor.putInt("shufflemode", mShuffleMode);
         editor.apply();
     }
 
@@ -870,10 +931,80 @@ public class MediaService extends Service {
     private int getNextPosition(final boolean force) {
         if (mPlaylist == null || mPlaylist.isEmpty()) {
             return -1;
-        } else {
+        }
+        if (!force && mRepeatMode == REPEAT_CURRENT) {
+            if (mPlayPos < 0) {
+                return 0;
+            }
+            return mPlayPos;
+        } else if (mShuffleMode == SHUFFLE_NORMAL) {
+            final int numTracks = mPlaylist.size();
+
+
+            final int[] trackNumPlays = new int[numTracks];
+            for (int i = 0; i < numTracks; i++) {
+                trackNumPlays[i] = 0;
+            }
+
+
+            final int numHistory = mHistory.size();
+            for (int i = 0; i < numHistory; i++) {
+                final int idx = mHistory.get(i).intValue();
+                if (idx >= 0 && idx < numTracks) {
+                    trackNumPlays[idx]++;
+                }
+            }
+
+            if (mPlayPos >= 0 && mPlayPos < numTracks) {
+                trackNumPlays[mPlayPos]++;
+            }
+
+            int minNumPlays = Integer.MAX_VALUE;
+            int numTracksWithMinNumPlays = 0;
+            for (int i = 0; i < trackNumPlays.length; i++) {
+                if (trackNumPlays[i] < minNumPlays) {
+                    minNumPlays = trackNumPlays[i];
+                    numTracksWithMinNumPlays = 1;
+                } else if (trackNumPlays[i] == minNumPlays) {
+                    numTracksWithMinNumPlays++;
+                }
+            }
+
+
+            if (minNumPlays > 0 && numTracksWithMinNumPlays == numTracks
+                    && mRepeatMode != REPEAT_ALL && !force) {
+                return -1;
+            }
+
+
+            int skip = mShuffler.nextInt(numTracksWithMinNumPlays);
+            for (int i = 0; i < trackNumPlays.length; i++) {
+                if (trackNumPlays[i] == minNumPlays) {
+                    if (skip == 0) {
+                        return i;
+                    } else {
+                        skip--;
+                    }
+                }
+            }
+            return -1;
+        } else if (mShuffleMode == SHUFFLE_AUTO) {
+            doAutoShuffleUpdate();
             return mPlayPos + 1;
+        } else {
+            if (mPlayPos >= mPlaylist.size() - 1) {
+                if (mRepeatMode == REPEAT_NONE && !force) {
+                    return -1;
+                } else if (mRepeatMode == REPEAT_ALL || force) {
+                    return 0;
+                }
+                return -1;
+            } else {
+                return mPlayPos + 1;
+            }
         }
     }
+
 
     private void setNextTrack() {
         setNextTrack(getNextPosition(false));
@@ -1032,12 +1163,52 @@ public class MediaService extends Service {
         }
     }
 
+    public int getAudioSessionId() {
+        synchronized (this) {
+            return mPlayer.getAudioSessionId();
+        }
+    }
+
     public long getAlbumId() {
         synchronized (this) {
             if (mCursor == null) {
                 return -1;
             }
             return mCursor.getLong(mCursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ALBUM_ID));
+        }
+    }
+
+    public String[] getAlbumPathAll() {
+        synchronized (this) {
+            try {
+                int len = mPlaylistInfo.size();
+                String[] albums = new String[len];
+                long[] queue = getQueue();
+                for (int i = 0; i < len; i++) {
+                    albums[i] = mPlaylistInfo.get(queue[i]).albumData;
+                }
+                return albums;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return new String[]{};
+        }
+    }
+
+    public String[] getAlbumPicAll() {
+        synchronized (this) {
+            try {
+                int len = mPlaylistInfo.size();
+                String[] albums = new String[len];
+                long[] queue = getQueue();
+                for (int i = 0; i < len; i++) {
+                    albums[i] = mPlaylistInfo.get(queue[i]).albumPic;
+                }
+                return albums;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return new String[]{};
         }
     }
 
@@ -1113,10 +1284,14 @@ public class MediaService extends Service {
      */
     public void setQueuePosition(int index) {
         synchronized (this) {
+            stop(false);
             mPlayPos = index;
             openCurrentAndNext();
-            play(true);
+            play();
             notifyChange(META_CHANGED);
+            if (mShuffleMode == SHUFFLE_AUTO) {
+                doAutoShuffleUpdate();
+            }
         }
     }
 
@@ -1127,6 +1302,12 @@ public class MediaService extends Service {
      */
     public void setAndRecordPlayPos(int nextPos) {
         synchronized (this) {
+            if (mShuffleMode != SHUFFLE_NONE) {
+                mHistory.add(mPlayPos);
+                if (mHistory.size() > MAX_HISTORY_SIZE) {
+                    mHistory.remove(0);
+                }
+            }
             mPlayPos = nextPos;
         }
     }
@@ -1146,6 +1327,99 @@ public class MediaService extends Service {
             openCurrentAndNextPlay(true);
             play();
             notifyChange(MUSIC_CHANGED);
+        }
+    }
+
+    private void getLrc(long id) {
+        MusicEntity info = mPlaylistInfo.get(id);
+        String lrc = Environment.getExternalStorageDirectory().getAbsolutePath() + LRC_PATH;
+        File file = new File(lrc);
+        if (!file.exists()) {
+            //不存在就建立此目录
+            boolean r = file.mkdirs();
+        }
+        file = new File(lrc + id);
+        if (!file.exists()) {
+            if (mRequestLrc != null) {
+                mRequestLrc.stop();
+                mLrcHandler.removeCallbacks(mRequestLrc);
+            }
+            mRequestLrc = new RequestLrc(mPlaylistInfo.get(id));
+            mLrcHandler.postDelayed(mRequestLrc, 70);
+        }
+    }
+
+    class RequestLrc implements Runnable {
+
+        private MusicEntity musicInfo;
+        private boolean stop;
+
+        RequestLrc(MusicEntity info) {
+            this.musicInfo = info;
+        }
+
+        public void stop() {
+            stop = true;
+        }
+
+        @Override
+        public void run() {
+//            String url = null;
+//            if (musicInfo != null && musicInfo.lrc != null) {
+//                url = musicInfo.lrc;
+//            }
+//            try {
+//                JsonObject jsonObject = HttpUtil.getResposeJsonObject(BMA.Search.searchLrcPic(musicInfo.musicName, musicInfo.artist));
+//                JsonArray array = jsonObject.get("songinfo").getAsJsonArray();
+//                int len = array.size();
+//                url = null;
+//                for (int i = 0; i < len; i++) {
+//                    url = array.get(i).getAsJsonObject().get("lrclink").getAsString();
+//                    if (url != null) {
+//                        break;
+//                    }
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+            if (!stop) {
+                final File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + LRC_PATH + musicInfo.songId);
+                LrcRequest lrcRequest = new LrcRequest(String.valueOf(musicInfo.getSongId()));
+                MyOkHttpClient.getInstance(MediaService.this).sendNet(lrcRequest, new BaseCallback<LrcResponse>() {
+                    @Override
+                    public void onSuccess(int statusCode, LrcResponse response) {
+                        try {
+                            String lrc = null;
+                            lrc = response.getShowapi_res_body().getLyric();
+                            if (lrc != null && !lrc.isEmpty()) {
+                                if (!file.exists())
+                                    file.createNewFile();
+                                writeToFile(file, SysUtils.ASCIIUtils(lrc));
+                                mPlayerHandler.sendEmptyMessage(LRC_DOWNLOADED);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int code, String error_msg) {
+
+                    }
+                });
+
+            }
+        }
+    }
+
+    private synchronized void writeToFile(File file, String lrc) {
+        try {
+            FileOutputStream outputStream = new FileOutputStream(file);
+            outputStream.write(lrc.getBytes());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -1173,6 +1447,12 @@ public class MediaService extends Service {
         } else if (STOP_ACTION.equals(action)) {
             pause();
             releaseServiceUiAndStop();
+        } else if (REPEAT_ACTION.equals(action)) {
+            cycleRepeat();
+        } else if (SHUFFLE_ACTION.equals(action)) {
+            cycleShuffle();
+        } else if (TRY_GET_TRACKINFO.equals(action)) {
+            getLrc(mPlaylist.get(mPlayPos).mId);
         }
     }
 
@@ -1354,6 +1634,147 @@ public class MediaService extends Service {
         mNotifyMode = NOTIFY_MODE_NONE;
     }
 
+    public void setShuffleMode(final int shufflemode) {
+        synchronized (this) {
+            if (mShuffleMode == shufflemode && mPlaylist.size() > 0) {
+                return;
+            }
+
+            mShuffleMode = shufflemode;
+            if (mShuffleMode == SHUFFLE_AUTO) {
+                if (makeAutoShuffleList()) {
+                    mPlaylist.clear();
+                    doAutoShuffleUpdate();
+                    mPlayPos = 0;
+                    openCurrentAndNext();
+                    play();
+                    notifyChange(META_CHANGED);
+                    return;
+                } else {
+                    mShuffleMode = SHUFFLE_NONE;
+                }
+            } else {
+                setNextTrack();
+            }
+            saveQueue(false);
+            notifyChange(SHUFFLEMODE_CHANGED);
+        }
+    }
+
+    public void setRepeatMode(final int repeatmode) {
+        synchronized (this) {
+            mRepeatMode = repeatmode;
+            setNextTrack();
+            saveQueue(false);
+            notifyChange(REPEATMODE_CHANGED);
+        }
+    }
+
+    private boolean makeAutoShuffleList() {
+        Cursor cursor = null;
+        try {
+            cursor = getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    new String[]{
+                            MediaStore.Audio.Media._ID
+                    }, MediaStore.Audio.Media.IS_MUSIC + "=1", null, null);
+            if (cursor == null || cursor.getCount() == 0) {
+                return false;
+            }
+            final int len = cursor.getCount();
+            final long[] list = new long[len];
+            for (int i = 0; i < len; i++) {
+                cursor.moveToNext();
+                list[i] = cursor.getLong(0);
+            }
+            mAutoShuffleList = list;
+            return true;
+        } catch (final RuntimeException e) {
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+                cursor = null;
+            }
+        }
+        return false;
+    }
+
+    private void doAutoShuffleUpdate() {
+        boolean notify = false;
+        if (mPlayPos > 10) {
+            removeTracks(0, mPlayPos - 9);
+            notify = true;
+        }
+        final int toAdd = 7 - (mPlaylist.size() - (mPlayPos < 0 ? -1 : mPlayPos));
+        for (int i = 0; i < toAdd; i++) {
+            int lookback = mHistory.size();
+            int idx = -1;
+            while (true) {
+                idx = mShuffler.nextInt(mAutoShuffleList.length);
+                if (!wasRecentlyUsed(idx, lookback)) {
+                    break;
+                }
+                lookback /= 2;
+            }
+            mHistory.add(idx);
+            if (mHistory.size() > MAX_HISTORY_SIZE) {
+                mHistory.remove(0);
+            }
+            mPlaylist.add(new MusicTrack(mAutoShuffleList[idx], -1));
+            notify = true;
+        }
+        if (notify) {
+            notifyChange(QUEUE_CHANGED);
+        }
+    }
+
+    public int removeTracks(final int first, final int last) {
+        final int numremoved = removeTracksInternal(first, last);
+        if (numremoved > 0) {
+            notifyChange(QUEUE_CHANGED);
+        }
+        return numremoved;
+    }
+
+    private boolean wasRecentlyUsed(final int idx, int lookbacksize) {
+        if (lookbacksize == 0) {
+            return false;
+        }
+        final int histsize = mHistory.size();
+        if (histsize < lookbacksize) {
+            lookbacksize = histsize;
+        }
+        final int maxidx = histsize - 1;
+        for (int i = 0; i < lookbacksize; i++) {
+            final long entry = mHistory.get(maxidx - i);
+            if (entry == idx) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void cycleRepeat() {
+        if (mRepeatMode == REPEAT_NONE) {
+            setRepeatMode(REPEAT_CURRENT);
+            if (mShuffleMode != SHUFFLE_NONE) {
+                setShuffleMode(SHUFFLE_NONE);
+            }
+        } else {
+            setRepeatMode(REPEAT_NONE);
+        }
+    }
+
+    private void cycleShuffle() {
+        if (mShuffleMode == SHUFFLE_NONE) {
+            setShuffleMode(SHUFFLE_NORMAL);
+            if (mRepeatMode == REPEAT_CURRENT) {
+                setRepeatMode(REPEAT_ALL);
+            }
+        } else if (mShuffleMode == SHUFFLE_NORMAL || mShuffleMode == SHUFFLE_AUTO) {
+            setShuffleMode(SHUFFLE_NONE);
+        }
+    }
+
 
     private Notification getNotification() {
         final RemoteViews remoteViews;
@@ -1503,7 +1924,7 @@ public class MediaService extends Service {
 
         @Override
         public String getAlbumPath() throws RemoteException {
-            return null;
+            return mService.get().getAlbumPath();
         }
 
         @Override
@@ -1512,8 +1933,13 @@ public class MediaService extends Service {
         }
 
         @Override
+        public long getAlbumId() throws RemoteException {
+            return mService.get().getAlbumId();
+        }
+
+        @Override
         public String[] getAlbumPathtAll() throws RemoteException {
-            return new String[0];
+            return mService.get().getAlbumPicAll();
         }
 
         @Override
@@ -1559,6 +1985,51 @@ public class MediaService extends Service {
         @Override
         public void enqueue(long[] list, Map infos, int action) throws RemoteException {
 
+        }
+
+        @Override
+        public int getShuffleMode() throws RemoteException {
+            return mService.get().getShuffleMode();
+        }
+
+        @Override
+        public int getRepeatMode() throws RemoteException {
+            return mService.get().getRepeatMode();
+        }
+
+        @Override
+        public void setShuffleMode(int shufflemode) throws RemoteException {
+            mService.get().setShuffleMode(shufflemode);
+        }
+
+        @Override
+        public void setRepeatMode(int repeatmode) throws RemoteException {
+            mService.get().setRepeatMode(repeatmode);
+        }
+
+        @Override
+        public long duration() throws RemoteException {
+            return mService.get().duration();
+        }
+
+        @Override
+        public long position() throws RemoteException {
+            return mService.get().position();
+        }
+
+        @Override
+        public long seek(long pos) throws RemoteException {
+            return mService.get().seek(pos);
+        }
+
+        @Override
+        public boolean isTrackLocal() throws RemoteException {
+            return mService.get().isTrackLocal();
+        }
+
+        @Override
+        public int secondPosition() throws RemoteException {
+            return mService.get().getSecondPosition();
         }
 
         @Override
@@ -1612,7 +2083,6 @@ public class MediaService extends Service {
         public MultiPlayer(final MediaService service) {
             mService = new WeakReference<MediaService>(service);
             mCurrentMediaPlayer.setWakeMode(mService.get(), PowerManager.PARTIAL_WAKE_LOCK);
-
         }
 
         public void setDataSource(final String path) {
@@ -1983,6 +2453,49 @@ public class MediaService extends Service {
                             service.nextPlay(false);
                         }
                         break;
+                    case LRC_DOWNLOADED:
+                        service.notifyChange(LRC_UPDATED);
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+
+    private static final class Shuffler {
+
+        private final LinkedList<Integer> mHistoryOfNumbers = new LinkedList<Integer>();
+
+        private final TreeSet<Integer> mPreviousNumbers = new TreeSet<Integer>();
+
+        private final Random mRandom = new Random();
+
+        private int mPrevious;
+
+
+        public Shuffler() {
+            super();
+        }
+
+
+        public int nextInt(final int interval) {
+            int next;
+            do {
+                next = mRandom.nextInt(interval);
+            } while (next == mPrevious && interval > 1
+                    && !mPreviousNumbers.contains(Integer.valueOf(next)));
+            mPrevious = next;
+            mHistoryOfNumbers.add(mPrevious);
+            mPreviousNumbers.add(mPrevious);
+            cleanUpHistory();
+            return next;
+        }
+
+
+        private void cleanUpHistory() {
+            if (!mHistoryOfNumbers.isEmpty() && mHistoryOfNumbers.size() >= MAX_HISTORY_SIZE) {
+                for (int i = 0; i < Math.max(1, MAX_HISTORY_SIZE / 2); i++) {
+                    mPreviousNumbers.remove(mHistoryOfNumbers.removeFirst());
                 }
             }
         }

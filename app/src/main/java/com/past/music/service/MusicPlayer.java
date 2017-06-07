@@ -95,16 +95,13 @@ public class MusicPlayer {
     }
 
     public static boolean getIsPlaying() {
-        try {
-            if (mService != null) {
+        if (mService != null) {
+            try {
                 return mService.isPlaying();
-            } else {
-                return false;
+            } catch (final RemoteException ignored) {
             }
-        } catch (RemoteException e) {
-            e.printStackTrace();
-            return false;
         }
+        return false;
     }
 
     public static final int getQueueSize() {
@@ -126,6 +123,35 @@ public class MusicPlayer {
         } catch (final RemoteException ignored) {
         }
         return 0;
+    }
+
+    public static void setQueuePosition(final int position) {
+        if (mService != null) {
+            try {
+                mService.setQueuePosition(position);
+            } catch (final RemoteException ignored) {
+            }
+        }
+    }
+
+    public static final String getAlbumPath() {
+        if (mService != null) {
+            try {
+                return mService.getAlbumPath();
+            } catch (final RemoteException ignored) {
+            }
+        }
+        return null;
+    }
+
+    public static final String[] getAlbumPathAll() {
+        if (mService != null) {
+            try {
+                return mService.getAlbumPathtAll();
+            } catch (final RemoteException ignored) {
+            }
+        }
+        return null;
     }
 
     /**
@@ -181,6 +207,72 @@ public class MusicPlayer {
         }
     }
 
+    public static final long position() {
+        if (mService != null) {
+            try {
+                return mService.position();
+            } catch (final RemoteException ignored) {
+            } catch (final IllegalStateException ex) {
+
+            }
+        }
+        return 0;
+    }
+
+    public static final long duration() {
+        if (mService != null) {
+            try {
+                return mService.duration();
+            } catch (final RemoteException ignored) {
+            } catch (final IllegalStateException ignored) {
+
+            }
+        }
+        return 0;
+    }
+
+    public static void seek(final long position) {
+        if (mService != null) {
+            try {
+                mService.seek(position);
+            } catch (final RemoteException ignored) {
+            }
+        }
+    }
+
+    public static final long getCurrentAlbumId() {
+        if (mService != null) {
+            try {
+                return mService.getAlbumId();
+            } catch (final RemoteException ignored) {
+            }
+        }
+        return -1;
+    }
+
+    public static boolean isTrackLocal() {
+        try {
+            if (mService != null) {
+                return mService.isTrackLocal();
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static final int secondPosition() {
+        if (mService != null) {
+            try {
+                return mService.secondPosition();
+            } catch (final RemoteException ignored) {
+            } catch (final IllegalStateException ex) {
+
+            }
+        }
+        return 0;
+    }
+
     public static void previous(final Context context, final boolean force) {
         final Intent previous = new Intent(context, MediaService.class);
         if (force) {
@@ -211,6 +303,63 @@ public class MusicPlayer {
 //            Toast.makeText(context, "已加入下一首播放", Toast.LENGTH_SHORT).show();
 //        } catch (final RemoteException ignored) {
 //        }
+    }
+
+    public static void cycleRepeat() {
+        try {
+            if (mService != null) {
+                if (mService.getShuffleMode() == MediaService.SHUFFLE_NORMAL) {
+                    mService.setShuffleMode(MediaService.SHUFFLE_NONE);
+                    mService.setRepeatMode(MediaService.REPEAT_CURRENT);
+                    return;
+                } else {
+                    switch (mService.getRepeatMode()) {
+                        case MediaService.REPEAT_CURRENT:
+                            mService.setRepeatMode(MediaService.REPEAT_ALL);
+                            break;
+                        case MediaService.REPEAT_ALL:
+                            mService.setShuffleMode(MediaService.SHUFFLE_NORMAL);
+//                        if (mService.getShuffleMode() != MediaService.SHUFFLE_NONE) {
+//                            mService.setShuffleMode(MediaService.SHUFFLE_NONE);
+//                        }
+                            break;
+
+                    }
+                }
+
+            }
+        } catch (final RemoteException ignored) {
+        }
+    }
+
+    public static final int getShuffleMode() {
+        if (mService != null) {
+            try {
+                return mService.getShuffleMode();
+            } catch (final RemoteException ignored) {
+            }
+        }
+        return 0;
+    }
+
+    public static void setShuffleMode(int mode) {
+        try {
+            if (mService != null) {
+                mService.setShuffleMode(mode);
+            }
+        } catch (RemoteException ignored) {
+
+        }
+    }
+
+    public static final int getRepeatMode() {
+        if (mService != null) {
+            try {
+                return mService.getRepeatMode();
+            } catch (final RemoteException ignored) {
+            }
+        }
+        return 0;
     }
 
 

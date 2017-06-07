@@ -5,8 +5,11 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
+import android.support.v8.renderscript.RenderScript;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.neu.gaojin.MyOkHttpClient;
@@ -16,6 +19,8 @@ import com.past.music.api.AvatarRequest;
 import com.past.music.api.AvatarResponse;
 import com.past.music.entity.MusicEntity;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 /**
@@ -133,5 +138,28 @@ public class ImageUtils {
             simpleDraweeView.setImageURI(musicEntity.getAlbumPic());
         }
 
+    }
+
+    public static Drawable createBlurredImageFromBitmap(Bitmap bitmap, Context context, int inSampleSize) {
+
+        RenderScript rs = RenderScript.create(context);
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = inSampleSize;
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        byte[] imageInByte = stream.toByteArray();
+        ByteArrayInputStream bis = new ByteArrayInputStream(imageInByte);
+        Bitmap blurTemplate = BitmapFactory.decodeStream(bis, null, options);
+
+        final android.support.v8.renderscript.Allocation input = android.support.v8.renderscript.Allocation.createFromBitmap(rs, blurTemplate);
+        final android.support.v8.renderscript.Allocation output = android.support.v8.renderscript.Allocation.createTyped(rs, input.getType());
+        final android.support.v8.renderscript.ScriptIntrinsicBlur script = android.support.v8.renderscript.ScriptIntrinsicBlur.create(rs, android.support.v8.renderscript.Element.U8_4(rs));
+        script.setRadius(8f);
+        script.setInput(input);
+        script.forEach(output);
+        output.copyTo(blurTemplate);
+
+        return new BitmapDrawable(context.getResources(), blurTemplate);
     }
 }

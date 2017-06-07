@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 
 import com.past.music.adapter.MusicListAdapter;
 import com.past.music.entity.MusicEntity;
-import com.past.music.log.MyLog;
 import com.past.music.pastmusic.R;
 import com.past.music.utils.MConstants;
 import com.past.music.utils.MusicUtils;
@@ -37,6 +36,7 @@ public class LocalMusicFragment extends BaseFragment {
     RecyclerView mRecyclerView;
 
     private MusicListAdapter mAdapter;
+    ArrayList<MusicEntity> musicList = new ArrayList<>();
 
 
     public static LocalMusicFragment newInstance(String param1, String param2) {
@@ -60,17 +60,21 @@ public class LocalMusicFragment extends BaseFragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mAdapter);
+        refreshAdapter();
         return view;
     }
 
-    //重写更新adapter的方法
     @Override
-    public void reloadAdapter() {
-        MyLog.i("20160523", "reloadAdapter执行");
+    public void onResume() {
+        super.onResume();
+    }
+
+    public void refreshAdapter() {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(final Void... unused) {
-                ArrayList<MusicEntity> musicList = (ArrayList) MusicUtils.queryMusic(mContext, MConstants.START_FROM_LOCAL);
+                musicList.clear();
+                musicList.addAll((ArrayList) MusicUtils.queryMusic(mContext, MConstants.START_FROM_LOCAL));
                 mAdapter.updateDataSet(musicList);
                 return null;
             }

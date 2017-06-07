@@ -27,6 +27,18 @@ public class SysUtils {
         return statusBarHeight;
     }
 
+    public static String ASCIIUtils(String string) {
+        string = string.replace("&#10;", "\n").replace("&#13;", "\r").replace("&#32;", " ").replace("&#33;", "!").replace("&#34;", "\"");
+        string = string.replace("&#39;", ",").replace("&#40;", "(").replace("&#41;", ")").replace("&#42;", "*").replace("&#43;", "+").replace("&#44;", ",");
+        string = string.replace("&#45;", "-").replace("&#46;", ".").replace("&#58;", ":");
+//        string.replace("&#32;", " ");
+//        string.replace("&#40;", "(");
+//        string.replace("&#41;", ")");
+//        string.replace("&#10;", "\n");
+//        string.replace("&#46;", ".");
+        return string;
+    }
+
     //        ViewTreeObserver vto = view.getViewTreeObserver();
 //        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 //            @Override

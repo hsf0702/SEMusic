@@ -23,6 +23,7 @@ interface IMediaAidlInterface {
     String getAlbumName();
     String getAlbumPath();
     String getAlbumPic();
+     long getAlbumId();
     String[] getAlbumPathtAll();
     String getPath();
     Map getPlaylistInfo();
@@ -33,4 +34,13 @@ interface IMediaAidlInterface {
     int getQueuePosition();
     int removeTrack(long id);
     void enqueue(in long [] list,in Map infos, int action);
+    int getShuffleMode();
+    int getRepeatMode();
+    void setShuffleMode(int shufflemode);
+    void setRepeatMode(int repeatmode);
+    long duration();
+    long position();
+    long seek(long pos);
+    boolean isTrackLocal();
+    int secondPosition();
 }

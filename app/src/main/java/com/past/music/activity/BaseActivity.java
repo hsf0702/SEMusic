@@ -54,6 +54,16 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(MediaService.PLAYSTATE_CHANGED);
         intentFilter.addAction(MediaService.META_CHANGED);
+        intentFilter.addAction(MediaService.MUSIC_CHANGED);
+        intentFilter.addAction(MediaService.QUEUE_CHANGED);
+        intentFilter.addAction(MConstants.MUSIC_COUNT_CHANGED);
+        intentFilter.addAction(MediaService.TRACK_PREPARED);
+        intentFilter.addAction(MediaService.BUFFER_UP);
+        intentFilter.addAction(MConstants.EMPTY_LIST);
+        intentFilter.addAction(MediaService.MUSIC_CHANGED);
+        intentFilter.addAction(MediaService.LRC_UPDATED);
+        intentFilter.addAction(MConstants.PLAYLIST_COUNT_CHANGED);
+        intentFilter.addAction(MediaService.MUSIC_LODING);
         registerReceiver(mPlaybackStatus, intentFilter);
         showQuickControl(true);
     }
@@ -109,6 +119,10 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
 
     }
 
+    public void updateLrc() {
+
+    }
+
 
     public void setMusicStateListenerListener(final MusicStateListener status) {
         if (status == this) {
@@ -141,7 +155,6 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
             BaseActivity baseActivity = mReference.get();
             if (baseActivity != null) {
                 if (action.equals(MediaService.META_CHANGED)) {
-                    MyLog.i("20160523", "MediaService.META_CHANGED--调用reloadAdapter");
                     baseActivity.baseUpdatePlayInfo();
                 } else if (action.equals(MediaService.PLAYSTATE_CHANGED)) {
 
@@ -162,9 +175,11 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
                 } else if (action.equals(MediaService.TRACK_ERROR)) {
                     Toast.makeText(baseActivity, "错误了嘤嘤嘤", Toast.LENGTH_SHORT).show();
                 } else if (action.equals(MediaService.MUSIC_CHANGED)) {
+                    MyLog.i("测试", "发送了MUSIC_CHANGED广播");
                     baseActivity.updateTrack();
+                } else if (action.equals(MediaService.LRC_UPDATED)) {
+                    baseActivity.updateLrc();
                 }
-
             }
         }
     }
@@ -175,7 +190,6 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
     public void baseUpdatePlayInfo() {
         for (MusicStateListener listener : mMusicListener) {
             if (listener != null) {
-                MyLog.i("20160523", "baseUpdatePlayInfo--调用reloadAdapter");
                 listener.reloadAdapter();
                 listener.updatePlayInfo();
             }
@@ -188,7 +202,6 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
     public void refreshUI() {
         for (final MusicStateListener listener : mMusicListener) {
             if (listener != null) {
-                MyLog.i("20160523", "refreshUI--调用reloadAdapter");
                 listener.reloadAdapter();
             }
         }

@@ -25,7 +25,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * Created by gaojin on 2017/4/7.
+ * =======================================================
+ * 作者：GaoJin
+ * 日期：2017/6/6 10:35
+ * 描述：
+ * 备注：
+ * =======================================================
  */
 
 public class MusicListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

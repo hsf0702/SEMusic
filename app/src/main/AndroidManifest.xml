@@ -70,6 +70,8 @@
         </activity>
         <activity android:name="com.past.music.activity.SelectSongListActivity">
         </activity>
+        <activity android:name="com.past.music.activity.SearchActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -12,6 +12,7 @@ import com.past.music.entity.AlbumEntity;
 import com.past.music.entity.ArtistEntity;
 import com.past.music.entity.FolderEntity;
 import com.past.music.entity.MusicEntity;
+import com.past.music.pastmusic.R;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -301,6 +302,28 @@ public class MusicUtils implements MConstants {
         }
         cursor.close();
         return music;
+    }
+
+    public static String makeTimeString(long milliSecs) {
+        StringBuffer sb = new StringBuffer();
+        long m = milliSecs / (60 * 1000);
+        sb.append(m < 10 ? "0" + m : m);
+        sb.append(":");
+        long s = (milliSecs % (60 * 1000)) / 1000;
+        sb.append(s < 10 ? "0" + s : s);
+        return sb.toString();
+    }
+
+    public static String makeShortTimeString(final Context context, long secs) {
+        long hours, mins;
+
+        hours = secs / 3600;
+        secs %= 3600;
+        mins = secs / 60;
+        secs %= 60;
+
+        final String durationFormat = context.getResources().getString(hours == 0 ? R.string.durationformatshort : R.string.durationformatlong);
+        return String.format(durationFormat, hours, mins, secs);
     }
 
 }
