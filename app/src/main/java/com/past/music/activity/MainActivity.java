@@ -1,5 +1,6 @@
 package com.past.music.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
@@ -39,6 +40,13 @@ public class MainActivity extends BaseActivity {
 
     @BindView(R.id.img_end)
     ImageView mImgEnd;
+
+    @OnClick(R.id.img_end)
+    void search() {
+        Intent intent = new Intent(MainActivity.this, NetSearchWordsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivityByX(intent, true);
+    }
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;

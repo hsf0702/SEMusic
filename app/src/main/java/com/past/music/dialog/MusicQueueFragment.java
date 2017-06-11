@@ -29,11 +29,14 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
 /**
- * Created by gaojin on 2017/3/28.
+ * =======================================================
+ * 作者：GaoJin
+ * 日期：2017/6/8 19:29
+ * 描述：
+ * 备注：
+ * =======================================================
  */
-
 public class MusicQueueFragment extends DialogFragment {
 
 

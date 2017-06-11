@@ -42,6 +42,7 @@ public class MusicEntity implements Parcelable {
         albumId = in.readInt();
         albumName = in.readString();
         albumData = in.readString();
+        albumPic = in.readString();
         duration = in.readInt();
         musicName = in.readString();
         artist = in.readString();
@@ -53,7 +54,6 @@ public class MusicEntity implements Parcelable {
         sort = in.readString();
         size = in.readInt();
         favorite = in.readInt();
-        albumPic = in.readString();
     }
 
     public static final Creator<MusicEntity> CREATOR = new Creator<MusicEntity>() {
@@ -67,31 +67,6 @@ public class MusicEntity implements Parcelable {
             return new MusicEntity[size];
         }
     };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(songId);
-        dest.writeInt(albumId);
-        dest.writeString(albumName);
-        dest.writeString(albumData);
-        dest.writeInt(duration);
-        dest.writeString(musicName);
-        dest.writeString(artist);
-        dest.writeLong(artistId);
-        dest.writeString(data);
-        dest.writeString(folder);
-        dest.writeString(lrc);
-        dest.writeByte((byte) (islocal ? 1 : 0));
-        dest.writeString(sort);
-        dest.writeInt(size);
-        dest.writeInt(favorite);
-        dest.writeString(albumPic);
-    }
 
     public long getSongId() {
         return songId;
@@ -219,5 +194,30 @@ public class MusicEntity implements Parcelable {
 
     public void setAlbumPic(String albumPic) {
         this.albumPic = albumPic;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeLong(songId);
+        parcel.writeInt(albumId);
+        parcel.writeString(albumName);
+        parcel.writeString(albumData);
+        parcel.writeString(albumPic);
+        parcel.writeInt(duration);
+        parcel.writeString(musicName);
+        parcel.writeString(artist);
+        parcel.writeLong(artistId);
+        parcel.writeString(data);
+        parcel.writeString(folder);
+        parcel.writeString(lrc);
+        parcel.writeByte((byte) (islocal ? 1 : 0));
+        parcel.writeString(sort);
+        parcel.writeInt(size);
+        parcel.writeInt(favorite);
     }
 }

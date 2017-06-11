@@ -142,6 +142,17 @@ public class MusicUtils implements MConstants {
                 select.append(" and " + MediaStore.Audio.Media.ALBUM_ID + " = " + id);
                 return getMusicListCursor(cr.query(uri, info_music, select.toString(), null,
                         SharePreferencesUtils.getInstance(context).getAlbumSortOrder()));
+            case START_FROM_FOLDER:
+                ArrayList<MusicEntity> list1 = new ArrayList<>();
+                ArrayList<MusicEntity> list = getMusicListCursor(cr.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, proj_music,
+                        select.toString(), null,
+                        null));
+                for (MusicEntity music : list) {
+                    if (music.data.substring(0, music.data.lastIndexOf(File.separator)).equals(id)) {
+                        list1.add(music);
+                    }
+                }
+                return list1;
             default:
                 return null;
         }

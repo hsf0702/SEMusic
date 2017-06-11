@@ -15,4 +15,8 @@
     <string name="play_one">单曲播放</string>
     <string name="durationformatshort" translatable="false"><xliff:g id="format">%2$d:%3$02d</xliff:g></string>
     <string name="durationformatlong" translatable="false"><xliff:g id="format">%1$d:%2$02d:%3$02d</xliff:g></string>
+    <string name="sure">确定</string>
+    <string name="cancel">取消</string>
+    <string name="search">搜索</string>
+    <string name="search_net_music">搜索音乐、歌手、歌词、...</string>
 </resources>

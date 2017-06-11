@@ -12,6 +12,7 @@ public class SharePreferencesUtils {
     public static final String ARTIST_SORT_ORDER = "artist_sort_order";
     public static final String SONG_SORT_ORDER = "song_sort_order";
     public static final String ALBUM_SORT_ORDER = "album_sort_order";
+    public static final String DOWNMUSIC_BIT = "DOWNMUSIC_BIT";
 
     private static SharePreferencesUtils sInstance;
 
@@ -52,5 +53,16 @@ public class SharePreferencesUtils {
     public String getPlayLink(long id) {
         return mPreferences.getString(id + "", null);
     }
+
+    public void setDownMusicBit(int bit) {
+        final SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putInt(DOWNMUSIC_BIT, bit);
+        editor.apply();
+    }
+
+    public int getDownMusicBit() {
+        return mPreferences.getInt(DOWNMUSIC_BIT, 192);
+    }
+
 
 }

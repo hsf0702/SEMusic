@@ -91,7 +91,7 @@ public class SelectSongListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         public void onBind(SongListEntity songListEntity) {
             songList_pic.setImageURI(songListEntity.getList_pic());
             mPlayListTitle.setText(songListEntity.getName());
-            mPlayListInfo.setText(songListEntity.getCreator() + songListEntity.getInfo());
+            mPlayListInfo.setText(MyApplication.musicInfoDBService.getLocalCount(songListEntity.getId()));
         }
     }
 }

@@ -20,7 +20,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.BaseColumns;
 
-import com.past.music.provider.RecentStore;
+import com.past.music.database.provider.RecentStore;
 
 import java.util.ArrayList;
 

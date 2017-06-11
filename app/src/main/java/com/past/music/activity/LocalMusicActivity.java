@@ -32,7 +32,7 @@ public class LocalMusicActivity extends ToolBarActivity {
     TabLayout mTabLayout;
 
     @BindView(R.id.local_view_pager)
-    ViewPager mViewPager = null;
+    ViewPager mViewPager;
 
     LocalFragmentAdapter mAdapter = null;
     private List<String> mTabNames = new ArrayList<>();

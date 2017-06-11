@@ -167,6 +167,9 @@ public class MusicPlayer {
             return;
         }
         try {
+            if (forceShuffle) {
+                mService.setShuffleMode(MediaService.SHUFFLE_NORMAL);
+            }
             final long currentId = mService.getAudioId();
             final int currentQueuePosition = getQueuePosition();
             if (position != -1) {

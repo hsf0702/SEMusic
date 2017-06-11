@@ -12,6 +12,7 @@ public class MusicInfoCache {
     public static final String SONG_LIST_ID = "_song_list_id";
     /*Data Field*/
     public static final String ID = "_id";
+    public static final String SONG_ID = "_song_id";
     public static final String NAME = "_name";
     public static final String ALBUM_ID = "_album_id";
     public static final String ALBUM_NAME = "_album_name";
@@ -21,4 +22,6 @@ public class MusicInfoCache {
     public static final String PATH = "_PATH";
     //0代表本地  1代表不是本地
     public static final String IS_LOCAL = "_is_local";
+    //0代表不喜欢  1代表喜欢
+    public static final String IS_LOVE = "_is_love";
 }

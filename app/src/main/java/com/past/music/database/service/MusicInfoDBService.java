@@ -11,6 +11,7 @@ import com.past.music.entity.MusicEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * =======================================================
@@ -30,13 +31,14 @@ public class MusicInfoDBService {
     public synchronized void insert(MusicEntity musicEntity, String songListId) {
         SQLiteDatabase db = pastMusicDBHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(MusicInfoCache.ID, musicEntity.getSongId());
+        contentValues.put(MusicInfoCache.ID, UUID.randomUUID().toString());
         contentValues.put(MusicInfoCache.NAME, musicEntity.getMusicName());
         contentValues.put(MusicInfoCache.ALBUM_ID, musicEntity.getAlbumId());
         contentValues.put(MusicInfoCache.ALBUM_NAME, musicEntity.getAlbumName());
         contentValues.put(MusicInfoCache.ALBUM_PIC, musicEntity.getAlbumPic());
         contentValues.put(MusicInfoCache.ARTIST_ID, musicEntity.getArtistId());
         contentValues.put(MusicInfoCache.ARTIST_NAME, musicEntity.getArtist());
+        contentValues.put(MusicInfoCache.SONG_ID, musicEntity.getSongId());
         if (musicEntity.islocal()) {
             contentValues.put(MusicInfoCache.IS_LOCAL, 0);
         } else {
@@ -131,5 +133,31 @@ public class MusicInfoDBService {
             }
         }
         return musicEntity;
+    }
+
+
+    public synchronized String getLocalCount(String songListId) {
+        int total = 0;
+        int local = 0;
+        SQLiteDatabase db = pastMusicDBHelper.getReadableDatabase();
+        List<MusicEntity> list = new ArrayList<>();
+        String sql = "select * from " + PastMusicDBHelper.MUSICINFO_TABLE + " where " + MusicInfoCache.SONG_LIST_ID + " = '" + songListId + "'";
+        Cursor cursor = db.rawQuery(sql, null);
+        if (cursor.getCount() > 0) {
+            total = cursor.getCount();
+            cursor.moveToFirst();
+            int a = cursor.getInt(9);
+            if (a == 0) {
+                local++;
+            }
+        }
+
+        while (cursor.moveToNext()) {
+            int a = cursor.getInt(9);
+            if (a == 0) {
+                local++;
+            }
+        }
+        return total + "首，" + local + "首已下载";
     }
 }

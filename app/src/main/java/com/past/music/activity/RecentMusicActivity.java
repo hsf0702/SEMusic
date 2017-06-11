@@ -15,7 +15,7 @@ import com.past.music.dialog.SongOperationDialog;
 import com.past.music.entity.MusicEntity;
 import com.past.music.log.MyLog;
 import com.past.music.pastmusic.R;
-import com.past.music.provider.RecentStore;
+import com.past.music.database.provider.RecentStore;
 import com.past.music.service.MusicPlayer;
 import com.past.music.utils.HandlerUtil;
 import com.past.music.utils.MConstants;

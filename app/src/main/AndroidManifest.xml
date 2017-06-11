@@ -53,6 +53,7 @@
         <activity android:name="com.past.music.activity.LocalMusicActivity"/>
         <activity android:name="com.past.music.activity.DownloadActivity"/>
         <activity android:name="com.past.music.activity.RecentMusicActivity"/>
+        <activity android:name="com.past.music.activity.NetSearchWordsActivity"/>
         <activity android:name="com.past.music.activity.CollectedActivity"/>
         <activity android:name="com.past.music.activity.MySingersActivity"/>
         <activity android:name="com.past.music.activity.PlayListInfoActivity"/>
@@ -72,6 +73,21 @@
         </activity>
         <activity android:name="com.past.music.activity.SearchActivity">
         </activity>
+
+        <service
+            android:name="com.past.music.download.DownService">
+            <intent-filter>
+                <action android:name="com.past.music.downtaskadd"/>
+                <action android:name="com.past.music.resumestarttask"/>
+                <action android:name="com.past.music.startalltask"/>
+                <action android:name="com.past.music.multidowntaskadd"/>
+                <action android:name="com.past.music.pausetask"/>
+                <action android:name="com.past.music.pausealltask"/>
+                <action android:name="com.past.music.cacletask"/>
+                <action android:name="com.past.music.caclealltask"/>
+            </intent-filter>
+
+        </service>
     </application>
 
 </manifest>

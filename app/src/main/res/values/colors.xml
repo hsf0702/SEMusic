@@ -20,7 +20,11 @@
     <color name="background_material_light_1">#fafafa</color>
     <color name="content_bg">#F5F5F5</color>
     <color name="white_text">#fafafa</color>
-
+    <color name="normalBackground">#fff2f4f5</color>
+    <color name="text_color">#FF000000</color>
+    <color name="test_color">#696969</color>
+    <color name="listSubTextColor">#ff888888</color>
+    <color name="listTextColor">#ff333333</color>
     <!--灰色-->
     <color name="background_gray">#eaeaea</color>
     <color name="split_color">#E3E3E3</color>

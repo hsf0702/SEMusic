@@ -28,7 +28,6 @@ import com.past.music.api.AvatarRequest;
 import com.past.music.api.AvatarResponse;
 import com.past.music.entity.MusicEntity;
 import com.past.music.entity.SongListEntity;
-import com.past.music.log.MyLog;
 import com.past.music.pastmusic.R;
 import com.past.music.utils.MConstants;
 import com.past.music.utils.MusicUtils;
@@ -261,7 +260,6 @@ public class MyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
 
         public void onBind(final SongListEntity songListEntity) {
-            MyLog.i("onBind", songListEntity.getId());
             final MusicEntity musicEntity = MyApplication.musicInfoDBService.firstEntity(songListEntity.getId());
             if (musicEntity != null && musicEntity.getAlbumPic() != null) {
                 MyApplication.songListDBService.updatePic(songListEntity.getId(), musicEntity.getAlbumPic());
@@ -289,7 +287,7 @@ public class MyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 }
             }
             mPlayListTitle.setText(songListEntity.getName());
-            mPlayListInfo.setText(songListEntity.getCreator() + songListEntity.getInfo());
+            mPlayListInfo.setText(MyApplication.musicInfoDBService.getLocalCount(songListEntity.getId()));
         }
     }
 

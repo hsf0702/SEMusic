@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-package com.past.music.provider;
+package com.past.music.database.provider;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -22,7 +22,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.past.music.database.PastMusicDBHelper;
-import com.past.music.log.MyLog;
 
 import java.util.ArrayList;
 
@@ -116,7 +115,6 @@ public class RecentStore {
         database.delete(RecentStoreColumns.NAME, RecentStoreColumns.ID + " = ?", new String[]{
                 String.valueOf(songId)
         });
-
     }
 
     public void deleteAll() {

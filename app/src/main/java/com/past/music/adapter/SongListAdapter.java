@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.past.music.dialog.SongOperationDialog;
+import com.past.music.dialog.NetSongDialog;
 import com.past.music.entity.MusicEntity;
 import com.past.music.pastmusic.R;
 import com.past.music.service.MusicPlayer;
@@ -40,7 +40,7 @@ public class SongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private List<MusicEntity> mList;
     private Handler mHandler;
     private boolean isLight = true;
-    private SongOperationDialog songOperationDialog;
+    private NetSongDialog netSongDialog;
 
     public SongListAdapter(Context context) {
         this.mContext = context;
@@ -92,8 +92,8 @@ public class SongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         @OnClick(R.id.three_more)
         void more() {
-            songOperationDialog = new SongOperationDialog(mContext, mList.get(getAdapterPosition()), MConstants.MUSICOVERFLOW);
-            songOperationDialog.show();
+            netSongDialog = new NetSongDialog(mContext, mList.get(getAdapterPosition()), MConstants.MUSICOVERFLOW);
+            netSongDialog.show();
         }
 
         public RecommendListHolder(View itemView) {
@@ -129,8 +129,9 @@ public class SongListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         list[i] = info.songId;
                         infos.put(list[i], info);
                     }
-                    if (getAdapterPosition() >= 0)
+                    if (getAdapterPosition() >= 0) {
                         MusicPlayer.playAll(infos, list, getAdapterPosition(), false);
+                    }
                 }
             }, 70);
         }

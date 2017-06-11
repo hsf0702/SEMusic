@@ -14,7 +14,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.jaeger.library.StatusBarUtil;
 import com.neu.gaojin.MyOkHttpClient;
 import com.neu.gaojin.response.BaseCallback;
-import com.past.music.MyApplication;
 import com.past.music.adapter.SongListAdapter;
 import com.past.music.api.HotListResponse;
 import com.past.music.api.HotListResquest;

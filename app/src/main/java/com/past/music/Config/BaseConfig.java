@@ -2,6 +2,8 @@ package com.past.music.Config;/**
  * Created by gaojin on 2017/1/26.
  */
 
+import android.os.Environment;
+
 /**
  * =======================================================
  * 作者：gaojin
@@ -20,6 +22,9 @@ public class BaseConfig {
     public static final String QQ_MUSIC_URL = "http://route.showapi.com/213-4";
 
     public static final int Alpha = 0;
+
+    public static final String PATH = Environment.getExternalStorageDirectory().getAbsolutePath() +
+            "/pastmusic/";
 
 
     public static class PlayerMsg {

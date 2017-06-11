@@ -49,11 +49,11 @@ import com.past.music.MyApplication;
 import com.past.music.activity.MainActivity;
 import com.past.music.api.LrcRequest;
 import com.past.music.api.LrcResponse;
+import com.past.music.database.provider.RecentStore;
 import com.past.music.entity.MusicEntity;
 import com.past.music.log.MyLog;
 import com.past.music.pastmusic.IMediaAidlInterface;
 import com.past.music.pastmusic.R;
-import com.past.music.provider.RecentStore;
 import com.past.music.utils.SharePreferencesUtils;
 import com.past.music.utils.SysUtils;
 
@@ -735,6 +735,7 @@ public class MediaService extends Service {
             closeCursor();
             stop(false);
             boolean shutdown = false;
+
             if (mPlaylist.size() == 0 || mPlaylistInfo.size() == 0 && mPlayPos >= mPlaylist.size()) {
                 clearPlayInfos();
                 return;
@@ -752,9 +753,12 @@ public class MediaService extends Service {
                 }
                 mRequestUrl = new RequestPlayUrl(id, play);
                 mUrlHandler.postDelayed(mRequestUrl, 70);
+
             } else {
                 while (true) {
-                    if (mCursor != null && openFile(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI + "/" + mCursor.getLong(IDCOLIDX))) {
+                    if (mCursor != null
+                            && openFile(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI + "/"
+                            + mCursor.getLong(IDCOLIDX))) {
                         break;
                     }
                     closeCursor();
@@ -770,11 +774,13 @@ public class MediaService extends Service {
                         updateCursor(mPlaylist.get(mPlayPos).mId);
                     } else {
                         mOpenFailedCounter = 0;
-                        MyLog.w(TAG, "Failed to open file for playback");
+                        Log.w(TAG, "Failed to open file for playback");
+                        shutdown = true;
                         break;
                     }
                 }
             }
+
             if (shutdown) {
                 scheduleDelayedShutdown();
                 if (isPlaying) {
@@ -2272,8 +2278,7 @@ public class MediaService extends Service {
             @Override
             public void run() {
                 if (mIsNextTrackPrepared && mIsInitialized) {
-
-//                    mCurrentMediaPlayer.setNextMediaPlayer(mNextMediaPlayer);
+                    mCurrentMediaPlayer.setNextMediaPlayer(mNextMediaPlayer);
                 } else if (count < 60) {
                     handler.postDelayed(setNextMediaPlayerIfPrepared, 100);
                 }
@@ -2390,14 +2395,12 @@ public class MediaService extends Service {
         public void onCompletion(final MediaPlayer mp) {
             Log.w(TAG, "completion");
             if (mp == mCurrentMediaPlayer && mNextMediaPlayer != null) {
-                MyLog.i(TAG, "completion---mNextMediaPlayer != null");
                 mCurrentMediaPlayer.release();
                 mCurrentMediaPlayer = mNextMediaPlayer;
                 mNextMediaPath = null;
                 mNextMediaPlayer = null;
                 mHandler.sendEmptyMessage(TRACK_WENT_TO_NEXT);
             } else {
-                MyLog.i(TAG, "completion---mNextMediaPlayer == null");
 //                mService.get().mWakeLock.acquire(30000);
                 mHandler.sendEmptyMessage(TRACK_ENDED);
                 mHandler.sendEmptyMessage(RELEASE_WAKELOCK);
