@@ -46,17 +46,6 @@ public class HeaderFloatBehavior extends CoordinatorLayout.Behavior<View> {
         Resources resources = getDependentView().getResources();
         final float progress = 1.f -
                 Math.abs(dependency.getTranslationY() / (dependency.getHeight() - resources.getDimension(R.dimen.collapsed_header_height)));
-
-        // Translation
-//        final float collapsedOffset = resources.getDimension(R.dimen.collapsed_float_offset_y);
-//        final float initOffset = resources.getDimension(R.dimen.init_float_offset_y);
-//        final float translateY = collapsedOffset + (initOffset - collapsedOffset) * progress;
-//        child.setTranslationY(translateY);
-
-        // Background
-//        child.setBackgroundColor((int) argbEvaluator.evaluate(progress,
-//                resources.getColor(R.color.colorInitFloatBackground),
-//                resources.getColor(R.color.colorCollapsedFloatBackground)));
         title.setAlpha((float) (1.0 - progress));
 
         return true;

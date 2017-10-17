@@ -80,7 +80,6 @@ public class SongOperationDialog extends AlertDialog {
         ButterKnife.bind(this);
         Window window = this.getWindow();
         window.setGravity(Gravity.BOTTOM);
-        window.setWindowAnimations(R.style.bottom);
         mHandler = HandlerUtil.getInstance(mContext);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setHasFixedSize(true);
