@@ -25,6 +25,7 @@ class AppMainFragment : Fragment() {
         mToolBar = view.findViewById(R.id.toolbar)
         mTabLayout = view.findViewById(R.id.tab_layout)
         mViewPager = view.findViewById(R.id.view_pager)
+
         return view
     }
 
