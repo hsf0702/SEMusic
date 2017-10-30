@@ -11,7 +11,6 @@ import com.google.gson.JsonParser;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -25,11 +24,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import okhttp3.internal.Util;
-import okhttp3.internal.cache.DiskLruCache;
-import okhttp3.internal.io.FileSystem;
-import okio.BufferedSource;
-import okio.Okio;
 
 /**
  * Created by wm on 2016/4/10.
@@ -63,33 +57,6 @@ public class HttpUtil {
             e.printStackTrace();
         }
         return null;
-    }
-
-    public static FilterInputStream getFromCache(Context context, String url) throws Exception {
-        //  File cacheDirectory = new File("/storage/emulated/0/Android/data/com.name.demo .dev/cache/HttpCache");
-        File cacheDirectory = context.getExternalCacheDir();
-        DiskLruCache cache = DiskLruCache.create(FileSystem.SYSTEM, cacheDirectory, 201105, 2, 1024 * 1024 * 30);
-        cache.flush();
-        String key = Util.md5Hex(url);
-        final DiskLruCache.Snapshot snapshot;
-        try {
-            snapshot = cache.get(key);
-            if (snapshot == null) {
-                return null;
-            }
-        } catch (IOException e) {
-            return null;
-        }
-        okio.Source source = snapshot.getSource(1);
-        BufferedSource metadata = Okio.buffer(source);
-        FilterInputStream bodyIn = new FilterInputStream(metadata.inputStream()) {
-            @Override
-            public void close() throws IOException {
-                snapshot.close();
-                super.close();
-            }
-        };
-        return bodyIn;
     }
 
     private static int _calculateInSampleSize(BitmapFactory.Options options,

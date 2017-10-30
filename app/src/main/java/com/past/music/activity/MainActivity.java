@@ -3,8 +3,6 @@ package com.past.music.activity;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 
-import com.jaeger.library.StatusBarUtil;
-import com.past.music.Config.BaseConfig;
 import com.past.music.fragment.AppMainFragment;
 import com.past.music.pastmusic.R;
 
@@ -34,7 +32,5 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void setStatusBar() {
-        int mStatusBarColor = getResources().getColor(R.color.colorPrimary);
-        StatusBarUtil.setColorForDrawerLayout(this, mDrawerLayout, mStatusBarColor, BaseConfig.Alpha);
     }
 }

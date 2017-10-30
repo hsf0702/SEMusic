@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -14,10 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.jaeger.library.StatusBarUtil;
 import com.neu.gaojin.MyOkHttpClient;
 import com.neu.gaojin.response.BaseCallback;
-import com.past.music.Config.BaseConfig;
 import com.past.music.MyApplication;
 import com.past.music.adapter.SongListAdapter;
 import com.past.music.api.AvatarRequest;
@@ -132,13 +129,11 @@ public class SongListInfoActivity extends ToolBarActivity {
 
     public void setStatusBar_C() {
         if (MyApplication.musicInfoDBService.haveSong(mId) != null) {
-            StatusBarUtil.setTranslucentForImageView(this, 0, findViewById(R.id.view_need_offset));
             mEmptyLayout.setVisibility(View.GONE);
             mList = MyApplication.musicInfoDBService.query(mId);
             mTvTitle.setText(mTitle);
             setSongInterFace();
         } else {
-            StatusBarUtil.setColor(this, getResources().getColor(R.color.colorPrimary), BaseConfig.Alpha);
             setTitle(mTitle);
         }
     }

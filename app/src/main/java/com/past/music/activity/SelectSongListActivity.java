@@ -10,8 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.jaeger.library.StatusBarUtil;
-import com.past.music.Config.BaseConfig;
 import com.past.music.adapter.SelectSongListAdapter;
 import com.past.music.entity.MusicEntity;
 import com.past.music.pastmusic.R;
@@ -88,8 +86,6 @@ public class SelectSongListActivity extends AppCompatActivity {
     }
 
     protected void setStatusBar() {
-        int mColor = getResources().getColor(R.color.colorPrimary);
-        StatusBarUtil.setColor(this, mColor, BaseConfig.Alpha);
     }
 
 

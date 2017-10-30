@@ -2,6 +2,7 @@ package com.past.music.activity;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -44,7 +45,6 @@ import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.jaeger.library.StatusBarUtil;
 import com.past.music.dialog.MusicQueueFragment;
 import com.past.music.fragment.RoundFragment;
 import com.past.music.log.MyLog;
@@ -180,6 +180,7 @@ public class PlayMusicActivity extends BaseActivity {
     ImageView mNeedle;
 
 
+    @SuppressLint("WrongConstant")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -238,13 +239,13 @@ public class PlayMusicActivity extends BaseActivity {
 
     @Override
     protected void setStatusBar() {
-        StatusBarUtil.setTranslucent(this);
     }
 
     @Override
     protected void showQuickControl(boolean show) {
     }
 
+    @SuppressLint("WrongConstant")
     @Override
     public void baseUpdatePlayInfo() {
         if (MusicPlayer.getQueueSize() == 0) {

@@ -22,9 +22,9 @@ class AppMainFragment : Fragment() {
                                      savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.fragment_app_main, container, false)
-        mToolBar = view.findViewById(R.id.toolbar) as Toolbar
-        mTabLayout = view.findViewById(R.id.tab_layout) as TabLayout
-        mViewPager = view.findViewById(R.id.view_pager) as ViewPager
+        mToolBar = view.findViewById(R.id.toolbar)
+        mTabLayout = view.findViewById(R.id.tab_layout)
+        mViewPager = view.findViewById(R.id.view_pager)
         return view
     }
 
@@ -41,7 +41,7 @@ class AppMainFragment : Fragment() {
         fun newInstance(): AppMainFragment {
             val fragment = AppMainFragment()
             val args = Bundle()
-            fragment.setArguments(args)
+            fragment.arguments = args
             return fragment
         }
     }
