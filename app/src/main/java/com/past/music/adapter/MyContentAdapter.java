@@ -4,6 +4,7 @@ package com.past.music.adapter;/**
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ import com.past.music.api.AvatarRequest;
 import com.past.music.api.AvatarResponse;
 import com.past.music.entity.MusicEntity;
 import com.past.music.entity.SongListEntity;
+import com.past.music.fragment.KT_LocalMusicFragment;
 import com.past.music.pastmusic.R;
 import com.past.music.utils.MConstants;
 import com.past.music.utils.MusicUtils;
@@ -165,7 +167,9 @@ public class MyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @OnClick(R.id.local_music)
         void localMusic() {
-            LocalMusicActivity.startActivity(mContext, 0);
+            FragmentTransaction ft = ((BaseActivity) mContext).getSupportFragmentManager().beginTransaction();
+            ft.addToBackStack("KT_LocalMusicFragment");
+            ft.add(R.id.content, KT_LocalMusicFragment.Companion.newInstance(0)).commitAllowingStateLoss();
         }
 
         @OnClick(R.id.download_music)

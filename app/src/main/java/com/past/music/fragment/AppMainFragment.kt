@@ -21,7 +21,7 @@ class AppMainFragment : Fragment() {
     public override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                                      savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        var view = inflater.inflate(R.layout.fragment_app_main, container, false)
+        val view = inflater.inflate(R.layout.fragment_app_main, container, false)
         mToolBar = view.findViewById(R.id.toolbar)
         mTabLayout = view.findViewById(R.id.tab_layout)
         mViewPager = view.findViewById(R.id.view_pager)
@@ -39,6 +39,7 @@ class AppMainFragment : Fragment() {
     }
 
     companion object {
+
         fun newInstance(): AppMainFragment {
             val fragment = AppMainFragment()
             val args = Bundle()
