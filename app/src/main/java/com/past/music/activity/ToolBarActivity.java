@@ -5,8 +5,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.jaeger.library.StatusBarUtil;
-import com.past.music.Config.BaseConfig;
 import com.past.music.pastmusic.R;
 
 import butterknife.BindView;
@@ -52,7 +50,5 @@ public abstract class ToolBarActivity extends BaseActivity {
 
     @Override
     protected void setStatusBar() {
-        int mColor = getResources().getColor(R.color.colorPrimary);
-        StatusBarUtil.setColor(this, mColor, BaseConfig.Alpha);
     }
 }

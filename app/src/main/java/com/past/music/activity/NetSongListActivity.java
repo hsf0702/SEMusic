@@ -11,7 +11,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.jaeger.library.StatusBarUtil;
 import com.neu.gaojin.MyOkHttpClient;
 import com.neu.gaojin.response.BaseCallback;
 import com.past.music.adapter.SongListAdapter;
@@ -140,6 +139,5 @@ public class NetSongListActivity extends BaseActivity {
 
     @Override
     protected void setStatusBar() {
-        StatusBarUtil.setTranslucentForImageView(this, 0, findViewById(R.id.view_need_offset));
     }
 }

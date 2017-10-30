@@ -13,7 +13,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.jaeger.library.StatusBarUtil;
 import com.past.music.fragment.QuickControlsFragment;
 import com.past.music.log.MyLog;
 import com.past.music.pastmusic.IMediaAidlInterface;
@@ -69,7 +68,6 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
     }
 
     protected void setStatusBar() {
-        StatusBarUtil.setColor(this, getResources().getColor(R.color.colorPrimary));
     }
 
 

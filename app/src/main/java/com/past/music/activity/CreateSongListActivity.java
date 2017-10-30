@@ -6,8 +6,6 @@ import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.jaeger.library.StatusBarUtil;
-import com.past.music.Config.BaseConfig;
 import com.past.music.MyApplication;
 import com.past.music.event.CreateSongListEvent;
 import com.past.music.pastmusic.R;
@@ -62,8 +60,6 @@ public class CreateSongListActivity extends AppCompatActivity {
     }
 
     protected void setStatusBar() {
-        int mColor = getResources().getColor(R.color.colorPrimary);
-        StatusBarUtil.setColor(this, mColor, BaseConfig.Alpha);
     }
 
     @Override
