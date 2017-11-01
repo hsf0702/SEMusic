@@ -74,8 +74,7 @@
         <activity android:name="com.past.music.activity.SearchActivity">
         </activity>
 
-        <service
-            android:name="com.past.music.download.DownService">
+        <service android:name="com.past.music.download.DownService">
             <intent-filter>
                 <action android:name="com.past.music.downtaskadd"/>
                 <action android:name="com.past.music.resumestarttask"/>
@@ -86,8 +85,10 @@
                 <action android:name="com.past.music.cacletask"/>
                 <action android:name="com.past.music.caclealltask"/>
             </intent-filter>
-
         </service>
+
+        <activity android:name="com.past.music.activity.PermissionsActivity">
+        </activity>
     </application>
 
 </manifest>
