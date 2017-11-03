@@ -8,15 +8,15 @@ import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.past.music.fragment.adapter.MainFragmentAdapter
+import com.past.music.adapter.KtMainFragmentAdapter
 import com.past.music.pastmusic.R
 
-class AppMainFragment : Fragment() {
+class KtAppMainFragment : Fragment() {
 
     private var mToolBar: Toolbar? = null
     private var mTabLayout: TabLayout? = null
     private var mViewPager: ViewPager? = null
-    private var mAdapter: MainFragmentAdapter? = null
+    private var mAdapter: KtMainFragmentAdapter? = null
 
     public override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                                      savedInstanceState: Bundle?): View? {
@@ -33,15 +33,15 @@ class AppMainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mTabLayout!!.tabGravity = TabLayout.GRAVITY_CENTER
         val fm = activity.supportFragmentManager
-        mAdapter = MainFragmentAdapter(fm)
+        mAdapter = KtMainFragmentAdapter(fm)
         mViewPager!!.adapter = mAdapter
         mTabLayout!!.setupWithViewPager(mViewPager)
     }
 
     companion object {
 
-        fun newInstance(): AppMainFragment {
-            val fragment = AppMainFragment()
+        fun newInstance(): KtAppMainFragment {
+            val fragment = KtAppMainFragment()
             val args = Bundle()
             fragment.arguments = args
             return fragment

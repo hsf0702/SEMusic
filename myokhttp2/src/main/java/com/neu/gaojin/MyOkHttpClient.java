@@ -178,7 +178,7 @@ public class MyOkHttpClient implements mConstant {
                                 ((JsonResponse) mResponseHandler).onSuccess(response.code(), jsonBody);
                             }
                         });
-                    } catch (JSONException e) {
+                    } catch (JSONException ignored) {
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
@@ -193,7 +193,7 @@ public class MyOkHttpClient implements mConstant {
                             try {
                                 Gson gson = new Gson();
                                 ((BaseCallback) mResponseHandler).onSuccess(response.code(), gson.fromJson(response_body, ((BaseCallback) mResponseHandler).getType()));
-                            } catch (Exception e) {
+                            } catch (Exception ignored) {
                                 mResponseHandler.onFailure(response.code(), "fail parse gson, body=" + response_body);
                             }
 

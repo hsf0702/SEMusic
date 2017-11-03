@@ -21,7 +21,6 @@ import com.past.music.MyApplication;
 import com.past.music.activity.BaseActivity;
 import com.past.music.activity.CollectedActivity;
 import com.past.music.activity.DownloadActivity;
-import com.past.music.activity.LocalMusicActivity;
 import com.past.music.activity.RecentMusicActivity;
 import com.past.music.activity.SongListActivity;
 import com.past.music.activity.SongListInfoActivity;
@@ -29,7 +28,7 @@ import com.past.music.api.AvatarRequest;
 import com.past.music.api.AvatarResponse;
 import com.past.music.entity.MusicEntity;
 import com.past.music.entity.SongListEntity;
-import com.past.music.fragment.KT_LocalMusicFragment;
+import com.past.music.fragment.KtLocalMusicFragment;
 import com.past.music.pastmusic.R;
 import com.past.music.utils.MConstants;
 import com.past.music.utils.MusicUtils;
@@ -168,8 +167,10 @@ public class MyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         @OnClick(R.id.local_music)
         void localMusic() {
             FragmentTransaction ft = ((BaseActivity) mContext).getSupportFragmentManager().beginTransaction();
-            ft.addToBackStack("KT_LocalMusicFragment");
-            ft.add(R.id.content, KT_LocalMusicFragment.Companion.newInstance(0)).commitAllowingStateLoss();
+            ft.addToBackStack(null);
+            ft.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_left_out, R.anim.slide_left_in, R.anim.slide_right_out);
+            ft.add(R.id.content, KtLocalMusicFragment.Companion.newInstance(0)).commitAllowingStateLoss();
+
         }
 
         @OnClick(R.id.download_music)
@@ -192,7 +193,10 @@ public class MyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @OnClick(R.id.love_singer)
         void loveSinger() {
-            LocalMusicActivity.startActivity(mContext, 1);
+            FragmentTransaction ft = ((BaseActivity) mContext).getSupportFragmentManager().beginTransaction();
+            ft.addToBackStack("KtLocalMusicFragment");
+            ft.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_left_out, R.anim.slide_left_in, R.anim.slide_right_out);
+            ft.add(R.id.content, KtLocalMusicFragment.Companion.newInstance(0)).commitAllowingStateLoss();
         }
 
         @OnClick(R.id.buy_music)

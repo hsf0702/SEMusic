@@ -78,7 +78,7 @@ public class CommonUtils {
             serial = android.os.Build.class.getField("SERIAL").get(null).toString();
             //API>=9 使用serial号
             return new UUID(m_szDevIDShort.hashCode(), serial.hashCode()).toString();
-        } catch (Exception exception) {
+        } catch (Exception ignored) {
             //serial需要一个初始化
             serial = "serial"; // 随便一个初始化
         }
@@ -158,7 +158,7 @@ public class CommonUtils {
             // Invoke Build.hasSmartBar()
             final Method method = Build.class.getMethod("hasSmartBar");
             return method != null;
-        } catch (final Exception e) {
+        } catch (final Exception ignored) {
             return false;
         }
     }

@@ -1,4 +1,4 @@
-package com.past.music.fragment.adapter;
+package com.past.music.adapter;
 
 import android.annotation.SuppressLint;
 import android.support.v4.app.Fragment;

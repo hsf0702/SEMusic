@@ -78,7 +78,7 @@ public class SongLoader {
         int columnIndex = -1;
         try {
             columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Playlists.Members.AUDIO_ID);
-        } catch (final IllegalArgumentException notaplaylist) {
+        } catch (final IllegalArgumentException ignored) {
             columnIndex = cursor.getColumnIndexOrThrow(BaseColumns._ID);
         }
         for (int i = 0; i < len; i++) {

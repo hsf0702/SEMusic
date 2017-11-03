@@ -8,7 +8,7 @@ import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.past.music.fragment.adapter.LocalFragmentAdapter
+import com.past.music.adapter.LocalFragmentAdapter
 import com.past.music.pastmusic.R
 import com.past.music.utils.MConstants
 import com.past.music.utils.MusicUtils
@@ -17,10 +17,10 @@ import java.util.*
 
 /**
  * A simple [Fragment] subclass.
- * Use the [KT_LocalMusicFragment.newInstance] factory method to
+ * Use the [KtLocalMusicFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class KT_LocalMusicFragment : KT_BaseFragment() {
+class KtLocalMusicFragment : KtBaseFragment() {
 
     internal var mAdapter: LocalFragmentAdapter? = null
     private val mTabNames = ArrayList<String>()
@@ -70,8 +70,8 @@ class KT_LocalMusicFragment : KT_BaseFragment() {
     companion object {
         private val POSITION = "POSITION"
 
-        fun newInstance(position: Int): KT_LocalMusicFragment {
-            val fragment = KT_LocalMusicFragment()
+        fun newInstance(position: Int): KtLocalMusicFragment {
+            val fragment = KtLocalMusicFragment()
             val args = Bundle()
             args.putInt(POSITION, position)
             fragment.arguments = args

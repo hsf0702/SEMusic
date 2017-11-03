@@ -12,7 +12,7 @@ class PermissionsChecker constructor(context: Context) {
     private val mContext: Context = context.applicationContext
 
     // 判断权限集合
-    fun lacksPermissions(vararg permissions: String): Boolean {
+    fun lacksPermissions(permissions: Array<String>): Boolean {
         return permissions.any { lacksPermission(it) }
     }
 

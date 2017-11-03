@@ -111,7 +111,7 @@ public class NetworkUtils {
             }
 
             return NetworkUtils.IP_DEFAULT;
-        } catch (final SocketException e) {
+        } catch (final SocketException ignored) {
             return NetworkUtils.IP_DEFAULT;
         }
     }

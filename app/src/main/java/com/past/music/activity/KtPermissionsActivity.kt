@@ -14,7 +14,7 @@ import com.past.music.pastmusic.R
 import com.past.music.utils.PermissionsChecker
 
 
-class PermissionsActivity : AppCompatActivity() {
+class KtPermissionsActivity : AppCompatActivity() {
 
     private val PERMISSION_REQUEST_CODE = 0x00
     private val PACKAGE_URL_SCHEME = "package:" // 方案
@@ -30,7 +30,7 @@ class PermissionsActivity : AppCompatActivity() {
 
         // 启动当前权限页面的公开接口
         fun startActivityForResult(activity: Activity, requestCode: Int, permissions: Array<String>) {
-            val intent = Intent(activity, PermissionsActivity::class.java)
+            val intent = Intent(activity, KtPermissionsActivity::class.java)
             intent.putExtra(EXTRA_PERMISSIONS, permissions)
             ActivityCompat.startActivityForResult(activity, intent, requestCode, null)
         }
@@ -51,7 +51,7 @@ class PermissionsActivity : AppCompatActivity() {
         super.onResume()
         if (isRequireCheck) {
             val permissions = getPermissions()
-            if (mChecker!!.lacksPermissions(*permissions)) {
+            if (mChecker!!.lacksPermissions(permissions)) {
                 requestPermissions(permissions, PERMISSION_REQUEST_CODE) // 请求权限
             } else {
                 allPermissionsGranted() // 全部权限都已获取
@@ -89,17 +89,17 @@ class PermissionsActivity : AppCompatActivity() {
 
     // 显示缺失权限提示
     private fun showMissingPermissionDialog() {
-        val builder = AlertDialog.Builder(this@PermissionsActivity)
+        val builder = AlertDialog.Builder(this@KtPermissionsActivity)
         builder.setTitle(R.string.help)
         builder.setMessage(R.string.string_help_text)
 
         // 拒绝, 退出应用
-        builder.setNegativeButton(R.string.quit, DialogInterface.OnClickListener { dialog, which ->
+        builder.setNegativeButton(R.string.quit, DialogInterface.OnClickListener { _, _ ->
             setResult(PERMISSIONS_DENIED)
             finish()
         })
 
-        builder.setPositiveButton(R.string.settings, DialogInterface.OnClickListener { dialog, which -> startAppSettings() })
+        builder.setPositiveButton(R.string.settings, DialogInterface.OnClickListener { _, _ -> startAppSettings() })
 
         builder.show()
     }

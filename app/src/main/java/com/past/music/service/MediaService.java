@@ -46,7 +46,7 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.neu.gaojin.MyOkHttpClient;
 import com.neu.gaojin.response.BaseCallback;
 import com.past.music.MyApplication;
-import com.past.music.activity.MainActivity;
+import com.past.music.activity.KtMainActivity;
 import com.past.music.api.LrcRequest;
 import com.past.music.api.LrcResponse;
 import com.past.music.database.provider.RecentStore;
@@ -1050,7 +1050,7 @@ public class MediaService extends Service {
                 long id = -1;
                 try {
                     id = Long.valueOf(uri.getLastPathSegment());
-                } catch (NumberFormatException ex) {
+                } catch (NumberFormatException ignored) {
                 }
 
                 if (id != -1 && path.startsWith(
@@ -1085,7 +1085,7 @@ public class MediaService extends Service {
                         mPlayPos = 0;
                         mHistory.clear();
                     }
-                } catch (final UnsupportedOperationException ex) {
+                } catch (final UnsupportedOperationException ignored) {
                 }
             }
             mFileToPlay = path;
@@ -1694,7 +1694,7 @@ public class MediaService extends Service {
             }
             mAutoShuffleList = list;
             return true;
-        } catch (final RuntimeException e) {
+        } catch (final RuntimeException ignored) {
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -1813,7 +1813,7 @@ public class MediaService extends Service {
         PendingIntent prePIntent = PendingIntent.getBroadcast(this, 0, preIntent, 0);
         remoteViews.setOnClickPendingIntent(R.id.img_cancel, prePIntent);
 
-        final Intent mMainIntent = new Intent(this, MainActivity.class);
+        final Intent mMainIntent = new Intent(this, KtMainActivity.class);
         PendingIntent mainIntent = PendingIntent.getActivity(this, 0, mMainIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         if (MyApplication.imageDBService.query(getArtistName().replace(";", "")) != null) {
@@ -2104,9 +2104,9 @@ public class MediaService extends Service {
             mIsNextInitialized = false;
             try {
                 mCurrentMediaPlayer.setNextMediaPlayer(null);
-            } catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException ignored) {
                 Log.i(TAG, "Next media player is current one, continuing");
-            } catch (IllegalStateException e) {
+            } catch (IllegalStateException ignored) {
                 Log.e(TAG, "Media player not initialized!");
                 return;
             }
@@ -2162,10 +2162,10 @@ public class MediaService extends Service {
                     mIllegalState = false;
                 }
 
-            } catch (final IOException todo) {
+            } catch (final IOException ignored) {
 
                 return false;
-            } catch (final IllegalArgumentException todo) {
+            } catch (final IllegalArgumentException ignored) {
 
                 return false;
             } catch (final IllegalStateException todo) {
@@ -2204,9 +2204,9 @@ public class MediaService extends Service {
                     player.prepare();
                     mIsNextTrackPrepared = false;
                 }
-            } catch (final IOException todo) {
+            } catch (final IOException ignored) {
                 return false;
-            } catch (final IllegalArgumentException todo) {
+            } catch (final IllegalArgumentException ignored) {
                 return false;
             }
             player.setOnCompletionListener(this);
