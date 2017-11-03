@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.google.gson.JsonArray;
 import com.past.music.api.SearchSongInfo;
 import com.past.music.download.BMA;
-import com.past.music.fragment.adapter.RecentSearchAdapter;
+import com.past.music.adapter.RecentSearchAdapter;
 import com.past.music.pastmusic.R;
 import com.past.music.utils.HttpUtil;
 import com.past.music.utils.NetworkUtils;

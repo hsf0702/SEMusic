@@ -12,7 +12,7 @@
  * See the GNU General Public License for more details.
  */
 
-package com.past.music.fragment.adapter;
+package com.past.music.adapter;
 
 import android.app.Activity;
 import android.content.Context;

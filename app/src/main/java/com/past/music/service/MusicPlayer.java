@@ -215,7 +215,7 @@ public class MusicPlayer {
             try {
                 return mService.position();
             } catch (final RemoteException ignored) {
-            } catch (final IllegalStateException ex) {
+            } catch (final IllegalStateException ignored) {
 
             }
         }
@@ -269,7 +269,7 @@ public class MusicPlayer {
             try {
                 return mService.secondPosition();
             } catch (final RemoteException ignored) {
-            } catch (final IllegalStateException ex) {
+            } catch (final IllegalStateException ignored) {
 
             }
         }

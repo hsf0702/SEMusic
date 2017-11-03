@@ -34,6 +34,7 @@ import okhttp3.ResponseBody;
  * 备注：
  * =======================================================
  */
+@SuppressWarnings("UnusedCatchParameter")
 public class DownloadTask implements Runnable {
     private DownloadDBEntity dbEntity;
     private DownFileStore downFileStore;

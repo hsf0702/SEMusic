@@ -129,7 +129,7 @@ public class HttpUtil {
 
             return BitmapFactory.decodeByteArray(byteArr, 0, count, options);
 
-        } catch (Exception e) {
+        } catch (Exception ignored) {
             // close_print_exception
 
             return null;

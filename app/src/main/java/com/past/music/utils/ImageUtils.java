@@ -107,7 +107,7 @@ public class ImageUtils {
                 try {
                     if (fd != null)
                         fd.close();
-                } catch (IOException e) {
+                } catch (IOException ignored) {
                 }
             }
         }
