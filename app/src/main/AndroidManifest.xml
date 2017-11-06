@@ -52,7 +52,6 @@
             android:exported="true"
             android:process=":remote"/>
 
-        <activity android:name="com.past.music.activity.DownloadActivity"/>
         <activity android:name="com.past.music.activity.RecentMusicActivity"/>
         <activity android:name="com.past.music.activity.NetSearchWordsActivity"/>
         <activity android:name="com.past.music.activity.CollectedActivity"/>

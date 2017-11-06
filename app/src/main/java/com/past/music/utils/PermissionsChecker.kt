@@ -17,7 +17,7 @@ class PermissionsChecker constructor(context: Context) {
     }
 
     // 判断是否缺少权限
-    public fun lacksPermission(permission: String): Boolean {
+    fun lacksPermission(permission: String): Boolean {
         return ContextCompat.checkSelfPermission(mContext, permission) ==
                 PackageManager.PERMISSION_DENIED
     }

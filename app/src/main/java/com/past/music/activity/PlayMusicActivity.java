@@ -73,7 +73,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class PlayMusicActivity extends BaseActivity {
+public class PlayMusicActivity extends KtBaseActivity {
 
     private static final int NEXT_MUSIC = 0;
     private static final int PRE_MUSIC = 1;
@@ -238,11 +238,11 @@ public class PlayMusicActivity extends BaseActivity {
     }
 
     @Override
-    protected void setStatusBar() {
+    public void setStatusBar() {
     }
 
     @Override
-    protected void showQuickControl(boolean show) {
+    public void showQuickControl(boolean show) {
     }
 
     @SuppressLint("WrongConstant")

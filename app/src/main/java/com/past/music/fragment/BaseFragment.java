@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
-import com.past.music.activity.BaseActivity;
+import com.past.music.activity.KtBaseActivity;
 import com.past.music.activity.MusicStateListener;
 
 /**
@@ -36,14 +36,14 @@ public class BaseFragment extends Fragment implements MusicStateListener {
     @Override
     public void onResume() {
         super.onResume();
-        ((BaseActivity) getActivity()).setMusicStateListenerListener(this);
+        ((KtBaseActivity) getActivity()).setMusicStateListenerListener(this);
         reloadAdapter();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        ((BaseActivity) getActivity()).removeMusicStateListenerListener(this);
+        ((KtBaseActivity) getActivity()).removeMusicStateListenerListener(this);
     }
 
     @Override
