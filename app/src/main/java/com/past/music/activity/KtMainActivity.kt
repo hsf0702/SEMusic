@@ -8,7 +8,7 @@ import com.past.music.fragment.KtAppMainFragment
 import com.past.music.pastmusic.R
 import com.past.music.utils.PermissionsChecker
 
-class KtMainActivity : BaseActivity() {
+class KtMainActivity : KtBaseActivity() {
 
     private val REQUEST_CODE = 0x00 // 请求码
     private val PERMISSIONS = Array(1, { Manifest.permission.READ_EXTERNAL_STORAGE })

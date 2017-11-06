@@ -18,9 +18,8 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.neu.gaojin.MyOkHttpClient;
 import com.neu.gaojin.response.BaseCallback;
 import com.past.music.MyApplication;
-import com.past.music.activity.BaseActivity;
 import com.past.music.activity.CollectedActivity;
-import com.past.music.activity.DownloadActivity;
+import com.past.music.activity.KtBaseActivity;
 import com.past.music.activity.RecentMusicActivity;
 import com.past.music.activity.SongListActivity;
 import com.past.music.activity.SongListInfoActivity;
@@ -28,6 +27,7 @@ import com.past.music.api.AvatarRequest;
 import com.past.music.api.AvatarResponse;
 import com.past.music.entity.MusicEntity;
 import com.past.music.entity.SongListEntity;
+import com.past.music.fragment.KtDownLoadFragment;
 import com.past.music.fragment.KtLocalMusicFragment;
 import com.past.music.pastmusic.R;
 import com.past.music.utils.MConstants;
@@ -166,7 +166,7 @@ public class MyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @OnClick(R.id.local_music)
         void localMusic() {
-            FragmentTransaction ft = ((BaseActivity) mContext).getSupportFragmentManager().beginTransaction();
+            FragmentTransaction ft = ((KtBaseActivity) mContext).getSupportFragmentManager().beginTransaction();
             ft.addToBackStack(null);
             ft.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_left_out, R.anim.slide_left_in, R.anim.slide_right_out);
             ft.add(R.id.content, KtLocalMusicFragment.Companion.newInstance(0)).commitAllowingStateLoss();
@@ -175,25 +175,27 @@ public class MyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @OnClick(R.id.download_music)
         void downloadMusic() {
-            Intent intent = new Intent(mContext, DownloadActivity.class);
-            ((BaseActivity) mContext).startActivityByX(intent, true);
+            FragmentTransaction ft = ((KtBaseActivity) mContext).getSupportFragmentManager().beginTransaction();
+            ft.addToBackStack(null);
+            ft.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_left_out, R.anim.slide_left_in, R.anim.slide_right_out);
+            ft.add(R.id.content, KtDownLoadFragment.Companion.newInstance()).commitAllowingStateLoss();
         }
 
         @OnClick(R.id.recent_music)
         void recentMusic() {
             Intent intent = new Intent(mContext, RecentMusicActivity.class);
-            ((BaseActivity) mContext).startActivityByX(intent, true);
+            ((KtBaseActivity) mContext).startActivityByX(intent, true);
         }
 
         @OnClick(R.id.love_music)
         void loveMusic() {
             Intent intent = new Intent(mContext, CollectedActivity.class);
-            ((BaseActivity) mContext).startActivityByX(intent, true);
+            ((KtBaseActivity) mContext).startActivityByX(intent, true);
         }
 
         @OnClick(R.id.love_singer)
         void loveSinger() {
-            FragmentTransaction ft = ((BaseActivity) mContext).getSupportFragmentManager().beginTransaction();
+            FragmentTransaction ft = ((KtBaseActivity) mContext).getSupportFragmentManager().beginTransaction();
             ft.addToBackStack("KtLocalMusicFragment");
             ft.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_left_out, R.anim.slide_left_in, R.anim.slide_right_out);
             ft.add(R.id.content, KtLocalMusicFragment.Companion.newInstance(0)).commitAllowingStateLoss();
@@ -231,7 +233,7 @@ public class MyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         @OnClick(R.id.rl_favor_title)
         void favorTltle() {
             Intent intent = new Intent(mContext, SongListActivity.class);
-            ((BaseActivity) mContext).startActivityByX(intent, false);
+            ((KtBaseActivity) mContext).startActivityByX(intent, false);
         }
 
         public FavorTitleLayout(View itemView) {
@@ -308,7 +310,7 @@ public class MyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(mContext, SongListActivity.class);
-            ((BaseActivity) mContext).startActivityByX(intent, false);
+            ((KtBaseActivity) mContext).startActivityByX(intent, false);
         }
     }
 }

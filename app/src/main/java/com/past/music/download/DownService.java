@@ -14,7 +14,6 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
-import com.past.music.activity.DownloadActivity;
 import com.past.music.database.provider.DownFileStore;
 import com.past.music.entity.DownloadDBEntity;
 import com.past.music.pastmusic.R;
@@ -396,8 +395,8 @@ public class DownService extends Service {
         }
         remoteViews = new RemoteViews(this.getPackageName(), R.layout.down_notification);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this.getApplicationContext(), 0,
-                new Intent(this.getApplicationContext(), DownloadActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(this.getApplicationContext(), 0,
+//                new Intent(this.getApplicationContext(), DownloadActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
 
 
         final Intent nowPlayingIntent = new Intent();

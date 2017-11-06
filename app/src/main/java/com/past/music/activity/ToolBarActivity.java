@@ -19,7 +19,7 @@ import butterknife.OnClick;
  * =======================================================
  */
 
-public abstract class ToolBarActivity extends BaseActivity {
+public abstract class ToolBarActivity extends KtBaseActivity {
 
     @BindView(R.id.title)
     protected TextView mTitle;
@@ -49,6 +49,6 @@ public abstract class ToolBarActivity extends BaseActivity {
     }
 
     @Override
-    protected void setStatusBar() {
+    public void setStatusBar() {
     }
 }
