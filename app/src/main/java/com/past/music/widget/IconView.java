@@ -49,20 +49,13 @@ public class IconView extends RelativeLayout {
 
     private void initView() {
         View.inflate(getContext(), R.layout.view_icon_view, this);
-        mHotPic = (SquareSimpleDraweeView) findViewById(R.id.img_hot_pic);
-        mTvDes = (TextView) findViewById(R.id.tv_describe);
+        mHotPic = findViewById(R.id.img_hot_pic);
+        mTvDes = findViewById(R.id.tv_describe);
     }
 
     public void setmHotPic(String pic) {
         Uri uri = Uri.parse(pic);
         mHotPic.setImageURI(uri);
-    }
-
-    public void setmHotPic(int resId) {
-        Uri uri = Uri.parse("res://" + mContext.getPackageName() + "/" + resId);
-        if (mHotPic != null) {
-            mHotPic.setImageURI(uri);
-        }
     }
 
     public void setmTvDes(String des) {

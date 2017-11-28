@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * Created by wm on 2016/4/11.
  */
-public class SearchTabPagerFragment extends AttachFragment {
+public class SearchTabPagerFragment extends KtAttachFragment {
 
     private ViewPager viewPager;
     private int page = 0;
@@ -93,10 +93,10 @@ public class SearchTabPagerFragment extends AttachFragment {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                if (mContext == null) {
+                if (getMContext() == null) {
                     return;
                 }
-                contentView = LayoutInflater.from(mContext).inflate(R.layout.fragment_net_tab, frameLayout, false);
+                contentView = LayoutInflater.from(getMContext()).inflate(R.layout.fragment_net_tab, frameLayout, false);
                 viewPager = (ViewPager) contentView.findViewById(R.id.viewpager);
                 if (viewPager != null) {
                     Adapter adapter = new Adapter(getChildFragmentManager());
@@ -130,7 +130,7 @@ public class SearchTabPagerFragment extends AttachFragment {
 
         View rootView = inflater.inflate(R.layout.load_framelayout, container, false);
         frameLayout = (FrameLayout) rootView.findViewById(R.id.loadframe);
-        View loadview = LayoutInflater.from(mContext).inflate(R.layout.loading, frameLayout, false);
+        View loadview = LayoutInflater.from(getMContext()).inflate(R.layout.loading, frameLayout, false);
         frameLayout.addView(loadview);
 
 

@@ -1,4 +1,5 @@
-package com.past.music.adapter;/**
+package com.past.music.adapter;
+/**
  * Created by gaojin on 2017/1/26.
  */
 
@@ -18,8 +19,8 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.neu.gaojin.MyOkHttpClient;
 import com.neu.gaojin.response.BaseCallback;
 import com.past.music.MyApplication;
-import com.past.music.activity.CollectedActivity;
 import com.past.music.activity.KtBaseActivity;
+import com.past.music.activity.KtCollectedActivity;
 import com.past.music.activity.RecentMusicActivity;
 import com.past.music.activity.SongListActivity;
 import com.past.music.activity.SongListInfoActivity;
@@ -189,14 +190,14 @@ public class MyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @OnClick(R.id.love_music)
         void loveMusic() {
-            Intent intent = new Intent(mContext, CollectedActivity.class);
+            Intent intent = new Intent(mContext, KtCollectedActivity.class);
             ((KtBaseActivity) mContext).startActivityByX(intent, true);
         }
 
         @OnClick(R.id.love_singer)
         void loveSinger() {
             FragmentTransaction ft = ((KtBaseActivity) mContext).getSupportFragmentManager().beginTransaction();
-            ft.addToBackStack("KtLocalMusicFragment");
+            ft.addToBackStack("KtUiLocalMusicFragment");
             ft.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_left_out, R.anim.slide_left_in, R.anim.slide_right_out);
             ft.add(R.id.content, KtLocalMusicFragment.Companion.newInstance(0)).commitAllowingStateLoss();
         }

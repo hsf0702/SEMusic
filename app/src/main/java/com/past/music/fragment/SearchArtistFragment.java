@@ -20,7 +20,7 @@ import java.util.ArrayList;
 /**
  * Created by wm on 2016/5/18.
  */
-public class SearchArtistFragment extends AttachFragment {
+public class SearchArtistFragment extends KtAttachFragment {
 
     private ArrayList<SearchArtistInfo> artistInfos;
     private RecyclerView recyclerView;
@@ -41,8 +41,8 @@ public class SearchArtistFragment extends AttachFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recylerview, container, false);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
-        layoutManager = new LinearLayoutManager(mContext);
+        recyclerView =  view.findViewById(R.id.recyclerview);
+        layoutManager = new LinearLayoutManager(getMContext());
         recyclerView.setLayoutManager(layoutManager);
         mAdapter = new ArtistAdapter(null);
         recyclerView.setAdapter(mAdapter);

@@ -18,7 +18,7 @@ import com.past.music.pastmusic.R
  * Creator：gaojin
  * date：2017/10/30 下午10:25
  */
-abstract class KtBaseFragment : Fragment() {
+abstract class KtUiBaseFragment : Fragment() {
     private var mAppBarLayout: AppBarLayout? = null
     private var mToolBar: Toolbar? = null
     private var mTitle: TextView? = null

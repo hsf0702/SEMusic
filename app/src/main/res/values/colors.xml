@@ -6,18 +6,10 @@
 
     <color name="transparent">#00000000</color>
     <color name="transparent_half">#bfffffff</color>
-    <color name="btn_bg">#FAFBFC</color>
-    <color name="tv_bg">#F1F3F3</color>
-    <color name="text_bg">#181818</color>
-    <color name="btn_text_bg">#595d66</color>
-    <color name="origin">#ec8b57</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
-    <color name="button_color">#fe7a2f</color>
     <color name="select_gray">#dedede</color>
-    <color name="select_color">#f76918</color>
     <color name="medium_sea_green">#31C27C</color>
-    <color name="background_material_light_1">#fafafa</color>
     <color name="content_bg">#F5F5F5</color>
     <color name="white_text">#fafafa</color>
     <color name="normalBackground">#fff2f4f5</color>
@@ -31,9 +23,5 @@
     <color name="text_gray">#959595</color>
 
     <!--底部栏-->
-    <color name="bottomSheetNormalBackground">#f9ffffff</color>
-    <color name="colorCollapsedFloatBackground">#001b1919</color>
-    <color name="colorInitFloatBackground">#e0282525</color>
-    <color name="test">#ff023b3d</color>
 
 </resources>

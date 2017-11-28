@@ -16,10 +16,6 @@ import java.util.Random;
  * =======================================================
  */
 public class RandomGUID {
-
-    protected final org.apache.commons.logging.Log logger = org.apache.commons.logging.LogFactory
-            .getLog(getClass());
-
     public String valueBeforeMD5 = "";
     public String valueAfterMD5 = "";
     private static Random myRand;
@@ -78,7 +74,6 @@ public class RandomGUID {
         try {
             md5 = MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException e) {
-            logger.error("Error: " + e);
         }
 
         try {
@@ -111,7 +106,6 @@ public class RandomGUID {
             valueAfterMD5 = sb.toString();
 
         } catch (Exception e) {
-            logger.error("Error:" + e);
         }
     }
 

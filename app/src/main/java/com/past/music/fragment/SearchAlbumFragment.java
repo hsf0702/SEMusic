@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Created by wm on 2016/5/18.
  */
-public class SearchAlbumFragment extends AttachFragment {
+public class SearchAlbumFragment extends KtAttachFragment {
 
     private LinearLayoutManager layoutManager;
     private List<SearchAlbumInfo> mAlbumList = new ArrayList<>();
@@ -42,8 +42,8 @@ public class SearchAlbumFragment extends AttachFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recylerview, container, false);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
-        layoutManager = new LinearLayoutManager(mContext);
+        recyclerView = view.findViewById(R.id.recyclerview);
+        layoutManager = new LinearLayoutManager(getMContext());
         recyclerView.setLayoutManager(layoutManager);
         mAdapter = new AlbumAdapter(null);
         recyclerView.setAdapter(mAdapter);
@@ -59,7 +59,7 @@ public class SearchAlbumFragment extends AttachFragment {
     }
 
     private void loadAlbums() {
-        if (mContext == null) {
+        if (getMContext() == null) {
             return;
         }
         if (getArguments() != null) {
