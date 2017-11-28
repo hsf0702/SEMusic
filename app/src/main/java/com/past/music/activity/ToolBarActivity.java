@@ -21,20 +21,6 @@ import butterknife.OnClick;
 
 public abstract class ToolBarActivity extends KtBaseActivity {
 
-    @BindView(R.id.title)
-    protected TextView mTitle;
-
-    @BindView(R.id.back)
-    protected ImageView mBack;
-
-    @BindView(R.id.base_toolbar)
-    RelativeLayout relativeLayout;
-
-    @OnClick(R.id.back)
-    void back() {
-        finish();
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +31,6 @@ public abstract class ToolBarActivity extends KtBaseActivity {
 
     @Override
     public void setTitle(CharSequence title) {
-        mTitle.setText(title);
     }
 
     @Override

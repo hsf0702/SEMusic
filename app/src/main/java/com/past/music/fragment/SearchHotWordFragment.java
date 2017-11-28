@@ -33,7 +33,7 @@ import java.util.List;
  * 备注：
  * =======================================================
  */
-public class SearchHotWordFragment extends AttachFragment implements View.OnClickListener, SearchWords {
+public class SearchHotWordFragment extends KtAttachFragment implements View.OnClickListener, SearchWords {
     String[] texts = new String[10];
     ArrayList<TextView> views = new ArrayList<>();
     SearchWords searchWords;
@@ -51,7 +51,7 @@ public class SearchHotWordFragment extends AttachFragment implements View.OnClic
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.load_framelayout, container, false);
         frameLayout = (FrameLayout) view.findViewById(R.id.loadframe);
-        loadview = LayoutInflater.from(mContext).inflate(R.layout.loading, frameLayout, false);
+        loadview = LayoutInflater.from(getMContext()).inflate(R.layout.loading, frameLayout, false);
         frameLayout.addView(loadview);
         loadWords();
 
@@ -73,13 +73,13 @@ public class SearchHotWordFragment extends AttachFragment implements View.OnClic
 
             @Override
             protected Boolean doInBackground(Boolean... params) {
-                if (NetworkUtils.isConnectInternet(mContext)) {
+                if (NetworkUtils.isConnectInternet(getMContext())) {
                     isFromCache = false;
                 }
 
 
                 try {
-                    JsonArray jsonArray = HttpUtil.getResposeJsonObject(BMA.Search.hotWord(), mContext, isFromCache).get("result").getAsJsonArray();
+                    JsonArray jsonArray = HttpUtil.getResposeJsonObject(BMA.Search.hotWord(), getMContext(), isFromCache).get("result").getAsJsonArray();
                     for (int i = 0; i < 10; i++) {
                         texts[i] = jsonArray.get(i).getAsJsonObject().get("word").getAsString();
                     }
@@ -94,15 +94,15 @@ public class SearchHotWordFragment extends AttachFragment implements View.OnClic
             @Override
             protected void onPostExecute(Boolean load) {
                 super.onPostExecute(load);
-                if (!load && mContext == null) {
+                if (!load && getMContext() == null) {
 
                     return;
                 }
-                View view = LayoutInflater.from(mContext).inflate(R.layout.fragment_search_hot_words, frameLayout, false);
+                View view = LayoutInflater.from(getMContext()).inflate(R.layout.fragment_search_hot_words, frameLayout, false);
                 recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
-                recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+                recyclerView.setLayoutManager(new LinearLayoutManager(getMContext()));
                 recyclerView.setHasFixedSize(true);
-                adapter = new RecentSearchAdapter(mContext);
+                adapter = new RecentSearchAdapter(getMContext());
                 adapter.setListenter(SearchHotWordFragment.this);
                 recyclerView.setAdapter(adapter);
 
@@ -131,10 +131,10 @@ public class SearchHotWordFragment extends AttachFragment implements View.OnClic
                 frameLayout.removeAllViews();
                 frameLayout.addView(view);
 
-                int w = mContext.getResources().getDisplayMetrics().widthPixels;
+                int w = getMContext().getResources().getDisplayMetrics().widthPixels;
                 int xdistance = -1;
                 int ydistance = 0;
-                int distance = dip2px(mContext, 16);
+                int distance = dip2px(getMContext(), 16);
                 for (int i = 0; i < 10; i++) {
                     views.get(i).setOnClickListener(SearchHotWordFragment.this);
                     views.get(i).setText(texts[i]);

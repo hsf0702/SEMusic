@@ -35,7 +35,7 @@ import java.util.HashMap;
  * 备注：
  * =======================================================
  */
-public class SearchMusicFragment extends AttachFragment {
+public class SearchMusicFragment extends KtAttachFragment {
 
     private MusicAdapter mAdapter;
     private ArrayList<SearchSongInfo> songInfos;
@@ -60,7 +60,7 @@ public class SearchMusicFragment extends AttachFragment {
         }
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
-        layoutManager = new LinearLayoutManager(mContext);
+        layoutManager = new LinearLayoutManager(getMContext());
         recyclerView.setLayoutManager(layoutManager);
         mAdapter = new MusicAdapter(songInfos);
         recyclerView.setAdapter(mAdapter);
@@ -151,15 +151,15 @@ public class SearchMusicFragment extends AttachFragment {
                     @Override
                     public void onClick(View v) {
                         final SearchSongInfo model = mList.get(getAdapterPosition());
-                        new AlertDialog.Builder(mContext).setTitle("要下载音乐吗").
-                                setPositiveButton(mContext.getString(R.string.sure), new DialogInterface.OnClickListener() {
+                        new AlertDialog.Builder(getMContext()).setTitle("要下载音乐吗").
+                                setPositiveButton(getMContext().getString(R.string.sure), new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         Down.downMusic(MyApplication.mContext, model.getSong_id() + "", model.getTitle(), model.getAuthor());
                                         dialog.dismiss();
                                     }
                                 }).
-                                setNegativeButton(mContext.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                                setNegativeButton(getMContext().getString(R.string.cancel), new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();

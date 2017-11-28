@@ -17,10 +17,10 @@ import java.util.*
 
 /**
  * A simple [Fragment] subclass.
- * Use the [KtLocalMusicFragment.newInstance] factory method to
+ * Use the [KtUiLocalMusicFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class KtLocalMusicFragment : KtBaseFragment() {
+class KtLocalMusicFragment : KtUiBaseFragment() {
 
     internal var mAdapter: LocalFragmentAdapter? = null
     private val mTabNames = ArrayList<String>()
