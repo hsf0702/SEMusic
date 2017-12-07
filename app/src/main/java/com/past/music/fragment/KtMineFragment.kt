@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.past.music.MyApplication
-import com.past.music.adapter.MyContentAdapter
+import com.past.music.adapter.KtMyContentAdapter
 import com.past.music.event.CreateSongListEvent
 import com.past.music.pastmusic.R
 import org.greenrobot.eventbus.EventBus
@@ -32,7 +32,7 @@ class KtMineFragment : Fragment() {
     }
 
     var mMusicList: RecyclerView? = null
-    private var mAdapter: MyContentAdapter? = null
+    private var mAdapter: KtMyContentAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +41,7 @@ class KtMineFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater!!.inflate(R.layout.fragment_mine, container, false)
-        mAdapter = MyContentAdapter(activity)
+        mAdapter = KtMyContentAdapter(activity)
         mMusicList = view.findViewById(R.id.recycle_layout)
         mMusicList!!.layoutManager = LinearLayoutManager(activity)
         mMusicList!!.setHasFixedSize(true)
