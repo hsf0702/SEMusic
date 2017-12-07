@@ -120,10 +120,10 @@ public class SearchAlbumFragment extends KtAttachFragment {
 
             ListItemViewHolder(View view) {
                 super(view);
-                this.title = (TextView) view.findViewById(R.id.viewpager_list_toptext);
-                this.title2 = (TextView) view.findViewById(R.id.viewpager_list_bottom_text);
-                this.draweeView = (SimpleDraweeView) view.findViewById(R.id.viewpager_list_img);
-                this.moreOverflow = (ImageView) view.findViewById(R.id.viewpager_list_button);
+                this.title = view.findViewById(R.id.viewpager_list_toptext);
+                this.title2 = view.findViewById(R.id.viewpager_list_bottom_text);
+                this.draweeView = view.findViewById(R.id.viewpager_list_img);
+                this.moreOverflow = view.findViewById(R.id.viewpager_list_button);
                 view.setOnClickListener(this);
 
             }

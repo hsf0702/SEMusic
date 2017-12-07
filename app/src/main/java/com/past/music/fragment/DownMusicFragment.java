@@ -56,7 +56,7 @@ public class DownMusicFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.down_music_recylerview, container, false);
 
         layoutManager = new LinearLayoutManager(mContext);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
+        recyclerView = view.findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(layoutManager);
         folderDetailAdapter = new FolderDetailAdapter(null);
         recyclerView.setAdapter(folderDetailAdapter);
@@ -166,8 +166,6 @@ public class DownMusicFragment extends BaseFragment {
             return (null != mList ? mList.size() + 1 : 0);
         }
 
-        ;
-
 
         class CommonItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             TextView textView;
@@ -175,8 +173,8 @@ public class DownMusicFragment extends BaseFragment {
 
             CommonItemViewHolder(View view) {
                 super(view);
-                this.textView = (TextView) view.findViewById(R.id.play_all_number);
-                this.select = (ImageView) view.findViewById(R.id.select);
+                this.textView = view.findViewById(R.id.play_all_number);
+                this.select = view.findViewById(R.id.select);
                 view.setOnClickListener(this);
             }
 
@@ -210,9 +208,9 @@ public class DownMusicFragment extends BaseFragment {
 
             ListItemViewHolder(View view) {
                 super(view);
-                this.mainTitle = (TextView) view.findViewById(R.id.music_name);
-                this.title = (TextView) view.findViewById(R.id.music_info);
-                this.moreOverflow = (ImageView) view.findViewById(R.id.viewpager_list_button);
+                this.mainTitle = view.findViewById(R.id.music_name);
+                this.title = view.findViewById(R.id.music_info);
+                this.moreOverflow = view.findViewById(R.id.viewpager_list_button);
 
                 //设置弹出菜单
                 moreOverflow.setOnClickListener(new View.OnClickListener() {

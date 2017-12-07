@@ -6,9 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import butterknife.BindView
 import butterknife.ButterKnife
-import butterknife.OnClick
 import com.facebook.drawee.view.SimpleDraweeView
 import com.past.music.activity.NetSongListActivity
 import com.past.music.activity.WebViewActivity
@@ -18,7 +16,7 @@ import com.past.music.utils.FrescoImageLoader
 import com.past.music.widget.IconView
 import com.youth.banner.Banner
 import com.youth.banner.listener.OnBannerListener
-import java.util.ArrayList
+import java.util.*
 
 /**
  * Created by gaojin on 2017/12/7.

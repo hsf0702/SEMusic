@@ -127,7 +127,7 @@ public class LrcRow implements Comparable<LrcRow> {
 
     @Override
     public int compareTo(LrcRow anotherLrcRow) {
-        return (int) (this.time - anotherLrcRow.time);
+        return this.time - anotherLrcRow.time;
     }
 
     @Override

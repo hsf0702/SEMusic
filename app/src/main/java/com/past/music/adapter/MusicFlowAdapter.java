@@ -76,8 +76,8 @@ public class MusicFlowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         ListItemViewHolder(View view) {
             super(view);
-            this.icon = (ImageView) view.findViewById(R.id.pop_list_view);
-            this.title = (TextView) view.findViewById(R.id.pop_list_item);
+            this.icon = view.findViewById(R.id.pop_list_view);
+            this.title = view.findViewById(R.id.pop_list_item);
 
         }
 

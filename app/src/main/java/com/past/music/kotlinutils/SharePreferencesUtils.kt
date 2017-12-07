@@ -21,7 +21,7 @@ class SharePreferencesUtils constructor(context: Context) {
 
     fun getInstance(context: Context): SharePreferencesUtils {
         if (sInstance == null) {
-            sInstance = SharePreferencesUtils(context.getApplicationContext())
+            sInstance = SharePreferencesUtils(context.applicationContext)
         }
         return sInstance as SharePreferencesUtils
     }

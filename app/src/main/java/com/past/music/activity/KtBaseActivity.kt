@@ -138,13 +138,13 @@ open class KtBaseActivity : AppCompatActivity(), ServiceConnection {
      */
     fun refreshUI() {
         for (listener in mMusicListener) {
-            listener?.reloadAdapter()
+            listener.reloadAdapter()
         }
     }
 
     fun updateTime() {
         for (listener in mMusicListener) {
-            listener?.updateTime()
+            listener.updateTime()
         }
     }
 

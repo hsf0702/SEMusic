@@ -50,7 +50,7 @@ public class RoundFragment extends Fragment {
         }
         //  CircleImageView  circleImageView = (CircleImageView) rootView.findViewById(R.id.circle);
 
-        sdv = (SimpleDraweeView) rootView.findViewById(R.id.sdv);
+        sdv = rootView.findViewById(R.id.sdv);
 
 
         //初始化圆角圆形参数对象
@@ -102,7 +102,7 @@ public class RoundFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        animatorWeakReference = new WeakReference(ObjectAnimator.ofFloat(getView(), "rotation", new float[]{0.0F, 360.0F}));
+        animatorWeakReference = new WeakReference(ObjectAnimator.ofFloat(getView(), "rotation", 0.0F, 360.0F));
         animator = animatorWeakReference.get();
         animator.setRepeatCount(Integer.MAX_VALUE);
         animator.setDuration(25000L);

@@ -78,8 +78,8 @@ public class OverFlowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         ListItemViewHolder(View view) {
             super(view);
-            this.icon = (ImageView) view.findViewById(R.id.pop_list_view);
-            this.title = (TextView) view.findViewById(R.id.pop_list_item);
+            this.icon = view.findViewById(R.id.pop_list_view);
+            this.title = view.findViewById(R.id.pop_list_item);
 
             view.setOnClickListener(this);
         }

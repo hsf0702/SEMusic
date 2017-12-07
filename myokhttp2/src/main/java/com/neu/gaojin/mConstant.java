@@ -5,6 +5,6 @@ package com.neu.gaojin;
  */
 
 public interface mConstant {
-    public static final int POST = 0x01;
-    public static final int GET = 0x02;
+    int POST = 0x01;
+    int GET = 0x02;
 }

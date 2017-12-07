@@ -74,10 +74,10 @@ public class PlayListInfoActivity extends ToolBarActivity implements MConstants 
                 ArrayList<MusicEntity> musicList = null;
                 switch (mark) {
                     case START_FROM_ARTIST:
-                        musicList = (ArrayList) MusicUtils.queryMusic(PlayListInfoActivity.this, searchId, MConstants.START_FROM_ARTIST);
+                        musicList = MusicUtils.queryMusic(PlayListInfoActivity.this, searchId, MConstants.START_FROM_ARTIST);
                         break;
                     case START_FROM_ALBUM:
-                        musicList = (ArrayList) MusicUtils.queryMusic(PlayListInfoActivity.this, searchId, START_FROM_ALBUM);
+                        musicList = MusicUtils.queryMusic(PlayListInfoActivity.this, searchId, START_FROM_ALBUM);
                         break;
                 }
                 mAdapter.updateDataSet(musicList);

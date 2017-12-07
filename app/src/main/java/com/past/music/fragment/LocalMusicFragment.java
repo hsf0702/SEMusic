@@ -74,7 +74,7 @@ public class LocalMusicFragment extends BaseFragment {
             @Override
             protected Void doInBackground(final Void... unused) {
                 musicList.clear();
-                musicList.addAll((ArrayList) MusicUtils.queryMusic(mContext, MConstants.START_FROM_LOCAL));
+                musicList.addAll(MusicUtils.queryMusic(mContext, MConstants.START_FROM_LOCAL));
                 mAdapter.updateDataSet(musicList);
                 return null;
             }

@@ -112,10 +112,10 @@ public class SearchArtistFragment extends KtAttachFragment {
 
             ListItemViewHolder(View view) {
                 super(view);
-                this.mainTitle = (TextView) view.findViewById(R.id.viewpager_list_toptext);
-                this.title = (TextView) view.findViewById(R.id.viewpager_list_bottom_text);
-                this.draweeView = (SimpleDraweeView) view.findViewById(R.id.viewpager_list_img);
-                this.moreOverflow = (ImageView) view.findViewById(R.id.viewpager_list_button);
+                this.mainTitle = view.findViewById(R.id.viewpager_list_toptext);
+                this.title = view.findViewById(R.id.viewpager_list_bottom_text);
+                this.draweeView = view.findViewById(R.id.viewpager_list_img);
+                this.moreOverflow = view.findViewById(R.id.viewpager_list_button);
 
 
                 //为每个条目设置监听

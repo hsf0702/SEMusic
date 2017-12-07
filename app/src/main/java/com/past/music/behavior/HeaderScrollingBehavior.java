@@ -160,18 +160,10 @@ public class HeaderScrollingBehavior extends CoordinatorLayout.Behavior<Recycler
 
         boolean targetState; // Flag indicates whether to expand the content.
         if (Math.abs(velocity) <= 800) {
-            if (Math.abs(translateY) < Math.abs(translateY - minHeaderTranslate)) {
-                targetState = false;
-            } else {
-                targetState = true;
-            }
+            targetState = !(Math.abs(translateY) < Math.abs(translateY - minHeaderTranslate));
             velocity = 800; // Limit velocity's minimum value.
         } else {
-            if (velocity > 0) {
-                targetState = true;
-            } else {
-                targetState = false;
-            }
+            targetState = velocity > 0;
         }
 
         float targetTranslateY = targetState ? minHeaderTranslate : 0;

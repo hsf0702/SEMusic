@@ -97,7 +97,7 @@ public class SearchTabPagerFragment extends KtAttachFragment {
                     return;
                 }
                 contentView = LayoutInflater.from(getMContext()).inflate(R.layout.fragment_net_tab, frameLayout, false);
-                viewPager = (ViewPager) contentView.findViewById(R.id.viewpager);
+                viewPager = contentView.findViewById(R.id.viewpager);
                 if (viewPager != null) {
                     Adapter adapter = new Adapter(getChildFragmentManager());
                     adapter.addFragment(SearchMusicFragment.newInstance(songResults), "单曲");
@@ -107,7 +107,7 @@ public class SearchTabPagerFragment extends KtAttachFragment {
                     viewPager.setOffscreenPageLimit(3);
                 }
 
-                TabLayout tabLayout = (TabLayout) contentView.findViewById(R.id.tabs);
+                TabLayout tabLayout = contentView.findViewById(R.id.tabs);
                 tabLayout.setupWithViewPager(viewPager);
                 viewPager.setCurrentItem(page);
                 frameLayout.removeAllViews();
@@ -129,7 +129,7 @@ public class SearchTabPagerFragment extends KtAttachFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.load_framelayout, container, false);
-        frameLayout = (FrameLayout) rootView.findViewById(R.id.loadframe);
+        frameLayout = rootView.findViewById(R.id.loadframe);
         View loadview = LayoutInflater.from(getMContext()).inflate(R.layout.loading, frameLayout, false);
         frameLayout.addView(loadview);
 

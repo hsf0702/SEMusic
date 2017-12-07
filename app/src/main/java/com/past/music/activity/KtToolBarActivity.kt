@@ -30,11 +30,11 @@ abstract class KtToolBarActivity : KtBaseActivity() {
 
     protected abstract fun getLayoutId(): Int
 
-    open override fun setTitle(title: CharSequence) {
+    override fun setTitle(title: CharSequence) {
         mTitle!!.text = title
     }
 
-    open override fun setStatusBar() {}
+    override fun setStatusBar() {}
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {

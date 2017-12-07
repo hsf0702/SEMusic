@@ -285,13 +285,13 @@ public class DownFragment extends BaseFragment {
 
             public ItemViewHolder(View itemView) {
                 super(itemView);
-                draweeView = (SimpleDraweeView) itemView.findViewById(R.id.down_img);
-                title = (TextView) itemView.findViewById(R.id.down_top_text);
-                count = (TextView) itemView.findViewById(R.id.down_count);
-                clear = (ImageView) itemView.findViewById(R.id.down_single_clear);
-                artist = (TextView) itemView.findViewById(R.id.down_artist);
-                downloaded = (ImageView) itemView.findViewById(R.id.downloaded);
-                progressBar = (ProgressBar) itemView.findViewById(R.id.down_progress);
+                draweeView = itemView.findViewById(R.id.down_img);
+                title = itemView.findViewById(R.id.down_top_text);
+                count = itemView.findViewById(R.id.down_count);
+                clear = itemView.findViewById(R.id.down_single_clear);
+                artist = itemView.findViewById(R.id.down_artist);
+                downloaded = itemView.findViewById(R.id.downloaded);
+                progressBar = itemView.findViewById(R.id.down_progress);
                 progressBar.setMax(100);
 
                 clear.setOnClickListener(new View.OnClickListener() {

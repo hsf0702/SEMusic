@@ -59,7 +59,7 @@ public class SearchMusicFragment extends KtAttachFragment {
             songInfos = getArguments().getParcelableArrayList("searchMusic");
         }
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
+        recyclerView = view.findViewById(R.id.recyclerview);
         layoutManager = new LinearLayoutManager(getMContext());
         recyclerView.setLayoutManager(layoutManager);
         mAdapter = new MusicAdapter(songInfos);
@@ -143,9 +143,9 @@ public class SearchMusicFragment extends KtAttachFragment {
 
             ListItemViewHolder(View view) {
                 super(view);
-                this.mainTitle = (TextView) view.findViewById(R.id.music_name);
-                this.title = (TextView) view.findViewById(R.id.music_info);
-                this.moreOverflow = (ImageView) view.findViewById(R.id.viewpager_list_button);
+                this.mainTitle = view.findViewById(R.id.music_name);
+                this.title = view.findViewById(R.id.music_info);
+                this.moreOverflow = view.findViewById(R.id.viewpager_list_button);
 
                 moreOverflow.setOnClickListener(new View.OnClickListener() {
                     @Override
