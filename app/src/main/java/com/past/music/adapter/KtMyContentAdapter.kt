@@ -39,10 +39,9 @@ class KtMyContentAdapter constructor(context: Context) : RecyclerView.Adapter<Re
 
     private val START = 3
     private var mList: List<SongListEntity>? = null
-    private var mContext: Context? = null
+    private var mContext: Context = context
 
     init {
-        mContext = context
         mList = MyApplication.songListDBService.query()
     }
 

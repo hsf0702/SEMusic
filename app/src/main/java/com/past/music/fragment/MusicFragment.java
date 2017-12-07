@@ -10,12 +10,13 @@ import android.view.ViewGroup;
 
 import com.neu.gaojin.MyOkHttpClient;
 import com.neu.gaojin.response.BaseCallback;
-import com.past.music.adapter.MusicContentAdapter;
+import com.past.music.adapter.KtMusicContentAdapter;
 import com.past.music.api.HotListResponse;
 import com.past.music.api.HotListResquest;
 import com.past.music.api.SonglistBean;
 import com.past.music.log.MyLog;
 import com.past.music.pastmusic.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class MusicFragment extends Fragment {
     private List<String> images = new ArrayList<>();
     private List<SonglistBean> mRecommendList;
 
-    private MusicContentAdapter mAdapter;
+    private KtMusicContentAdapter mAdapter;
 
     public MusicFragment() {
 
@@ -66,7 +67,7 @@ public class MusicFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_music, container, false);
         ButterKnife.bind(this, view);
-        mAdapter = new MusicContentAdapter(getActivity());
+        mAdapter = new KtMusicContentAdapter(getActivity());
         mMusicList.setLayoutManager(new LinearLayoutManager(getActivity()));
         mMusicList.setHasFixedSize(true);
         mMusicList.setAdapter(mAdapter);
