@@ -30,7 +30,7 @@ public class WebViewActivity extends ToolBarActivity {
         Intent intent = new Intent(context, WebViewActivity.class);
         intent.putExtra(TITLE, title);
         intent.putExtra(WEBURL, webUrl);
-        ((KtBaseActivity) context).startActivityByX(intent, false);
+        ((BaseActivity) context).startActivityByX(intent, false);
     }
 
     @Override

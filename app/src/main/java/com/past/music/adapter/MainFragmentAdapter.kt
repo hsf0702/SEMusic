@@ -11,7 +11,7 @@ import java.util.*
  * Creator：gaojin
  * date：2017/11/3 下午8:58
  */
-class KtMainFragmentAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class MainFragmentAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     private val tabNames = ArrayList<String>()
 
     init {

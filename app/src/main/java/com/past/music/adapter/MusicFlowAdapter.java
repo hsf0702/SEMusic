@@ -32,7 +32,6 @@ public class MusicFlowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public void onClick(View v) {
         if (mOnItemClickListener != null) {
-            //注意这里使用getTag方法获取数据
             mOnItemClickListener.onItemClick(v, (String) v.getTag());
         }
     }
@@ -45,7 +44,6 @@ public class MusicFlowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.music_flow_layout, parent, false);
         ListItemViewHolder vh = new ListItemViewHolder(view);
-        //将创建的View注册点击事件
         view.setOnClickListener(this);
         return vh;
     }
@@ -55,7 +53,6 @@ public class MusicFlowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         OverFlowItem minfo = mList.get(position);
         ((ListItemViewHolder) holder).icon.setImageResource(minfo.getAvatar());
         ((ListItemViewHolder) holder).title.setText(minfo.getTitle());
-        //设置tag
         ((ListItemViewHolder) holder).itemView.setTag(position + "");
 
     }
@@ -65,7 +62,6 @@ public class MusicFlowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return mList.size();
     }
 
-    //定义接口
     public interface OnRecyclerViewItemClickListener {
         void onItemClick(View view, String data);
     }

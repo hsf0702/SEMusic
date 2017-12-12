@@ -21,7 +21,7 @@ import java.util.*
 /**
  * Created by gaojin on 2017/12/7.
  */
-class KtMusicContentAdapter constructor(context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MusicContentAdapter constructor(context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val BANNER_LAYOUT = 0X01
     private val HOT_LIST_LAYOUT = 0X02
     private val RECOMMEND_SONGS_LAYOUT = 0X03

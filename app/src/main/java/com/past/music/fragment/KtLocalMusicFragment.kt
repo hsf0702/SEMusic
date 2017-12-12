@@ -8,7 +8,7 @@ import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.past.music.adapter.KtLocalFragmentAdapter
+import com.past.music.adapter.LocalFragmentAdapter
 import com.past.music.pastmusic.R
 import com.past.music.utils.MConstants
 import com.past.music.utils.MusicUtils
@@ -22,7 +22,7 @@ import java.util.*
  */
 class KtLocalMusicFragment : KtUiBaseFragment() {
 
-    internal var mAdapter: KtLocalFragmentAdapter? = null
+    internal var mAdapter: LocalFragmentAdapter? = null
     private val mTabNames = ArrayList<String>()
     private var position: Int = 0
     private var mTabLayout: TabLayout? = null
@@ -57,7 +57,7 @@ class KtLocalMusicFragment : KtUiBaseFragment() {
         setTitle("本地音乐")
         mTabLayout!!.tabGravity = TabLayout.GRAVITY_CENTER
         val fm = activity.supportFragmentManager
-        mAdapter = KtLocalFragmentAdapter(fm, mTabNames)
+        mAdapter = LocalFragmentAdapter(fm, mTabNames)
         mViewPager!!.adapter = mAdapter
         mViewPager!!.currentItem = position
         mTabLayout!!.setupWithViewPager(mViewPager)

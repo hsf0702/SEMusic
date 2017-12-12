@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.past.music.activity.PlayListInfoActivity;
 import com.past.music.entity.AlbumEntity;
 import com.past.music.pastmusic.R;
 import com.past.music.utils.MConstants;
@@ -105,8 +104,6 @@ public class LocalAlbumFragment extends BaseFragment {
 
         @OnClick(R.id.rl_singer_item)
         void click() {
-            PlayListInfoActivity.startActivity(getContext(), list.get(getAdapterPosition()).album_name
-                    , String.valueOf(list.get(getAdapterPosition()).album_id), MConstants.START_FROM_ALBUM);
         }
 
         public SingerItemViewHolder(View itemView) {

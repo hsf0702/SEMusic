@@ -11,7 +11,7 @@ import com.past.music.pastmusic.R
  * Creator：gaojin
  * date：2017/11/6 下午8:32
  */
-abstract class KtToolBarActivity : KtBaseActivity() {
+abstract class ToolBarActivity : BaseActivity() {
     private var mAppBarLayout: AppBarLayout? = null
     private var mToolBar: Toolbar? = null
     private var mTitle: TextView? = null

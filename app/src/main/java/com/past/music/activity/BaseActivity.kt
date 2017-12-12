@@ -20,7 +20,7 @@ import java.util.*
  * Creator：gaojin
  * date：2017/11/6 下午7:57
  */
-open class KtBaseActivity : AppCompatActivity(), ServiceConnection {
+open class BaseActivity : AppCompatActivity(), ServiceConnection {
 
     private var mToken: MusicPlayer.ServiceToken? = null
     var mService: IMediaAidlInterface? = null
@@ -178,9 +178,9 @@ open class KtBaseActivity : AppCompatActivity(), ServiceConnection {
     }
 
 
-    class PlaybackStatus(activity: KtBaseActivity) : BroadcastReceiver() {
+    class PlaybackStatus(activity: BaseActivity) : BroadcastReceiver() {
 
-        private val mReference: WeakReference<KtBaseActivity> = WeakReference(activity)
+        private val mReference: WeakReference<BaseActivity> = WeakReference(activity)
 
 
         override fun onReceive(context: Context, intent: Intent) {

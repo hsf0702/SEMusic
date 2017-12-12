@@ -29,7 +29,7 @@ import com.past.music.widget.MineItemView
 /**
  * Created by gaojin on 2017/12/7.
  */
-class KtMyContentAdapter constructor(context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MyContentAdapter constructor(context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val HEAD_LAYOUT = 0X01
     private val FUNC_LAYOUT = 0X02
@@ -152,7 +152,7 @@ class KtMyContentAdapter constructor(context: Context) : RecyclerView.Adapter<Re
         }
 
         private fun localMusic() {
-            val ft = (mContext as KtBaseActivity).supportFragmentManager.beginTransaction()
+            val ft = (mContext as BaseActivity).supportFragmentManager.beginTransaction()
             ft.addToBackStack(null)
             ft.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_left_out, R.anim.slide_left_in, R.anim.slide_right_out)
             ft.add(R.id.content, KtLocalMusicFragment.newInstance(0)).commitAllowingStateLoss()
@@ -160,7 +160,7 @@ class KtMyContentAdapter constructor(context: Context) : RecyclerView.Adapter<Re
         }
 
         private fun downloadMusic() {
-            val ft = (mContext as KtBaseActivity).supportFragmentManager.beginTransaction()
+            val ft = (mContext as BaseActivity).supportFragmentManager.beginTransaction()
             ft.addToBackStack(null)
             ft.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_left_out, R.anim.slide_left_in, R.anim.slide_right_out)
             ft.add(R.id.content, KtDownLoadFragment.newInstance()).commitAllowingStateLoss()
@@ -168,16 +168,16 @@ class KtMyContentAdapter constructor(context: Context) : RecyclerView.Adapter<Re
 
         private fun recentMusic() {
             val intent = Intent(mContext, RecentMusicActivity::class.java)
-            (mContext as KtBaseActivity).startActivityByX(intent, true)
+            (mContext as BaseActivity).startActivityByX(intent, true)
         }
 
         private fun loveMusic() {
-            val intent = Intent(mContext, KtCollectedActivity::class.java)
-            (mContext as KtBaseActivity).startActivityByX(intent, true)
+            val intent = Intent(mContext, CollectedActivity::class.java)
+            (mContext as BaseActivity).startActivityByX(intent, true)
         }
 
         private fun loveSinger() {
-            val ft = (mContext as KtBaseActivity).supportFragmentManager.beginTransaction()
+            val ft = (mContext as BaseActivity).supportFragmentManager.beginTransaction()
             ft.addToBackStack("KtUiLocalMusicFragment")
             ft.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_left_out, R.anim.slide_left_in, R.anim.slide_right_out)
             ft.add(R.id.content, KtLocalMusicFragment.newInstance(0)).commitAllowingStateLoss()
@@ -203,7 +203,7 @@ class KtMyContentAdapter constructor(context: Context) : RecyclerView.Adapter<Re
 
         private fun favorTltle() {
             val intent = Intent(mContext, SongListActivity::class.java)
-            (mContext as KtBaseActivity).startActivityByX(intent, false)
+            (mContext as BaseActivity).startActivityByX(intent, false)
         }
     }
 
@@ -214,7 +214,7 @@ class KtMyContentAdapter constructor(context: Context) : RecyclerView.Adapter<Re
 
         override fun onClick(view: View) {
             val intent = Intent(mContext, SongListActivity::class.java)
-            (mContext as KtBaseActivity).startActivityByX(intent, false)
+            (mContext as BaseActivity).startActivityByX(intent, false)
         }
     }
 

@@ -32,7 +32,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="com.past.music.activity.KtMainActivity"
+            android:name="com.past.music.activity.MainActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -54,9 +54,8 @@
 
         <activity android:name="com.past.music.activity.RecentMusicActivity"/>
         <activity android:name="com.past.music.activity.NetSearchWordsActivity"/>
-        <activity android:name="com.past.music.activity.KtCollectedActivity"/>
+        <activity android:name="com.past.music.activity.CollectedActivity"/>
         <activity android:name="com.past.music.activity.MySingersActivity"/>
-        <activity android:name="com.past.music.activity.PlayListInfoActivity"/>
         <activity android:name="com.past.music.activity.NetSongListActivity">
         </activity>
         <activity android:name="com.past.music.activity.WebViewActivity">
@@ -87,7 +86,7 @@
             </intent-filter>
         </service>
 
-        <activity android:name="com.past.music.activity.KtPermissionsActivity">
+        <activity android:name="com.past.music.activity.PermissionsActivity">
         </activity>
     </application>
 

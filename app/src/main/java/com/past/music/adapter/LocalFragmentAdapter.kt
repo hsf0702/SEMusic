@@ -12,7 +12,7 @@ import java.util.ArrayList
 /**
  * Created by gaojin on 2017/12/7.
  */
-class KtLocalFragmentAdapter constructor(fm: FragmentManager, list: List<String>) : FragmentPagerAdapter(fm) {
+class LocalFragmentAdapter constructor(fm: FragmentManager, list: List<String>) : FragmentPagerAdapter(fm) {
     private var tabNames = ArrayList<String>()
 
     init {

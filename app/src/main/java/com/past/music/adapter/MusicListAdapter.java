@@ -49,12 +49,6 @@ public class MusicListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         handler = HandlerUtil.getInstance(context);
     }
 
-    public MusicListAdapter(Context context, ArrayList<MusicEntity> list) {
-        this.mList = list;
-        this.mContext = context;
-        handler = HandlerUtil.getInstance(context);
-    }
-
     //更新adpter的数据
     public void updateDataSet(ArrayList<MusicEntity> list) {
         this.mList = list;
@@ -81,7 +75,7 @@ public class MusicListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public int getItemCount() {
-        return (null != mList ? mList.size() + 1 : 0);
+        return null != mList ? mList.size() + 1 : 0;
     }
 
     @Override

@@ -21,7 +21,7 @@ import com.past.music.pastmusic.R
 /**
  * Created by gaojin on 2017/12/7.
  */
-class KtCreateSongListAdapter constructor(context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class CreateSongListAdapter constructor(context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
     val HEADLAYOUT = 0x01

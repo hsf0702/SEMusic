@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import com.past.music.pastmusic.R;
 
-public class SearchActivity extends KtBaseActivity {
+public class SearchActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -46,7 +46,7 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.neu.gaojin.MyOkHttpClient;
 import com.neu.gaojin.response.BaseCallback;
 import com.past.music.MyApplication;
-import com.past.music.activity.KtMainActivity;
+import com.past.music.activity.MainActivity;
 import com.past.music.api.LrcRequest;
 import com.past.music.api.LrcResponse;
 import com.past.music.database.provider.RecentStore;
@@ -1813,7 +1813,7 @@ public class MediaService extends Service {
         PendingIntent prePIntent = PendingIntent.getBroadcast(this, 0, preIntent, 0);
         remoteViews.setOnClickPendingIntent(R.id.img_cancel, prePIntent);
 
-        final Intent mMainIntent = new Intent(this, KtMainActivity.class);
+        final Intent mMainIntent = new Intent(this, MainActivity.class);
         PendingIntent mainIntent = PendingIntent.getActivity(this, 0, mMainIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         if (MyApplication.imageDBService.query(getArtistName().replace(";", "")) != null) {

@@ -8,7 +8,7 @@ import com.past.music.fragment.KtAppMainFragment
 import com.past.music.pastmusic.R
 import com.past.music.utils.PermissionsChecker
 
-class KtMainActivity : KtBaseActivity() {
+class MainActivity : BaseActivity() {
 
     private val REQUEST_CODE = 0x00 // 请求码
     private val PERMISSIONS = Array(1, { Manifest.permission.READ_EXTERNAL_STORAGE })
@@ -35,13 +35,13 @@ class KtMainActivity : KtBaseActivity() {
     }
 
     private fun startPermissionsActivity() {
-        KtPermissionsActivity.startActivityForResult(this, REQUEST_CODE, PERMISSIONS)
+        PermissionsActivity.startActivityForResult(this, REQUEST_CODE, PERMISSIONS)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         // 拒绝时, 关闭页面, 缺少主要权限, 无法运行
-        if (requestCode == REQUEST_CODE && resultCode == KtPermissionsActivity.PERMISSIONS_DENIED) {
+        if (requestCode == REQUEST_CODE && resultCode == PermissionsActivity.PERMISSIONS_DENIED) {
             finish()
         }
     }

@@ -36,7 +36,7 @@ import butterknife.OnClick;
  * =======================================================
  */
 
-public class NetSongListActivity extends KtBaseActivity {
+public class NetSongListActivity extends BaseActivity {
 
     public static final String TAG = "NetSongListActivity";
     public static final String TOPID = "TOPID";
@@ -71,7 +71,7 @@ public class NetSongListActivity extends KtBaseActivity {
         Intent intent = new Intent(context, NetSongListActivity.class);
         intent.putExtra(TOPID, topid);
         intent.putExtra(TITLE, title);
-        ((KtBaseActivity) context).startActivityByX(intent, true);
+        ((BaseActivity) context).startActivityByX(intent, true);
     }
 
 

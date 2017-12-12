@@ -13,13 +13,11 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.neu.gaojin.MyOkHttpClient;
 import com.neu.gaojin.response.BaseSuccessCallback;
 import com.past.music.MyApplication;
-import com.past.music.activity.PlayListInfoActivity;
 import com.past.music.api.AvatarRequest;
 import com.past.music.api.AvatarResponse;
 import com.past.music.entity.ArtistEntity;
 import com.past.music.log.MyLog;
 import com.past.music.pastmusic.R;
-import com.past.music.utils.MConstants;
 import com.past.music.utils.MusicUtils;
 
 import java.util.ArrayList;
@@ -114,8 +112,6 @@ public class LocalSingerFragment extends BaseFragment {
 
         @OnClick(R.id.rl_singer_item)
         void click() {
-            PlayListInfoActivity.startActivity(getContext(), list.get(getAdapterPosition()).artist_name
-                    , String.valueOf(list.get(getAdapterPosition()).artist_id), MConstants.START_FROM_ARTIST);
         }
 
         public SingerItemViewHolder(View itemView) {

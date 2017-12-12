@@ -6,7 +6,7 @@ import com.past.music.pastmusic.R
 /**
  * Created by gaojin on 2017/11/26.
  */
-class KtCollectedActivity : ToolBarActivity() {
+class CollectedActivity : ToolBarActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

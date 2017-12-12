@@ -73,7 +73,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class PlayMusicActivity extends KtBaseActivity {
+public class PlayMusicActivity extends BaseActivity {
 
     private static final int NEXT_MUSIC = 0;
     private static final int PRE_MUSIC = 1;

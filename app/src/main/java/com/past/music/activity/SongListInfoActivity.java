@@ -71,7 +71,7 @@ public class SongListInfoActivity extends ToolBarActivity {
         Intent intent = new Intent(context, SongListInfoActivity.class);
         intent.putExtra(SONG_LIST_ID, songListId);
         intent.putExtra(TITLE, title);
-        ((KtBaseActivity) context).startActivityByX(intent, true);
+        ((BaseActivity) context).startActivityByX(intent, true);
     }
 
     @Override
