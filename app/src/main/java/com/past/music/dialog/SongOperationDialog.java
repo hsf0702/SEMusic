@@ -121,7 +121,7 @@ public class SongOperationDialog extends AlertDialog {
             }
             setCommonInfo();
             heightPercent = 0.3;
-            commonAdapter = new OverFlowAdapter(mContext, mlistInfo, list);
+            commonAdapter = new OverFlowAdapter(mContext, mlistInfo);
 
         }
     }

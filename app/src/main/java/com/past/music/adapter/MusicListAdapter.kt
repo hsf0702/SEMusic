@@ -18,7 +18,7 @@ import java.util.*
 /**
  * Created by gaojin on 2017/12/8.
  */
-class KtMusicListAdapter constructor(context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MusicListAdapter constructor(context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     val HEAD_LAYOUT = 0X01
     val CONTENT_LAYOUT = 0X02
 
