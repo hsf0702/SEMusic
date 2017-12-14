@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * Created by wm on 2016/4/11.
  */
-public class SearchTabPagerFragment extends KtAttachFragment {
+public class SearchTabPagerFragment extends AttachFragment {
 
     private ViewPager viewPager;
     private int page = 0;

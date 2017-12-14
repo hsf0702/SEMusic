@@ -19,12 +19,12 @@ import org.greenrobot.eventbus.ThreadMode
  * Creator：gaojin
  * date：2017/11/3 下午9:38
  */
-class KtMineFragment : Fragment() {
+class MineFragment : Fragment() {
 
     companion object {
 
-        fun newInstance(): KtMineFragment {
-            val fragment = KtMineFragment()
+        fun newInstance(): MineFragment {
+            val fragment = MineFragment()
             val args = Bundle()
             fragment.arguments = args
             return fragment

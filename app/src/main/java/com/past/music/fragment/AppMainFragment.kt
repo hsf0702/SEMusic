@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import com.past.music.adapter.MainFragmentAdapter
 import com.past.music.pastmusic.R
 
-class KtAppMainFragment : Fragment() {
+class AppMainFragment : Fragment() {
 
     private var mToolBar: Toolbar? = null
     private var mTabLayout: TabLayout? = null
@@ -40,8 +40,8 @@ class KtAppMainFragment : Fragment() {
 
     companion object {
 
-        fun newInstance(): KtAppMainFragment {
-            val fragment = KtAppMainFragment()
+        fun newInstance(): AppMainFragment {
+            val fragment = AppMainFragment()
             val args = Bundle()
             fragment.arguments = args
             return fragment

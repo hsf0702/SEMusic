@@ -53,9 +53,7 @@
             android:process=":remote"/>
 
         <activity android:name="com.past.music.activity.RecentMusicActivity"/>
-        <activity android:name="com.past.music.activity.NetSearchWordsActivity"/>
         <activity android:name="com.past.music.activity.CollectedActivity"/>
-        <activity android:name="com.past.music.activity.MySingersActivity"/>
         <activity android:name="com.past.music.activity.NetSongListActivity">
         </activity>
         <activity android:name="com.past.music.activity.WebViewActivity">

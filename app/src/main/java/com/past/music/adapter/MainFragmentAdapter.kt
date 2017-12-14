@@ -3,7 +3,7 @@ package com.past.music.adapter
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
-import com.past.music.fragment.KtMineFragment
+import com.past.music.fragment.MineFragment
 import com.past.music.fragment.MusicFragment
 import java.util.*
 
@@ -21,7 +21,7 @@ class MainFragmentAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
     override fun getItem(position: Int): Fragment? {
         when (position) {
-            0 -> return KtMineFragment.newInstance()
+            0 -> return MineFragment.newInstance()
             1 -> return MusicFragment.newInstance("", "")
             else -> return null
         }

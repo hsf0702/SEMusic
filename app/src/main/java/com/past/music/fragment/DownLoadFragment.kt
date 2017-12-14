@@ -15,7 +15,7 @@ import com.past.music.pastmusic.R
  * Creator：gaojin
  * date：2017/11/6 下午8:44
  */
-class KtDownLoadFragment : KtUiBaseFragment() {
+class DownLoadFragment : UiBaseFragment() {
     override fun getLayoutId(): Int {
         return R.layout.activity_download
     }
@@ -66,8 +66,8 @@ class KtDownLoadFragment : KtUiBaseFragment() {
     }
 
     companion object {
-        fun newInstance(): KtDownLoadFragment {
-            return KtDownLoadFragment()
+        fun newInstance(): DownLoadFragment {
+            return DownLoadFragment()
         }
     }
 }

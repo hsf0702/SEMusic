@@ -20,7 +20,7 @@ import java.util.ArrayList;
 /**
  * Created by wm on 2016/5/18.
  */
-public class SearchArtistFragment extends KtAttachFragment {
+public class SearchArtistFragment extends AttachFragment {
 
     private ArrayList<SearchArtistInfo> artistInfos;
     private RecyclerView recyclerView;

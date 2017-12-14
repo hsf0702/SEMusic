@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Created by wm on 2016/5/18.
  */
-public class SearchAlbumFragment extends KtAttachFragment {
+public class SearchAlbumFragment extends AttachFragment {
 
     private LinearLayoutManager layoutManager;
     private List<SearchAlbumInfo> mAlbumList = new ArrayList<>();

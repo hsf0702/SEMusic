@@ -12,8 +12,6 @@ import android.webkit.WebViewClient;
 import com.past.music.log.MyLog;
 import com.past.music.pastmusic.R;
 
-import butterknife.BindView;
-
 public class WebViewActivity extends ToolBarActivity {
 
     public static final String TAG = "WebViewActivity";
@@ -21,9 +19,6 @@ public class WebViewActivity extends ToolBarActivity {
     public static final String WEBURL = "WebView_WEBURL";
 
     private String mWebUrl = null;
-    private String mTitle;
-
-    @BindView(R.id.web_view)
     WebView mWebView;
 
     public static void startWebViewActivity(Context context, String title, String webUrl) {
@@ -42,6 +37,7 @@ public class WebViewActivity extends ToolBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mWebView = findViewById(R.id.web_view);
         WebSettings setting = mWebView.getSettings();
         //是否支持和JS交互
         setting.setJavaScriptEnabled(true);
@@ -73,7 +69,6 @@ public class WebViewActivity extends ToolBarActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         mWebUrl = intent.getStringExtra(WEBURL);
-        mTitle = intent.getStringExtra(TITLE);
     }
 
     @Override

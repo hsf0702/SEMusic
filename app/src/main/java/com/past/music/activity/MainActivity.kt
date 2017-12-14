@@ -4,7 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.widget.DrawerLayout
-import com.past.music.fragment.KtAppMainFragment
+import com.past.music.fragment.AppMainFragment
 import com.past.music.pastmusic.R
 import com.past.music.utils.PermissionsChecker
 
@@ -22,7 +22,7 @@ class MainActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
         mDrawerLayout = findViewById(R.id.drawer_layout)
         supportFragmentManager.beginTransaction()
-                .add(R.id.content, KtAppMainFragment.newInstance())
+                .add(R.id.content, AppMainFragment.newInstance())
                 .commitAllowingStateLoss()
         mPermissionsChecker = PermissionsChecker(this)
     }

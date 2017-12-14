@@ -35,7 +35,7 @@ import java.util.HashMap;
  * 备注：
  * =======================================================
  */
-public class SearchMusicFragment extends KtAttachFragment {
+public class SearchMusicFragment extends AttachFragment {
 
     private MusicAdapter mAdapter;
     private ArrayList<SearchSongInfo> songInfos;

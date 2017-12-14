@@ -20,7 +20,7 @@ import java.util.*
  * Use the [KtUiLocalMusicFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class KtLocalMusicFragment : KtUiBaseFragment() {
+class LocalMusicFragment : UiBaseFragment() {
 
     internal var mAdapter: LocalFragmentAdapter? = null
     private val mTabNames = ArrayList<String>()
@@ -70,8 +70,8 @@ class KtLocalMusicFragment : KtUiBaseFragment() {
     companion object {
         private val POSITION = "POSITION"
 
-        fun newInstance(position: Int): KtLocalMusicFragment {
-            val fragment = KtLocalMusicFragment()
+        fun newInstance(position: Int): LocalMusicFragment {
+            val fragment = LocalMusicFragment()
             val args = Bundle()
             args.putInt(POSITION, position)
             fragment.arguments = args

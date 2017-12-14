@@ -18,8 +18,8 @@ import com.past.music.activity.*
 import com.past.music.api.AvatarRequest
 import com.past.music.api.AvatarResponse
 import com.past.music.entity.SongListEntity
-import com.past.music.fragment.KtDownLoadFragment
-import com.past.music.fragment.KtLocalMusicFragment
+import com.past.music.fragment.DownLoadFragment
+import com.past.music.fragment.LocalMusicFragment
 import com.past.music.pastmusic.R
 import com.past.music.utils.MConstants
 import com.past.music.utils.MusicUtils
@@ -155,7 +155,7 @@ class MyContentAdapter constructor(context: Context) : RecyclerView.Adapter<Recy
             val ft = (mContext as BaseActivity).supportFragmentManager.beginTransaction()
             ft.addToBackStack(null)
             ft.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_left_out, R.anim.slide_left_in, R.anim.slide_right_out)
-            ft.add(R.id.content, KtLocalMusicFragment.newInstance(0)).commitAllowingStateLoss()
+            ft.add(R.id.content, LocalMusicFragment.newInstance(0)).commitAllowingStateLoss()
 
         }
 
@@ -163,7 +163,7 @@ class MyContentAdapter constructor(context: Context) : RecyclerView.Adapter<Recy
             val ft = (mContext as BaseActivity).supportFragmentManager.beginTransaction()
             ft.addToBackStack(null)
             ft.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_left_out, R.anim.slide_left_in, R.anim.slide_right_out)
-            ft.add(R.id.content, KtDownLoadFragment.newInstance()).commitAllowingStateLoss()
+            ft.add(R.id.content, DownLoadFragment.newInstance()).commitAllowingStateLoss()
         }
 
         private fun recentMusic() {
@@ -180,7 +180,7 @@ class MyContentAdapter constructor(context: Context) : RecyclerView.Adapter<Recy
             val ft = (mContext as BaseActivity).supportFragmentManager.beginTransaction()
             ft.addToBackStack("KtUiLocalMusicFragment")
             ft.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_left_out, R.anim.slide_left_in, R.anim.slide_right_out)
-            ft.add(R.id.content, KtLocalMusicFragment.newInstance(0)).commitAllowingStateLoss()
+            ft.add(R.id.content, LocalMusicFragment.newInstance(0)).commitAllowingStateLoss()
         }
 
         private fun buyMusic() {
