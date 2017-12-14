@@ -7,7 +7,7 @@ import com.past.music.fragment.FolderFragment
 import com.past.music.fragment.LocalAlbumFragment
 import com.past.music.fragment.LocalMusicFragment
 import com.past.music.fragment.LocalSingerFragment
-import java.util.ArrayList
+import java.util.*
 
 /**
  * Created by gaojin on 2017/12/7.
@@ -20,11 +20,11 @@ class LocalFragmentAdapter constructor(fm: FragmentManager, list: List<String>) 
     }
 
     override fun getItem(position: Int): Fragment {
-        when (position) {
-            0 -> return LocalMusicFragment.newInstance("", "")
-            1 -> return LocalSingerFragment.newInstance()
-            2 -> return LocalAlbumFragment.newInstance()
-            else -> return FolderFragment.newInstance()
+        return when (position) {
+            0 -> LocalMusicFragment.newInstance(0)
+            1 -> LocalSingerFragment.newInstance()
+            2 -> LocalAlbumFragment.newInstance()
+            else -> FolderFragment.newInstance()
         }
     }
 

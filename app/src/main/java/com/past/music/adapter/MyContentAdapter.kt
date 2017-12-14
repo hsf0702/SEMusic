@@ -14,12 +14,16 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.neu.gaojin.MyOkHttpClient
 import com.neu.gaojin.response.BaseCallback
 import com.past.music.MyApplication
-import com.past.music.activity.*
+import com.past.music.activity.BaseActivity
+import com.past.music.activity.CollectedActivity
+import com.past.music.activity.SongListActivity
+import com.past.music.activity.SongListInfoActivity
 import com.past.music.api.AvatarRequest
 import com.past.music.api.AvatarResponse
 import com.past.music.entity.SongListEntity
 import com.past.music.fragment.DownLoadFragment
 import com.past.music.fragment.LocalMusicFragment
+import com.past.music.fragment.RecentMusicFragment
 import com.past.music.pastmusic.R
 import com.past.music.utils.MConstants
 import com.past.music.utils.MusicUtils
@@ -167,8 +171,10 @@ class MyContentAdapter constructor(context: Context) : RecyclerView.Adapter<Recy
         }
 
         private fun recentMusic() {
-            val intent = Intent(mContext, RecentMusicActivity::class.java)
-            (mContext as BaseActivity).startActivityByX(intent, true)
+            val ft = (mContext as BaseActivity).supportFragmentManager.beginTransaction()
+            ft.addToBackStack(null)
+            ft.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_left_out, R.anim.slide_left_in, R.anim.slide_right_out)
+            ft.add(R.id.content, RecentMusicFragment.newInstance(0)).commitAllowingStateLoss()
         }
 
         private fun loveMusic() {

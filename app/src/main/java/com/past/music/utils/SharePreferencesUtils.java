@@ -54,12 +54,6 @@ public class SharePreferencesUtils {
         return mPreferences.getString(id + "", null);
     }
 
-    public void setDownMusicBit(int bit) {
-        final SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putInt(DOWNMUSIC_BIT, bit);
-        editor.apply();
-    }
-
     public int getDownMusicBit() {
         return mPreferences.getInt(DOWNMUSIC_BIT, 192);
     }
