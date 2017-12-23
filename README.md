@@ -1,6 +1,4 @@
 # PastMusic
-仿QQ音乐
+仿QQ音乐 APP
 
-![](screenshot/shot_main.png)
-
-![状态图](screenshot/mediaplayer_state_diagram.gif) 
+Java & Kotlin
