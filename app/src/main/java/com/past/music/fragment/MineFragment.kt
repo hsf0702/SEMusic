@@ -31,7 +31,7 @@ class MineFragment : Fragment() {
         }
     }
 
-    var mMusicList: RecyclerView? = null
+    private var mMusicList: RecyclerView? = null
     private var mAdapter: MyContentAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {

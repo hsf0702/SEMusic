@@ -19,4 +19,7 @@
     <string name="string_help_text">当前应用缺少必要的权限</string>
     <string name="quit">退出</string>
     <string name="settings">设置</string>
+
+    <string name="local_music_tab">我的</string>
+    <string name="online_music_tab">音乐馆</string>
 </resources>

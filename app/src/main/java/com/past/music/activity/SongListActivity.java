@@ -1,6 +1,7 @@
 package com.past.music.activity;
 
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -36,4 +37,5 @@ public class SongListActivity extends ToolBarActivity {
     protected int getLayoutId() {
         return R.layout.activity_song_list;
     }
+
 }

@@ -159,22 +159,21 @@ class MyContentAdapter constructor(context: Context) : RecyclerView.Adapter<Recy
             val ft = (mContext as BaseActivity).supportFragmentManager.beginTransaction()
             ft.addToBackStack(null)
             ft.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_left_out, R.anim.slide_left_in, R.anim.slide_right_out)
-            ft.add(R.id.content, LocalMusicFragment.newInstance(0)).commitAllowingStateLoss()
-
+            ft.add(R.id.content, LocalMusicFragment.newInstance(0)).commit()
         }
 
         private fun downloadMusic() {
             val ft = (mContext as BaseActivity).supportFragmentManager.beginTransaction()
             ft.addToBackStack(null)
             ft.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_left_out, R.anim.slide_left_in, R.anim.slide_right_out)
-            ft.add(R.id.content, DownLoadFragment.newInstance()).commitAllowingStateLoss()
+            ft.add(R.id.content, DownLoadFragment.newInstance()).commit()
         }
 
         private fun recentMusic() {
             val ft = (mContext as BaseActivity).supportFragmentManager.beginTransaction()
             ft.addToBackStack(null)
             ft.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_left_out, R.anim.slide_left_in, R.anim.slide_right_out)
-            ft.add(R.id.content, RecentMusicFragment.newInstance(0)).commitAllowingStateLoss()
+            ft.add(R.id.content, RecentMusicFragment.newInstance(0)).commit()
         }
 
         private fun loveMusic() {
@@ -186,7 +185,7 @@ class MyContentAdapter constructor(context: Context) : RecyclerView.Adapter<Recy
             val ft = (mContext as BaseActivity).supportFragmentManager.beginTransaction()
             ft.addToBackStack("KtUiLocalMusicFragment")
             ft.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_left_out, R.anim.slide_left_in, R.anim.slide_right_out)
-            ft.add(R.id.content, LocalMusicFragment.newInstance(0)).commitAllowingStateLoss()
+            ft.add(R.id.content, LocalMusicFragment.newInstance(0)).commit()
         }
 
         private fun buyMusic() {

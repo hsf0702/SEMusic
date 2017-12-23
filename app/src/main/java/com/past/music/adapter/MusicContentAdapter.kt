@@ -11,7 +11,9 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.past.music.activity.NetSongListActivity
 import com.past.music.activity.WebViewActivity
 import com.past.music.api.SonglistBean
+import com.past.music.online.model.HallModel
 import com.past.music.pastmusic.R
+import com.past.music.utils.CollectionUtils
 import com.past.music.utils.FrescoImageLoader
 import com.past.music.widget.IconView
 import com.youth.banner.Banner
@@ -30,6 +32,7 @@ class MusicContentAdapter constructor(context: Context) : RecyclerView.Adapter<R
     private val mContext: Context = context
     private var mHotList: ArrayList<String>? = null
     private var mRecommendList: List<SonglistBean>? = null
+    private var bannerList: List<HallModel.Data.Slider>? = null
 
     fun updateHotList(arrayList: ArrayList<String>) {
         this.mHotList = arrayList
@@ -39,7 +42,13 @@ class MusicContentAdapter constructor(context: Context) : RecyclerView.Adapter<R
     fun updateRecommendList(arrayList: List<SonglistBean>) {
         this.mRecommendList = arrayList
         notifyItemRangeChanged(2, 5)
+    }
 
+    fun updateBanner(bannerList: List<HallModel.Data.Slider>?) {
+        this.bannerList = bannerList
+        if (!CollectionUtils.isEmpty(bannerList)) {
+            notifyItemChanged(0)
+        }
     }
 
 
@@ -73,17 +82,14 @@ class MusicContentAdapter constructor(context: Context) : RecyclerView.Adapter<R
     }
 
 
-    internal inner class BannerLayoutHolder(itemView: View) : RecyclerView.ViewHolder(itemView), OnBannerListener {
+    private inner class BannerLayoutHolder(itemView: View) : RecyclerView.ViewHolder(itemView), OnBannerListener {
 
         private val images = ArrayList<String>()
         var banner: Banner? = null
 
         init {
-            images.add("https://y.gtimg.cn/music/photo_new/T003R720x288M000004YEQve3OwuKT.jpg")
-            images.add("https://y.gtimg.cn/music/photo_new/T003R720x288M000002P5Ak50TPHdm.jpg")
-            images.add("https://y.gtimg.cn/music/photo_new/T003R720x288M000001xMeNP2PGdLS.jpg")
-            images.add("https://y.gtimg.cn/music/photo_new/T003R720x288M000001P2zAW0MPYpK.jpg")
 
+            bannerList?.forEach { it.picUrl?.let { it1 -> images.add(it1) } }
             banner = itemView.findViewById(R.id.banner)
 
             //设置图片加载器
@@ -105,11 +111,11 @@ class MusicContentAdapter constructor(context: Context) : RecyclerView.Adapter<R
         }
 
         override fun OnBannerClick(position: Int) {
-            WebViewActivity.startWebViewActivity(mContext, "", "https://y.qq.com/msa/226/0_3046.html?ADTAG=myqq&from=myqq&channel=10007100")
+            WebViewActivity.startWebViewActivity(mContext, "", bannerList?.get(position)?.linkUrl)
         }
     }
 
-    internal inner class HotListHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    private inner class HotListHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
         var mIconView1: IconView? = null
 
