@@ -12,8 +12,6 @@ import android.os.ParcelFileDescriptor;
 import android.support.v8.renderscript.RenderScript;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.neu.gaojin.MyOkHttpClient;
-import com.neu.gaojin.response.BaseCallback;
 import com.past.music.MyApplication;
 import com.past.music.entity.MusicEntity;
 
