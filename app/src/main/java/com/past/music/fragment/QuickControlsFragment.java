@@ -11,12 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.neu.gaojin.MyOkHttpClient;
-import com.neu.gaojin.response.BaseSuccessCallback;
-import com.past.music.MyApplication;
 import com.past.music.activity.PlayMusicActivity;
-import com.past.music.api.AvatarRequest;
-import com.past.music.api.AvatarResponse;
 import com.past.music.dialog.MusicQueueFragment;
 import com.past.music.log.MyLog;
 import com.past.music.pastmusic.R;
@@ -112,7 +107,6 @@ public class QuickControlsFragment extends BaseFragment {
     }
 
     public void updateFragment() {
-        MyLog.i(TAG, "updateFragment");
         mPlaybarInfo.setText(MusicPlayer.getTrackName());
         mPlaybarSinger.setText(MusicPlayer.getArtistName());
         if (MusicPlayer.getIsPlaying()) {
@@ -123,20 +117,6 @@ public class QuickControlsFragment extends BaseFragment {
         if (MusicPlayer.getAlbumPic() != null) {
             MyLog.i(TAG, MusicPlayer.getAlbumPic());
             mAlbum.setImageURI(MusicPlayer.getAlbumPic());
-        } else if (MusicPlayer.getArtistName() != null) {
-            AvatarRequest avatarRequest = new AvatarRequest();
-            avatarRequest.setArtist(MusicPlayer.getArtistName().replace(";", " "));
-            if (MyApplication.imageDBService.query(MusicPlayer.getArtistName().replace(";", "")) == null) {
-                MyOkHttpClient.getInstance(getContext()).sendNet(avatarRequest, new BaseSuccessCallback<AvatarResponse>() {
-                    @Override
-                    public void onSuccess(int statusCode, final AvatarResponse response) {
-                        MyApplication.imageDBService.insert(MusicPlayer.getArtistName().replace(";", ""), response.getArtist().getImage().get(2).get_$Text112());
-                        mAlbum.setImageURI(response.getArtist().getImage().get(2).get_$Text112());
-                    }
-                });
-            } else {
-                mAlbum.setImageURI(MyApplication.imageDBService.query(MusicPlayer.getArtistName().replace(";", "")));
-            }
         }
     }
 

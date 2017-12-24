@@ -8,19 +8,6 @@ import android.os.Parcelable;
  */
 public class SearchAlbumInfo implements Parcelable {
 
-    /**
-     * album_id : 14636595
-     * author : Whistler
-     * hot : 32
-     * title : whistler
-     * artist_id : 2859671
-     * all_artist_id : 2859671
-     * company : Om Music
-     * publishtime : 1999-01-01
-     * album_desc : by  Stephen CramerThe harmonica and carefree mood of "If I Give You a Smile" kicks off the self-titl...
-     * pic_small : http://qukufile2.qianqian.com/data2/pic/39766008/39766008.jpg
-     */
-
     private String album_id;
     private String author;
     private int hot;

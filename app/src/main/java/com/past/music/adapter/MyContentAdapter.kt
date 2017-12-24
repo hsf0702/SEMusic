@@ -11,15 +11,11 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.facebook.drawee.view.SimpleDraweeView
-import com.neu.gaojin.MyOkHttpClient
-import com.neu.gaojin.response.BaseCallback
 import com.past.music.MyApplication
 import com.past.music.activity.BaseActivity
 import com.past.music.activity.CollectedActivity
 import com.past.music.activity.SongListActivity
 import com.past.music.activity.SongListInfoActivity
-import com.past.music.api.AvatarRequest
-import com.past.music.api.AvatarResponse
 import com.past.music.entity.SongListEntity
 import com.past.music.fragment.DownLoadFragment
 import com.past.music.fragment.LocalMusicFragment
@@ -251,29 +247,9 @@ class MyContentAdapter constructor(context: Context) : RecyclerView.Adapter<Recy
             if (musicEntity?.getAlbumPic() != null) {
                 MyApplication.songListDBService.updatePic(songListEntity.getId(), musicEntity.getAlbumPic())
                 songListPic!!.setImageURI(musicEntity.getAlbumPic())
-            } else if (musicEntity != null) {
-                if (MyApplication.imageDBService.query(musicEntity.getArtist().replace(";", "")) == null) {
-                    val avatarRequest = AvatarRequest()
-                    avatarRequest.artist = musicEntity.getArtist().replace(";", "")
-                    MyOkHttpClient.getInstance(mContext).sendNet(avatarRequest, object : BaseCallback<AvatarResponse>() {
-                        override fun onFailure(code: Int, error_msg: String) {
-
-                        }
-
-                        override fun onSuccess(statusCode: Int, response: AvatarResponse) {
-                            MyApplication.imageDBService.insert(musicEntity.getArtist().replace(";", ""), response.artist.image[2].`_$Text112`)
-                            MyApplication.songListDBService.updatePic(songListEntity.getId(), response.artist.image[3].`_$Text112`)
-                            songListPic!!.setImageURI(response.artist.image[2].`_$Text112`)
-                        }
-                    })
-                } else {
-                    MyApplication.songListDBService.updatePic(songListEntity.getId(), MyApplication.imageDBService.query(musicEntity.getArtist().replace(";", "")))
-                    songListPic!!.setImageURI(MyApplication.imageDBService.query(musicEntity.getArtist().replace(";", "")))
-                }
             }
             mPlayListTitle!!.text = songListEntity.getName()
             mPlayListInfo!!.text = MyApplication.musicInfoDBService.getLocalCount(songListEntity.getId())
         }
     }
-
 }

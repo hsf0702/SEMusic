@@ -10,13 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.neu.gaojin.MyOkHttpClient;
-import com.neu.gaojin.response.BaseSuccessCallback;
-import com.past.music.MyApplication;
-import com.past.music.api.AvatarRequest;
-import com.past.music.api.AvatarResponse;
 import com.past.music.entity.ArtistEntity;
-import com.past.music.log.MyLog;
 import com.past.music.pastmusic.R;
 import com.past.music.utils.MusicUtils;
 
@@ -122,20 +116,6 @@ public class LocalSingerFragment extends BaseFragment {
         public void onBindData(final ArtistEntity artistEntity) {
             mTitle.setText(artistEntity.artist_name);
             mInfo.setText(artistEntity.getNumber_of_tracks() + "首");
-            AvatarRequest avatarRequest = new AvatarRequest();
-            avatarRequest.setArtist(artistEntity.getArtist_name().replace(";", " "));
-            if (MyApplication.imageDBService.query(artistEntity.getArtist_name().replace(";", "")) == null) {
-                MyOkHttpClient.getInstance(getContext()).sendNet(avatarRequest, new BaseSuccessCallback<AvatarResponse>() {
-                    @Override
-                    public void onSuccess(int statusCode, final AvatarResponse response) {
-                        MyLog.i("onSuccess", statusCode + "");
-                        MyApplication.imageDBService.insert(artistEntity.getArtist_name().replace(";", ""), response.getArtist().getImage().get(2).get_$Text112());
-                        simpleDraweeView.setImageURI(response.getArtist().getImage().get(2).get_$Text112());
-                    }
-                });
-            } else {
-                simpleDraweeView.setImageURI(MyApplication.imageDBService.query(artistEntity.getArtist_name()));
-            }
         }
     }
 }

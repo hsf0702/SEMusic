@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.past.music.database.provider.DownFileStore;
 import com.past.music.entity.DownloadDBEntity;
 import com.past.music.pastmusic.R;
-import com.past.music.utils.HttpUtil;
 import com.past.music.utils.MConstants;
 
 import java.io.File;
@@ -320,7 +319,6 @@ public class DownService extends Service {
             if (downloadTask.getDownloadStatus() != DownloadStatus.DOWNLOAD_STATUS_COMPLETED) {
                 downloadTask.setDownloadStatus(DownloadStatus.DOWNLOAD_STATUS_PREPARE);
                 downloadTask.setdownFileStore(downFileStore);
-                downloadTask.setHttpClient(HttpUtil.mOkHttpClient);
                 downloadTask.addDownloadListener(listener);
                 executorService.submit(downloadTask);
                 currentTask = downloadTask;

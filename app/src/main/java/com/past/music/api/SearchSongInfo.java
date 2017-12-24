@@ -8,40 +8,6 @@ import android.os.Parcelable;
  */
 public class SearchSongInfo implements Parcelable {
 
-    /**
-     * content :
-     * copy_type : 1
-     * toneid : 0
-     * info :
-     * all_rate : 24,64,128
-     * resource_type : 2
-     * relate_status : 1
-     * has_mv_mobile : 0
-     * versions :
-     * song_id : 85060522
-     * title : Whistle
-     * ting_uid : 208132
-     * author : Glee Cast
-     * album_id : 0
-     * album_title :
-     * is_first_publish : 0
-     * havehigh : 0
-     * charge : 0
-     * has_mv : 0
-     * learn : 0
-     * song_source : web
-     * piao_id : 0
-     * korean_bb_song : 0
-     * resource_type_ext : 0
-     * mv_provider : 0000000000
-     * artist_id : 374550
-     * all_artist_id : 374550
-     * lrclink : http://musicdata.baidu.com/data2/lrc/239939129/239939129.lrc
-     * data_source : 0
-     * cluster_id : 0
-     * bitrate_fee : {"0":"0|0","1":"0|0"}
-     */
-
     private String content;
     private String copy_type;
     private String toneid;

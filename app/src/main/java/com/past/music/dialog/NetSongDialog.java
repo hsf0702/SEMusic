@@ -2,7 +2,6 @@ package com.past.music.dialog;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,7 +20,6 @@ import com.past.music.entity.MusicEntity;
 import com.past.music.entity.OverFlowItem;
 import com.past.music.pastmusic.R;
 import com.past.music.service.MusicPlayer;
-import com.past.music.utils.DownUtils;
 import com.past.music.utils.HandlerUtil;
 import com.past.music.utils.MConstants;
 import com.past.music.utils.MusicUtils;
@@ -158,22 +156,6 @@ public class NetSongDialog extends AlertDialog {
                         case 2:
                             break;
                         case 3:
-                            new android.support.v7.app.AlertDialog.Builder(mContext).setTitle("要下载音乐吗").
-                                    setPositiveButton(mContext.getString(R.string.sure), new DialogInterface.OnClickListener() {
-
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            DownUtils.downMusic(mContext, String.valueOf(adapterMusicEntity.songId), adapterMusicEntity.musicName, adapterMusicEntity.artist);
-                                            dialog.dismiss();
-                                        }
-                                    }).
-                                    setNegativeButton(mContext.getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                        }
-                                    }).show();
-                            dismiss();
                             break;
                         case 4:
                             break;

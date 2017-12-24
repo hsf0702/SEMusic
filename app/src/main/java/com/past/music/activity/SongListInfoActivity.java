@@ -13,14 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.neu.gaojin.MyOkHttpClient;
-import com.neu.gaojin.response.BaseCallback;
 import com.past.music.MyApplication;
 import com.past.music.adapter.SongListAdapter;
-import com.past.music.api.AvatarRequest;
-import com.past.music.api.AvatarResponse;
 import com.past.music.entity.MusicEntity;
-import com.past.music.log.MyLog;
 import com.past.music.pastmusic.R;
 
 import java.util.List;
@@ -96,20 +91,7 @@ public class SongListInfoActivity extends ToolBarActivity {
     public void setSongInterFace() {
         if (mList.get(0).getAlbumPic() == null) {
             if (MyApplication.imageDBService.query(mList.get(0).getArtist().replace(";", "")) == null) {
-                AvatarRequest avatarRequest = new AvatarRequest();
-                avatarRequest.setArtist(mList.get(0).getArtist().replace(";", ""));
-                MyOkHttpClient.getInstance(this).sendNet(avatarRequest, new BaseCallback<AvatarResponse>() {
-                    @Override
-                    public void onFailure(int code, String error_msg) {
-                        MyLog.i("sssss", error_msg);
-                    }
-
-                    @Override
-                    public void onSuccess(int statusCode, final AvatarResponse response) {
-                        MyApplication.imageDBService.insert(mList.get(0).getArtist().replace(";", ""), response.getArtist().getImage().get(2).get_$Text112());
-                        headView.setImageURI(response.getArtist().getImage().get(2).get_$Text112());
-                    }
-                });
+                //TODO
             } else {
                 headView.setImageURI(MyApplication.imageDBService.query(mList.get(0).getArtist().replace(";", "")));
             }

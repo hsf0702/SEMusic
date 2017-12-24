@@ -43,19 +43,14 @@ import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.neu.gaojin.MyOkHttpClient;
-import com.neu.gaojin.response.BaseCallback;
 import com.past.music.MyApplication;
 import com.past.music.activity.MainActivity;
-import com.past.music.api.LrcRequest;
-import com.past.music.api.LrcResponse;
 import com.past.music.database.provider.RecentStore;
 import com.past.music.entity.MusicEntity;
 import com.past.music.log.MyLog;
 import com.past.music.pastmusic.IMediaAidlInterface;
 import com.past.music.pastmusic.R;
 import com.past.music.utils.SharePreferencesUtils;
-import com.past.music.utils.SysUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -1370,50 +1365,8 @@ public class MediaService extends Service {
 
         @Override
         public void run() {
-//            String url = null;
-//            if (musicInfo != null && musicInfo.lrc != null) {
-//                url = musicInfo.lrc;
-//            }
-//            try {
-//                JsonObject jsonObject = HttpUtil.getResposeJsonObject(BMA.Search.searchLrcPic(musicInfo.musicName, musicInfo.artist));
-//                JsonArray array = jsonObject.get("songinfo").getAsJsonArray();
-//                int len = array.size();
-//                url = null;
-//                for (int i = 0; i < len; i++) {
-//                    url = array.get(i).getAsJsonObject().get("lrclink").getAsString();
-//                    if (url != null) {
-//                        break;
-//                    }
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
             if (!stop) {
                 final File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + LRC_PATH + musicInfo.songId);
-                LrcRequest lrcRequest = new LrcRequest(String.valueOf(musicInfo.getSongId()));
-                MyOkHttpClient.getInstance(MediaService.this).sendNet(lrcRequest, new BaseCallback<LrcResponse>() {
-                    @Override
-                    public void onSuccess(int statusCode, LrcResponse response) {
-                        try {
-                            String lrc = null;
-                            lrc = response.getShowapi_res_body().getLyric();
-                            if (lrc != null && !lrc.isEmpty()) {
-                                if (!file.exists())
-                                    file.createNewFile();
-                                writeToFile(file, SysUtils.ASCIIUtils(lrc));
-                                mPlayerHandler.sendEmptyMessage(LRC_DOWNLOADED);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(int code, String error_msg) {
-
-                    }
-                });
-
             }
         }
     }

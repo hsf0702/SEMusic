@@ -8,19 +8,6 @@ import android.os.Parcelable;
  */
 public class SearchArtistInfo implements Parcelable {
 
-
-    /**
-     * artist_id : 2027570
-     * author : Maroon
-     * ting_uid : 87966713
-     * avatar_middle : http://c.hiphotos.baidu.com/ting/pic/item/80cb39dbb6fd526674d53b05ad18972bd4073620.jpg
-     * album_num : 0
-     * song_num : 3
-     * country :
-     * artist_desc :
-     * artist_source : web
-     */
-
     private String artist_id;
     private String author;
     private String ting_uid;

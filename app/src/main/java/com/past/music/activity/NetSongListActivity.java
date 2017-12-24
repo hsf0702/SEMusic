@@ -2,7 +2,6 @@ package com.past.music.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,14 +10,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.neu.gaojin.MyOkHttpClient;
-import com.neu.gaojin.response.BaseCallback;
 import com.past.music.adapter.SongListAdapter;
-import com.past.music.api.HotListResponse;
-import com.past.music.api.HotListResquest;
 import com.past.music.api.SonglistBean;
 import com.past.music.entity.MusicEntity;
-import com.past.music.log.MyLog;
 import com.past.music.pastmusic.R;
 
 import java.util.ArrayList;
@@ -92,49 +86,6 @@ public class NetSongListActivity extends BaseActivity {
         String topid = intent.getStringExtra(TOPID);
         String title = intent.getStringExtra(TITLE);
         mTitle.setText(title);
-        HotListResquest hotListResquest = new HotListResquest(topid);
-        MyOkHttpClient.getInstance(this).sendNet(hotListResquest, new BaseCallback<HotListResponse>() {
-            @Override
-            public void onSuccess(int statusCode, HotListResponse response) {
-                if (response.getShowapi_res_code() == 0) {
-                    mHotList = response.getShowapi_res_body().getPagebean().getSonglist();
-                    headView.setImageURI(mHotList.get(0).getAlbumpic_big());
-                    String color_hex = Integer.toHexString(response.getShowapi_res_body().getPagebean().getColor());
-                    String color = null;
-                    if (color_hex.length() < 6) {
-                        color = color_hex;
-                        for (int i = 0; i < 6 - color_hex.length(); i++) {
-                            color = "0" + color;
-                        }
-                        color = "#ff" + color;
-                    } else if (color_hex.length() == 6) {
-                        color = "#ff" + Integer.toHexString(response.getShowapi_res_body().getPagebean().getColor());
-                    }
-                    MyLog.i(TAG, color + "---" + response.getShowapi_res_body().getPagebean().getColor());
-                    mRecyclerView.setBackgroundColor(Color.parseColor(color));
-                    relativeLayout.setBackgroundColor(Color.parseColor(color));
-
-                    for (int i = 0; i < mHotList.size(); i++) {
-                        MusicEntity musicInfo = new MusicEntity();
-                        musicInfo.songId = mHotList.get(i).getSongid();
-                        musicInfo.musicName = mHotList.get(i).getSongname();
-                        musicInfo.artist = mHotList.get(i).getSingername();
-                        musicInfo.islocal = false;
-                        musicInfo.albumName = mHotList.get(i).getAlbummid();
-                        musicInfo.albumId = mHotList.get(i).getAlbumid();
-                        musicInfo.artistId = mHotList.get(i).getSingerid();
-                        musicInfo.albumPic = mHotList.get(i).getAlbumpic_big();
-                        mList.add(musicInfo);
-                    }
-                    adapter.updateList(mList);
-                }
-            }
-
-            @Override
-            public void onFailure(int code, String error_msg) {
-
-            }
-        });
     }
 
     @Override
