@@ -12,7 +12,7 @@ import com.past.music.pastmusic.R
  * Creator：gaojin
  * date：2017/11/3 下午8:58
  */
-class MainFragmentAdapter(context: Context, fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class MainFragmentAdapter(context: Context, fm: FragmentManager?) : FragmentPagerAdapter(fm) {
     private val tabNames = ArrayList<String>()
 
     init {

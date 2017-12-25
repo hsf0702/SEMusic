@@ -20,17 +20,17 @@ class KtMusicFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mAdapter = MusicContentAdapter(context)
+        mAdapter = MusicContentAdapter(context!!)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_music, container, false)
+        return inflater.inflate(R.layout.fragment_music, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mMusicList = view!!.findViewById(R.id.music_recycle_view)
+        mMusicList = view.findViewById(R.id.music_recycle_view)
         mMusicList!!.layoutManager = LinearLayoutManager(activity)
         mMusicList!!.setHasFixedSize(true)
         mMusicList!!.adapter = mAdapter
@@ -44,4 +44,4 @@ class KtMusicFragment : Fragment() {
             return fragment
         }
     }
-}// Required empty public constructor
+}

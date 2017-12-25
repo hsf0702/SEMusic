@@ -46,14 +46,14 @@ class RecentMusicFragment : UiBaseFragment() {
         mList = recentsongs
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         LoadSongs().execute("")
         return super.onCreateView(inflater, container, savedInstanceState)!!
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setTitle("最近播放")
-        mRecyclerView = view!!.findViewById(R.id.recent_music_recycle)
+        mRecyclerView = view.findViewById(R.id.recent_music_recycle)
         mRecyclerView!!.layoutManager = LinearLayoutManager(context)
         mRecyclerView!!.setHasFixedSize(true)
     }

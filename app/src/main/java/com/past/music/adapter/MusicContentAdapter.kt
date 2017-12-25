@@ -14,7 +14,7 @@ import com.past.music.api.SonglistBean
 import com.past.music.online.model.HallModel
 import com.past.music.pastmusic.R
 import com.past.music.utils.CollectionUtils
-import com.past.music.utils.FrescoImageLoader
+import com.past.music.utils.GlideImageLoader
 import com.past.music.widget.IconView
 import com.youth.banner.Banner
 import com.youth.banner.listener.OnBannerListener
@@ -93,7 +93,7 @@ class MusicContentAdapter constructor(context: Context) : RecyclerView.Adapter<R
             banner = itemView.findViewById(R.id.banner)
 
             //设置图片加载器
-            banner?.setImageLoader(FrescoImageLoader())
+            banner?.setImageLoader(GlideImageLoader())
             //设置图片集合
             banner?.setImages(images)
             //banner设置方法全部调用完毕时最后调用

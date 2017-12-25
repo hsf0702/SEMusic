@@ -31,7 +31,7 @@ class LocalMusicFragment : UiBaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            position = arguments.getInt(POSITION)
+            position = arguments!!.getInt(POSITION)
         }
         val localCount = MusicUtils.queryMusic(context, MConstants.START_FROM_LOCAL).size
         val singerCount = MusicUtils.queryArtist(context).size
@@ -43,7 +43,7 @@ class LocalMusicFragment : UiBaseFragment() {
         mTabNames.add("文件夹 " + folderCount)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view = super.onCreateView(inflater, container, savedInstanceState)!!
@@ -52,11 +52,11 @@ class LocalMusicFragment : UiBaseFragment() {
         return view
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setTitle("本地音乐")
         mTabLayout!!.tabGravity = TabLayout.GRAVITY_CENTER
-        val fm = activity.supportFragmentManager
+        val fm = activity?.supportFragmentManager
         mAdapter = LocalFragmentAdapter(fm, mTabNames)
         mViewPager!!.adapter = mAdapter
         mViewPager!!.currentItem = position

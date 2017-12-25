@@ -4,4 +4,5 @@
 
     <dimen name="divider_1">0.1dp</dimen>
     <dimen name="collapsed_header_height">60dp</dimen>
+    <dimen name="tool_bar_height">48dp</dimen>
 </resources>

@@ -24,11 +24,11 @@ class DownLoadFragment : UiBaseFragment() {
 
     internal var mAdapter: FragmentAdapter? = null
 
-    var mTabLayout: TabLayout? = null
+    private var mTabLayout: TabLayout? = null
 
-    var mViewPager: ViewPager? = null
+    private var mViewPager: ViewPager? = null
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = super.onCreateView(inflater, container, savedInstanceState)!!
         setTitle("下载歌曲")
         mTabLayout = view.findViewById(R.id.local_tab_layout)
@@ -36,15 +36,15 @@ class DownLoadFragment : UiBaseFragment() {
         return view
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mTabLayout!!.tabGravity = TabLayout.GRAVITY_CENTER
-        val fm = activity.supportFragmentManager
+        val fm = activity?.supportFragmentManager
         mAdapter = FragmentAdapter(fm)
         mViewPager!!.adapter = mAdapter
         mTabLayout!!.setupWithViewPager(mViewPager)
     }
 
-    internal inner class FragmentAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+    internal inner class FragmentAdapter(fm: FragmentManager?) : FragmentPagerAdapter(fm) {
 
         override fun getItem(position: Int): Fragment {
             return if (position == 0) {

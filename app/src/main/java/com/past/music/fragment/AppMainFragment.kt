@@ -27,10 +27,10 @@ class AppMainFragment : Fragment() {
         return view
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mTabLayout!!.tabGravity = TabLayout.GRAVITY_CENTER
-        mAdapter = MainFragmentAdapter(context, activity.supportFragmentManager)
+        mAdapter = MainFragmentAdapter(context!!, activity?.supportFragmentManager)
         mViewPager!!.adapter = mAdapter
         mTabLayout!!.setupWithViewPager(mViewPager)
     }

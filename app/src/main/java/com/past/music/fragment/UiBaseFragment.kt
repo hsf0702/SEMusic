@@ -30,8 +30,8 @@ abstract class UiBaseFragment : Fragment() {
         mTitle!!.text = title
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(getLayoutId(), container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(getLayoutId(), container, false)
         mAppBarLayout = view.findViewById(R.id.appbar_layout)
         mToolBar = view.findViewById(R.id.base_toolbar)
         mTitle = view.findViewById(R.id.toolbar_title)

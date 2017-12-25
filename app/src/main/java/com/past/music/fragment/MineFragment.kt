@@ -39,9 +39,9 @@ class MineFragment : Fragment() {
         EventBus.getDefault().register(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater!!.inflate(R.layout.fragment_mine, container, false)
-        mAdapter = MyContentAdapter(activity)
+        mAdapter = MyContentAdapter(activity!!)
         mMusicList = view.findViewById(R.id.recycle_layout)
         mMusicList!!.layoutManager = LinearLayoutManager(activity)
         mMusicList!!.setHasFixedSize(true)

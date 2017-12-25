@@ -23,14 +23,14 @@ class MusicFragment : Fragment() {
     private var mMusicList: RecyclerView? = null
     private var mAdapter: MusicContentAdapter? = null
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_music, container, false)
+        return inflater.inflate(R.layout.fragment_music, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        mMusicList = view!!.findViewById(R.id.music_recycle_view)
-        mAdapter = MusicContentAdapter(context)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        mMusicList = view.findViewById(R.id.music_recycle_view)
+        mAdapter = MusicContentAdapter(context!!)
         mMusicList!!.layoutManager = LinearLayoutManager(context)
         mMusicList!!.setHasFixedSize(true)
         mMusicList!!.adapter = mAdapter
@@ -44,7 +44,7 @@ class MusicFragment : Fragment() {
      * 请求轮播图片
      */
     private fun buildHallCallBack(): CallLoaderCallbacks<HallModel> {
-        return object : CallLoaderCallbacks<HallModel>(context) {
+        return object : CallLoaderCallbacks<HallModel>(context!!) {
             override fun onCreateCall(id: Int, args: Bundle?): Call<HallModel> {
                 return MusicRetrofit.getInstance().getMusicHall()
             }
