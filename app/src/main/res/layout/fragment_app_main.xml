@@ -11,9 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/tool_bar_height"
         android:background="@color/colorPrimary"
-        android:fitsSystemWindows="true">
+        app:contentInsetStart="0dp">
 
-        <android.support.design.widget.TabLayout
+        <com.past.music.widget.TitleZoomTabLayout
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -22,8 +22,7 @@
             app:tabIndicatorHeight="0dp"
             app:tabMode="fixed"
             app:tabSelectedTextColor="@color/white"
-            app:tabTextAppearance="@style/MyCustomTabLayout"
-            app:tabTextColor="@color/select_gray"/>
+            app:tabTextAppearance="@style/CustomTabLayout"/>
 
     </android.support.v7.widget.Toolbar>
 

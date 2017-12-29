@@ -1,7 +1,6 @@
 package com.past.music.fragment
 
 import android.os.Bundle
-import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
@@ -10,11 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import com.past.music.adapter.MainFragmentAdapter
 import com.past.music.pastmusic.R
+import com.past.music.widget.TitleZoomTabLayout
 
 class AppMainFragment : Fragment() {
 
     private var mToolBar: Toolbar? = null
-    private var mTabLayout: TabLayout? = null
+    private var mTabLayout: TitleZoomTabLayout? = null
     private var mViewPager: ViewPager? = null
     private var mAdapter: MainFragmentAdapter? = null
 
@@ -29,7 +29,7 @@ class AppMainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mTabLayout!!.tabGravity = TabLayout.GRAVITY_CENTER
+        mTabLayout!!.tabGravity = TitleZoomTabLayout.GRAVITY_CENTER
         mAdapter = MainFragmentAdapter(context!!, activity?.supportFragmentManager)
         mViewPager!!.adapter = mAdapter
         mTabLayout!!.setupWithViewPager(mViewPager)
