@@ -178,6 +178,7 @@ public class TitleZoomTabLayout extends FrameLayout {
     int mTabTextAppearance;
     ColorStateList mTabTextColors;
     float mTabTextSize;
+    float mTabBigTextSize;
     float mTabTextMultiLineSize;
 
     final int mTabBackgroundResId;
@@ -289,6 +290,10 @@ public class TitleZoomTabLayout extends FrameLayout {
 
         // Now apply the tab mode and gravity
         applyModeAndGravity();
+    }
+
+    public void selectTextAppend(float size) {
+        mTabBigTextSize = mTabTextSize + size;
     }
 
     /**
@@ -1035,7 +1040,7 @@ public class TitleZoomTabLayout extends FrameLayout {
 
     private void dispatchTabSelected(@NonNull final Tab tab) {
         updateOnMeasure = false;
-        tab.mView.mTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, 60);
+        tab.mView.mTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTabBigTextSize);
         for (int i = mSelectedListeners.size() - 1; i >= 0; i--) {
             mSelectedListeners.get(i).onTabSelected(tab);
         }
@@ -1749,7 +1754,7 @@ public class TitleZoomTabLayout extends FrameLayout {
                 // First we'll find the widest tab
                 int largestTabWidth = 0;
                 Paint paint = new Paint();
-                paint.setTextSize(60);
+                paint.setTextSize(mTabBigTextSize);
                 for (int i = 0, z = count; i < z; i++) {
                     View child = getChildAt(i);
                     LayoutParams lp = (LayoutParams) child.getLayoutParams();

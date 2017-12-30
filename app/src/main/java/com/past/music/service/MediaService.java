@@ -1800,7 +1800,7 @@ public class MediaService extends Service {
         if (mNotification == null) {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                     .setContent(remoteViews)
-                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setSmallIcon(R.drawable.ic_launcher)
                     .setContentIntent(mainIntent)
                     .setWhen(mNotificationPostTime);
             mNotification = builder.build();

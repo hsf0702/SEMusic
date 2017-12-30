@@ -91,15 +91,6 @@ class MusicContentAdapter constructor(context: Context) : RecyclerView.Adapter<R
 
             bannerList?.forEach { it.picUrl?.let { it1 -> images.add(it1) } }
             banner = itemView.findViewById(R.id.banner)
-
-            //设置图片加载器
-            banner?.setImageLoader(GlideImageLoader())
-            //设置图片集合
-            banner?.setImages(images)
-            //banner设置方法全部调用完毕时最后调用
-            banner?.start()
-
-            banner?.setOnBannerListener(this)
         }
 
         fun startAutoPlay() {

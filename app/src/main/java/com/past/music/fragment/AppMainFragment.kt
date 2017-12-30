@@ -32,6 +32,7 @@ class AppMainFragment : Fragment() {
         mTabLayout!!.tabGravity = TitleZoomTabLayout.GRAVITY_CENTER
         mAdapter = MainFragmentAdapter(context!!, activity?.supportFragmentManager)
         mViewPager!!.adapter = mAdapter
+        mTabLayout!!.selectTextAppend(10F)
         mTabLayout!!.setupWithViewPager(mViewPager)
     }
 

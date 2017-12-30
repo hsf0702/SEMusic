@@ -202,7 +202,7 @@ public class DownMusicFragment extends BaseFragment {
         }
 
         public class ListItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-            //ViewHolder
+            //RecommendViewHolder
             ImageView moreOverflow;
             TextView mainTitle, title;
 

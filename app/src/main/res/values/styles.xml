@@ -41,4 +41,8 @@
         <item name="android:windowExitAnimation">@anim/dialog_out_bottom</item>
     </style>
 
+    <declare-styleable name="AspectRatioView">
+        <attr name="aspectRatio" format="string"/>
+    </declare-styleable>
+
 </resources>

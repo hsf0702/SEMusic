@@ -22,4 +22,15 @@
 
     <string name="local_music_tab">我的</string>
     <string name="online_music_tab">音乐馆</string>
+
+
+    <string name="classify_singer">歌手</string>
+    <string name="classify_rank">排行</string>
+    <string name="classify_radio">电台</string>
+    <string name="classify_song_list">分类歌单</string>
+    <string name="classify_mv">视频MV</string>
+    <string name="classify_album">数字专辑</string>
+
+
+    <string name="online_recommend_song_list">歌单推荐</string>
 </resources>
