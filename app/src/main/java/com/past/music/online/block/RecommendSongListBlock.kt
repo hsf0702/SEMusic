@@ -1,26 +1,38 @@
 package com.past.music.online.block
 
 import android.content.Context
+import android.os.Bundle
+import android.support.v4.app.FragmentManager
+import android.support.v4.app.LoaderManager
+import android.support.v4.content.Loader
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import com.past.music.online.listener.OnLineRefreshListener
+import com.past.music.online.model.RecommendListModel
+import com.past.music.online.model.VHotBean
 import com.past.music.pastmusic.R
-import com.past.music.widget.RecommendDividerItemDecoration
+import com.past.music.retrofit.MusicRetrofit
+import com.past.music.retrofit.callback.CallLoaderCallbacks
+import com.past.music.utils.CollectionUtils
+import com.past.music.utils.IdUtils
+import com.past.music.widget.GridItemDecoration
 import com.past.music.widget.RecommendItemView
+import retrofit2.Call
 
 
 /**
  * Created by gaojin on 2017/12/31.
  */
-class RecommendSongListBlock : LinearLayout {
+class RecommendSongListBlock : LinearLayout, OnLineRefreshListener {
 
     private var recommendRecycleView: RecyclerView? = null
     private var iconEnter: View? = null
-    private var mDividerItemDecoration: RecommendDividerItemDecoration? = null
 
     constructor(context: Context) : this(context, null)
 
@@ -42,25 +54,49 @@ class RecommendSongListBlock : LinearLayout {
         iconEnter = findViewById(R.id.recommend_icon_enter)
         recommendRecycleView = findViewById(R.id.recommend_recycle_view)
         recommendRecycleView!!.layoutManager = GridLayoutManager(context, 3)
-        recommendRecycleView!!.adapter = RecommendGridAdapter(context)
 
-        mDividerItemDecoration = RecommendDividerItemDecoration(context, LinearLayoutManager.HORIZONTAL)
-        mDividerItemDecoration!!.setDrawable(context.resources.getDrawable(R.drawable.transparent_divider))
-
+        val mDividerItemDecoration = GridItemDecoration(context, LinearLayoutManager.HORIZONTAL, 3)
+        mDividerItemDecoration.setDrawable(context.resources.getDrawable(R.drawable.transparent_divider))
         recommendRecycleView!!.addItemDecoration(mDividerItemDecoration)
 
     }
 
-    class RecommendGridAdapter(context: Context) : RecyclerView.Adapter<RecommendViewHolder>() {
+    override fun refresh(fragmentManager: FragmentManager?, loaderManager: LoaderManager) {
+        loaderManager.initLoader(IdUtils.GET_RECOMMEND_LIST, null, buildRecommendListCallBack())
+    }
+
+    private fun buildRecommendListCallBack(): CallLoaderCallbacks<RecommendListModel> {
+        return object : CallLoaderCallbacks<RecommendListModel>(context!!) {
+            override fun onCreateCall(id: Int, args: Bundle?): Call<RecommendListModel> {
+                return MusicRetrofit.getInstance().getRecommendList()
+            }
+
+            override fun onSuccess(loader: Loader<*>, data: RecommendListModel) {
+                recommendRecycleView!!.adapter = RecommendGridAdapter(context, data.recomPlaylist?.data?.v_hot)
+            }
+
+            override fun onFailure(loader: Loader<*>, throwable: Throwable) {
+                Log.e("RecommendSongListBlock", throwable.toString())
+            }
+        }
+    }
+
+    class RecommendGridAdapter(context: Context, v_hot: List<VHotBean>?) : RecyclerView.Adapter<RecommendViewHolder>() {
         private var context: Context = context
         private val ITEMCOUNT = 6
+        private var hotList = v_hot
         override fun onBindViewHolder(holderRecommend: RecommendViewHolder?, position: Int) {
-            holderRecommend?.recommendView?.setImageView("https://y.gtimg.cn/music/common/upload/iphone_order_channel/toplist_26_300_201697348.jpg")
-                    ?.setDescription("进图违反了开发进阶软工")
+            val vHotBean = hotList?.get(position)
+            holderRecommend?.recommendView?.setImageView(vHotBean?.cover!!)
+                    ?.setDescription(vHotBean.title!!)
         }
 
         override fun getItemCount(): Int {
-            return ITEMCOUNT
+            return when {
+                CollectionUtils.isEmpty(hotList) -> 0
+                hotList!!.size < 6 -> hotList!!.size
+                else -> ITEMCOUNT
+            }
         }
 
         override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecommendViewHolder {

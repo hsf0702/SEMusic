@@ -37,7 +37,6 @@ class DownLoadFragment : UiBaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        mTabLayout!!.tabGravity = TabLayout.GRAVITY_CENTER
         val fm = activity?.supportFragmentManager
         mAdapter = FragmentAdapter(fm)
         mViewPager!!.adapter = mAdapter
@@ -50,7 +49,7 @@ class DownLoadFragment : UiBaseFragment() {
             return if (position == 0) {
                 DownMusicFragment.newInstance("/storage/emulated/0/pastmusic", false, null)
             } else {
-                DownFragment.newInstance()
+                DownMusicFragment.newInstance("/storage/emulated/0/pastmusic", false, null)
             }
 
         }

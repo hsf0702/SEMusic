@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.past.music.activity.WebViewActivity
+import com.past.music.online.block.RecommendSongListBlock
+import com.past.music.online.listener.OnLineRefreshListener
 import com.past.music.online.model.HallModel
 import com.past.music.pastmusic.R
 import com.past.music.retrofit.MusicRetrofit
@@ -17,25 +19,39 @@ import com.past.music.utils.IdUtils
 import com.youth.banner.Banner
 import com.youth.banner.listener.OnBannerListener
 import retrofit2.Call
-import java.util.*
 
 
 class MusicFragment : Fragment(), OnBannerListener {
 
+    //View
     private var banner: Banner? = null
+    private var recommendBlock: RecommendSongListBlock? = null
+
+
     private val images = ArrayList<String>()
     private var bannerList: List<HallModel.Data.Slider>? = null
+    private var refreshList: MutableList<OnLineRefreshListener>? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_music, container, false)
-        banner = view.findViewById(R.id.banner)
-        return view
+        return inflater.inflate(R.layout.fragment_music, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        banner = view.findViewById(R.id.banner)
+        recommendBlock = view.findViewById(R.id.online_recommend_block)
+
+        refreshList = ArrayList()
+        refreshList!!.add(recommendBlock!!)
+
         loaderManager.initLoader(IdUtils.GET_MUSIC_HALL, null, buildHallCallBack())
 
+
+        initBlocks()
+    }
+
+    private fun initBlocks() {
+        refreshList?.forEach { it.refresh(fragmentManager, loaderManager) }
     }
 
     private fun initBanner() {

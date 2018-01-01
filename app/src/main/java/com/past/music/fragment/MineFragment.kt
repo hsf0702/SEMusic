@@ -40,7 +40,7 @@ class MineFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.fragment_mine, container, false)
+        val view = inflater.inflate(R.layout.fragment_mine, container, false)
         mAdapter = MyContentAdapter(activity!!)
         mMusicList = view.findViewById(R.id.recycle_layout)
         mMusicList!!.layoutManager = LinearLayoutManager(activity)

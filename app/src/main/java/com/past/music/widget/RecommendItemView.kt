@@ -1,6 +1,7 @@
 package com.past.music.widget
 
 import android.content.Context
+import android.support.annotation.Nullable
 import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
@@ -36,12 +37,12 @@ class RecommendItemView : LinearLayout {
         descriptionView = findViewById(R.id.song_list_description)
     }
 
-    fun setImageView(url: String): RecommendItemView {
+    fun setImageView(@Nullable url: String): RecommendItemView {
         Glide.with(context).load(url).into(itemHeader)
         return this
     }
 
-    fun setDescription(description: String): RecommendItemView {
+    fun setDescription(@Nullable description: String): RecommendItemView {
         descriptionView!!.text = description
         return this
     }

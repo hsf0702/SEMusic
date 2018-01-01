@@ -19,6 +19,7 @@
             android:layout_marginTop="@dimen/app_base_top_bottom_padding"/>
 
         <com.past.music.online.block.RecommendSongListBlock
+            android:id="@+id/online_recommend_block"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/app_base_top_bottom_padding"/>

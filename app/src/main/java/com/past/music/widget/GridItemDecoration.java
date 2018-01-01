@@ -17,16 +17,14 @@ import android.widget.LinearLayout;
  * date：2017/11/12 下午1:08
  * 默认不显示最后一个item的divider
  */
-public class RecommendDividerItemDecoration extends RecyclerView.ItemDecoration {
-
-    private boolean shownLast = false;
+public class GridItemDecoration extends RecyclerView.ItemDecoration {
 
     public static final int HORIZONTAL = LinearLayout.HORIZONTAL;
+
     public static final int VERTICAL = LinearLayout.VERTICAL;
-
     private static final String TAG = "DividerItem";
-    private static final int[] ATTRS = new int[]{android.R.attr.listDivider};
 
+    private static final int[] ATTRS = new int[]{android.R.attr.listDivider};
     private Drawable mDivider;
 
     /**
@@ -36,6 +34,9 @@ public class RecommendDividerItemDecoration extends RecyclerView.ItemDecoration 
 
     private final Rect mBounds = new Rect();
 
+    private boolean showSpanDivider = false;
+    private int spanCount;
+
     /**
      * Creates a divider {@link RecyclerView.ItemDecoration} that can be used with a
      * {@link LinearLayoutManager}.
@@ -43,7 +44,7 @@ public class RecommendDividerItemDecoration extends RecyclerView.ItemDecoration 
      * @param context     Current context, it will be used to access resources.
      * @param orientation Divider orientation. Should be {@link #HORIZONTAL} or {@link #VERTICAL}.
      */
-    public RecommendDividerItemDecoration(Context context, int orientation) {
+    public GridItemDecoration(Context context, int orientation, int spanCount) {
         final TypedArray a = context.obtainStyledAttributes(ATTRS);
         mDivider = a.getDrawable(0);
         if (mDivider == null) {
@@ -52,6 +53,7 @@ public class RecommendDividerItemDecoration extends RecyclerView.ItemDecoration 
         }
         a.recycle();
         setOrientation(orientation);
+        this.spanCount = spanCount;
     }
 
     /**
@@ -92,8 +94,12 @@ public class RecommendDividerItemDecoration extends RecyclerView.ItemDecoration 
         }
     }
 
-    public void setShownLastDivider(boolean shownLast) {
-        this.shownLast = shownLast;
+    public void setShowSpanDivider(boolean showSpanDivider) {
+        this.showSpanDivider = showSpanDivider;
+    }
+
+    public void setSpanCount(int spanCount) {
+        this.spanCount = spanCount;
     }
 
     private void drawVertical(Canvas canvas, RecyclerView parent) {
@@ -158,17 +164,16 @@ public class RecommendDividerItemDecoration extends RecyclerView.ItemDecoration 
             return;
         }
 
-        final int lastPosition = state.getItemCount() - 1;
-        final int current = parent.getChildLayoutPosition(view);
+        int current = parent.getChildLayoutPosition(view);
 
         if (mOrientation == VERTICAL) {
-            if (current == lastPosition && !shownLast) {
+            if (spanCount != 0 && (current + 1) % spanCount == 0 && !showSpanDivider) {
                 outRect.set(0, 0, 0, 0);
             } else {
                 outRect.set(0, 0, 0, mDivider.getIntrinsicHeight());
             }
         } else {
-            if (current == lastPosition && !shownLast) {
+            if (spanCount != 0 && (current + 1) % spanCount == 0 && !showSpanDivider) {
                 outRect.set(0, 0, 0, 0);
             } else {
                 outRect.set(0, 0, mDivider.getIntrinsicWidth(), 0);

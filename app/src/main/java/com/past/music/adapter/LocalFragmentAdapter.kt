@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import com.past.music.fragment.FolderFragment
 import com.past.music.fragment.LocalAlbumFragment
-import com.past.music.fragment.LocalMusicFragment
 import com.past.music.fragment.LocalSingerFragment
 import java.util.*
 
@@ -21,7 +20,7 @@ class LocalFragmentAdapter constructor(fm: FragmentManager?, list: List<String>)
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
-            0 -> LocalMusicFragment.newInstance(0)
+            0 -> LocalSingerFragment.newInstance()
             1 -> LocalSingerFragment.newInstance()
             2 -> LocalAlbumFragment.newInstance()
             else -> FolderFragment.newInstance()

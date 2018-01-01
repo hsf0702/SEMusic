@@ -55,7 +55,6 @@ class LocalMusicFragment : UiBaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setTitle("本地音乐")
-        mTabLayout!!.tabGravity = TabLayout.GRAVITY_CENTER
         val fm = activity?.supportFragmentManager
         mAdapter = LocalFragmentAdapter(fm, mTabNames)
         mViewPager!!.adapter = mAdapter
@@ -79,4 +78,4 @@ class LocalMusicFragment : UiBaseFragment() {
         }
     }
 
-}// Required empty public constructor
+}

@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.past.music.database.entity.ImageCache;
 import com.past.music.database.entity.MusicInfoCache;
 import com.past.music.database.entity.SongListCache;
-import com.past.music.database.provider.DownFileStore;
 import com.past.music.database.provider.RecentStore;
 import com.past.music.database.provider.SearchHistory;
 
@@ -78,7 +77,6 @@ public class PastMusicDBHelper extends SQLiteOpenHelper {
         db.execSQL(SONGLIST_TABLE_CREATE);
         db.execSQL(MUSICINFO_TABLE_CREATE);
         RecentStore.getInstance(mContext).onCreate(db);
-        DownFileStore.getInstance(mContext).onCreate(db);
         SearchHistory.getInstance(mContext).onCreate(db);
     }
 
@@ -88,7 +86,6 @@ public class PastMusicDBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + SONGLIST_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + MUSICINFO_TABLE);
         RecentStore.getInstance(mContext).onUpgrade(db, oldVersion, newVersion);
-        DownFileStore.getInstance(mContext).onUpgrade(db, oldVersion, newVersion);
         SearchHistory.getInstance(mContext).onUpgrade(db, oldVersion, newVersion);
         onCreate(db);
     }
