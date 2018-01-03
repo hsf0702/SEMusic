@@ -6,7 +6,9 @@ import android.support.v4.app.LoaderManager
 import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
+import com.past.music.activity.BaseActivity
 import com.past.music.online.listener.OnLineRefreshListener
+import com.past.music.online.subfragment.OnLineSingerFragment
 import com.past.music.pastmusic.R
 
 /**
@@ -61,6 +63,11 @@ class OnLineClassifyBlock : LinearLayout, OnLineRefreshListener, View.OnClickLis
     }
 
     override fun onClick(p0: View?) {
-
+        if (p0!!.id == R.id.classify_singer) {
+            val ft = (mContext as BaseActivity).supportFragmentManager.beginTransaction()
+            ft.addToBackStack(null)
+            ft.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_left_out, R.anim.slide_left_in, R.anim.slide_right_out)
+            ft.add(R.id.content, OnLineSingerFragment.newInstance()).commit()
+        }
     }
 }

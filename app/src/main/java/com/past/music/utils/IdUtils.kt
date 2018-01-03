@@ -20,5 +20,6 @@ class IdUtils {
 
         val GET_MUSIC_HALL = generateLoaderId()
         val GET_RECOMMEND_LIST = generateLoaderId()
+        val GET_SINGER_LIST = generateLoaderId()
     }
 }

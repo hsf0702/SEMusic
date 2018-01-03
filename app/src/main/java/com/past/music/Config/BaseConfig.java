@@ -32,4 +32,6 @@ public class BaseConfig {
         public static final int PAUSE_MSG = 0x02;
         public static final int STOP_MSG = 0x03;
     }
+
+    public static final String picBaseUrl = "https://y.gtimg.cn/music/photo_new/T001R300x300M000%1$s.jpg";
 }

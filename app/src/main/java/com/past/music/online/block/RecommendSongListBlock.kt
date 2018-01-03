@@ -15,7 +15,6 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.past.music.online.listener.OnLineRefreshListener
 import com.past.music.online.model.RecommendListModel
-import com.past.music.online.model.VHotBean
 import com.past.music.pastmusic.R
 import com.past.music.retrofit.MusicRetrofit
 import com.past.music.retrofit.callback.CallLoaderCallbacks
@@ -81,7 +80,7 @@ class RecommendSongListBlock : LinearLayout, OnLineRefreshListener {
         }
     }
 
-    class RecommendGridAdapter(context: Context, v_hot: List<VHotBean>?) : RecyclerView.Adapter<RecommendViewHolder>() {
+    class RecommendGridAdapter(context: Context, v_hot: List<RecommendListModel.VHotBean>?) : RecyclerView.Adapter<RecommendViewHolder>() {
         private var context: Context = context
         private val ITEMCOUNT = 6
         private var hotList = v_hot

@@ -7,7 +7,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:drawableRight="@drawable/play_list_item_enter"
+        android:drawableRight="@drawable/item_enter"
         android:gravity="center"
         android:text="创建和管理歌单"
         android:textSize="18sp"/>

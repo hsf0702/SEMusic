@@ -50,7 +50,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="15dp"
-        android:src="@drawable/play_list_item_enter"/>
+        android:src="@drawable/item_enter"/>
 
 
     <View
