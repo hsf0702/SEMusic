@@ -3,7 +3,7 @@ package com.past.music.retrofit
 import com.past.music.online.model.HallModel
 import com.past.music.online.model.RecommendListModel
 import com.past.music.online.model.SingerModel
-import com.past.music.online.params.CommonParams
+import com.past.music.online.params.RecommendPostParams
 import com.past.music.utils.GsonFactory
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -30,8 +30,13 @@ class MusicRetrofit private constructor() {
     }
 
     fun getRecommendList(): Call<RecommendListModel> {
+        val params = RecommendPostParams()
+        params.recomPlaylist.method = "get_hot_recommend"
+        params.recomPlaylist.module = "playlist.HotRecommendServer"
+        params.recomPlaylist.param.async = 1
+        params.recomPlaylist.param.cmd = 2
         return baseURetrofit.create(RetrofitService::class.java)
-                .getRecommendList(GsonFactory.getInstance().toJson(CommonParams()))
+                .getRecommendList(GsonFactory.getInstance().toJson(params))
     }
 
     fun getSinger(pagesize: Int, pagenum: Int): Call<SingerModel> {

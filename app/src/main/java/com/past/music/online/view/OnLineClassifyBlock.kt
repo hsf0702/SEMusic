@@ -1,4 +1,4 @@
-package com.past.music.online.block
+package com.past.music.online.view
 
 import android.content.Context
 import android.support.v4.app.FragmentManager

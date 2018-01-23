@@ -1,4 +1,4 @@
-package com.past.music.online.block
+package com.past.music.online.view
 
 import android.content.Context
 import android.os.Bundle
@@ -45,7 +45,7 @@ class RecommendSongListBlock : LinearLayout, OnLineRefreshListener {
 
     fun init() {
         orientation = LinearLayout.VERTICAL
-        View.inflate(context, R.layout.online_recommend_song_list_block, this)
+        View.inflate(context, R.layout.online_new_song_express_block, this)
         initView()
     }
 
@@ -57,7 +57,6 @@ class RecommendSongListBlock : LinearLayout, OnLineRefreshListener {
         val mDividerItemDecoration = GridItemDecoration(context, LinearLayoutManager.HORIZONTAL, 3)
         mDividerItemDecoration.setDrawable(context.resources.getDrawable(R.drawable.transparent_divider))
         recommendRecycleView!!.addItemDecoration(mDividerItemDecoration)
-
     }
 
     override fun refresh(fragmentManager: FragmentManager?, loaderManager: LoaderManager) {

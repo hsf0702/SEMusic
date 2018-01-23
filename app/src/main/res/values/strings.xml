@@ -32,5 +32,6 @@
     <string name="classify_album">数字专辑</string>
 
 
-    <string name="online_recommend_song_list">歌单推荐</string>
+    <string name="online_recommend_song_list">新 歌 速 递</string>
+    <string name="online_day_recommend_song">每 日 歌 曲 推 荐</string>
 </resources>

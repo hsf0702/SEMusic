@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.past.music.activity.WebViewActivity
-import com.past.music.online.block.RecommendSongListBlock
+import com.past.music.online.view.RecommendSongListBlock
 import com.past.music.online.listener.OnLineRefreshListener
 import com.past.music.online.model.HallModel
 import com.past.music.pastmusic.R
@@ -27,7 +27,6 @@ class MusicFragment : Fragment(), OnBannerListener {
     private var banner: Banner? = null
     private var recommendBlock: RecommendSongListBlock? = null
 
-
     private val images = ArrayList<String>()
     private var bannerList: List<HallModel.Data.Slider>? = null
     private var refreshList: MutableList<OnLineRefreshListener>? = null
@@ -38,6 +37,7 @@ class MusicFragment : Fragment(), OnBannerListener {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         banner = view.findViewById(R.id.banner)
         recommendBlock = view.findViewById(R.id.online_recommend_block)
 
@@ -45,7 +45,6 @@ class MusicFragment : Fragment(), OnBannerListener {
         refreshList!!.add(recommendBlock!!)
 
         loaderManager.initLoader(IdUtils.GET_MUSIC_HALL, null, buildHallCallBack())
-
 
         initBlocks()
     }
