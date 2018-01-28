@@ -45,7 +45,7 @@ class RecommendSongListBlock : LinearLayout, OnLineRefreshListener {
 
     fun init() {
         orientation = LinearLayout.VERTICAL
-        View.inflate(context, R.layout.online_new_song_express_block, this)
+        View.inflate(context, R.layout.online_day_recommend_song_block, this)
         initView()
     }
 
@@ -57,6 +57,7 @@ class RecommendSongListBlock : LinearLayout, OnLineRefreshListener {
         val mDividerItemDecoration = GridItemDecoration(context, LinearLayoutManager.HORIZONTAL, 3)
         mDividerItemDecoration.setDrawable(context.resources.getDrawable(R.drawable.transparent_divider))
         recommendRecycleView!!.addItemDecoration(mDividerItemDecoration)
+        recommendRecycleView!!.isNestedScrollingEnabled = false
     }
 
     override fun refresh(fragmentManager: FragmentManager?, loaderManager: LoaderManager) {

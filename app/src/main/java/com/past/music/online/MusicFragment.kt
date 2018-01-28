@@ -8,9 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.past.music.activity.WebViewActivity
-import com.past.music.online.view.RecommendSongListBlock
 import com.past.music.online.listener.OnLineRefreshListener
 import com.past.music.online.model.HallModel
+import com.past.music.online.view.NewSongExpressBlock
+import com.past.music.online.view.RecommendSongListBlock
 import com.past.music.pastmusic.R
 import com.past.music.retrofit.MusicRetrofit
 import com.past.music.retrofit.callback.CallLoaderCallbacks
@@ -26,6 +27,7 @@ class MusicFragment : Fragment(), OnBannerListener {
     //View
     private var banner: Banner? = null
     private var recommendBlock: RecommendSongListBlock? = null
+    private var expressBlock: NewSongExpressBlock? = null
 
     private val images = ArrayList<String>()
     private var bannerList: List<HallModel.Data.Slider>? = null
@@ -40,12 +42,13 @@ class MusicFragment : Fragment(), OnBannerListener {
 
         banner = view.findViewById(R.id.banner)
         recommendBlock = view.findViewById(R.id.online_recommend_block)
+        expressBlock = view.findViewById(R.id.online_express_block)
 
         refreshList = ArrayList()
         refreshList!!.add(recommendBlock!!)
+        refreshList!!.add(expressBlock!!)
 
         loaderManager.initLoader(IdUtils.GET_MUSIC_HALL, null, buildHallCallBack())
-
         initBlocks()
     }
 

@@ -1,5 +1,6 @@
 package com.past.music.retrofit
 
+import com.past.music.online.model.ExpressInfoModel
 import com.past.music.online.model.HallModel
 import com.past.music.online.model.RecommendListModel
 import com.past.music.online.model.SingerModel
@@ -21,4 +22,7 @@ interface RetrofitService {
 
     @GET("v8/fcg-bin/v8.fcg")
     fun getSinger(@QueryMap map: Map<String, String>, @Query("pagesize") pagesize: Int, @Query("pagenum") pagenum: Int): Call<SingerModel>
+
+    @GET("cgi-bin/musicu.fcg")
+    fun getExpressInfo(@Query("data") data: String): Call<ExpressInfoModel>
 }

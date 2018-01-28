@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.bumptech.glide.Glide
+import com.past.music.GlideApp
 import com.past.music.pastmusic.R
 
 /**
@@ -38,7 +38,7 @@ class RecommendItemView : LinearLayout {
     }
 
     fun setImageView(@Nullable url: String): RecommendItemView {
-        Glide.with(context).load(url).into(itemHeader)
+        GlideApp.with(context).load(url).into(itemHeader!!)
         return this
     }
 

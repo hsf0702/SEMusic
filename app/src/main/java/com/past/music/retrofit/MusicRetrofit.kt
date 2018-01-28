@@ -1,9 +1,12 @@
 package com.past.music.retrofit
 
+import android.util.Log
+import com.past.music.online.model.ExpressInfoModel
 import com.past.music.online.model.HallModel
 import com.past.music.online.model.RecommendListModel
 import com.past.music.online.model.SingerModel
-import com.past.music.online.params.RecommendPostParams
+import com.past.music.online.params.CommonPostParams
+import com.past.music.online.params.ExpressPostParams
 import com.past.music.utils.GsonFactory
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -14,8 +17,8 @@ import retrofit2.Retrofit
  */
 class MusicRetrofit private constructor() {
 
-    val API_BASE_C_URL = "https://c.y.qq.com/"
-    val API_BASE_U_URL = "https://u.y.qq.com/"
+    val API_BASE_C_URL = "http://c.y.qq.com/"
+    val API_BASE_U_URL = "http://u.y.qq.com/"
 
     private val baseCRetrofit: Retrofit
     private val baseURetrofit: Retrofit
@@ -30,7 +33,7 @@ class MusicRetrofit private constructor() {
     }
 
     fun getRecommendList(): Call<RecommendListModel> {
-        val params = RecommendPostParams()
+        val params = CommonPostParams()
         params.recomPlaylist.method = "get_hot_recommend"
         params.recomPlaylist.module = "playlist.HotRecommendServer"
         params.recomPlaylist.param.async = 1
@@ -44,8 +47,28 @@ class MusicRetrofit private constructor() {
         return baseCRetrofit.create(RetrofitService::class.java).getSinger(map, pagesize, pagenum)
     }
 
+    fun getExpressInfo(): Call<ExpressInfoModel> {
+
+        val expressPostParams = ExpressPostParams()
+        expressPostParams.new_album.method = "GetNewSong"
+        expressPostParams.new_album.module = "QQMusic.MusichallServer"
+        expressPostParams.new_album.param.sort = 1
+        expressPostParams.new_album.param.start = 0
+        expressPostParams.new_album.param.end = 0
+
+        expressPostParams.new_song.method = "GetNewAlbum"
+        expressPostParams.new_song.module = "QQMusic.MusichallServer"
+        expressPostParams.new_song.param.sort = 1
+        expressPostParams.new_song.param.start = 0
+        expressPostParams.new_song.param.end = 1
+
+        return baseURetrofit.create(RetrofitService::class.java)
+                .getExpressInfo(GsonFactory.getInstance().toJson(expressPostParams))
+    }
+
     companion object {
-        @Volatile private var sMusicRetrofit: MusicRetrofit? = null
+        @Volatile
+        private var sMusicRetrofit: MusicRetrofit? = null
 
         fun getInstance(): MusicRetrofit {
             if (null == sMusicRetrofit) {

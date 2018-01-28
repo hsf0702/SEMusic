@@ -10,8 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.bumptech.glide.Glide
 import com.past.music.Config.BaseConfig
+import com.past.music.GlideApp
 import com.past.music.fragment.UiBaseFragment
 import com.past.music.online.model.SingerModel
 import com.past.music.pastmusic.R
@@ -71,7 +71,7 @@ class OnLineSingerFragment : UiBaseFragment() {
     inner class SingerAdapter : RecyclerView.Adapter<ItemViewHolder>() {
         override fun onBindViewHolder(holder: ItemViewHolder?, position: Int) {
             holder?.singerName?.text = singerList!![position].Fsinger_name
-            Glide.with(context).load(String.format(BaseConfig.picBaseUrl, singerList!![position].Fsinger_mid)).into(holder?.singerAvatar)
+            GlideApp.with(context!!).load(String.format(BaseConfig.picBaseUrl, singerList!![position].Fsinger_mid)).into(holder?.singerAvatar!!)
         }
 
         override fun getItemCount(): Int {

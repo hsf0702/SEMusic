@@ -1,7 +1,5 @@
 package com.past.music.entity;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 /**
@@ -10,171 +8,13 @@ import java.util.List;
 
 public class Bean {
 
-    public NewAlbumBean new_album;
+    /**
+     * new_song : {"data":{"album_list":[{"album":{"id":3767136,"mid":"001f5qLB0VIsA2","name":"8090","subtitle":"","time_public":"2017-12-14","title":"8090"},"author":[{"id":1327288,"mid":"001xruwk2A0Vw7","name":"赵方婧","title":"赵方婧","type":1,"uin":0}]},{"album":{"id":3767110,"mid":"001dsBel46bkC8","name":"好聚不好散","subtitle":"","time_public":"2017-12-14","title":"好聚不好散"},"author":[{"id":1278829,"mid":"000EwSOA2udDjs","name":"孙晨","title":"孙晨","type":0,"uin":0}]}],"category_info":[{"id":-1,"title":"全部"},{"id":0,"title":"专辑"},{"id":11,"title":"EP"},{"id":10,"title":"Single"},{"id":1,"title":"演唱会"},{"id":3,"title":"动漫"},{"id":4,"title":"游戏"}],"company_info":[{"id":-1,"title":"全部"},{"id":35,"title":"环球唱片"},{"id":5,"title":"索尼音乐"},{"id":3,"title":"华纳唱片"},{"id":1360,"title":"少城时代"},{"id":2,"title":"英皇唱片"},{"id":373,"title":"金牌大风"},{"id":10,"title":"福茂唱片"},{"id":7913,"title":"梦响强音"},{"id":20,"title":"华谊兄弟"},{"id":1020,"title":"乐华圆娱"},{"id":2597,"title":"梦响当然"},{"id":12692,"title":"时代峰峻"},{"id":1110,"title":"通力时代"},{"id":1167,"title":"简单快乐"},{"id":6,"title":"滚石唱片"},{"id":357,"title":"相信音乐"},{"id":63,"title":"海蝶音乐"},{"id":24,"title":"太合麦田"},{"id":1892,"title":"华宇世博"},{"id":53,"title":"摩登天空"},{"id":146,"title":"亚神音乐"}],"genre_info":[{"id":0,"title":"全部"},{"id":1,"title":"流行"},{"id":2,"title":"古典"},{"id":3,"title":"爵士"},{"id":36,"title":"摇滚"},{"id":22,"title":"电子"},{"id":27,"title":"拉丁"},{"id":21,"title":"轻音乐"},{"id":39,"title":"世界音乐"},{"id":34,"title":"嘻哈"},{"id":37,"title":"原声"},{"id":19,"title":"乡村"},{"id":20,"title":"舞曲"},{"id":33,"title":"R&B"},{"id":23,"title":"民谣"},{"id":28,"title":"金属"}],"size":17400,"type":1,"type_info":[{"id":1,"report":"","title":"内地"},{"id":2,"report":"","title":"港台"},{"id":3,"report":"","title":"欧美"},{"id":4,"report":"","title":"日本"},{"id":5,"report":"","title":"韩国"},{"id":6,"report":"","title":"其他"}],"year_info":[{"id":1,"title":"全部"},{"id":14,"title":"2017"},{"id":7,"title":"2016"},{"id":8,"title":"2015"},{"id":9,"title":"2014"},{"id":15,"title":"2013"},{"id":16,"title":"2012"},{"id":2,"title":"一零年代"},{"id":3,"title":"零零年代"},{"id":4,"title":"九十年代"},{"id":5,"title":"八十年代"},{"id":6,"title":"七十年代"},{"id":13,"title":"六十年代"}]},"code":0}
+     */
+
     public NewSongBean new_song;
-    public int code;
-    public long ts;
-
-    public static class NewAlbumBean {
-
-        public DataBean data;
-        public int code;
-        public static class DataBean {
-
-            public int size;
-            public int type;
-            public List<AlbumListBean> album_list;
-
-            public static class AlbumListBean {
-
-                public AlbumBean album;
-                public List<AuthorBean> author;
-
-                public static class AlbumBean {
-
-                    public int id;
-                    public String mid;
-                    public String name;
-                    public String subtitle;
-                    public String time_public;
-                    public String title;
-                }
-
-                public static class AuthorBean {
-
-                    public int id;
-                    public String mid;
-                    public String name;
-                    public String title;
-                    public int type;
-                    public int uin;
-                }
-            }
-        }
-    }
 
     public static class NewSongBean {
 
-        public DataBeanX data;
-        public int code;
-
-        public static class DataBeanX {
-
-            public int size;
-            public int type;
-            public List<SongListBean> song_list;
-
-            public static class SongListBean {
-
-                public ActionBean action;
-                public AlbumBeanX album;
-                public int bpm;
-                public int data_type;
-                public FileBean file;
-                public int fnote;
-                public int genre;
-                public int id;
-                public int index_album;
-                public int index_cd;
-                public int interval;
-                public int isonly;
-                public KsongBean ksong;
-                public String label;
-                public int language;
-                public String mid;
-                public int modify_stamp;
-                public MvBean mv;
-                public String name;
-                public PayBean pay;
-                public int status;
-                public String subtitle;
-                public String time_public;
-                public String title;
-                public String trace;
-                public int type;
-                public String url;
-                public int version;
-                public VolumeBean volume;
-                public List<SingerBean> singer;
-
-                public static class ActionBean {
-
-                    public int alert;
-                    public int icons;
-                    public int msgdown;
-                    public int msgfav;
-                    public int msgid;
-                    public int msgpay;
-                    public int msgshare;
-                    @SerializedName("switch")
-                    public int switchX;
-                }
-
-                public static class AlbumBeanX {
-
-                    public int id;
-                    public String mid;
-                    public String name;
-                    public String subtitle;
-                    public String time_public;
-                    public String title;
-                }
-
-                public static class FileBean {
-
-                    public String media_mid;
-                    public int size_128mp3;
-                    public int size_192aac;
-                    public int size_192ogg;
-                    public int size_24aac;
-                    public int size_320mp3;
-                    public int size_48aac;
-                    public int size_96aac;
-                    public int size_ape;
-                    public int size_dts;
-                    public int size_flac;
-                    public int size_try;
-                    public int try_begin;
-                    public int try_end;
-                }
-
-                public static class KsongBean {
-                    public int id;
-                    public String mid;
-                }
-
-                public static class MvBean {
-                    public int id;
-                    public String name;
-                    public String title;
-                    public String vid;
-                }
-
-                public static class PayBean {
-                    public int pay_down;
-                    public int pay_month;
-                    public int pay_play;
-                    public int pay_status;
-                    public int price_album;
-                    public int price_track;
-                    public int time_free;
-                }
-
-                public static class VolumeBean {
-                    public double gain;
-                    public double lra;
-                    public int peak;
-                }
-
-                public static class SingerBean {
-                    public int id;
-                    public String mid;
-                    public String name;
-                    public String title;
-                    public int type;
-                    public int uin;
-                }
-            }
-        }
     }
 }

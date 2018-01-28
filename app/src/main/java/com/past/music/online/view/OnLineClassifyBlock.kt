@@ -1,23 +1,17 @@
 package com.past.music.online.view
 
 import android.content.Context
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.LoaderManager
 import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
 import com.past.music.activity.BaseActivity
-import com.past.music.online.listener.OnLineRefreshListener
 import com.past.music.online.subfragment.OnLineSingerFragment
 import com.past.music.pastmusic.R
 
 /**
  * Created by gaojin on 2017/12/30.
  */
-class OnLineClassifyBlock : LinearLayout, OnLineRefreshListener, View.OnClickListener {
-    override fun refresh(fragmentManager: FragmentManager?, loaderManager: LoaderManager) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+class OnLineClassifyBlock : LinearLayout, View.OnClickListener {
 
     private var mContext: Context = context
 

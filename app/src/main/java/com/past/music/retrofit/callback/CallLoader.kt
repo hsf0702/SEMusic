@@ -19,9 +19,6 @@ class CallLoader<T>(context: Context, onStartErrorResume: Boolean) : Loader<Try<
     private var executing: Call<T>? = null
     private var callCreator: CallCreator<T>? = null
 
-    init {
-    }
-
     constructor(context: Context, callCreator: CallCreator<T>, onStartErrorResume: Boolean) : this(context, onStartErrorResume) {
         this.callCreator = callCreator
     }

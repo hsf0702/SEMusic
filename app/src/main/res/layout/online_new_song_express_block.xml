@@ -19,7 +19,7 @@
             android:textSize="16sp"/>
 
         <ImageView
-            android:id="@+id/recommend_icon_enter"
+            android:id="@+id/express_icon_enter"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="right"
@@ -28,7 +28,7 @@
     </FrameLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recommend_recycle_view"
+        android:id="@+id/express_recycle_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
