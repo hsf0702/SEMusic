@@ -47,7 +47,6 @@ import com.past.music.MyApplication;
 import com.past.music.activity.MainActivity;
 import com.past.music.database.provider.RecentStore;
 import com.past.music.entity.MusicEntity;
-import com.past.music.log.MyLog;
 import com.past.music.pastmusic.IMediaAidlInterface;
 import com.past.music.pastmusic.R;
 import com.past.music.utils.SharePreferencesUtils;
@@ -240,7 +239,6 @@ public class MediaService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        MyLog.i(TAG, "onBind");
         cancelShutdown();
         mServiceInUse = true;
         return mBinder;
@@ -270,7 +268,6 @@ public class MediaService extends Service {
         super.onCreate();
         mGetUrlThread.start();
         mLrcThread.start();
-        MyLog.i(TAG, "onCreate");
         mContext = this;
         mHandlerThread = new HandlerThread("MusicPlayerHandler", android.os.Process.THREAD_PRIORITY_BACKGROUND);
         mHandlerThread.start();
@@ -819,7 +816,6 @@ public class MediaService extends Service {
                     SharePreferencesUtils.getInstance(MediaService.this).setPlayLink(id, url);
                 }
                 if (url == null) {
-                    MyLog.i(TAG + "在线播放", "下一首");
                     nextPlay(true);
                 }
 
@@ -1034,7 +1030,6 @@ public class MediaService extends Service {
 
 
     public boolean openFile(final String path) {
-        MyLog.i(TAG, "openFile: path = " + path);
         synchronized (this) {
             if (path == null) {
                 return false;

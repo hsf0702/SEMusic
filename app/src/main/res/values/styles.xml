@@ -16,7 +16,7 @@
 
     <style name="CustomTabLayout" parent="Widget.Design.TabLayout">
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/select_gray</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="WhiteTabLayout" parent="Widget.Design.TabLayout">

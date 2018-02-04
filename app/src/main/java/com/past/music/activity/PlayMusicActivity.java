@@ -47,7 +47,6 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.past.music.dialog.MusicQueueFragment;
 import com.past.music.fragment.RoundFragment;
-import com.past.music.log.MyLog;
 import com.past.music.lrc.DefaultLrcParser;
 import com.past.music.lrc.LrcRow;
 import com.past.music.lrc.LrcView;
@@ -305,7 +304,6 @@ public class PlayMusicActivity extends BaseActivity {
 
     @Override
     public void updateTrack() {
-        MyLog.i("PlayMusicActivity", "执行了一次");
         mHandler.removeCallbacks(mUpAlbumRunnable);
         mHandler.postDelayed(mUpAlbumRunnable, 0);
 

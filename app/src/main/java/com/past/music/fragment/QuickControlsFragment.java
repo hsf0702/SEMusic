@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.past.music.activity.PlayMusicActivity;
 import com.past.music.dialog.MusicQueueFragment;
-import com.past.music.log.MyLog;
 import com.past.music.pastmusic.R;
 import com.past.music.service.MusicPlayer;
 
@@ -69,7 +68,6 @@ public class QuickControlsFragment extends BaseFragment {
     @OnClick(R.id.control)
     void control() {
         MusicPlayer.playOrPause();
-        MyLog.i(TAG, "control");
     }
 
     @OnClick(R.id.play_next)
@@ -115,7 +113,6 @@ public class QuickControlsFragment extends BaseFragment {
             mControl.setImageResource(R.drawable.playbar_btn_play);
         }
         if (MusicPlayer.getAlbumPic() != null) {
-            MyLog.i(TAG, MusicPlayer.getAlbumPic());
             mAlbum.setImageURI(MusicPlayer.getAlbumPic());
         }
     }

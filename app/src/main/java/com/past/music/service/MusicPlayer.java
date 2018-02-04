@@ -10,7 +10,6 @@ import android.os.IBinder;
 import android.os.RemoteException;
 
 import com.past.music.entity.MusicEntity;
-import com.past.music.log.MyLog;
 import com.past.music.pastmusic.IMediaAidlInterface;
 
 import java.util.Arrays;
@@ -202,7 +201,6 @@ public class MusicPlayer {
     public static void nextPlay() {
         try {
             if (mService != null) {
-                MyLog.i(TAG, "nextPlay");
                 mService.nextPlay();
             }
         } catch (RemoteException e) {

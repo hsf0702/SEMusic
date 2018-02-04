@@ -11,9 +11,6 @@ import android.widget.TextView;
 
 import com.past.music.pastmusic.R;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 /**
  * =======================================================
  * 作者：gaojin
@@ -25,13 +22,8 @@ import butterknife.ButterKnife;
  */
 public class MineItemView extends RelativeLayout {
 
-    @BindView(R.id.img_item)
     ImageView mImageView;
-
-    @BindView(R.id.tv_item_name)
     TextView mItemName;
-
-    @BindView(R.id.tv_item_count)
     TextView mItemCount;
 
     private int count;
@@ -63,7 +55,11 @@ public class MineItemView extends RelativeLayout {
 
     private void initView() {
         View.inflate(getContext(), R.layout.view_mine_item_view, this);
-        ButterKnife.bind(this, this);
+
+        mImageView = findViewById(R.id.img_item);
+        mItemName = findViewById(R.id.tv_item_name);
+        mItemCount = findViewById(R.id.tv_item_count);
+
         mImageView.setImageDrawable(icon);
         mItemName.setText(item_text);
         mItemCount.setText(String.valueOf(count));

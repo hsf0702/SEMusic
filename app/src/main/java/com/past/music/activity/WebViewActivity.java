@@ -9,7 +9,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.past.music.log.MyLog;
 import com.past.music.pastmusic.R;
 
 public class WebViewActivity extends ToolBarActivity {
@@ -46,7 +45,6 @@ public class WebViewActivity extends ToolBarActivity {
         //是否显示缩放工具
         setting.setBuiltInZoomControls(false);
         onNewIntent(getIntent());
-        MyLog.i(TAG, mWebUrl);
         mWebView.loadUrl(mWebUrl);
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
