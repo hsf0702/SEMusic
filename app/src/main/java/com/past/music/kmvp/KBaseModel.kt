@@ -7,8 +7,9 @@ import kotlin.reflect.full.declaredMemberFunctions
 
 /**
  * Created by gaojin on 2018/2/4.
+ * MVP - Model实现
  */
-abstract class KBaseModel<in T>(private var presenter: KMvpPresenter, private val modelId: Int) : KMvpModel {
+abstract class KBaseModel<in T : Any>(private var presenter: KMvpPresenter, private val modelId: Int) : KMvpModel {
     override fun setPresenter(presenter: KMvpPresenter) {
         this.presenter = presenter
     }

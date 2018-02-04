@@ -2,84 +2,139 @@ package com.past.music.kmvp
 
 import android.app.Activity
 import android.os.Bundle
+import android.support.v4.app.Fragment
+import android.util.SparseArray
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
+import kotlin.reflect.full.declaredMemberFunctions
 
 /**
  * Created by gaojin on 2018/2/4.
+ * MVP - Presenter实现
  */
-class KBasePresenter : KMvpPresenter {
-    override fun <D> onViewChanged(id: Int, data: D) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+class KBasePresenter(private var page: KMvpPage) : KMvpPresenter {
+
+    private val mvpViewMap = SparseArray<KMvpView>()
+    private val mvpModelMap = SparseArray<KMvpModel>()
+    private val modelTypeMap = SparseArray<KType>()
+
+    init {
+        if (page !is Fragment && page !is android.app.Fragment && page !is Activity) {
+            throw IllegalArgumentException("FoodMvpPage must be implemented by Activity or Fragment")
+        }
     }
 
-    override fun <D> onModelChanged(id: Int, data: D) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun <D : Any> onViewChanged(id: Int, data: D) {
+        if (data::class == Any::class) {
+            throw IllegalArgumentException("Please don't dispatch data whose Class type is Any !!!")
+        }
+
+        val dataClazz: KClass<*> = data::class
+        page::class.declaredMemberFunctions.forEach {
+            if ("onViewChanged" == it.name && dataClazz == it.typeParameters) {
+                it.call(data)
+            }
+        }
+    }
+
+    override fun <D : Any> onModelChanged(id: Int, data: D) {
+        if (data::class == Any::class) {
+            throw IllegalArgumentException("Please don't dispatch data whose Class type is Any !!!")
+        }
+
+        val dataClazz: KClass<*> = data::class
+        page::class.declaredMemberFunctions.forEach {
+            if ("onModelChanged" == it.name && dataClazz == it.typeParameters) {
+                it.call(data)
+            }
+        }
     }
 
     override fun onError(exception: Exception) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        page.onPageError(exception)
     }
 
     override fun add(view: KMvpView) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        mvpViewMap.put(view.getId(), view)
     }
 
     override fun add(model: KMvpModel) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        mvpModelMap.put(model.getId(), model)
     }
 
-    override fun getView(viewId: Int): KMvpView {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun getView(viewId: Int): KMvpView? {
+        return if (mvpViewMap.indexOfKey(viewId) >= 0) {
+            mvpViewMap.get(viewId)
+        } else null
     }
 
-    override fun getActivity(): Activity {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun getActivity(): Activity? {
+        return page.getActivity()
     }
 
-    override fun <D> dispatchModelDataToView(modelId: Int, data: D, vararg viewIds: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun <D : Any> dispatchModelDataToView(modelId: Int, data: D, vararg viewIds: Int) {
+        for (id in viewIds) {
+            mvpViewMap.get(id)?.onDataChanged(data)
+        }
     }
 
-    override fun <D> dispatchModelDataToModel(modelId: Int, data: D, vararg modelIds: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun <D : Any> dispatchModelDataToModel(modelId: Int, data: D, vararg modelIds: Int) {
+        for (id in modelIds) {
+            mvpModelMap.get(id)?.onDataChanged(data)
+        }
     }
 
-    override fun <D> dispatchViewDataToView(viewId: Int, data: D, vararg viewIds: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun <D : Any> dispatchViewDataToView(viewId: Int, data: D, vararg viewIds: Int) {
+        for (id in viewIds) {
+            mvpViewMap.get(id)?.onDataChanged(data)
+        }
     }
 
-    override fun <D> dispatchViewDataToModel(viewId: Int, data: D, vararg modelIds: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun <D : Any> dispatchViewDataToModel(viewId: Int, data: D, vararg modelIds: Int) {
+        for (id in modelIds) {
+            mvpModelMap.get(id)?.onDataChanged(data)
+        }
     }
 
     override fun start(vararg modelIds: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun load(vararg models: KMvpModel) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        modelIds
+                .map { mvpModelMap.get(it) }
+                .forEach { it?.load() }
     }
 
     override fun onCreate(savedInstanceState: Bundle) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val onCreate = KMvpOnCreate()
+        onCreate.savedInstanceState = savedInstanceState
+        dispatchLifeCycle(onCreate)
     }
 
     override fun onStart() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        dispatchLifeCycle(KMvpOnStart())
     }
 
     override fun onResume() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        dispatchLifeCycle(KMvpOnResume())
     }
 
     override fun onPause() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        dispatchLifeCycle(KMvpOnPause())
     }
 
     override fun onStop() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        dispatchLifeCycle(KMvpOnStop())
     }
 
     override fun onDestroy() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        dispatchLifeCycle(KMvpOnDestroy())
+    }
+
+    private fun dispatchLifeCycle(lifeCycle: KMvpLifeCycle) {
+        (0 until mvpViewMap.size())
+                .map { mvpViewMap.valueAt(it) }
+                .forEach { it.onDataChanged(lifeCycle) }
+
+        (0 until mvpModelMap.size())
+                .map { mvpModelMap.valueAt(it) }
+                .forEach { it.onDataChanged(lifeCycle) }
     }
 }

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/rl_layout"
-    android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:background="@color/transparent_half">
+                xmlns:fresco="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/rl_layout"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/transparent_half">
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/split_color" />
+        android:background="@color/split_color"/>
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/playbar_img"
@@ -19,7 +19,7 @@
         android:layout_marginTop="3dp"
         android:layout_weight="0"
         fresco:placeholderImage="@drawable/placeholder_disk_210"
-        fresco:placeholderImageScaleType="fitXY" />
+        fresco:placeholderImageScaleType="fitXY"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -35,9 +35,9 @@
             android:layout_height="23dp"
             android:layout_marginTop="6dp"
             android:ellipsize="marquee"
-            android:maxLines="1"
+            android:singleLine="true"
             android:text="晴天"
-            android:textSize="17dp" />
+            android:textSize="17dp"/>
 
         <TextView
             android:id="@+id/playbar_singer"
@@ -47,7 +47,7 @@
             android:maxLength="20"
             android:maxLines="1"
             android:text="周杰伦"
-            android:textSize="10dp" />
+            android:textSize="10dp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -64,7 +64,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="14dp"
-            android:src="@drawable/playbar_btn_playlist" />
+            android:src="@drawable/playbar_btn_playlist"/>
 
         <ImageView
             android:id="@+id/control"
@@ -73,7 +73,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="12dp"
-            android:src="@drawable/playbar_btn_play" />
+            android:src="@drawable/playbar_btn_play"/>
 
         <ImageView
             android:id="@+id/play_next"
@@ -83,6 +83,6 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:onClick="click_next"
             android:padding="16dp"
-            android:src="@drawable/playbar_btn_next" />
+            android:src="@drawable/playbar_btn_next"/>
     </LinearLayout>
 </RelativeLayout>

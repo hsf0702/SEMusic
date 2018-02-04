@@ -10,6 +10,7 @@ import kotlin.reflect.full.declaredMemberFunctions
 
 /**
  * Created by gaojin on 2018/2/4.
+ * MVP - View实现
  */
 abstract class KBaseView(private var presenter: KMvpPresenter, private val viewId: Int) : KMvpView {
 

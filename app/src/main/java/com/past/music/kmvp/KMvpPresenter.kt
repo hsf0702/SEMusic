@@ -14,7 +14,7 @@ interface KMvpPresenter {
      * @param data View变化带来的影响结果
      * @param <D>
     </D> */
-    fun <D> onViewChanged(id: Int, data: D)
+    fun <D : Any> onViewChanged(id: Int, data: D)
 
     /**
      * 数据请求回调
@@ -22,7 +22,7 @@ interface KMvpPresenter {
      * @param data 数据请求返回结果
      * @param <D>
     </D> */
-    fun <D> onModelChanged(id: Int, data: D)
+    fun <D : Any> onModelChanged(id: Int, data: D)
 
     /**
      * 提供给一个页面的基础请求Model在error的时候调用
@@ -35,23 +35,19 @@ interface KMvpPresenter {
 
     fun add(model: KMvpModel)
 
-    fun getView(viewId: Int): KMvpView
+    fun getView(viewId: Int): KMvpView?
 
-    fun getActivity(): Activity
+    fun getActivity(): Activity?
 
-    fun <D> dispatchModelDataToView(modelId: Int, data: D, vararg viewIds: Int)
+    fun <D : Any> dispatchModelDataToView(modelId: Int, data: D, vararg viewIds: Int)
 
-    fun <D> dispatchModelDataToModel(modelId: Int, data: D, vararg modelIds: Int)
+    fun <D : Any> dispatchModelDataToModel(modelId: Int, data: D, vararg modelIds: Int)
 
-    fun <D> dispatchViewDataToView(viewId: Int, data: D, vararg viewIds: Int)
+    fun <D : Any> dispatchViewDataToView(viewId: Int, data: D, vararg viewIds: Int)
 
-    fun <D> dispatchViewDataToModel(viewId: Int, data: D, vararg modelIds: Int)
+    fun <D : Any> dispatchViewDataToModel(viewId: Int, data: D, vararg modelIds: Int)
 
     fun start(vararg modelIds: Int)
-
-    @Deprecated("")
-    fun load(vararg models: KMvpModel)
-
 
     fun onCreate(savedInstanceState: Bundle)
 
