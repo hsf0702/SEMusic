@@ -42,7 +42,6 @@ public class MusicQueueFragment extends DialogFragment {
 
     private ArrayList<MusicEntity> playlist = new ArrayList<>();
     private PlayListAdapter mAdapter = null;
-    private RecyclerView.ItemDecoration itemDecoration;
     private Handler mHandler;
     private int currentlyPlayingPosition = 0;
     private MusicEntity musicEntity = null;
@@ -108,7 +107,7 @@ public class MusicQueueFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.dialog_play_list, container);
         ButterKnife.bind(this, view);
         mHandler = HandlerUtil.getInstance(mContext);
-        itemDecoration = new DividerItemDecoration(getActivity().getResources(), R.color.text_gray, R.dimen.divider_1, DividerItemDecoration.VERTICAL_LIST);
+        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity().getResources(), R.color.text_gray, R.dimen.divider_1, DividerItemDecoration.VERTICAL_LIST);
         mAdapter = new PlayListAdapter();
         layoutManager = new LinearLayoutManager(mContext);
         mRecyclerView.setLayoutManager(layoutManager);
