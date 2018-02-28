@@ -20,7 +20,7 @@ import java.util.*
  * Use the [KtUiLocalMusicFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class LocalMusicFragment : UiBaseFragment() {
+class LocalMusicFragment : KtBaseFragment() {
 
     internal var mAdapter: LocalFragmentAdapter? = null
     private val mTabNames = ArrayList<String>()
@@ -37,33 +37,27 @@ class LocalMusicFragment : UiBaseFragment() {
         val singerCount = MusicUtils.queryArtist(context).size
         val albumCount = MusicUtils.queryAlbums(context).size
         val folderCount = MusicUtils.queryFolder(context).size
-        mTabNames.add("歌曲 " + localCount)
-        mTabNames.add("歌手 " + singerCount)
-        mTabNames.add("专辑 " + albumCount)
-        mTabNames.add("文件夹 " + folderCount)
+        mTabNames.add(context!!.getString(R.string.local_music_song, localCount))
+        mTabNames.add(context!!.getString(R.string.local_music_singer, singerCount))
+        mTabNames.add(context!!.getString(R.string.local_music_album, albumCount))
+        mTabNames.add(context!!.getString(R.string.local_music_folder, folderCount))
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        val view = super.onCreateView(inflater, container, savedInstanceState)!!
-        mTabLayout = view.findViewById(R.id.local_tab_layout)
-        mViewPager = view.findViewById(R.id.local_view_pager)
-        return view
+    override fun createContentView(inflater: LayoutInflater, container: ViewGroup?): View {
+        val content = LayoutInflater.from(context).inflate(R.layout.fragment_local_music_kotlin, container, false)
+        mTabLayout = content.findViewById(R.id.local_tab_layout)
+        mViewPager = content.findViewById(R.id.local_view_pager)
+        return content
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setTitle("本地音乐")
-        val fm = activity?.supportFragmentManager
+        setTitle(context!!.getString(R.string.local_music_title))
         mAdapter = LocalFragmentAdapter(fm, mTabNames)
         mViewPager!!.adapter = mAdapter
         mViewPager!!.currentItem = position
         mTabLayout!!.setupWithViewPager(mViewPager)
-    }
-
-    override fun getLayoutId(): Int {
-        return R.layout.fragment_local_music_kotlin
     }
 
     companion object {

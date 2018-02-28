@@ -15,9 +15,12 @@ import com.past.music.pastmusic.R
  * Creator：gaojin
  * date：2017/11/6 下午8:44
  */
-class DownLoadFragment : UiBaseFragment() {
-    override fun getLayoutId(): Int {
-        return R.layout.activity_download
+class DownLoadFragment : KtBaseFragment() {
+    override fun createContentView(inflater: LayoutInflater, container: ViewGroup?): View {
+        val content = LayoutInflater.from(context).inflate(R.layout.activity_download, container, false)
+        mTabLayout = content.findViewById(R.id.local_tab_layout)
+        mViewPager = content.findViewById(R.id.local_view_pager)
+        return content
     }
 
     val names = arrayOf("已下载", "正在下载")
@@ -28,22 +31,14 @@ class DownLoadFragment : UiBaseFragment() {
 
     private var mViewPager: ViewPager? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = super.onCreateView(inflater, container, savedInstanceState)!!
-        setTitle("下载歌曲")
-        mTabLayout = view.findViewById(R.id.local_tab_layout)
-        mViewPager = view.findViewById(R.id.local_view_pager)
-        return view
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val fm = activity?.supportFragmentManager
+        setTitle(context!!.getString(R.string.down_music_title))
         mAdapter = FragmentAdapter(fm)
         mViewPager!!.adapter = mAdapter
         mTabLayout!!.setupWithViewPager(mViewPager)
     }
 
-    internal inner class FragmentAdapter(fm: FragmentManager?) : FragmentPagerAdapter(fm) {
+    inner class FragmentAdapter(fm: FragmentManager?) : FragmentPagerAdapter(fm) {
 
         override fun getItem(position: Int): Fragment {
             return if (position == 0) {

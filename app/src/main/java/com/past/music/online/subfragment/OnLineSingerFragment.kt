@@ -12,7 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.past.music.Config.BaseConfig
 import com.past.music.GlideApp
-import com.past.music.fragment.UiBaseFragment
+import com.past.music.fragment.KtBaseFragment
 import com.past.music.online.model.SingerModel
 import com.past.music.pastmusic.R
 import com.past.music.retrofit.MusicRetrofit
@@ -25,9 +25,9 @@ import retrofit2.Call
 /**
  * Created by gaojin on 2018/1/3.
  */
-class OnLineSingerFragment : UiBaseFragment() {
-    override fun getLayoutId(): Int {
-        return R.layout.fragment_online_singer
+class OnLineSingerFragment : KtBaseFragment() {
+    override fun createContentView(inflater: LayoutInflater, container: ViewGroup?): View {
+        return LayoutInflater.from(context).inflate(R.layout.fragment_online_singer, container, false)
     }
 
     private var recycleView: RecyclerView? = null
@@ -40,7 +40,7 @@ class OnLineSingerFragment : UiBaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        setTitle("歌手")
+        setTitle(context!!.getString(R.string.classify_singer))
         recycleView = view.findViewById(R.id.online_singer)
         recycleView!!.layoutManager = LinearLayoutManager(activity)
         recycleView!!.setHasFixedSize(true)

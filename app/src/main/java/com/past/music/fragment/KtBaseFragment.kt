@@ -10,41 +10,41 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.past.music.pastmusic.R
 
-
 /**
- * Creator：gaojin
- * date：2017/10/30 下午10:25
+ * Created by gaojin on 2018/2/28.
  */
-abstract class UiBaseFragment : Fragment() {
+abstract class KtBaseFragment : Fragment() {
+
     private var mAppBarLayout: AppBarLayout? = null
     private var mToolBar: Toolbar? = null
     private var mTitle: TextView? = null
 
     var fm: FragmentManager? = null
 
-
     fun setTitle(title: String?) {
         mTitle!!.text = title
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(getLayoutId(), container, false)
-        mAppBarLayout = view.findViewById(R.id.appbar_layout)
-        mToolBar = view.findViewById(R.id.base_toolbar)
-        mTitle = view.findViewById(R.id.toolbar_title)
+        val linearLayout = inflater.inflate(R.layout.fragment_base, container, false) as LinearLayout?
+        linearLayout!!.addView(createContentView(inflater, container))
+
+        mAppBarLayout = linearLayout.findViewById(R.id.appbar_layout)
+        mToolBar = linearLayout.findViewById(R.id.base_toolbar)
+        mTitle = linearLayout.findViewById(R.id.toolbar_title)
         fm = fragmentManager
 
         setHasOptionsMenu(true)
         (activity as AppCompatActivity).setSupportActionBar(mToolBar)
         (activity as AppCompatActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         (activity as AppCompatActivity).supportActionBar!!.setDisplayShowTitleEnabled(false)
-        return view
-    }
 
-    abstract fun getLayoutId(): Int
+        return linearLayout
+    }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
@@ -53,5 +53,5 @@ abstract class UiBaseFragment : Fragment() {
         return true
     }
 
-
+    abstract fun createContentView(inflater: LayoutInflater, container: ViewGroup?): View
 }

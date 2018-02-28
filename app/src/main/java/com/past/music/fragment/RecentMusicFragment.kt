@@ -26,9 +26,11 @@ import java.util.*
 /**
  * Created by gaojin on 2017/12/14.
  */
-class RecentMusicFragment : UiBaseFragment() {
-    override fun getLayoutId(): Int {
-        return R.layout.activity_recent_music
+class RecentMusicFragment : KtBaseFragment() {
+    override fun createContentView(inflater: LayoutInflater, container: ViewGroup?): View {
+        val content = LayoutInflater.from(context).inflate(R.layout.activity_recent_music, container, false)
+        mRecyclerView = content.findViewById(R.id.recent_music_recycle)
+        return content
     }
 
     internal var mRecyclerView: RecyclerView? = null
@@ -52,8 +54,7 @@ class RecentMusicFragment : UiBaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        setTitle("最近播放")
-        mRecyclerView = view.findViewById(R.id.recent_music_recycle)
+        setTitle(context!!.getString(R.string.recent_music_title))
         mRecyclerView!!.layoutManager = LinearLayoutManager(context)
         mRecyclerView!!.setHasFixedSize(true)
     }
