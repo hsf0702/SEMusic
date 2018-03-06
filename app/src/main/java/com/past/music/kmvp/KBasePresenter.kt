@@ -4,7 +4,9 @@ import android.app.Activity
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.SparseArray
+import java.lang.reflect.InvocationTargetException
 import kotlin.reflect.KClass
+import kotlin.reflect.KFunction
 import kotlin.reflect.KType
 import kotlin.reflect.full.declaredMemberFunctions
 
@@ -29,10 +31,16 @@ class KBasePresenter(private var page: KMvpPage) : KMvpPresenter {
             throw IllegalArgumentException("Please don't dispatch data whose Class type is Any !!!")
         }
 
-        val dataClazz: KClass<*> = data::class
-        page::class.declaredMemberFunctions.forEach {
-            if ("onViewChanged" == it.name && dataClazz == it.typeParameters) {
-                it.call(data)
+        val declaredMemberFunctions = page::class.declaredMemberFunctions
+        for (item: KFunction<*> in declaredMemberFunctions) {
+            if (item.name == "onViewChanged") {
+                try {
+                    item.call(page, data)
+                } catch (e: IllegalArgumentException) {
+                } catch (e: InvocationTargetException) {
+                } catch (e: IllegalAccessException) {
+                }
+                break
             }
         }
     }
@@ -42,10 +50,16 @@ class KBasePresenter(private var page: KMvpPage) : KMvpPresenter {
             throw IllegalArgumentException("Please don't dispatch data whose Class type is Any !!!")
         }
 
-        val dataClazz: KClass<*> = data::class
-        page::class.declaredMemberFunctions.forEach {
-            if ("onModelChanged" == it.name && dataClazz == it.typeParameters) {
-                it.call(data)
+        val declaredMemberFunctions = page::class.declaredMemberFunctions
+        for (item: KFunction<*> in declaredMemberFunctions) {
+            if (item.name == "onModelChanged") {
+                try {
+                    item.call(page, id, data)
+                } catch (e: IllegalArgumentException) {
+                } catch (e: InvocationTargetException) {
+                } catch (e: IllegalAccessException) {
+                }
+                break
             }
         }
     }

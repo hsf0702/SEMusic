@@ -2,7 +2,8 @@ package com.past.music.kmvp
 
 import android.app.Activity
 import android.content.Context
-import kotlin.reflect.KClass
+import java.lang.reflect.InvocationTargetException
+import kotlin.reflect.KFunction
 import kotlin.reflect.full.declaredMemberFunctions
 
 /**
@@ -19,10 +20,16 @@ abstract class KBaseModel<in T : Any>(private var presenter: KMvpPresenter, priv
             throw IllegalArgumentException("Please don't dispatch data whose Class type is Any !!!")
         }
 
-        val dataClazz: KClass<*> = data::class
-        this::class.declaredMemberFunctions.forEach {
-            if ("onDataChanged" == it.name && dataClazz == it.typeParameters) {
-                it.call(data)
+        val declaredMemberFunctions = this::class.declaredMemberFunctions
+        for (item: KFunction<*> in declaredMemberFunctions) {
+            if (item.name == "onDataChanged") {
+                try {
+                    item.call(this, data)
+                } catch (e: IllegalArgumentException) {
+                } catch (e: InvocationTargetException) {
+                } catch (e: IllegalAccessException) {
+                }
+                break
             }
         }
     }

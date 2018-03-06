@@ -5,7 +5,8 @@ import android.content.Context
 import android.support.annotation.IdRes
 import android.view.View
 import android.view.ViewGroup
-import kotlin.reflect.KClass
+import java.lang.reflect.InvocationTargetException
+import kotlin.reflect.KFunction
 import kotlin.reflect.full.declaredMemberFunctions
 
 /**
@@ -40,10 +41,16 @@ abstract class KBaseView(private var presenter: KMvpPresenter, private val viewI
             throw IllegalArgumentException("Please don't dispatch data whose Class type is Any !!!")
         }
 
-        val dataClazz: KClass<*> = data::class
-        this::class.declaredMemberFunctions.forEach {
-            if ("onDataChanged" == it.name && dataClazz == it.typeParameters) {
-                it.call(data)
+        val declaredMemberFunctions = this::class.declaredMemberFunctions
+        for (item: KFunction<*> in declaredMemberFunctions) {
+            if (item.name == "onDataChanged") {
+                try {
+                    item.call(this, data)
+                } catch (e: IllegalArgumentException) {
+                } catch (e: InvocationTargetException) {
+                } catch (e: IllegalAccessException) {
+                }
+                break
             }
         }
     }

@@ -29,7 +29,7 @@ class OnLineBannerModel(presenter: KMvpPresenter, modelId: Int) : KBaseModel<Hal
             }
 
             override fun onSuccess(loader: Loader<*>, data: HallModel) {
-
+                dispatchData(data)
             }
 
             override fun onFailure(loader: Loader<*>, throwable: Throwable) {
@@ -37,4 +37,6 @@ class OnLineBannerModel(presenter: KMvpPresenter, modelId: Int) : KBaseModel<Hal
             }
         }
     }
+
+
 }
