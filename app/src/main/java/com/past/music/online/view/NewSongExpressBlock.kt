@@ -1,36 +1,22 @@
 package com.past.music.online.view
 
 import android.content.Context
-import android.os.Bundle
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.LoaderManager
-import android.support.v4.content.Loader
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import com.past.music.online.listener.OnLineRefreshListener
 import com.past.music.online.model.ExpressInfoModel
 import com.past.music.pastmusic.R
-import com.past.music.retrofit.MusicRetrofit
-import com.past.music.retrofit.callback.CallLoaderCallbacks
-import com.past.music.utils.IdUtils
 import com.past.music.widget.GridItemDecoration
 import com.past.music.widget.RecommendItemView
-import retrofit2.Call
 
 /**
  * Created by gaojin on 2018/1/6.
  */
-class NewSongExpressBlock : LinearLayout, OnLineRefreshListener {
-
-    override fun refresh(fragmentManager: FragmentManager?, loaderManager: LoaderManager) {
-        loaderManager.initLoader(IdUtils.GET_EXPRESS_SONG, null, buildExpressInfoCallBack())
-    }
+class NewSongExpressBlock : LinearLayout {
 
     private var recommendRecycleView: RecyclerView? = null
     private var iconEnter: View? = null
@@ -62,26 +48,11 @@ class NewSongExpressBlock : LinearLayout, OnLineRefreshListener {
         recommendRecycleView!!.isNestedScrollingEnabled = false
     }
 
-    private fun buildExpressInfoCallBack(): CallLoaderCallbacks<ExpressInfoModel> {
-        return object : CallLoaderCallbacks<ExpressInfoModel>(context!!) {
-            override fun onCreateCall(id: Int, args: Bundle?): Call<ExpressInfoModel> {
-                return MusicRetrofit.getInstance().getExpressInfo()
-            }
-
-            override fun onSuccess(loader: Loader<*>, data: ExpressInfoModel) {
-                recommendRecycleView!!.adapter = ExpressGridAdapter(context, data)
-            }
-
-
-            override fun onFailure(loader: Loader<*>, throwable: Throwable) {
-                Log.e("RecommendSongListBlock", throwable.toString())
-            }
-
-        }
+    fun dataChanged(data: ExpressInfoModel) {
+        recommendRecycleView!!.adapter = ExpressGridAdapter(context, data)
     }
 
-    class ExpressGridAdapter(context: Context, data: ExpressInfoModel) : RecyclerView.Adapter<RecommendViewHolder>() {
-        private var context: Context = context
+    class ExpressGridAdapter(private var context: Context, data: ExpressInfoModel) : RecyclerView.Adapter<RecommendViewHolder>() {
         private val ITEMCOUNT = 3
         private var mData: ExpressInfoModel = data
         private val imgUrl = "http://y.gtimg.cn/music/photo_new/T002R150x150M000%s.jpg?max_age=2592000"

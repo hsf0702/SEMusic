@@ -47,8 +47,11 @@ abstract class KBaseView(private var presenter: KMvpPresenter, private val viewI
                 try {
                     item.call(this, data)
                 } catch (e: IllegalArgumentException) {
+                    continue
                 } catch (e: InvocationTargetException) {
+                    continue
                 } catch (e: IllegalAccessException) {
+                    continue
                 }
                 break
             }
@@ -92,10 +95,7 @@ abstract class KBaseView(private var presenter: KMvpPresenter, private val viewI
         if (viewParent != null && viewParent is ViewGroup) {
             val index = viewParent.indexOfChild(target)
             viewParent.removeViewInLayout(target)
-
-            val id = target.id
-            source.id = id
-
+            source.id = target.id
             val layoutParams = target.layoutParams
             if (layoutParams != null) {
                 viewParent.addView(source, index, layoutParams)

@@ -55,7 +55,7 @@ public class DownMusicFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.down_music_recylerview, container, false);
 
-        layoutManager = new LinearLayoutManager(mContext);
+        layoutManager = new LinearLayoutManager(getContext());
         recyclerView = view.findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(layoutManager);
         folderDetailAdapter = new FolderDetailAdapter(null);
@@ -96,7 +96,7 @@ public class DownMusicFragment extends BaseFragment {
                     hasFolder = true;
                 }
                 if (hasFolder) {
-                    List<MusicEntity> albumList = MusicUtils.queryMusic(mContext, folder_path, MConstants.START_FROM_FOLDER);
+                    List<MusicEntity> albumList = MusicUtils.Companion.queryMusic(getContext(), folder_path, MConstants.Companion.getSTART_FROM_FOLDER());
                     folderDetailAdapter.updateDataSet(albumList);
                 }
 
@@ -148,9 +148,9 @@ public class DownMusicFragment extends BaseFragment {
                 ((CommonItemViewHolder) holder).select.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        Intent intent = new Intent(mContext, SelectActivity.class);
+//                        Intent intent = new Intent(getContext(), SelectActivity.class);
 //                        intent.putParcelableArrayListExtra("ids", (ArrayList) mList);
-//                        mContext.startActivity(intent);
+//                        getContext().startActivity(intent);
                     }
                 });
             }
@@ -181,7 +181,7 @@ public class DownMusicFragment extends BaseFragment {
             //播放文件夹
             @Override
             public void onClick(View v) {
-                HandlerUtil.getInstance(mContext).postDelayed(new Runnable() {
+                HandlerUtil.getInstance(getContext()).postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         long[] list = new long[mList.size()];
@@ -190,7 +190,7 @@ public class DownMusicFragment extends BaseFragment {
                             MusicEntity info = mList.get(i);
                             list[i] = info.songId;
                             info.islocal = true;
-                            info.albumData = MusicUtils.getAlbumArtUri(info.albumId) + "";
+                            info.albumData = MusicUtils.Companion.getAlbumArtUri(info.albumId) + "";
                             infos.put(list[i], mList.get(i));
                         }
                         MusicPlayer.playAll(infos, list, 0, false);
@@ -227,7 +227,7 @@ public class DownMusicFragment extends BaseFragment {
             //播放歌曲
             @Override
             public void onClick(View v) {
-                HandlerUtil.getInstance(mContext).postDelayed(new Runnable() {
+                HandlerUtil.getInstance(getContext()).postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         long[] list = new long[mList.size()];
@@ -236,7 +236,7 @@ public class DownMusicFragment extends BaseFragment {
                             MusicEntity info = mList.get(i);
                             list[i] = info.songId;
                             info.islocal = true;
-                            info.albumData = MusicUtils.getAlbumArtUri(info.albumId) + "";
+                            info.albumData = MusicUtils.Companion.getAlbumArtUri(info.albumId) + "";
                             infos.put(list[i], mList.get(i));
                         }
                         if (getAdapterPosition() > 0)

@@ -32,8 +32,7 @@ public class FolderFragment extends BaseFragment {
     ArrayList<FolderEntity> list = new ArrayList<>();
 
     public static FolderFragment newInstance() {
-        FolderFragment fragment = new FolderFragment();
-        return fragment;
+        return new FolderFragment();
     }
 
 
@@ -60,7 +59,7 @@ public class FolderFragment extends BaseFragment {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(final Void... unused) {
-                list.addAll(MusicUtils.queryFolder(mContext));
+                list.addAll(MusicUtils.Companion.queryFolder(getContext()));
                 return null;
             }
 
@@ -96,11 +95,6 @@ public class FolderFragment extends BaseFragment {
 
         @BindView(R.id.folder_info)
         TextView mFolderInfo;
-
-        @OnClick(R.id.rl_folder_item)
-        void click() {
-
-        }
 
         public FolderViewHolder(View itemView) {
             super(itemView);

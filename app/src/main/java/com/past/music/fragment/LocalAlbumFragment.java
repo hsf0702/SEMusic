@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.past.music.entity.AlbumEntity;
 import com.past.music.pastmusic.R;
-import com.past.music.utils.MConstants;
 import com.past.music.utils.MusicUtils;
 
 import java.util.ArrayList;
@@ -62,7 +61,7 @@ public class LocalAlbumFragment extends BaseFragment {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(final Void... unused) {
-                list.addAll(MusicUtils.queryAlbums(mContext));
+                list.addAll(MusicUtils.Companion.queryAlbums(getContext()));
                 return null;
             }
 

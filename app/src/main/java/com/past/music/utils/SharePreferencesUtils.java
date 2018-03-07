@@ -33,15 +33,15 @@ public class SharePreferencesUtils {
 
 
     public final String getArtistSortOrder() {
-        return mPreferences.getString(ARTIST_SORT_ORDER, SortOrder.ArtistSortOrder.ARTIST_A_Z);
+        return mPreferences.getString(ARTIST_SORT_ORDER, SortOrder.ArtistSortOrder.Companion.getARTIST_A_Z());
     }
 
     public final String getSongSortOrder() {
-        return mPreferences.getString(SONG_SORT_ORDER, SortOrder.SongSortOrder.SONG_A_Z);
+        return mPreferences.getString(SONG_SORT_ORDER, SortOrder.SongSortOrder.Companion.getSONG_A_Z());
     }
 
     public final String getAlbumSortOrder() {
-        return mPreferences.getString(ALBUM_SORT_ORDER, SortOrder.AlbumSortOrder.ALBUM_A_Z);
+        return mPreferences.getString(ALBUM_SORT_ORDER, SortOrder.AlbumSortOrder.Companion.getALBUM_A_Z());
     }
 
     public void setPlayLink(long id, String link) {

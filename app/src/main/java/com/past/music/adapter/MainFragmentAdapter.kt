@@ -4,7 +4,7 @@ import android.content.Context
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
-import com.past.music.online.MusicFragment
+import com.past.music.fragment.MineFragment
 import com.past.music.online.MvpMusicFragment
 import com.past.music.pastmusic.R
 
@@ -22,9 +22,8 @@ class MainFragmentAdapter(context: Context, fm: FragmentManager?) : FragmentPage
 
     override fun getItem(position: Int): Fragment? {
         when (position) {
-//            0 -> return MineFragment.newInstance()
-            0 -> return MvpMusicFragment.newInstance()
-            1 -> return MusicFragment.newInstance()
+            0 -> return MineFragment.newInstance()
+            1 -> return MvpMusicFragment.newInstance()
             else -> return null
         }
     }

@@ -43,8 +43,8 @@ public class MusicPlayer {
     }
 
 
-    public static final ServiceToken bindToService(final Context context,
-                                                   final ServiceConnection callback) {
+    public static ServiceToken bindToService(final Context context,
+                                             final ServiceConnection callback) {
 
         //document:Return the parent activity if this view is an embedded child.
         //如果是内嵌的Activity则获得他所在activity的上下文
@@ -224,9 +224,7 @@ public class MusicPlayer {
         if (mService != null) {
             try {
                 return mService.duration();
-            } catch (final RemoteException ignored) {
-            } catch (final IllegalStateException ignored) {
-
+            } catch (final RemoteException | IllegalStateException ignored) {
             }
         }
         return 0;
@@ -241,7 +239,7 @@ public class MusicPlayer {
         }
     }
 
-    public static final long getCurrentAlbumId() {
+    public static long getCurrentAlbumId() {
         if (mService != null) {
             try {
                 return mService.getAlbumId();
@@ -266,9 +264,7 @@ public class MusicPlayer {
         if (mService != null) {
             try {
                 return mService.secondPosition();
-            } catch (final RemoteException ignored) {
-            } catch (final IllegalStateException ignored) {
-
+            } catch (final RemoteException | IllegalStateException ignored) {
             }
         }
         return 0;

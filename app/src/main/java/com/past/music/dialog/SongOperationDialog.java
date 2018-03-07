@@ -22,7 +22,6 @@ import com.past.music.pastmusic.R;
 import com.past.music.service.MusicPlayer;
 import com.past.music.utils.HandlerUtil;
 import com.past.music.utils.MConstants;
-import com.past.music.utils.MusicUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -102,23 +101,23 @@ public class SongOperationDialog extends AlertDialog {
             muaicflowAdapter = new MusicFlowAdapter(mContext, mlistInfo, adapterMusicEntity);
 
         } else {
-            switch (type) {
-                case MConstants.ARTISTOVERFLOW:
-                    String artist = id;
-                    list = MusicUtils.queryMusic(mContext, artist, MConstants.START_FROM_ARTIST);
-                    topTitle.setText("歌曲：" + " " + list.get(0).artist);
-                    break;
-                case MConstants.ALBUMOVERFLOW:
-                    String albumId = id;
-                    list = MusicUtils.queryMusic(mContext, albumId, MConstants.START_FROM_ALBUM);
-                    topTitle.setText("专辑：" + " " + list.get(0).albumName);
-                    break;
-                case MConstants.FOLDEROVERFLOW:
-                    String folder = id;
-                    list = MusicUtils.queryMusic(mContext, folder, MConstants.START_FROM_FOLDER);
-                    topTitle.setText("文件夹：" + " " + folder);
-                    break;
-            }
+//            switch (type) {
+//                case MConstants.ARTISTOVERFLOW:
+//                    String artist = id;
+//                    list = MusicUtils.queryMusic(mContext, artist, MConstants.START_FROM_ARTIST);
+//                    topTitle.setText("歌曲：" + " " + list.get(0).artist);
+//                    break;
+//                case MConstants.ALBUMOVERFLOW:
+//                    String albumId = id;
+//                    list = MusicUtils.queryMusic(mContext, albumId, MConstants.START_FROM_ALBUM);
+//                    topTitle.setText("专辑：" + " " + list.get(0).albumName);
+//                    break;
+//                case MConstants.FOLDEROVERFLOW:
+//                    String folder = id;
+//                    list = MusicUtils.queryMusic(mContext, folder, MConstants.START_FROM_FOLDER);
+//                    topTitle.setText("文件夹：" + " " + folder);
+//                    break;
+//            }
             setCommonInfo();
             heightPercent = 0.3;
             commonAdapter = new OverFlowAdapter(mContext, mlistInfo);

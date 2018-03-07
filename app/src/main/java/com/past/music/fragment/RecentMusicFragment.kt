@@ -136,7 +136,7 @@ class RecentMusicFragment : KtBaseFragment() {
                     val list = LongArray(mList!!.size)
                     val infos = HashMap<Long, MusicEntity>()
                     for (i in mList!!.indices) {
-                        val info = MusicUtils.getMusicInfo(context, mList!![i].id)
+                        val info = MusicUtils.getMusicInfo(context!!, mList!![i].id)
                         list[i] = info!!.songId
                         info.islocal = true
                         info.albumData = MusicUtils.getAlbumArtUri(info.albumId.toLong()).toString() + ""
@@ -153,8 +153,8 @@ class RecentMusicFragment : KtBaseFragment() {
             private var mMusicInfo: TextView? = null
             private var mViewPagerButton: ImageView? = null
 
-            private fun setmListButton() {
-                val musicEntity = MusicUtils.getMusicInfo(context, mList!![adapterPosition - 1].id)
+            private fun setListButton() {
+                val musicEntity = MusicUtils.getMusicInfo(context!!, mList!![adapterPosition - 1].id)
                 songOperationDialog = SongOperationDialog(context, musicEntity, MConstants.MUSICOVERFLOW)
                 songOperationDialog!!.show()
             }
@@ -163,7 +163,7 @@ class RecentMusicFragment : KtBaseFragment() {
                 mMusicName = itemView.findViewById(R.id.music_name)
                 mMusicInfo = itemView.findViewById(R.id.music_info)
                 mViewPagerButton = itemView.findViewById(R.id.viewpager_list_button)
-                mViewPagerButton!!.setOnClickListener { setmListButton() }
+                mViewPagerButton!!.setOnClickListener { setListButton() }
                 view.setOnClickListener(this)
             }
 
@@ -172,7 +172,7 @@ class RecentMusicFragment : KtBaseFragment() {
                     val list = LongArray(mList!!.size)
                     val infos = HashMap<Long, MusicEntity>()
                     for (i in mList!!.indices) {
-                        val info = MusicUtils.getMusicInfo(context, mList!![i].id)
+                        val info = MusicUtils.getMusicInfo(context!!, mList!![i].id)
                         list[i] = info!!.songId
                         info.islocal = true
                         info.albumData = MusicUtils.getAlbumArtUri(info.albumId.toLong()).toString() + ""

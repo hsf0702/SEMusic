@@ -3,16 +3,22 @@ package com.past.music.online
 import android.os.Bundle
 import android.support.annotation.Keep
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.past.music.kmvp.KBasePresenter
 import com.past.music.kmvp.KMvpPage
 import com.past.music.kmvp.KMvpPresenter
+import com.past.music.online.model.ExpressInfoModel
 import com.past.music.online.model.HallModel
+import com.past.music.online.model.RecommendListModel
 import com.past.music.online.mvpmodel.OnLineBannerModel
+import com.past.music.online.mvpmodel.OnLineExpressModel
+import com.past.music.online.mvpmodel.OnLineRecommendModel
 import com.past.music.online.mvpview.OnLineBannerView
+import com.past.music.online.mvpview.OnLineClassifyView
+import com.past.music.online.mvpview.OnLineExpressView
+import com.past.music.online.mvpview.OnLineRecommendView
 import com.past.music.pastmusic.R
 import com.past.music.utils.IdUtils
 
@@ -42,16 +48,36 @@ class MvpMusicFragment : Fragment(), KMvpPage {
         super.onViewCreated(view, savedInstanceState)
         presenter.add(OnLineBannerView(presenter, R.id.banner))
         presenter.add(OnLineBannerModel(presenter, IdUtils.GET_MUSIC_HALL))
+
+        presenter.add(OnLineClassifyView(presenter, R.id.classify_view))
+
+        presenter.add(OnLineRecommendView(presenter, R.id.online_recommend))
+        presenter.add(OnLineRecommendModel(presenter, IdUtils.GET_RECOMMEND_LIST))
+
+        presenter.add(OnLineExpressView(presenter, R.id.online_express))
+        presenter.add(OnLineExpressModel(presenter, IdUtils.GET_EXPRESS_SONG))
         loadData()
     }
 
     private fun loadData() {
-        presenter.start(IdUtils.GET_MUSIC_HALL)
+        presenter.start(IdUtils.GET_MUSIC_HALL
+                , IdUtils.GET_RECOMMEND_LIST
+                , IdUtils.GET_EXPRESS_SONG)
     }
 
     @Keep
     fun onModelChanged(id: Int, hallModel: HallModel) {
         presenter.dispatchModelDataToView(id, hallModel, R.id.banner)
+    }
+
+    @Keep
+    fun onModelChanged(id: Int, recommendModel: RecommendListModel) {
+        presenter.dispatchModelDataToView(id, recommendModel, R.id.online_recommend)
+    }
+
+    @Keep
+    fun onModelChanged(id: Int, expressInfoModel: ExpressInfoModel) {
+        presenter.dispatchModelDataToView(id, expressInfoModel, R.id.online_express)
     }
 
     override fun onStart() {

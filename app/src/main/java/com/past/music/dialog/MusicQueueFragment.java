@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -21,7 +22,6 @@ import com.past.music.entity.MusicEntity;
 import com.past.music.pastmusic.R;
 import com.past.music.service.MusicPlayer;
 import com.past.music.utils.HandlerUtil;
-import com.past.music.widget.DividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -107,7 +107,7 @@ public class MusicQueueFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.dialog_play_list, container);
         ButterKnife.bind(this, view);
         mHandler = HandlerUtil.getInstance(mContext);
-        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity().getResources(), R.color.text_gray, R.dimen.divider_1, DividerItemDecoration.VERTICAL_LIST);
+        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL);
         mAdapter = new PlayListAdapter();
         layoutManager = new LinearLayoutManager(mContext);
         mRecyclerView.setLayoutManager(layoutManager);

@@ -26,8 +26,11 @@ abstract class KBaseModel<in T : Any>(private var presenter: KMvpPresenter, priv
                 try {
                     item.call(this, data)
                 } catch (e: IllegalArgumentException) {
+                    continue
                 } catch (e: InvocationTargetException) {
+                    continue
                 } catch (e: IllegalAccessException) {
+                    continue
                 }
                 break
             }

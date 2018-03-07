@@ -64,7 +64,7 @@ public class LocalSingerFragment extends BaseFragment {
             @Override
             protected Void doInBackground(final Void... unused) {
                 list.clear();
-                list.addAll(MusicUtils.queryArtist(mContext));
+                list.addAll(MusicUtils.Companion.queryArtist(getContext()));
                 return null;
             }
 

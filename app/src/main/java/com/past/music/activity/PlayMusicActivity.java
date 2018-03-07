@@ -294,7 +294,7 @@ public class PlayMusicActivity extends BaseActivity {
                 mRotateAnim.setFloatValues(valueAvatar, 360f + valueAvatar);
             }
         }
-        mDuration.setText(MusicUtils.makeShortTimeString(PlayMusicActivity.this.getApplication(), MusicPlayer.duration() / 1000));
+        mDuration.setText(MusicUtils.Companion.makeShortTimeString(PlayMusicActivity.this.getApplication(), MusicPlayer.duration() / 1000));
         isNextOrPreSetPage = false;
         if (MusicPlayer.getQueuePosition() + 1 != mViewPager.getCurrentItem()) {
             mViewPager.setCurrentItem(MusicPlayer.getQueuePosition() + 1);
@@ -310,7 +310,7 @@ public class PlayMusicActivity extends BaseActivity {
         updateLrc();
         ab.setTitle(MusicPlayer.getTrackName());
         ab.setSubtitle(MusicPlayer.getArtistName());
-        mDuration.setText(MusicUtils.makeShortTimeString(PlayMusicActivity.this.getApplication(), MusicPlayer.duration() / 1000));
+        mDuration.setText(MusicUtils.Companion.makeShortTimeString(PlayMusicActivity.this.getApplication(), MusicPlayer.duration() / 1000));
     }
 
     @Override
@@ -667,7 +667,7 @@ public class PlayMusicActivity extends BaseActivity {
                 long duration = MusicPlayer.duration();
                 if (duration > 0 && duration < 627080716) {
                     mProgress.setProgress((int) (1000 * position / duration));
-                    mTimePlayed.setText(MusicUtils.makeTimeString(position));
+                    mTimePlayed.setText(MusicUtils.Companion.makeTimeString(position));
                 }
                 if (MusicPlayer.getIsPlaying()) {
                     mProgress.postDelayed(mUpdateProgress, 200);
@@ -689,7 +689,7 @@ public class PlayMusicActivity extends BaseActivity {
                     mLrcView.seekTo(i, true, b);
                     if (b) {
                         MusicPlayer.seek((long) i);
-                        mTimePlayed.setText(MusicUtils.makeTimeString(i));
+                        mTimePlayed.setText(MusicUtils.Companion.makeTimeString(i));
                     }
                 }
 

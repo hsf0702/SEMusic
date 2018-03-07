@@ -105,17 +105,17 @@ public class NetSongDialog extends AlertDialog {
             switch (type) {
                 case MConstants.ARTISTOVERFLOW:
                     String artist = id;
-                    list = MusicUtils.queryMusic(mContext, artist, MConstants.START_FROM_ARTIST);
+                    list = MusicUtils.Companion.queryMusic(mContext, artist, MConstants.Companion.getSTART_FROM_ARTIST());
                     topTitle.setText("歌曲：" + " " + list.get(0).artist);
                     break;
                 case MConstants.ALBUMOVERFLOW:
                     String albumId = id;
-                    list = MusicUtils.queryMusic(mContext, albumId, MConstants.START_FROM_ALBUM);
+                    list = MusicUtils.Companion.queryMusic(mContext, albumId, MConstants.Companion.getSTART_FROM_ALBUM());
                     topTitle.setText("专辑：" + " " + list.get(0).albumName);
                     break;
                 case MConstants.FOLDEROVERFLOW:
                     String folder = id;
-                    list = MusicUtils.queryMusic(mContext, folder, MConstants.START_FROM_FOLDER);
+                    list = MusicUtils.Companion.queryMusic(mContext, folder, MConstants.Companion.getSTART_FROM_FOLDER());
                     topTitle.setText("文件夹：" + " " + folder);
                     break;
             }

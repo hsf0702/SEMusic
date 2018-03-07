@@ -33,10 +33,10 @@ class LocalMusicFragment : KtBaseFragment() {
         if (arguments != null) {
             position = arguments!!.getInt(POSITION)
         }
-        val localCount = MusicUtils.queryMusic(context, MConstants.START_FROM_LOCAL).size
-        val singerCount = MusicUtils.queryArtist(context).size
-        val albumCount = MusicUtils.queryAlbums(context).size
-        val folderCount = MusicUtils.queryFolder(context).size
+        val localCount = MusicUtils.queryMusic(context!!, MConstants.START_FROM_LOCAL).size
+        val singerCount = MusicUtils.queryArtist(context!!).size
+        val albumCount = MusicUtils.queryAlbums(context!!).size
+        val folderCount = MusicUtils.queryFolder(context!!).size
         mTabNames.add(context!!.getString(R.string.local_music_song, localCount))
         mTabNames.add(context!!.getString(R.string.local_music_singer, singerCount))
         mTabNames.add(context!!.getString(R.string.local_music_album, albumCount))

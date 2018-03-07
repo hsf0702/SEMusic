@@ -18,18 +18,19 @@
             android:layout_height="150dp"/>
 
         <View
+            android:id="@+id/classify_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/app_base_top_bottom_padding"/>
 
         <View
-            android:id="@+id/online_recommend_block"
+            android:id="@+id/online_recommend"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/app_base_top_bottom_padding"/>
 
         <View
-            android:id="@+id/online_express_block"
+            android:id="@+id/online_express"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/app_base_top_bottom_padding"/>
