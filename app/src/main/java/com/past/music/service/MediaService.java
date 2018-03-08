@@ -654,7 +654,7 @@ public class MediaService extends Service {
             if (mPlaylist.size() == listlength) {
                 newlist = false;
                 for (int i = 0; i < listlength; i++) {
-                    if (list[i] != mPlaylist.get(i).mId) {
+                    if (list[i] != mPlaylist.get(i).getMId()) {
                         newlist = true;
                         break;
                     }
@@ -732,7 +732,7 @@ public class MediaService extends Service {
                 clearPlayInfos();
                 return;
             }
-            final long id = mPlaylist.get(mPlayPos).mId;
+            final long id = mPlaylist.get(mPlayPos).getMId();
             updateCursor(id);
             getLrc(id);
             if (mPlaylistInfo.get(id) == null) {
@@ -763,7 +763,7 @@ public class MediaService extends Service {
                         mPlayPos = pos;
                         stop(false);
                         mPlayPos = pos;
-                        updateCursor(mPlaylist.get(mPlayPos).mId);
+                        updateCursor(mPlaylist.get(mPlayPos).getMId());
                     } else {
                         mOpenFailedCounter = 0;
                         Log.w(TAG, "Failed to open file for playback");
@@ -1015,7 +1015,7 @@ public class MediaService extends Service {
     private void setNextTrack(int position) {
         mNextPlayPos = position;
         if (mNextPlayPos >= 0 && mPlaylist != null && mNextPlayPos < mPlaylist.size()) {
-            final long id = mPlaylist.get(mNextPlayPos).mId;
+            final long id = mPlaylist.get(mNextPlayPos).getMId();
             if (mPlaylistInfo.get(id) != null) {
                 if (mPlaylistInfo.get(id).islocal) {
                     mPlayer.setNextDataSource(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI + "/" + id);
@@ -1220,7 +1220,7 @@ public class MediaService extends Service {
     public long getAudioId() {
         MusicTrack track = getCurrentTrack();
         if (track != null) {
-            return track.mId;
+            return track.getMId();
         }
         return -1;
     }
@@ -1256,7 +1256,7 @@ public class MediaService extends Service {
             final int len = mPlaylist.size();
             final long[] list = new long[len];
             for (int i = 0; i < len; i++) {
-                list[i] = mPlaylist.get(i).mId;
+                list[i] = mPlaylist.get(i).getMId();
             }
             return list;
         }
@@ -1406,7 +1406,7 @@ public class MediaService extends Service {
         } else if (SHUFFLE_ACTION.equals(action)) {
             cycleShuffle();
         } else if (TRY_GET_TRACKINFO.equals(action)) {
-            getLrc(mPlaylist.get(mPlayPos).mId);
+            getLrc(mPlaylist.get(mPlayPos).getMId());
         }
     }
 
@@ -1479,7 +1479,7 @@ public class MediaService extends Service {
         int numremoved = 0;
         synchronized (this) {
             for (int i = 0; i < mPlaylist.size(); i++) {
-                if (mPlaylist.get(i).mId == id) {
+                if (mPlaylist.get(i).getMId() == id) {
                     numremoved += removeTracksInternal(i, i);
                     i--;
                 }
@@ -1521,7 +1521,7 @@ public class MediaService extends Service {
                 mHistory.clear();
             } else {
                 for (int i = 0; i < numToRemove; i++) {
-                    mPlaylistInfo.remove(mPlaylist.get(first).mId);
+                    mPlaylistInfo.remove(mPlaylist.get(first).getMId());
                     mPlaylist.remove(first);
 
                 }
@@ -2391,7 +2391,7 @@ public class MediaService extends Service {
                             service.mCursor.close();
                             service.mCursor = null;
                         }
-                        service.updateCursor(service.mPlaylist.get(service.mPlayPos).mId);
+                        service.updateCursor(service.mPlaylist.get(service.mPlayPos).getMId());
                         service.notifyChange(META_CHANGED);
                         service.notifyChange(MUSIC_CHANGED);
                         service.updateNotification();

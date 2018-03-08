@@ -193,7 +193,7 @@ public class DownMusicFragment extends BaseFragment {
                             info.albumData = MusicUtils.Companion.getAlbumArtUri(info.albumId) + "";
                             infos.put(list[i], mList.get(i));
                         }
-                        MusicPlayer.playAll(infos, list, 0, false);
+                        MusicPlayer.Companion.playAll(infos, list, 0, false);
                     }
                 }, 70);
             }
@@ -240,7 +240,7 @@ public class DownMusicFragment extends BaseFragment {
                             infos.put(list[i], mList.get(i));
                         }
                         if (getAdapterPosition() > 0)
-                            MusicPlayer.playAll(infos, list, getAdapterPosition() - 1, false);
+                            MusicPlayer.Companion.playAll(infos, list, getAdapterPosition() - 1, false);
                     }
                 }, 60);
             }

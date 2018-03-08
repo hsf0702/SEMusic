@@ -20,6 +20,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+;
+
 /**
  * =======================================================
  * 作者：gaojin
@@ -67,12 +69,12 @@ public class QuickControlsFragment extends BaseFragment {
 
     @OnClick(R.id.control)
     void control() {
-        MusicPlayer.playOrPause();
+        MusicPlayer.Companion.playOrPause();
     }
 
     @OnClick(R.id.play_next)
     void playNext() {
-        MusicPlayer.nextPlay();
+        MusicPlayer.Companion.nextPlay();
     }
 
 
@@ -105,15 +107,15 @@ public class QuickControlsFragment extends BaseFragment {
     }
 
     public void updateFragment() {
-        mPlaybarInfo.setText(MusicPlayer.getTrackName());
-        mPlaybarSinger.setText(MusicPlayer.getArtistName());
-        if (MusicPlayer.getIsPlaying()) {
+        mPlaybarInfo.setText(MusicPlayer.Companion.getTrackName());
+        mPlaybarSinger.setText(MusicPlayer.Companion.getArtistName());
+        if (MusicPlayer.Companion.getIsPlaying()) {
             mControl.setImageResource(R.drawable.playbar_btn_pause);
         } else {
             mControl.setImageResource(R.drawable.playbar_btn_play);
         }
-        if (MusicPlayer.getAlbumPic() != null) {
-            mAlbum.setImageURI(MusicPlayer.getAlbumPic());
+        if (MusicPlayer.Companion.getAlbumPic() != null) {
+            mAlbum.setImageURI(MusicPlayer.Companion.getAlbumPic());
         }
     }
 

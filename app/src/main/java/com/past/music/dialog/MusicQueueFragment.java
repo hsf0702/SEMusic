@@ -124,9 +124,9 @@ public class MusicQueueFragment extends DialogFragment {
 
         @Override
         protected Void doInBackground(Void... params) {
-            HashMap<Long, MusicEntity> play = MusicPlayer.getPlayinfos();
+            HashMap<Long, MusicEntity> play = MusicPlayer.Companion.getPlayinfos();
             if (play != null && play.size() > 0) {
-                long[] queue = MusicPlayer.getQueue();
+                long[] queue = MusicPlayer.Companion.getQueue();
                 int len = queue.length;
                 for (int i = 0; i < len; i++) {
                     playlist.add(play.get(queue[i]));
@@ -141,7 +141,7 @@ public class MusicQueueFragment extends DialogFragment {
             mAdapter.notifyDataSetChanged();
             for (int i = 0; i < playlist.size(); i++) {
                 MusicEntity info = playlist.get(i);
-                if (info != null && MusicPlayer.getCurrentAudioId() == info.getSongId()) {
+                if (info != null && MusicPlayer.Companion.getCurrentAudioId() == info.getSongId()) {
                     moveToPosition(i);
                 }
             }
@@ -195,7 +195,7 @@ public class MusicQueueFragment extends DialogFragment {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             musicEntity = playlist.get(position);
-            if (MusicPlayer.getCurrentAudioId() == musicEntity.getSongId()) {
+            if (MusicPlayer.Companion.getCurrentAudioId() == musicEntity.getSongId()) {
                 currentlyPlayingPosition = position;
                 ((ItemViewHolder) holder).onBindData(playlist.get(position), position, true);
             } else {
@@ -260,7 +260,7 @@ public class MusicQueueFragment extends DialogFragment {
                         } else {
                             long[] ids = new long[1];
                             ids[0] = playlist.get(position).songId;
-                            MusicPlayer.setQueue(position);
+                            MusicPlayer.Companion.setQueue(position);
                             notifyItemChanged(currentlyPlayingPosition);
                             notifyItemChanged(position);
                         }

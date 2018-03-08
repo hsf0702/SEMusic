@@ -98,7 +98,7 @@ public class PlayMusicActivity extends BaseActivity {
 
     @OnClick(R.id.playing_mode)
     void changeMode() {
-        MusicPlayer.cycleRepeat();
+        MusicPlayer.Companion.cycleRepeat();
         updatePlaymode();
     }
 
@@ -126,13 +126,13 @@ public class PlayMusicActivity extends BaseActivity {
 
     @OnClick(R.id.playing_play)
     void play() {
-        if (MusicPlayer.getIsPlaying()) {
+        if (MusicPlayer.Companion.getIsPlaying()) {
             mPlay.setImageResource(R.drawable.play_rdi_btn_pause);
         } else {
             mPlay.setImageResource(R.drawable.play_rdi_btn_play);
         }
-        if (MusicPlayer.getQueueSize() != 0) {
-            MusicPlayer.playOrPause();
+        if (MusicPlayer.Companion.getQueueSize() != 0) {
+            MusicPlayer.Companion.playOrPause();
         }
         mHandler.postDelayed(mUpdateProgress, 0);
     }
@@ -224,10 +224,10 @@ public class PlayMusicActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         lastAlbum = -1;
-        if (MusicPlayer.isTrackLocal())
+        if (MusicPlayer.Companion.isTrackLocal())
             updateBuffer(100);
         else {
-            updateBuffer(MusicPlayer.secondPosition());
+            updateBuffer(MusicPlayer.Companion.secondPosition());
         }
     }
 
@@ -247,7 +247,7 @@ public class PlayMusicActivity extends BaseActivity {
     @SuppressLint("WrongConstant")
     @Override
     public void baseUpdatePlayInfo() {
-        if (MusicPlayer.getQueueSize() == 0) {
+        if (MusicPlayer.Companion.getQueueSize() == 0) {
             return;
         }
         Fragment fragment = (RoundFragment) mViewPager.getAdapter().instantiateItem(mViewPager, mViewPager.getCurrentItem());
@@ -265,7 +265,7 @@ public class PlayMusicActivity extends BaseActivity {
             mRotateAnim = (ObjectAnimator) mActiveView.getTag(R.id.tag_animator);
         }
         mAnimatorSet = new AnimatorSet();
-        if (MusicPlayer.getIsPlaying()) {
+        if (MusicPlayer.Companion.getIsPlaying()) {
             mProgress.removeCallbacks(mUpdateProgress);
             mProgress.postDelayed(mUpdateProgress, 200);
             mPlay.setImageResource(R.drawable.play_rdi_btn_pause);
@@ -294,10 +294,10 @@ public class PlayMusicActivity extends BaseActivity {
                 mRotateAnim.setFloatValues(valueAvatar, 360f + valueAvatar);
             }
         }
-        mDuration.setText(MusicUtils.Companion.makeShortTimeString(PlayMusicActivity.this.getApplication(), MusicPlayer.duration() / 1000));
+        mDuration.setText(MusicUtils.Companion.makeShortTimeString(PlayMusicActivity.this.getApplication(), MusicPlayer.Companion.duration() / 1000));
         isNextOrPreSetPage = false;
-        if (MusicPlayer.getQueuePosition() + 1 != mViewPager.getCurrentItem()) {
-            mViewPager.setCurrentItem(MusicPlayer.getQueuePosition() + 1);
+        if (MusicPlayer.Companion.getQueuePosition() + 1 != mViewPager.getCurrentItem()) {
+            mViewPager.setCurrentItem(MusicPlayer.Companion.getQueuePosition() + 1);
             isNextOrPreSetPage = true;
         }
     }
@@ -308,9 +308,9 @@ public class PlayMusicActivity extends BaseActivity {
         mHandler.postDelayed(mUpAlbumRunnable, 0);
 
         updateLrc();
-        ab.setTitle(MusicPlayer.getTrackName());
-        ab.setSubtitle(MusicPlayer.getArtistName());
-        mDuration.setText(MusicUtils.Companion.makeShortTimeString(PlayMusicActivity.this.getApplication(), MusicPlayer.duration() / 1000));
+        ab.setTitle(MusicPlayer.Companion.getTrackName());
+        ab.setSubtitle(MusicPlayer.Companion.getArtistName());
+        mDuration.setText(MusicUtils.Companion.makeShortTimeString(PlayMusicActivity.this.getApplication(), MusicPlayer.Companion.duration() / 1000));
     }
 
     @Override
@@ -397,7 +397,7 @@ public class PlayMusicActivity extends BaseActivity {
 
         @Override
         public void onSeekTo(int progress) {
-            MusicPlayer.seek(progress);
+            MusicPlayer.Companion.seek(progress);
         }
     };
 
@@ -419,7 +419,7 @@ public class PlayMusicActivity extends BaseActivity {
         InputStream is = null;
         try {
             is = new FileInputStream(Environment.getExternalStorageDirectory().getAbsolutePath() +
-                    "/pastmusic/lrc/" + MusicPlayer.getCurrentAudioId());
+                    "/pastmusic/lrc/" + MusicPlayer.Companion.getCurrentAudioId());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } finally {
@@ -460,11 +460,11 @@ public class PlayMusicActivity extends BaseActivity {
     private Runnable mUpAlbumRunnable = new Runnable() {
         @Override
         public void run() {
-            if (MusicPlayer.getAlbumPic() == null) {
+            if (MusicPlayer.Companion.getAlbumPic() == null) {
 
             } else {
                 ImageRequest imageRequest = ImageRequestBuilder
-                        .newBuilderWithSource(Uri.parse(MusicPlayer.getAlbumPic()))
+                        .newBuilderWithSource(Uri.parse(MusicPlayer.Companion.getAlbumPic()))
                         .setProgressiveRenderingEnabled(true)
                         .build();
                 ImagePipeline imagePipeline = Fresco.getImagePipeline();
@@ -516,23 +516,23 @@ public class PlayMusicActivity extends BaseActivity {
             @Override
             public void onPageSelected(final int pPosition) {
                 if (pPosition < 1) { //首位之前，跳转到末尾（N）
-                    MusicPlayer.setQueuePosition(MusicPlayer.getQueue().length);
-                    mViewPager.setCurrentItem(MusicPlayer.getQueue().length, false);
+                    MusicPlayer.Companion.setQueuePosition(MusicPlayer.Companion.getQueue().length);
+                    mViewPager.setCurrentItem(MusicPlayer.Companion.getQueue().length, false);
                     isNextOrPreSetPage = false;
                     return;
-                } else if (pPosition > MusicPlayer.getQueue().length) { //末位之后，跳转到首位（1）
-                    MusicPlayer.setQueuePosition(0);
+                } else if (pPosition > MusicPlayer.Companion.getQueue().length) { //末位之后，跳转到首位（1）
+                    MusicPlayer.Companion.setQueuePosition(0);
                     mViewPager.setCurrentItem(1, false); //false:不显示跳转过程的动画
                     isNextOrPreSetPage = false;
                     return;
                 } else {
 
                     if (!isNextOrPreSetPage) {
-                        if (pPosition < MusicPlayer.getQueuePosition() + 1) {
+                        if (pPosition < MusicPlayer.Companion.getQueuePosition() + 1) {
                             Message msg = new Message();
                             msg.what = PRE_MUSIC;
                             mPlayHandler.sendMessageDelayed(msg, TIME_DELAY);
-                        } else if (pPosition > MusicPlayer.getQueuePosition() + 1) {
+                        } else if (pPosition > MusicPlayer.Companion.getQueuePosition() + 1) {
                             Message msg = new Message();
                             msg.what = NEXT_MUSIC;
                             mPlayHandler.sendMessageDelayed(msg, TIME_DELAY);
@@ -585,7 +585,7 @@ public class PlayMusicActivity extends BaseActivity {
         @Override
         public void transformPage(View view, float position) {
             if (position == 0) {
-                if (MusicPlayer.getIsPlaying()) {
+                if (MusicPlayer.Companion.getIsPlaying()) {
                     mRotateAnim = (ObjectAnimator) view.getTag(R.id.tag_animator);
                     if (mRotateAnim != null && !mRotateAnim.isRunning() && mNeedleAnim != null) {
                         mAnimatorSet = new AnimatorSet();
@@ -627,16 +627,16 @@ public class PlayMusicActivity extends BaseActivity {
         @Override
         public Fragment getItem(int position) {
 
-            if (position == MusicPlayer.getQueue().length + 1 || position == 0) {
+            if (position == MusicPlayer.Companion.getQueue().length + 1 || position == 0) {
                 return RoundFragment.newInstance("");
             }
-            return RoundFragment.newInstance(MusicPlayer.getAlbumPathAll()[position - 1]);
+            return RoundFragment.newInstance(MusicPlayer.Companion.getAlbumPathAll()[position - 1]);
         }
 
         @Override
         public int getCount() {
             //左右各加一个
-            return MusicPlayer.getQueue().length + 2;
+            return MusicPlayer.Companion.getQueue().length + 2;
         }
 
 
@@ -663,13 +663,13 @@ public class PlayMusicActivity extends BaseActivity {
         public void run() {
 
             if (mProgress != null) {
-                long position = MusicPlayer.position();
-                long duration = MusicPlayer.duration();
+                long position = MusicPlayer.Companion.position();
+                long duration = MusicPlayer.Companion.duration();
                 if (duration > 0 && duration < 627080716) {
                     mProgress.setProgress((int) (1000 * position / duration));
                     mTimePlayed.setText(MusicUtils.Companion.makeTimeString(position));
                 }
-                if (MusicPlayer.getIsPlaying()) {
+                if (MusicPlayer.Companion.getIsPlaying()) {
                     mProgress.postDelayed(mUpdateProgress, 200);
                 } else {
                     mProgress.removeCallbacks(mUpdateProgress);
@@ -685,10 +685,10 @@ public class PlayMusicActivity extends BaseActivity {
 
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                    i = (int) (i * MusicPlayer.duration() / 1000);
+                    i = (int) (i * MusicPlayer.Companion.duration() / 1000);
                     mLrcView.seekTo(i, true, b);
                     if (b) {
-                        MusicPlayer.seek((long) i);
+                        MusicPlayer.Companion.seek((long) i);
                         mTimePlayed.setText(MusicUtils.Companion.makeTimeString(i));
                     }
                 }
@@ -711,12 +711,12 @@ public class PlayMusicActivity extends BaseActivity {
     }
 
     private void updatePlaymode() {
-        if (MusicPlayer.getShuffleMode() == MediaService.SHUFFLE_NORMAL) {
+        if (MusicPlayer.Companion.getShuffleMode() == MediaService.SHUFFLE_NORMAL) {
             mPlayMode.setImageResource(R.drawable.play_icn_shuffle);
             Toast.makeText(PlayMusicActivity.this.getApplication(), getResources().getString(R.string.random_play),
                     Toast.LENGTH_SHORT).show();
         } else {
-            switch (MusicPlayer.getRepeatMode()) {
+            switch (MusicPlayer.Companion.getRepeatMode()) {
                 case MediaService.REPEAT_ALL:
                     mPlayMode.setImageResource(R.drawable.play_icn_loop);
                     Toast.makeText(PlayMusicActivity.this.getApplication(), getResources().getString(R.string.loop_play),
@@ -742,13 +742,13 @@ public class PlayMusicActivity extends BaseActivity {
                     super.handleMessage(msg);
                     switch (msg.what) {
                         case PRE_MUSIC:
-                            MusicPlayer.previous(PlayMusicActivity.this, true);
+                            MusicPlayer.Companion.previous(PlayMusicActivity.this, true);
                             break;
                         case NEXT_MUSIC:
-                            MusicPlayer.nextPlay();
+                            MusicPlayer.Companion.nextPlay();
                             break;
                         case 3:
-//                            MusicPlayer.setQueuePosition(msg.arg1);
+//                            MusicPlayer.CompanionsetQueuePosition(msg.arg1);
                             break;
                     }
                 }

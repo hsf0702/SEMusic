@@ -136,14 +136,14 @@ public class NetSongDialog extends AlertDialog {
                             mHandler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if (adapterMusicEntity.songId == MusicPlayer.getCurrentAudioId())
+                                    if (adapterMusicEntity.songId == MusicPlayer.Companion.getCurrentAudioId())
                                         return;
 
                                     long[] ids = new long[1];
                                     ids[0] = adapterMusicEntity.songId;
                                     HashMap<Long, MusicEntity> map = new HashMap<Long, MusicEntity>();
                                     map.put(ids[0], adapterMusicEntity);
-                                    MusicPlayer.playNext(mContext, map, ids);
+//                                    MusicPlayer.Companion.playNext(mContext, map, ids);
                                 }
                             }, 100);
 
@@ -190,7 +190,7 @@ public class NetSongDialog extends AlertDialog {
                                     infos.put(listid[i], info);
                                 }
 
-                                MusicPlayer.playAll(infos, listid, 0, false);
+                                MusicPlayer.Companion.playAll(infos, listid, 0, false);
                             }
                         }, 60);
                         dismiss();
