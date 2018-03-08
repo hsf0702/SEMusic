@@ -2,7 +2,7 @@ package com.past.music.adapter
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.app.FragmentStatePagerAdapter
 import com.past.music.fragment.FolderFragment
 import com.past.music.fragment.LocalAlbumFragment
 import com.past.music.fragment.LocalMusicSongFragment
@@ -12,7 +12,7 @@ import java.util.*
 /**
  * Created by gaojin on 2017/12/7.
  */
-class LocalFragmentAdapter constructor(fm: FragmentManager?, list: List<String>) : FragmentPagerAdapter(fm) {
+class LocalFragmentAdapter constructor(fm: FragmentManager?, list: List<String>) : FragmentStatePagerAdapter(fm) {
     private var tabNames = ArrayList<String>()
 
     init {

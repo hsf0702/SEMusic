@@ -84,7 +84,9 @@ public class LocalSingerFragment extends BaseFragment {
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            ((SingerItemViewHolder) holder).onBindData(list.get(position));
+            if (!list.isEmpty()) {
+                ((SingerItemViewHolder) holder).onBindData(list.get(position));
+            }
         }
 
         @Override

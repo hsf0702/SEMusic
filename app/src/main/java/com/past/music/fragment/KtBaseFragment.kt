@@ -48,7 +48,9 @@ abstract class KtBaseFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
-            android.R.id.home -> fm!!.popBackStack()
+            android.R.id.home -> {
+                fm!!.popBackStack()
+            }
         }
         return true
     }

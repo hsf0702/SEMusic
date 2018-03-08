@@ -58,6 +58,7 @@ class LocalMusicFragment : KtBaseFragment() {
         mViewPager!!.adapter = mAdapter
         mViewPager!!.currentItem = position
         mTabLayout!!.setupWithViewPager(mViewPager)
+        mAdapter!!.notifyDataSetChanged()
     }
 
     companion object {

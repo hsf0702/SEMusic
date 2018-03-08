@@ -22,7 +22,6 @@ import org.greenrobot.eventbus.ThreadMode
 class MineFragment : Fragment() {
 
     companion object {
-
         fun newInstance(): MineFragment {
             val fragment = MineFragment()
             val args = Bundle()
