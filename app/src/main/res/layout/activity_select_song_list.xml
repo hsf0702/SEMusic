@@ -81,7 +81,7 @@
             android:layout_marginLeft="65dp"
             android:layout_marginTop="7dp"
             android:text="17首,9首已下载"
-            android:textColor="@color/text_gray"
+            android:textColor="@color/gray"
             android:textSize="12sp"/>
     </RelativeLayout>
 

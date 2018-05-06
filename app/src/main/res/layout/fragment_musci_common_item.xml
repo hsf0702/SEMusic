@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:text="周杰伦 -- 叶惠美"
-            android:textColor="@color/text_gray"
+            android:textColor="@color/gray"
             android:textSize="12sp" />
 
     </LinearLayout>

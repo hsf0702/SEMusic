@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.Scroller;
 
-import com.past.music.MyApplication;
+import com.past.music.MusicApplication;
 import com.past.music.pastmusic.R;
 import com.past.music.utils.DensityUtil;
 
@@ -45,7 +45,7 @@ public class LrcView extends View implements ILrcView {
     /**
      * 默认文字的字体大小
      **/
-    private static final float SIZE_FOR_DEFAULT_TEXT = DensityUtil.Companion.dip2px(MyApplication.mContext, 17);
+    private static final float SIZE_FOR_DEFAULT_TEXT = DensityUtil.Companion.dip2px(MusicApplication.Companion.getInstance(), 17);
 
     /**
      * 画高亮歌词的画笔
@@ -54,7 +54,7 @@ public class LrcView extends View implements ILrcView {
     /**
      * 高亮歌词的默认字体大小
      ***/
-    private static final float DEFAULT_SIZE_FOR_HIGHT_LIGHT_LRC = DensityUtil.Companion.dip2px(MyApplication.mContext, 15);
+    private static final float DEFAULT_SIZE_FOR_HIGHT_LIGHT_LRC = DensityUtil.Companion.dip2px(MusicApplication.Companion.getInstance(), 15);
     /**
      * 高亮歌词当前的字体大小
      ***/
@@ -76,7 +76,7 @@ public class LrcView extends View implements ILrcView {
     /**
      * 其他歌词的默认字体大小
      ***/
-    private static final float DEFAULT_SIZE_FOR_OTHER_LRC = DensityUtil.Companion.dip2px(MyApplication.mContext, 15);
+    private static final float DEFAULT_SIZE_FOR_OTHER_LRC = DensityUtil.Companion.dip2px(MusicApplication.Companion.getInstance(), 15);
     /**
      * 其他歌词当前的字体大小
      ***/
@@ -102,7 +102,7 @@ public class LrcView extends View implements ILrcView {
     /**
      * 时间文字大小
      **/
-    private static final int SIZE_FOR_TIME = DensityUtil.Companion.dip2px(MyApplication.mContext, 12);
+    private static final int SIZE_FOR_TIME = DensityUtil.Companion.dip2px(MusicApplication.Companion.getInstance(), 12);
     /**
      * 是否画时间线
      **/
@@ -111,7 +111,7 @@ public class LrcView extends View implements ILrcView {
     /**
      * 歌词间默认的行距
      **/
-    private static final float DEFAULT_PADDING = DensityUtil.Companion.dip2px(MyApplication.mContext, 17);
+    private static final float DEFAULT_PADDING = DensityUtil.Companion.dip2px(MusicApplication.Companion.getInstance(), 17);
     /**
      * 歌词当前的行距
      **/

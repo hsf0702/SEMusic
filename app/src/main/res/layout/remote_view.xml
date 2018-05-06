@@ -41,7 +41,7 @@
             android:fadingEdge="horizontal"
             android:fadingEdgeLength="10dp"
             android:maxLines="1"
-            android:textColor="@color/text_gray"
+            android:textColor="@color/gray"
             android:textSize="12sp" />
     </LinearLayout>
 

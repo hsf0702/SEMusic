@@ -9,7 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.past.music.MyApplication.mContext
+import com.past.music.MusicApplication
 import com.past.music.adapter.MusicListAdapter
 import com.past.music.entity.MusicEntity
 import com.past.music.pastmusic.R
@@ -52,7 +52,7 @@ class LocalMusicSongFragment : Fragment() {
         object : AsyncTask<Void, Void, String>() {
             override fun doInBackground(vararg params: Void?): String {
                 musicList.clear()
-                musicList.addAll(MusicUtils.queryMusic(mContext, MConstants.START_FROM_LOCAL) as ArrayList)
+                musicList.addAll(MusicUtils.queryMusic(MusicApplication.instance, MConstants.START_FROM_LOCAL) as ArrayList)
                 mAdapter!!.updateDataSet(musicList)
                 return ""
             }

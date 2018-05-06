@@ -9,8 +9,9 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.facebook.drawee.view.SimpleDraweeView
-import com.past.music.MyApplication
 import com.past.music.activity.SelectSongListActivity
+import com.past.music.database.provider.MusicInfoDBService
+import com.past.music.database.provider.SongListDBService
 import com.past.music.entity.MusicEntity
 import com.past.music.entity.SongListEntity
 import com.past.music.event.CreateSongListEvent
@@ -22,7 +23,7 @@ import org.greenrobot.eventbus.EventBus
  */
 class SelectSongListAdapter(context: Context, musicEntity: MusicEntity) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val mList: List<SongListEntity> = MyApplication.songListDBService.query()
+    private val mList: List<SongListEntity> = SongListDBService.instance.query()
     private val mContext: Context = context
     private val musicEntity: MusicEntity = musicEntity
 
@@ -47,7 +48,7 @@ class SelectSongListAdapter(context: Context, musicEntity: MusicEntity) : Recycl
         var mItemLayout: RelativeLayout = itemView.findViewById(R.id.rl_favor_item)
 
         private fun favorItem() {
-            MyApplication.musicInfoDBService.insert(musicEntity, mList[adapterPosition].getId())
+            MusicInfoDBService.instance.insert(musicEntity, mList[adapterPosition].getId())
             EventBus.getDefault().post(CreateSongListEvent())
             (mContext as SelectSongListActivity).finish()
         }
@@ -59,7 +60,7 @@ class SelectSongListAdapter(context: Context, musicEntity: MusicEntity) : Recycl
         fun onBind(songListEntity: SongListEntity) {
             songListPic.setImageURI(songListEntity.getList_pic())
             mPlayListTitle.text = songListEntity.getName()
-            mPlayListInfo.text = MyApplication.musicInfoDBService.getLocalCount(songListEntity.getId())
+            mPlayListInfo.text = MusicInfoDBService.instance.getLocalCount(songListEntity.getId())
         }
     }
 }

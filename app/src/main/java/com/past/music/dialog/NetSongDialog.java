@@ -80,7 +80,7 @@ public class NetSongDialog extends AlertDialog {
         ButterKnife.bind(this);
         Window window = this.getWindow();
         window.setGravity(Gravity.BOTTOM);
-        mHandler = HandlerUtil.getInstance(mContext);
+        mHandler = HandlerUtil.Companion.getInstance();
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setHasFixedSize(true);
         getList();

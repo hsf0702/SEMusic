@@ -12,7 +12,7 @@
         android:layout_marginLeft="15dp"
         android:gravity="center"
         android:text="12个歌单"
-        android:textColor="@color/text_gray"
+        android:textColor="@color/gray"
         android:textSize="16sp"/>
 
     <TextView

@@ -976,7 +976,7 @@ public class TitleZoomTabLayout extends FrameLayout {
     private void ensureScrollAnimator() {
         if (mScrollAnimator == null) {
             mScrollAnimator = new ValueAnimator();
-            mScrollAnimator.setInterpolator(AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR);
+            mScrollAnimator.setInterpolator(AnimationUtils.Companion.getFAST_OUT_SLOW_IN_INTERPOLATOR());
             mScrollAnimator.setDuration(ANIMATION_DURATION);
             mScrollAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
@@ -1894,7 +1894,7 @@ public class TitleZoomTabLayout extends FrameLayout {
 
             if (startLeft != targetLeft || startRight != targetRight) {
                 ValueAnimator animator = mIndicatorAnimator = new ValueAnimator();
-                animator.setInterpolator(AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR);
+                animator.setInterpolator(AnimationUtils.Companion.getFAST_OUT_SLOW_IN_INTERPOLATOR());
                 animator.setDuration(duration);
                 animator.setFloatValues(0, 1);
                 animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -1902,8 +1902,8 @@ public class TitleZoomTabLayout extends FrameLayout {
                     public void onAnimationUpdate(ValueAnimator animator) {
                         final float fraction = animator.getAnimatedFraction();
                         setIndicatorPosition(
-                                AnimationUtils.lerp(startLeft, targetLeft, fraction),
-                                AnimationUtils.lerp(startRight, targetRight, fraction));
+                                AnimationUtils.Companion.lerp(startLeft, targetLeft, fraction),
+                                AnimationUtils.Companion.lerp(startRight, targetRight, fraction));
                     }
                 });
                 animator.addListener(new AnimatorListenerAdapter() {

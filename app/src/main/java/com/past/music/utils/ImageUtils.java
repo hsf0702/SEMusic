@@ -12,7 +12,7 @@ import android.os.ParcelFileDescriptor;
 import android.support.v8.renderscript.RenderScript;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.past.music.MyApplication;
+import com.past.music.database.provider.ImageDBService;
 import com.past.music.entity.MusicEntity;
 
 import java.io.ByteArrayInputStream;
@@ -112,10 +112,10 @@ public class ImageUtils {
 
     public static void setImageSource(Context context, final SimpleDraweeView simpleDraweeView, final MusicEntity musicEntity) {
         if (musicEntity.getAlbumPic() == null) {
-            if (MyApplication.imageDBService.query(musicEntity.getArtist().replace(";", "")) == null) {
-              //TODO
+            if (ImageDBService.Companion.getInstance().query(musicEntity.getArtist().replace(";", "")) == null) {
+                //TODO
             } else {
-                simpleDraweeView.setImageURI(MyApplication.imageDBService.query(musicEntity.getArtist().replace(";", "")));
+                simpleDraweeView.setImageURI(ImageDBService.Companion.getInstance().query(musicEntity.getArtist().replace(";", "")));
             }
         } else {
             simpleDraweeView.setImageURI(musicEntity.getAlbumPic());

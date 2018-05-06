@@ -41,9 +41,9 @@ class RecentMusicFragment : KtBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        recentStore = RecentStore.getInstance(context)
-        val recentloader = TopTracksLoader(context, TopTracksLoader.QueryType.RecentSongs)
-        val recentsongs = SongLoader.getSongsForCursor(TopTracksLoader.getCursor())
+        recentStore = RecentStore.instance
+        val recentloader = TopTracksLoader(TopTracksLoader.QueryType.RecentSongs)
+        val recentsongs = SongLoader.getSongsForCursor(TopTracksLoader.getCursor(context!!))
         val songCountInt = recentsongs.size
         mList = recentsongs
     }
@@ -132,7 +132,7 @@ class RecentMusicFragment : KtBaseFragment() {
 
 
             override fun onClick(v: View) {
-                HandlerUtil.getInstance(context).postDelayed({
+                HandlerUtil.instance.postDelayed({
                     val list = LongArray(mList!!.size)
                     val infos = HashMap<Long, MusicEntity>()
                     for (i in mList!!.indices) {
@@ -168,7 +168,7 @@ class RecentMusicFragment : KtBaseFragment() {
             }
 
             override fun onClick(v: View) {
-                HandlerUtil.getInstance(context).postDelayed({
+                HandlerUtil.instance.postDelayed({
                     val list = LongArray(mList!!.size)
                     val infos = HashMap<Long, MusicEntity>()
                     for (i in mList!!.indices) {
@@ -176,7 +176,7 @@ class RecentMusicFragment : KtBaseFragment() {
                         list[i] = info!!.songId
                         info.islocal = true
                         info.albumData = MusicUtils.getAlbumArtUri(info.albumId.toLong()).toString() + ""
-                        infos.put(list[i], info)
+                        infos[list[i]] = info
                     }
                     if (adapterPosition > 0)
                         MusicPlayer.playAll(infos, list, adapterPosition - 1, false)

@@ -13,8 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.past.music.MyApplication;
 import com.past.music.adapter.SongListAdapter;
+import com.past.music.database.provider.ImageDBService;
+import com.past.music.database.provider.MusicInfoDBService;
 import com.past.music.entity.MusicEntity;
 import com.past.music.pastmusic.R;
 
@@ -90,10 +91,10 @@ public class SongListInfoActivity extends ToolBarActivity {
 
     public void setSongInterFace() {
         if (mList.get(0).getAlbumPic() == null) {
-            if (MyApplication.imageDBService.query(mList.get(0).getArtist().replace(";", "")) == null) {
+            if (ImageDBService.Companion.getInstance().query(mList.get(0).getArtist().replace(";", "")) == null) {
                 //TODO
             } else {
-                headView.setImageURI(MyApplication.imageDBService.query(mList.get(0).getArtist().replace(";", "")));
+                headView.setImageURI(ImageDBService.Companion.getInstance().query(mList.get(0).getArtist().replace(";", "")));
             }
         } else {
             headView.setImageURI(mList.get(0).getAlbumPic());
@@ -110,9 +111,9 @@ public class SongListInfoActivity extends ToolBarActivity {
     }
 
     public void setStatusBar_C() {
-        if (MyApplication.musicInfoDBService.haveSong(mId) != null) {
+        if (MusicInfoDBService.Companion.getInstance().haveSong(mId) != null) {
             mEmptyLayout.setVisibility(View.GONE);
-            mList = MyApplication.musicInfoDBService.query(mId);
+            mList = MusicInfoDBService.Companion.getInstance().query(mId);
             mTvTitle.setText(mTitle);
             setSongInterFace();
         } else {

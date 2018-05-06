@@ -181,7 +181,7 @@ public class DownMusicFragment extends BaseFragment {
             //播放文件夹
             @Override
             public void onClick(View v) {
-                HandlerUtil.getInstance(getContext()).postDelayed(new Runnable() {
+                HandlerUtil.Companion.getInstance().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         long[] list = new long[mList.size()];
@@ -227,7 +227,7 @@ public class DownMusicFragment extends BaseFragment {
             //播放歌曲
             @Override
             public void onClick(View v) {
-                HandlerUtil.getInstance(getContext()).postDelayed(new Runnable() {
+                HandlerUtil.Companion.getInstance().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         long[] list = new long[mList.size()];

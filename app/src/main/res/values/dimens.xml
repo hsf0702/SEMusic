@@ -11,4 +11,7 @@
     <dimen name="app_base_left_right_padding">15dp</dimen>
     <dimen name="app_base_top_bottom_padding">15dp</dimen>
     <dimen name="classify_drawable_padding">5dp</dimen>
+
+
+    <dimen name="mine_list_image_size">60dp</dimen>
 </resources>

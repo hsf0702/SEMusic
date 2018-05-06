@@ -107,29 +107,25 @@ class MusicUtils : MConstants {
             // 查询语句：检索出.mp3为后缀名，时长大于1分钟，文件大小大于1MB的媒体文件
             select.append(" and " + MediaStore.Audio.Media.SIZE + " > " + FILTER_SIZE)
             select.append(" and " + MediaStore.Audio.Media.DURATION + " > " + FILTER_DURATION)
-            val selectionStatement = "is_music=1 AND title != ''"
-            val songSortOrder = SharePreferencesUtils.getInstance(context).songSortOrder
 
             when (from) {
                 START_FROM_LOCAL -> {
-                    return getMusicListCursor(cr.query(uri, info_music, select.toString(), null, songSortOrder))
+                    return getMusicListCursor(cr.query(uri, info_music, select.toString(), null, SharePreferencesUtils.SONG_SORT_ORDER))
                 }
                 START_FROM_ARTIST -> {
                     select.append(" and " + MediaStore.Audio.Media.ARTIST_ID + " = " + id)
-                    return getMusicListCursor(cr.query(uri, info_music, select.toString(), null,
-                            SharePreferencesUtils.getInstance(context).artistSortOrder))
+                    return getMusicListCursor(cr.query(uri, info_music, select.toString(), null, SharePreferencesUtils.ARTIST_SORT_ORDER))
                 }
                 START_FROM_ALBUM -> {
                     select.append(" and " + MediaStore.Audio.Media.ALBUM_ID + " = " + id)
-                    return getMusicListCursor(cr.query(uri, info_music, select.toString(), null,
-                            SharePreferencesUtils.getInstance(context).albumSortOrder))
+                    return getMusicListCursor(cr.query(uri, info_music, select.toString(), null, SharePreferencesUtils.ALBUM_SORT_ORDER))
                 }
                 START_FROM_FOLDER -> {
                     val list = getMusicListCursor(cr.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, proj_music,
                             select.toString(), null, null))
                     return list.filterTo(ArrayList()) { it.data.substring(0, it.data.lastIndexOf(File.separator)) == id }
                 }
-                else -> return getMusicListCursor(cr.query(uri, info_music, select.toString(), null, songSortOrder))
+                else -> return getMusicListCursor(cr.query(uri, info_music, select.toString(), null, SharePreferencesUtils.SONG_SORT_ORDER))
             }
 
         }
@@ -190,7 +186,7 @@ class MusicUtils : MConstants {
             where.append(")")
 
             return getArtistList(cr.query(uri, info_artist,
-                    where.toString(), null, SharePreferencesUtils.getInstance(context).artistSortOrder))
+                    where.toString(), null, SharePreferencesUtils.ARTIST_SORT_ORDER))
 
         }
 
@@ -228,7 +224,7 @@ class MusicUtils : MConstants {
 
             // Media.ALBUM_KEY 按专辑名称排序
             return getAlbumList(cr.query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, info_album,
-                    where.toString(), null, SharePreferencesUtils.getInstance(context).albumSortOrder))
+                    where.toString(), null, SharePreferencesUtils.ALBUM_SORT_ORDER))
 
         }
 

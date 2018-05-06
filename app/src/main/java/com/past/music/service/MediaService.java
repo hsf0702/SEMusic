@@ -43,12 +43,14 @@ import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.past.music.MyApplication;
+import com.past.music.MusicApplication;
 import com.past.music.activity.MainActivity;
+import com.past.music.database.provider.ImageDBService;
 import com.past.music.database.provider.RecentStore;
 import com.past.music.entity.MusicEntity;
 import com.past.music.pastmusic.IMediaAidlInterface;
 import com.past.music.pastmusic.R;
+import com.past.music.singleton.GsonSingleton;
 import com.past.music.utils.SharePreferencesUtils;
 
 import java.io.File;
@@ -275,7 +277,7 @@ public class MediaService extends Service {
         mPlayer = new MultiPlayer(this);
         mPlayer.setHandler(mPlayerHandler);
         mPreferences = getSharedPreferences("Service", 0);
-        mRecentStore = RecentStore.getInstance(this);
+        mRecentStore = RecentStore.Companion.getInstance();
 
         final IntentFilter filter = new IntentFilter();
 //         filter.addAction(SERVICECMD);
@@ -810,15 +812,14 @@ public class MediaService extends Service {
         @Override
         public void run() {
             try {
-                String url = SharePreferencesUtils.getInstance(MediaService.this).getPlayLink(id);
-                if (url == null) {
-                    url = "http://ws.stream.qqmusic.qq.com/" + id + ".m4a?fromtag=46";
-                    SharePreferencesUtils.getInstance(MediaService.this).setPlayLink(id, url);
-                }
-                if (url == null) {
-                    nextPlay(true);
-                }
-
+                String url = SharePreferencesUtils.Companion.getInstance().getPlayLink(id);
+//                if (url == null) {
+//                    url = "http://ws.stream.qqmusic.qq.com/" + id + ".m4a?fromtag=46";
+//                    SharePreferencesUtils.getInstance(MediaService.this).setPlayLink(id, url);
+//                }
+//                if (url == null) {
+//                    nextPlay(true);
+//                }
                 if (!stop) {
                     mPlayer.setDataSource(url);
                 }
@@ -897,7 +898,7 @@ public class MediaService extends Service {
         if (full) {
 //            mPlaybackStateStore.saveState(mPlaylist, mShuffleMode != SHUFFLE_NONE ? mHistory : null);
             if (mPlaylistInfo.size() > 0) {
-                String temp = MyApplication.gsonInstance().toJson(mPlaylistInfo);
+                String temp = GsonSingleton.Companion.getInstance().toJson(mPlaylistInfo);
                 try {
                     File file = new File(getCacheDir().getAbsolutePath() + "playlist");
                     RandomAccessFile ra = new RandomAccessFile(file, "rws");
@@ -1764,9 +1765,9 @@ public class MediaService extends Service {
         final Intent mMainIntent = new Intent(this, MainActivity.class);
         PendingIntent mainIntent = PendingIntent.getActivity(this, 0, mMainIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        if (MyApplication.imageDBService.query(getArtistName().replace(";", "")) != null) {
+        if (ImageDBService.Companion.getInstance().query(getArtistName().replace(";", "")) != null) {
             ImagePipeline imagePipeline = Fresco.getImagePipeline();
-            Uri uri = Uri.parse(MyApplication.imageDBService.query(getArtistName().replace(";", "")));
+            Uri uri = Uri.parse(ImageDBService.Companion.getInstance().query(getArtistName().replace(";", "")));
             ImageRequest imageRequest = ImageRequestBuilder
                     .newBuilderWithSource(uri)
                     .setProgressiveRenderingEnabled(true)
@@ -2095,7 +2096,7 @@ public class MediaService extends Service {
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 if (path.startsWith("content://")) {
                     player.setOnPreparedListener(null);
-                    player.setDataSource(MyApplication.mContext, Uri.parse(path));
+                    player.setDataSource(MusicApplication.Companion.getInstance(), Uri.parse(path));
                     player.prepare();
                     mIsTrackPrepared = true;
                     player.setOnCompletionListener(this);
@@ -2144,7 +2145,7 @@ public class MediaService extends Service {
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 if (path.startsWith("content://")) {
                     player.setOnPreparedListener(preparedNextListener);
-                    player.setDataSource(MyApplication.mContext, Uri.parse(path));
+                    player.setDataSource(MusicApplication.Companion.getInstance(), Uri.parse(path));
                     player.prepare();
                 } else {
                     player.setDataSource(path);
@@ -2152,9 +2153,7 @@ public class MediaService extends Service {
                     player.prepare();
                     mIsNextTrackPrepared = false;
                 }
-            } catch (final IOException ignored) {
-                return false;
-            } catch (final IllegalArgumentException ignored) {
+            } catch (final IOException | IllegalArgumentException ignored) {
                 return false;
             }
             player.setOnCompletionListener(this);

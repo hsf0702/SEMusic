@@ -21,7 +21,7 @@
 
     <style name="WhiteTabLayout" parent="Widget.Design.TabLayout">
         <item name="android:textSize">15sp</item>
-        <item name="android:textColor">@color/text_gray</item>
+        <item name="android:textColor">@color/gray</item>
     </style>
 
     <style name="style_dialog" parent="android:style/Theme.Dialog">

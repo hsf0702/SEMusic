@@ -40,7 +40,7 @@
         android:layout_marginTop="7dp"
         android:layout_toRightOf="@+id/img_down"
         android:text="17首,9首已下载"
-        android:textColor="@color/text_gray"
+        android:textColor="@color/gray"
         android:textSize="11sp"/>
 
 

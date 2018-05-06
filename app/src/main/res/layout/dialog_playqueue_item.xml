@@ -20,7 +20,7 @@
         android:layout_height="1dp"
         android:layout_gravity="center"
         android:layout_marginLeft="7dp"
-        android:background="@color/text_gray" />
+        android:background="@color/gray" />
 
     <TextView
         android:id="@+id/music_singer"
@@ -29,7 +29,7 @@
         android:layout_marginLeft="7dp"
         android:gravity="center"
         android:text="测试"
-        android:textColor="@color/text_gray"
+        android:textColor="@color/gray"
         android:textSize="13sp" />
 
     <ImageView

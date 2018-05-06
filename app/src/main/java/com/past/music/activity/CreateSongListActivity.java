@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.past.music.MyApplication;
+import com.past.music.database.provider.SongListDBService;
 import com.past.music.event.CreateSongListEvent;
 import com.past.music.pastmusic.R;
 
@@ -40,7 +40,7 @@ public class CreateSongListActivity extends AppCompatActivity {
         listName = nameInput.getText().toString();
         listInfo = infoInput.getText().toString();
         if (!TextUtils.isEmpty(listName)) {
-            MyApplication.songListDBService.insert(listName, listInfo);
+            SongListDBService.Companion.getInstance().insert(listName, listInfo);
             EventBus.getDefault().post(new CreateSongListEvent());
         }
         finish();

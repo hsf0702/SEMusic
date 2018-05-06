@@ -106,7 +106,7 @@ public class MusicQueueFragment extends DialogFragment {
         getDialog().getWindow().setAttributes(params);
         View view = inflater.inflate(R.layout.dialog_play_list, container);
         ButterKnife.bind(this, view);
-        mHandler = HandlerUtil.getInstance(mContext);
+        mHandler = HandlerUtil.Companion.getInstance();
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL);
         mAdapter = new PlayListAdapter();
         layoutManager = new LinearLayoutManager(mContext);
@@ -240,8 +240,8 @@ public class MusicQueueFragment extends DialogFragment {
                     imageView.setVisibility(View.VISIBLE);
                 } else {
                     mMusicName.setTextColor(mContext.getResources().getColor(R.color.white));
-                    mMusicSinger.setTextColor(mContext.getResources().getColor(R.color.text_gray));
-                    viewLine.setBackgroundResource(R.color.text_gray);
+                    mMusicSinger.setTextColor(mContext.getResources().getColor(R.color.gray));
+                    viewLine.setBackgroundResource(R.color.gray);
                     mMusicName.setText(musicEntity.getMusicName());
                     mMusicSinger.setText(musicEntity.getArtist());
                     imageView.setVisibility(View.GONE);

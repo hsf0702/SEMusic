@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
@@ -38,7 +38,7 @@ class DownLoadFragment : KtBaseFragment() {
         mTabLayout!!.setupWithViewPager(mViewPager)
     }
 
-    inner class FragmentAdapter(fm: FragmentManager?) : FragmentPagerAdapter(fm) {
+    inner class FragmentAdapter(fm: FragmentManager?) : FragmentStatePagerAdapter(fm) {
 
         override fun getItem(position: Int): Fragment {
             return if (position == 0) {

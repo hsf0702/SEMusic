@@ -31,7 +31,7 @@ class SongListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
     private var netSongDialog: NetSongDialog? = null
 
     constructor(context: Context, isLight: Boolean) : this(context) {
-        mHandler = HandlerUtil.getInstance(context)
+        mHandler = HandlerUtil.instance
         this.isLight = isLight
     }
 
@@ -41,7 +41,7 @@ class SongListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
     }
 
     init {
-        mHandler = HandlerUtil.getInstance(context)
+        mHandler = HandlerUtil.instance
     }
 
     override fun getItemCount(): Int {

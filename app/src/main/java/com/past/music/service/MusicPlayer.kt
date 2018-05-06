@@ -16,13 +16,12 @@ class MusicPlayer {
 
     companion object {
         var mService: IMediaAidlInterface? = null
-
         /**
          * 实现规范化Context到ServiceConnection的映射
          * 一般用weak reference引用的对象是有价值被cache, 而且很容易被重新被构建, 且很消耗内存的对象.
          * GC执行的时候就会回收weak reference
          */
-        private var mConnectionMap: WeakHashMap<Context, ServiceConnect>? = null
+        private var mConnectionMap: WeakHashMap<Context, ServiceConnect> = WeakHashMap()
 
         fun bindToService(context: Context, callback: ServiceConnection): ServiceToken? {
 
@@ -36,7 +35,7 @@ class MusicPlayer {
             contextWrapper.startService(Intent(contextWrapper, MediaService::class.java))
             val sc = ServiceConnect(callback, contextWrapper.applicationContext)
             if (contextWrapper.bindService(Intent().setClass(contextWrapper, MediaService::class.java), sc, Context.BIND_AUTO_CREATE)) {
-                mConnectionMap!![contextWrapper] = sc
+                mConnectionMap[contextWrapper] = sc
                 return ServiceToken(contextWrapper)
             }
             return null
@@ -47,9 +46,9 @@ class MusicPlayer {
                 return
             }
             val mContextWrapper = token.mWrappedContext
-            val sc = mConnectionMap!!.remove(mContextWrapper) ?: return
+            val sc = mConnectionMap.remove(mContextWrapper) ?: return
             mContextWrapper.unbindService(sc)
-            if (mConnectionMap!!.isEmpty()) {
+            if (mConnectionMap.isEmpty()) {
                 mService = null
             }
         }
@@ -414,10 +413,6 @@ class MusicPlayer {
 
             return 0
         }
-    }
-
-    init {
-        mConnectionMap = WeakHashMap()
     }
 
     class ServiceConnect(private val mCallback: ServiceConnection?, private val mContext: Context) : ServiceConnection {

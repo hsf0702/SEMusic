@@ -213,7 +213,7 @@ public class PlayMusicActivity extends BaseActivity {
         setViewPager();
         initLrcView();
 
-        mHandler = HandlerUtil.getInstance(this);
+        mHandler = HandlerUtil.Companion.getInstance();
         mHandler.removeCallbacks(mUpAlbumRunnable);
         mHandler.postDelayed(mUpAlbumRunnable, 0);
         mPlayThread = new PlayMusic();

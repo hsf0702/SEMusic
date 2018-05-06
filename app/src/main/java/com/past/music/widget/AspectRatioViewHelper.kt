@@ -77,7 +77,7 @@ class AspectRatioViewHelper(view: View, attrs: AttributeSet?) {
         if (ratio == 0f) {
             throw IllegalArgumentException("Illegal aspect ratio: 0")
         }
-        view!!.requestLayout()
+        view.requestLayout()
     }
 
 }

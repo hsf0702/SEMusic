@@ -28,7 +28,7 @@ class MusicListAdapter constructor(context: Context) : RecyclerView.Adapter<Recy
     private var mContext: Context = context
 
     init {
-        handler = HandlerUtil.getInstance(context)
+        handler = HandlerUtil.instance
     }
 
     //更新adpter的数据

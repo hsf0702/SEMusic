@@ -12,9 +12,10 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.facebook.drawee.view.SimpleDraweeView
-import com.past.music.MyApplication
 import com.past.music.activity.CreateSongListActivity
 import com.past.music.activity.SongListInfoActivity.startActivity
+import com.past.music.database.provider.MusicInfoDBService
+import com.past.music.database.provider.SongListDBService
 import com.past.music.entity.SongListEntity
 import com.past.music.pastmusic.R
 
@@ -32,11 +33,11 @@ class CreateSongListAdapter constructor(context: Context) : RecyclerView.Adapter
     private val mContext: Context = context
 
     init {
-        mList = MyApplication.songListDBService.query()
+        mList = SongListDBService.instance.query()
     }
 
     fun update() {
-        mList = MyApplication.songListDBService.query()
+        mList = SongListDBService.instance.query()
         notifyDataSetChanged()
     }
 
@@ -125,7 +126,7 @@ class CreateSongListAdapter constructor(context: Context) : RecyclerView.Adapter
         fun onBind(songListEntity: SongListEntity) {
             songListPic!!.setImageURI(songListEntity.getList_pic())
             mPlayListTitle!!.text = songListEntity.getName()
-            mPlayListInfo!!.text = MyApplication.musicInfoDBService.getLocalCount(songListEntity.getId())
+            mPlayListInfo!!.text = MusicInfoDBService.instance.getLocalCount(songListEntity.getId())
         }
     }
 

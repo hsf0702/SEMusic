@@ -91,7 +91,7 @@
             android:layout_marginTop="15dp"
             android:gravity="center"
             android:text="歌单里没有歌曲"
-            android:textColor="@color/text_gray"
+            android:textColor="@color/gray"
             android:textSize="16sp"/>
 
         <TextView
@@ -101,7 +101,7 @@
             android:layout_marginTop="8dp"
             android:gravity="center"
             android:text="你可以挑一些歌曲添加到这里"
-            android:textColor="@color/text_gray"
+            android:textColor="@color/gray"
             android:textSize="14sp"/>
 
         <TextView
