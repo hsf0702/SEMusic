@@ -13,6 +13,7 @@ import com.past.music.MusicApplication
 import com.past.music.adapter.MusicListAdapter
 import com.past.music.entity.MusicEntity
 import com.past.music.pastmusic.R
+import com.past.music.singleton.ApplicationSingleton
 import com.past.music.utils.MConstants
 import com.past.music.utils.MusicUtils
 
@@ -52,7 +53,7 @@ class LocalMusicSongFragment : Fragment() {
         object : AsyncTask<Void, Void, String>() {
             override fun doInBackground(vararg params: Void?): String {
                 musicList.clear()
-                musicList.addAll(MusicUtils.queryMusic(MusicApplication.instance, MConstants.START_FROM_LOCAL) as ArrayList)
+                musicList.addAll(MusicUtils.queryMusic(ApplicationSingleton.instance!!, MConstants.START_FROM_LOCAL) as ArrayList)
                 mAdapter!!.updateDataSet(musicList)
                 return ""
             }

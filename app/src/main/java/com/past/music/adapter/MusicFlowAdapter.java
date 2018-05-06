@@ -15,7 +15,7 @@ import com.past.music.pastmusic.R;
 import java.util.List;
 
 /**
- * Created by wm on 2016/2/21.
+ * Created by gaojin on 2018/2/21.
  */
 public class MusicFlowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener {
     private List<OverFlowItem> mList;

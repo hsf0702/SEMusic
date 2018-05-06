@@ -50,6 +50,7 @@ import com.past.music.database.provider.RecentStore;
 import com.past.music.entity.MusicEntity;
 import com.past.music.pastmusic.IMediaAidlInterface;
 import com.past.music.pastmusic.R;
+import com.past.music.singleton.ApplicationSingleton;
 import com.past.music.singleton.GsonSingleton;
 import com.past.music.utils.SharePreferencesUtils;
 
@@ -2096,7 +2097,7 @@ public class MediaService extends Service {
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 if (path.startsWith("content://")) {
                     player.setOnPreparedListener(null);
-                    player.setDataSource(MusicApplication.Companion.getInstance(), Uri.parse(path));
+                    player.setDataSource(ApplicationSingleton.Companion.getInstance(), Uri.parse(path));
                     player.prepare();
                     mIsTrackPrepared = true;
                     player.setOnCompletionListener(this);
@@ -2145,7 +2146,7 @@ public class MediaService extends Service {
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 if (path.startsWith("content://")) {
                     player.setOnPreparedListener(preparedNextListener);
-                    player.setDataSource(MusicApplication.Companion.getInstance(), Uri.parse(path));
+                    player.setDataSource(ApplicationSingleton.Companion.getInstance(), Uri.parse(path));
                     player.prepare();
                 } else {
                     player.setDataSource(path);

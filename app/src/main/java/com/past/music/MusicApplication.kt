@@ -1,7 +1,9 @@
 package com.past.music
 
 import android.app.Application
+import android.content.Context
 import com.facebook.drawee.backends.pipeline.Fresco
+import com.past.music.singleton.ApplicationSingleton
 
 /**
  * Author: gaojin
@@ -10,8 +12,9 @@ import com.facebook.drawee.backends.pipeline.Fresco
  */
 class MusicApplication : Application() {
 
-    companion object {
-        val instance: MusicApplication by lazy { MusicApplication() }
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+        ApplicationSingleton.bindInstance(this)
     }
 
     override fun onCreate() {

@@ -2,7 +2,7 @@ package com.past.music.utils
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.past.music.MusicApplication
+import com.past.music.singleton.ApplicationSingleton
 
 /**
  * Author: gaojin
@@ -21,7 +21,7 @@ class SharePreferencesUtils {
         val instance: SharePreferencesUtils by lazy { SharePreferencesUtils() }
     }
 
-    private val mPreferences: SharedPreferences = MusicApplication.instance.getSharedPreferences(SHARE_PREFERENCE_NAME, Context.MODE_PRIVATE)
+    private val mPreferences: SharedPreferences = ApplicationSingleton.instance!!.getSharedPreferences(SHARE_PREFERENCE_NAME, Context.MODE_PRIVATE)
 
 
     fun getArtistSortOrder(): String {

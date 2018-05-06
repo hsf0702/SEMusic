@@ -2,6 +2,7 @@ package com.past.music.mine.root
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,7 +42,6 @@ class MineAdapter constructor(private var context: Context) : RecyclerView.Adapt
 
             holder.songListTitle!!.text = songListEntity.name
             holder.songListInfo!!.text = songListEntity.info
-
             holder.songListItem!!.setOnClickListener { Toast.makeText(context, "gj_jump", Toast.LENGTH_SHORT).show() }
         }
     }

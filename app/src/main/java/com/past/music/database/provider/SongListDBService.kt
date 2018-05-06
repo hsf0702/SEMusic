@@ -1,5 +1,6 @@
 package com.past.music.database.provider
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import com.past.music.database.MusicDBHelper
 import com.past.music.database.entity.SongListCache

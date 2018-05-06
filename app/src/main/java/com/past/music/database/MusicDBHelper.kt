@@ -3,12 +3,12 @@ package com.past.music.database
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import com.past.music.MusicApplication
 import com.past.music.database.entity.ImageCache
 import com.past.music.database.entity.MusicInfoCache
 import com.past.music.database.entity.SongListCache
 import com.past.music.database.provider.RecentStore
 import com.past.music.database.provider.SearchHistory
+import com.past.music.singleton.ApplicationSingleton
 
 /**
  * Author: gaojin
@@ -57,7 +57,7 @@ class MusicDBHelper(context: Context, name: String?, factory: SQLiteDatabase.Cur
             "PRIMARY KEY (" + MusicInfoCache.ID + ")" +
             ");"
 
-    constructor() : this(MusicApplication.instance, DB_NAME, null, DB_VERSION)
+    constructor() : this(ApplicationSingleton.instance!!.applicationContext, DB_NAME, null, DB_VERSION)
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(IMAGE_TABLE_CREATE)
