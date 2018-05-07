@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import com.past.music.kmvp.KBasePresenter
 import com.past.music.kmvp.KMvpPage
 import com.past.music.kmvp.KMvpPresenter
+import com.past.music.mine.personal.MinePersonalInfoView
 import com.past.music.mine.root.MineAdapter
 import com.past.music.pastmusic.R
 
@@ -30,7 +31,6 @@ class MvpMineFragment : Fragment(), KMvpPage {
     }
 
     override fun onPageError(exception: Exception) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -43,6 +43,8 @@ class MvpMineFragment : Fragment(), KMvpPage {
         recyclerView!!.layoutManager = LinearLayoutManager(context)
         adapter = MineAdapter(context!!)
         recyclerView!!.adapter = adapter
+
+        presenter.add(MinePersonalInfoView(presenter, R.id.mine_personal_info, adapter!!.header!!))
     }
 
     override fun onStart() {

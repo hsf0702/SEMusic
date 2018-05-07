@@ -2,7 +2,6 @@ package com.past.music.mine.root
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,12 +23,14 @@ class MineAdapter constructor(private var context: Context) : RecyclerView.Adapt
     private val HEADER = 0X01
     private val LIST = 0X02
     private var list: List<SongListEntity> = SongListDBService.instance.query()
-
+    var header: View? = null
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
-        return when (viewType) {
-            HEADER -> HeadItemHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.mine_header_view_layout, parent, false))
-            else -> ListItemHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.mine_list_view_layout, parent, false))
+        return if (viewType == HEADER) {
+            header = LayoutInflater.from(parent!!.context).inflate(R.layout.mine_header_view_layout, parent, false)
+            HeadItemHolder(header!!)
+        } else {
+            ListItemHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.mine_list_view_layout, parent, false))
         }
     }
 

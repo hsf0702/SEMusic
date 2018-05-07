@@ -77,6 +77,21 @@ abstract class KBaseView(private var presenter: KMvpPresenter, private val viewI
         }
     }
 
+    /**
+     * getActivity().findViewById找不到View情况
+     */
+    protected fun initView(rootView: View) {
+        if (view == null) {
+            view = createView()
+            replace(rootView, viewId, view)
+        }
+    }
+
+    protected fun replace(rootView: View, @IdRes targetId: Int, source: View?) {
+        val target: View = rootView.findViewById(targetId)
+        replace(target, source)
+    }
+
     protected fun replace(@IdRes targetId: Int, source: View?) {
         val target: View = getActivity()!!.findViewById(targetId)
         replace(target, source)
