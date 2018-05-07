@@ -9,7 +9,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.past.music.GlideApp
-import com.past.music.database.provider.SongListDBService
 import com.past.music.entity.SongListEntity
 import com.past.music.pastmusic.R
 import com.past.music.utils.CollectionUtils
@@ -18,16 +17,18 @@ import com.past.music.utils.CollectionUtils
  * Author: gaojin
  * Time: 2018/5/4 下午10:50
  */
-class MineAdapter constructor(private var context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MineAdapter constructor(private var context: Context, private val list: List<SongListEntity>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val HEADER = 0X01
     private val LIST = 0X02
-    private var list: List<SongListEntity> = SongListDBService.instance.query()
     var header: View? = null
+
+    init {
+        header = LayoutInflater.from(context).inflate(R.layout.mine_header_view_layout, null)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == HEADER) {
-            header = LayoutInflater.from(parent!!.context).inflate(R.layout.mine_header_view_layout, parent, false)
             HeadItemHolder(header!!)
         } else {
             ListItemHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.mine_list_view_layout, parent, false))

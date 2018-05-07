@@ -58,6 +58,29 @@ abstract class KBaseView(private var presenter: KMvpPresenter, private val viewI
         }
     }
 
+    override fun <D : Any> onDataChanged(data: D, view: View) {
+        initView(view)
+        if (data::class == Any::class) {
+            throw IllegalArgumentException("Please don't dispatch data whose Class type is Any !!!")
+        }
+
+        val declaredMemberFunctions = this::class.declaredMemberFunctions
+        for (item: KFunction<*> in declaredMemberFunctions) {
+            if (item.name == "onDataChanged") {
+                try {
+                    item.call(this, data)
+                } catch (e: IllegalArgumentException) {
+                    continue
+                } catch (e: InvocationTargetException) {
+                    continue
+                } catch (e: IllegalAccessException) {
+                    continue
+                }
+                break
+            }
+        }
+    }
+
     override fun getView(): View {
         initView()
         return view!!

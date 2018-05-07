@@ -1,4 +1,4 @@
-package com.past.music.utils
+package com.past.music.singleton
 
 import com.google.gson.Gson
 

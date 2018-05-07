@@ -1,38 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="10dp"
+              android:background="@color/white"
+              android:orientation="vertical">
 
     <ImageView
         android:id="@+id/img_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/item_music" />
+        tools:src="@drawable/item_music"/>
 
     <TextView
         android:id="@+id/tv_item_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/img_item"
         android:layout_marginTop="4dp"
         android:gravity="center"
-        android:text="本地歌曲"
         android:textColor="@color/black"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        tools:text="本地歌曲"/>
 
     <TextView
         android:id="@+id/tv_item_count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_item_name"
         android:layout_marginTop="4dp"
         android:gravity="center"
-        android:text="151"
-        android:textSize="11sp" />
+        android:textSize="12sp"
+        tools:text="151"/>
 
-</RelativeLayout>
+</LinearLayout>

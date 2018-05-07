@@ -2,7 +2,6 @@ package com.past.music.fragment
 
 import android.os.AsyncTask
 import android.os.Bundle
-import android.os.Handler
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -11,12 +10,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.past.music.database.provider.RecentStore
-import com.past.music.dialog.SongOperationDialog
 import com.past.music.entity.MusicEntity
 import com.past.music.pastmusic.R
 import com.past.music.service.MusicPlayer
 import com.past.music.utils.HandlerUtil
-import com.past.music.utils.MConstants
 import com.past.music.utils.MusicUtils
 import com.past.music.utils.recent.Song
 import com.past.music.utils.recent.SongLoader
@@ -77,8 +74,6 @@ class RecentMusicFragment : KtBaseFragment() {
     }
 
     inner class Adapter(private var mList: List<Song>?) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-        private val handler: Handler? = null
-        internal var songOperationDialog: SongOperationDialog? = null
 
         init {
             if (mList == null) {
@@ -154,9 +149,6 @@ class RecentMusicFragment : KtBaseFragment() {
             private var mViewPagerButton: ImageView? = null
 
             private fun setListButton() {
-                val musicEntity = MusicUtils.getMusicInfo(context!!, mList!![adapterPosition - 1].id)
-                songOperationDialog = SongOperationDialog(context, musicEntity, MConstants.MUSICOVERFLOW)
-                songOperationDialog!!.show()
             }
 
             init {

@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.past.music.activity.PlayMusicActivity;
-import com.past.music.dialog.MusicQueueFragment;
 import com.past.music.pastmusic.R;
 import com.past.music.service.MusicPlayer;
 
@@ -64,7 +63,6 @@ public class QuickControlsFragment extends BaseFragment {
 
     @OnClick(R.id.play_list)
     void playList() {
-        MusicQueueFragment.newInstance().show(getFragmentManager(), "music_queue");
     }
 
     @OnClick(R.id.control)

@@ -3,6 +3,7 @@ package com.past.music
 import android.app.Application
 import android.content.Context
 import com.facebook.drawee.backends.pipeline.Fresco
+import com.past.music.base.BaseConfig
 import com.past.music.singleton.ApplicationSingleton
 
 /**
@@ -20,5 +21,6 @@ class MusicApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         Fresco.initialize(this)
+        BaseConfig.init(this)
     }
 }

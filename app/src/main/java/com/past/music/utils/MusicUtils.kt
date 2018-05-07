@@ -110,22 +110,22 @@ class MusicUtils : MConstants {
 
             when (from) {
                 START_FROM_LOCAL -> {
-                    return getMusicListCursor(cr.query(uri, info_music, select.toString(), null, SharePreferencesUtils.SONG_SORT_ORDER))
+                    return getMusicListCursor(cr.query(uri, info_music, select.toString(), null, SharePreferencesUtils.instance.getSongSortOrder()))
                 }
                 START_FROM_ARTIST -> {
                     select.append(" and " + MediaStore.Audio.Media.ARTIST_ID + " = " + id)
-                    return getMusicListCursor(cr.query(uri, info_music, select.toString(), null, SharePreferencesUtils.ARTIST_SORT_ORDER))
+                    return getMusicListCursor(cr.query(uri, info_music, select.toString(), null, SharePreferencesUtils.instance.getArtistSortOrder()))
                 }
                 START_FROM_ALBUM -> {
                     select.append(" and " + MediaStore.Audio.Media.ALBUM_ID + " = " + id)
-                    return getMusicListCursor(cr.query(uri, info_music, select.toString(), null, SharePreferencesUtils.ALBUM_SORT_ORDER))
+                    return getMusicListCursor(cr.query(uri, info_music, select.toString(), null, SharePreferencesUtils.instance.getAlbumSortOrder()))
                 }
                 START_FROM_FOLDER -> {
                     val list = getMusicListCursor(cr.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, proj_music,
                             select.toString(), null, null))
                     return list.filterTo(ArrayList()) { it.data.substring(0, it.data.lastIndexOf(File.separator)) == id }
                 }
-                else -> return getMusicListCursor(cr.query(uri, info_music, select.toString(), null, SharePreferencesUtils.SONG_SORT_ORDER))
+                else -> return getMusicListCursor(cr.query(uri, info_music, select.toString(), null, SharePreferencesUtils.instance.getSongSortOrder()))
             }
 
         }
@@ -186,7 +186,7 @@ class MusicUtils : MConstants {
             where.append(")")
 
             return getArtistList(cr.query(uri, info_artist,
-                    where.toString(), null, SharePreferencesUtils.ARTIST_SORT_ORDER))
+                    where.toString(), null, SharePreferencesUtils.instance.getArtistSortOrder()))
 
         }
 
@@ -224,7 +224,7 @@ class MusicUtils : MConstants {
 
             // Media.ALBUM_KEY 按专辑名称排序
             return getAlbumList(cr.query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, info_album,
-                    where.toString(), null, SharePreferencesUtils.ALBUM_SORT_ORDER))
+                    where.toString(), null, SharePreferencesUtils.instance.getAlbumSortOrder()))
 
         }
 

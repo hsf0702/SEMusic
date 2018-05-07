@@ -1,13 +1,12 @@
 package com.past.music.retrofit
 
-import android.util.Log
 import com.past.music.online.model.ExpressInfoModel
 import com.past.music.online.model.HallModel
 import com.past.music.online.model.RecommendListModel
 import com.past.music.online.model.SingerModel
 import com.past.music.online.params.CommonPostParams
 import com.past.music.online.params.ExpressPostParams
-import com.past.music.utils.GsonFactory
+import com.past.music.singleton.GsonFactory
 import retrofit2.Call
 import retrofit2.Retrofit
 

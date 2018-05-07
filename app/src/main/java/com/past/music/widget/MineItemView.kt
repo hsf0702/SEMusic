@@ -14,9 +14,9 @@ import com.past.music.pastmusic.R
  */
 class MineItemView : LinearLayout {
 
-    internal var mImageView: ImageView? = null
-    internal var mItemName: TextView? = null
-    internal var mItemCount: TextView? = null
+    private var mImageView: ImageView? = null
+    private var mItemName: TextView? = null
+    private var mItemCount: TextView? = null
 
     private var count: Int = 0
     private var itemtext: String? = null

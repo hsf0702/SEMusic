@@ -23,6 +23,13 @@
     <string name="local_music_tab">我的</string>
     <string name="online_music_tab">音乐馆</string>
 
+    <string name="mine_local_music">本地歌曲</string>
+    <string name="mine_down_music">下载歌曲</string>
+    <string name="mine_recent_music">最近播放</string>
+    <string name="mine_love_music">我喜欢</string>
+    <string name="mine_love_singer">我的歌手</string>
+    <string name="mine_buy_music">已购音乐</string>
+
 
     <string name="classify_singer">歌手</string>
     <string name="classify_rank">排行</string>

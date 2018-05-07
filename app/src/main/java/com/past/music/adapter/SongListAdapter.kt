@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.facebook.drawee.view.SimpleDraweeView
-import com.past.music.dialog.NetSongDialog
 import com.past.music.entity.MusicEntity
 import com.past.music.pastmusic.R
 import com.past.music.service.MusicPlayer
@@ -28,7 +27,6 @@ class SongListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
     private var mList: List<MusicEntity>? = null
     private var mHandler: Handler? = null
     private var isLight = true
-    private var netSongDialog: NetSongDialog? = null
 
     constructor(context: Context, isLight: Boolean) : this(context) {
         mHandler = HandlerUtil.instance
@@ -65,8 +63,6 @@ class SongListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
         var mLine: View = itemView.findViewById(R.id.line)
 
         fun more() {
-            netSongDialog = NetSongDialog(mContext, mList!![adapterPosition], MConstants.MUSICOVERFLOW)
-            netSongDialog!!.show()
         }
 
         init {

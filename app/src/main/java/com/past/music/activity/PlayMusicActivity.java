@@ -45,7 +45,6 @@ import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.past.music.dialog.MusicQueueFragment;
 import com.past.music.fragment.RoundFragment;
 import com.past.music.lrc.DefaultLrcParser;
 import com.past.music.lrc.LrcRow;
@@ -139,7 +138,6 @@ public class PlayMusicActivity extends BaseActivity {
 
     @OnClick(R.id.playing_playlist)
     void play_list() {
-        MusicQueueFragment.newInstance().show(getSupportFragmentManager(), "music_queue");
     }
 
     @BindView(R.id.play_seek)

@@ -9,7 +9,9 @@ import android.view.View
 interface KMvpView {
     fun setPresenter(presenter: KMvpPresenter)
 
-    fun <D:Any> onDataChanged(data: D)
+    fun <D : Any> onDataChanged(data: D)
+
+    fun <D : Any> onDataChanged(data: D, view: View)
 
     fun getView(): View
 
