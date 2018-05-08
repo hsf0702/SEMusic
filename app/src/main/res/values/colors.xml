@@ -9,6 +9,9 @@
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="gray">#FF999999</color>
+    <color name="light_gray">#efeeee</color>
+    <color name="light_black">#333333</color>
+    <color name="black2">#666666</color>
     <color name="select_gray">#dedede</color>
     <color name="medium_sea_green">#31C27C</color>
     <color name="content_bg">#F5F5F5</color>
@@ -20,6 +23,7 @@
     <!--灰色-->
     <color name="background_gray">#F1F1F1</color>
     <color name="split_color">#E3E3E3</color>
+    <color name="e5e5e5">#ffe5e5e5</color>
 
     <!--底部栏-->
 

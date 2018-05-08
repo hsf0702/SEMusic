@@ -37,7 +37,7 @@ class MineAdapter constructor(private var context: Context, private val list: Li
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         if (holder is ListItemHolder) {
-            val songListEntity: SongListEntity = list[position + 1]
+            val songListEntity: SongListEntity = list[position - 1]
             GlideApp.with(context)
                     .load(songListEntity.list_pic)
                     .into(holder.imageView!!)
@@ -75,8 +75,8 @@ class MineAdapter constructor(private var context: Context, private val list: Li
 
         init {
             imageView = itemView.findViewById(R.id.song_list_image)
-            songListTitle = itemView.findViewById(R.id.play_list_title)
-            songListInfo = itemView.findViewById(R.id.play_list_info)
+            songListTitle = itemView.findViewById(R.id.song_list_name)
+            songListInfo = itemView.findViewById(R.id.song_list_content)
             songListItem = itemView.findViewById(R.id.song_list_item)
         }
     }

@@ -12,6 +12,7 @@ import com.past.music.entity.SongListEntity
 import com.past.music.kmvp.KBasePresenter
 import com.past.music.kmvp.KMvpPage
 import com.past.music.kmvp.KMvpPresenter
+import com.past.music.mine.listname.MineSongListNameView
 import com.past.music.mine.operation.MineOperationView
 import com.past.music.mine.personal.MinePersonalInfoView
 import com.past.music.mine.root.MineAdapter
@@ -26,7 +27,7 @@ class MvpMineFragment : Fragment(), KMvpPage {
     private val presenter: KMvpPresenter = KBasePresenter(this)
     private var recyclerView: RecyclerView? = null
     private var adapter: MineAdapter? = null
-    private var list: List<SongListEntity>? = null
+    private var list = ArrayList<SongListEntity>()
 
     companion object {
         fun newInstance(): MvpMineFragment {
@@ -41,8 +42,7 @@ class MvpMineFragment : Fragment(), KMvpPage {
         val rootView: View = inflater.inflate(R.layout.fragment_mine_mvp, container, false)
         recyclerView = rootView.findViewById(R.id.mine_recycler_view)
         recyclerView!!.layoutManager = LinearLayoutManager(context)
-        list = SongListDBService.instance.query()
-        adapter = MineAdapter(context!!, list!!)
+        adapter = MineAdapter(context!!, list)
         recyclerView!!.adapter = adapter
         return rootView
     }
@@ -50,6 +50,7 @@ class MvpMineFragment : Fragment(), KMvpPage {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         presenter.add(MinePersonalInfoView(presenter, R.id.mine_personal_info, adapter!!.header!!))
         presenter.add(MineOperationView(presenter, R.id.mine_fun_area, adapter!!.header!!))
+        presenter.add(MineSongListNameView(presenter, R.id.mine_song_list_title, adapter!!.header!!, list))
     }
 
     override fun onStart() {
@@ -60,6 +61,10 @@ class MvpMineFragment : Fragment(), KMvpPage {
     override fun onResume() {
         super.onResume()
         presenter.onResume()
+        list.addAll(SongListDBService.instance.query())
+        if (!list.isEmpty()) {
+            adapter!!.notifyItemRangeChanged(1, list.size)
+        }
     }
 
     override fun onPause() {
