@@ -1,13 +1,17 @@
 package com.past.music.mine.listname
 
 import android.content.Intent
+import android.support.annotation.Keep
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import com.past.music.activity.CreateSongListActivity
-import com.past.music.entity.SongListEntity
+import com.past.music.database.provider.SongListDBService
 import com.past.music.kmvp.KBaseView
+import com.past.music.kmvp.KMvpOnResume
 import com.past.music.kmvp.KMvpPresenter
+import com.past.music.mine.event.CollectEvent
+import com.past.music.mine.event.CreateEvent
 import com.past.music.pastmusic.R
 
 /**
@@ -16,8 +20,7 @@ import com.past.music.pastmusic.R
  */
 class MineSongListNameView(presenter: KMvpPresenter
                            , viewId: Int
-                           , view: View
-                           , private var list: List<SongListEntity>) : KBaseView(presenter, viewId), View.OnClickListener {
+                           , view: View) : KBaseView(presenter, viewId), View.OnClickListener {
 
     private var titleCreated: TextView? = null
     private var titleCollected: TextView? = null
@@ -28,13 +31,16 @@ class MineSongListNameView(presenter: KMvpPresenter
     private var llCreateNewSongList: View? = null
     private var tvNoCollectedSongList: View? = null
 
+    private var createSongListSize = 0
+    private var collectedSongListSize = 0
+    private var isCreateTab = true
+
     init {
         initView(view)
     }
 
     override fun createView(): View {
         val rootView = LayoutInflater.from(getContext()).inflate(R.layout.mine_song_list_title_layout, null)
-
         titleCreated = rootView.findViewById(R.id.tv_title_created)
         titleCollected = rootView.findViewById(R.id.tv_title_collected)
         songListCount = rootView.findViewById(R.id.song_list_count)
@@ -54,35 +60,38 @@ class MineSongListNameView(presenter: KMvpPresenter
     }
 
     private fun bindView() {
-        titleCreated!!.setTextColor(getContext()!!.resources.getColor(R.color.light_black))
-        titleCollected!!.setTextColor(getContext()!!.resources.getColor(R.color.gray))
-
-        if (list.isEmpty()) {
-            songListCount!!.text = getContext()!!.resources.getString(R.string.song_list_count, 0)
-            llCreateNewSongList!!.visibility = View.VISIBLE
-            tvNoCollectedSongList!!.visibility = View.GONE
-        } else {
-            songListCount!!.text = getContext()!!.resources.getString(R.string.song_list_count, list.size)
-            llCreateNewSongList!!.visibility = View.GONE
+        if (isCreateTab) {
+            titleCreated!!.setTextColor(getContext()!!.resources.getColor(R.color.light_black))
+            titleCollected!!.setTextColor(getContext()!!.resources.getColor(R.color.gray))
         }
     }
 
     private fun clickCreated() {
+        if (isCreateTab) {
+            return
+        }
         titleCreated!!.setTextColor(getContext()!!.resources.getColor(R.color.light_black))
         titleCollected!!.setTextColor(getContext()!!.resources.getColor(R.color.gray))
-        tvNoCollectedSongList!!.visibility = View.GONE
+        songListCount!!.text = getContext()!!.resources.getString(R.string.song_list_count, createSongListSize)
         addSongList!!.visibility = View.VISIBLE
-        if (list.isEmpty()) {
-            llCreateNewSongList!!.visibility = View.VISIBLE
-        }
+        tvNoCollectedSongList!!.visibility = View.GONE
+        llCreateNewSongList!!.visibility = if (createSongListSize == 0) View.VISIBLE else View.GONE
+        dispatchData(CreateEvent())
+        isCreateTab = true
     }
 
     private fun clickCollected() {
+        if (!isCreateTab) {
+            return
+        }
         titleCollected!!.setTextColor(getContext()!!.resources.getColor(R.color.light_black))
         titleCreated!!.setTextColor(getContext()!!.resources.getColor(R.color.gray))
-        llCreateNewSongList!!.visibility = View.GONE
+        songListCount!!.text = getContext()!!.resources.getString(R.string.song_list_count, collectedSongListSize)
         addSongList!!.visibility = View.GONE
-        tvNoCollectedSongList!!.visibility = View.VISIBLE
+        llCreateNewSongList!!.visibility = View.GONE
+        tvNoCollectedSongList!!.visibility = if (collectedSongListSize == 0) View.VISIBLE else View.GONE
+        dispatchData(CollectEvent())
+        isCreateTab = false
     }
 
     private fun createNewSongList() {
@@ -100,4 +109,19 @@ class MineSongListNameView(presenter: KMvpPresenter
         }
     }
 
+    @Keep
+    fun onDataChanged(onResume: KMvpOnResume) {
+        createSongListSize = SongListDBService.instance.query().size
+        collectedSongListSize = SongListDBService.instance.query().size
+
+        if (isCreateTab) {
+            songListCount!!.text = getContext()!!.resources.getString(R.string.song_list_count, createSongListSize)
+            tvNoCollectedSongList!!.visibility = View.GONE
+            llCreateNewSongList!!.visibility = if (createSongListSize == 0) View.VISIBLE else View.GONE
+        } else {
+            songListCount!!.text = getContext()!!.resources.getString(R.string.song_list_count, collectedSongListSize)
+            llCreateNewSongList!!.visibility = View.GONE
+            tvNoCollectedSongList!!.visibility = if (collectedSongListSize == 0) View.VISIBLE else View.GONE
+        }
+    }
 }

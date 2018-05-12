@@ -34,7 +34,7 @@ class KBasePresenter(private var page: KMvpPage) : KMvpPresenter {
         for (item: KFunction<*> in declaredMemberFunctions) {
             if (item.name == "onViewChanged") {
                 try {
-                    item.call(page, data)
+                    item.call(page, id, data)
                 } catch (e: IllegalArgumentException) {
                     continue
                 } catch (e: InvocationTargetException) {
