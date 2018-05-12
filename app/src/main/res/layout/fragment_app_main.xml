@@ -4,7 +4,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              tools:context="com.past.music.fragment.AppMainFragment">
+              tools:context="com.se.music.fragment.AppMainFragment">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -13,7 +13,7 @@
         android:background="@color/colorPrimary"
         app:contentInsetStart="0dp">
 
-        <com.past.music.widget.TitleZoomTabLayout
+        <com.se.music.widget.TitleZoomTabLayout
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

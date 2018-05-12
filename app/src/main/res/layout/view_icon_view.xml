@@ -6,7 +6,7 @@
               android:background="@color/white"
               android:orientation="vertical">
 
-    <com.past.music.widget.AutoHeightImageView
+    <com.se.music.widget.AutoHeightImageView
         android:id="@+id/img_hot_pic"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

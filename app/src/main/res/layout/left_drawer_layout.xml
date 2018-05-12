@@ -11,7 +11,7 @@
         android:background="@drawable/bb_meteor"
         android:scaleType="centerCrop" />
 
-    <com.past.music.widget.CircleImageView
+    <com.se.music.widget.CircleImageView
         android:id="@+id/head_portrait"
         android:layout_width="48dp"
         android:layout_height="48dp"

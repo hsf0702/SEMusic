@@ -46,7 +46,7 @@
                     android:scaleType="fitCenter"
                     android:src="@drawable/play_disc_halo"/>
 
-                <com.past.music.widget.AlbumViewPager
+                <com.se.music.widget.AlbumViewPager
                     android:id="@+id/view_pager"
                     android:layout_width="match_parent"
                     android:layout_height="263dp"
@@ -130,7 +130,7 @@
                 android:text="获取封面和歌词"
                 android:textAlignment="center"/>
 
-            <com.past.music.lrc.LrcView
+            <com.se.music.lrc.LrcView
                 android:id="@+id/lrcview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -204,7 +204,7 @@
                     android:textColor="@color/white_text"
                     android:textSize="10sp"/>
 
-                <com.past.music.widget.PlayerSeekBar
+                <com.se.music.widget.PlayerSeekBar
                     android:id="@+id/play_seek"
                     style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                     android:layout_width="0dp"

@@ -5,7 +5,7 @@
               android:layout_height="55dp"
               android:orientation="horizontal">
 
-    <com.past.music.widget.CircleImageView
+    <com.se.music.widget.CircleImageView
         android:id="@+id/singer_avatar"
         android:layout_width="42dp"
         android:layout_height="42dp"

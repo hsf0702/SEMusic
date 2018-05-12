@@ -7,7 +7,7 @@
     android:background="@color/background_gray"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="com.past.music.activity.CreateSongListActivity">
+    tools:context="com.se.music.activity.CreateSongListActivity">
 
     <RelativeLayout
         android:id="@+id/base_toolbar"
