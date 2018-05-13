@@ -156,6 +156,7 @@ public class PlayMusicActivity extends BaseActivity {
                         if (bitmap != null) {
                             mBitmap = bitmap;
                             Drawable drawable = null;
+                            mBackAlbum.setBackground(drawable);
                         }
                     }
 
@@ -403,7 +404,7 @@ public class PlayMusicActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.setAction(MediaService.TRY_GET_TRACKINFO);
+                intent.setAction(MediaService.Companion.getTRY_GET_TRACKINFO());
                 sendBroadcast(intent);
                 Toast.makeText(getApplicationContext(), "正在获取信息", Toast.LENGTH_SHORT).show();
             }
@@ -584,22 +585,19 @@ public class PlayMusicActivity extends BaseActivity {
     }
 
     private void updatePlaymode() {
-        if (MusicPlayer.Companion.getShuffleMode() == MediaService.SHUFFLE_NORMAL) {
+        if (MusicPlayer.Companion.getShuffleMode() == MediaService.Companion.getSHUFFLE_NORMAL()) {
             mPlayMode.setImageResource(R.drawable.play_icn_shuffle);
             Toast.makeText(PlayMusicActivity.this.getApplication(), getResources().getString(R.string.random_play),
                     Toast.LENGTH_SHORT).show();
         } else {
-            switch (MusicPlayer.Companion.getRepeatMode()) {
-                case MediaService.REPEAT_ALL:
-                    mPlayMode.setImageResource(R.drawable.play_icn_loop);
-                    Toast.makeText(PlayMusicActivity.this.getApplication(), getResources().getString(R.string.loop_play),
-                            Toast.LENGTH_SHORT).show();
-                    break;
-                case MediaService.REPEAT_CURRENT:
-                    mPlayMode.setImageResource(R.drawable.play_icn_one);
-                    Toast.makeText(PlayMusicActivity.this.getApplication(), getResources().getString(R.string.play_one),
-                            Toast.LENGTH_SHORT).show();
-                    break;
+            if (MusicPlayer.Companion.getRepeatMode() == MediaService.Companion.getREPEAT_ALL()) {
+                mPlayMode.setImageResource(R.drawable.play_icn_loop);
+                Toast.makeText(PlayMusicActivity.this.getApplication(), getResources().getString(R.string.loop_play),
+                        Toast.LENGTH_SHORT).show();
+            } else if (MusicPlayer.Companion.getRepeatMode() == MediaService.Companion.getREPEAT_CURRENT()) {
+                mPlayMode.setImageResource(R.drawable.play_icn_one);
+                Toast.makeText(PlayMusicActivity.this.getApplication(), getResources().getString(R.string.play_one),
+                        Toast.LENGTH_SHORT).show();
             }
         }
 
