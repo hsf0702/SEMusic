@@ -15,9 +15,9 @@ import com.se.music.entity.MusicEntity
 import com.se.music.service.MusicPlayer
 import com.se.music.utils.HandlerUtil
 import com.se.music.utils.MusicUtils
-import com.se.music.utils.recent.Song
-import com.se.music.utils.recent.SongLoader
-import com.se.music.utils.recent.TopTracksLoader
+import com.se.music.database.recent.Song
+import com.se.music.database.recent.SongLoader
+import com.se.music.database.recent.TopTracksLoader
 import java.util.*
 
 /**

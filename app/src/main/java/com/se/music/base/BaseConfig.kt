@@ -10,6 +10,8 @@ class BaseConfig {
 
     companion object {
 
+        val picBaseUrl = "http://y.gtimg.cn/music/photo_new/T001R300x300M000%1\$s.jpg"
+
         private var displayInited: Boolean = false
         var width: Int = 0
         var height: Int = 0

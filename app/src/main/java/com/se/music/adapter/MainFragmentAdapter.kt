@@ -13,12 +13,8 @@ import com.se.music.online.MvpMusicFragment
  * date：2017/11/3 下午8:58
  */
 class MainFragmentAdapter(context: Context, fm: FragmentManager?) : FragmentPagerAdapter(fm) {
-    private val tabNames = ArrayList<String>()
-
-    init {
-        tabNames.add(context.getString(R.string.local_music_tab))
-        tabNames.add(context.getString(R.string.online_music_tab))
-    }
+    private val tabNames = listOf(context.getString(R.string.local_music_tab)
+            , context.getString(R.string.online_music_tab))
 
     override fun getItem(position: Int): Fragment? {
         return when (position) {

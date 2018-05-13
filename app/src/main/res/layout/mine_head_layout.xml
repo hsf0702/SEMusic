@@ -12,7 +12,6 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/mine_head_listen_time"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -23,13 +22,11 @@
             android:text="52分钟" />
 
         <com.se.music.widget.CircleImageView
-            android:id="@+id/mine_head_avatar"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:src="@drawable/avatar" />
 
         <TextView
-            android:id="@+id/mine_head_listen_vip"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -40,7 +37,6 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/mine_head_user_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"

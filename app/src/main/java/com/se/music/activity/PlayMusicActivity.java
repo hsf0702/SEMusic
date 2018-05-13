@@ -53,7 +53,6 @@ import com.se.music.lrc.LrcView;
 import com.se.music.service.MediaService;
 import com.se.music.service.MusicPlayer;
 import com.se.music.utils.HandlerUtil;
-import com.se.music.utils.ImageUtils;
 import com.se.music.utils.MusicUtils;
 import com.se.music.widget.AlbumViewPager;
 import com.se.music.widget.PlayerSeekBar;
@@ -157,8 +156,6 @@ public class PlayMusicActivity extends BaseActivity {
                         if (bitmap != null) {
                             mBitmap = bitmap;
                             Drawable drawable = null;
-                            drawable = ImageUtils.createBlurredImageFromBitmap(mBitmap, PlayMusicActivity.this.getApplication(), 3);
-                            mBackAlbum.setBackground(drawable);
                         }
                     }
 

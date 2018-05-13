@@ -10,9 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.se.music.Config.BaseConfig
 import com.se.music.GlideApp
 import com.se.music.R
+import com.se.music.base.BaseConfig
 import com.se.music.fragment.KtBaseFragment
 import com.se.music.online.model.SingerModel
 import com.se.music.retrofit.MusicRetrofit
@@ -71,7 +71,9 @@ class OnLineSingerFragment : KtBaseFragment() {
     inner class SingerAdapter : RecyclerView.Adapter<ItemViewHolder>() {
         override fun onBindViewHolder(holder: ItemViewHolder?, position: Int) {
             holder?.singerName?.text = singerList!![position].Fsinger_name
-            GlideApp.with(context!!).load(String.format(BaseConfig.picBaseUrl, singerList!![position].Fsinger_mid)).into(holder?.singerAvatar!!)
+            GlideApp.with(context!!)
+                    .load(String.format(BaseConfig.picBaseUrl, singerList!![position].Fsinger_mid))
+                    .into(holder?.singerAvatar!!)
         }
 
         override fun getItemCount(): Int {

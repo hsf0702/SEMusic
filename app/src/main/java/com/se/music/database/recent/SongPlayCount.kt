@@ -1,4 +1,4 @@
-package com.se.music.utils.recent
+package com.se.music.database.recent
 
 import android.content.ContentValues
 import android.database.Cursor
