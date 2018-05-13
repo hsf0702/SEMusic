@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:fresco="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/rl_hot_singer_item"
-                android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:background="@color/transparent"
-                android:clickable="true">
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rl_hot_singer_item"
+    android:layout_width="match_parent"
+    android:layout_height="55dp"
+    android:background="@color/transparent"
+    android:clickable="true">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/hot_img_singer"
@@ -16,7 +16,7 @@
         android:scaleType="centerCrop"
         fresco:actualImageScaleType="centerInside"
         fresco:placeholderImage="@drawable/placeholder_disk_210"
-        fresco:placeholderImageScaleType="fitXY"/>
+        fresco:placeholderImageScaleType="fitXY" />
 
     <LinearLayout
 
@@ -36,7 +36,7 @@
             android:maxLines="1"
             android:text="如果我变成回忆"
             android:textColor="@color/black"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/hot_singer_list_info"
@@ -46,7 +46,7 @@
             android:maxLines="1"
             android:text="14首"
             android:textColor="@color/gray"
-            android:textSize="12sp"/>
+            android:textSize="12sp" />
     </LinearLayout>
 
     <ImageView
@@ -56,7 +56,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:padding="15dp"
-        android:src="@drawable/three_white"/>
+        android:src="@drawable/three_white" />
 
     <View
         android:id="@+id/line"
@@ -66,6 +66,6 @@
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@+id/hot_img_singer"
         android:background="@color/background_gray"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </RelativeLayout>

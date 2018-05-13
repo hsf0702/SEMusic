@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/rl_favor_item"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:background="@color/white">
+    android:id="@+id/rl_favor_item"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:background="@color/white">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/img_album"
         android:layout_width="59dp"
         android:layout_height="59dp"
-        android:background="@drawable/placeholder_disk_210"/>
+        android:background="@drawable/placeholder_disk_210" />
 
     <TextView
         android:id="@+id/play_list_title"
@@ -19,7 +19,7 @@
         android:layout_marginTop="10dp"
         android:text="周杰伦"
         android:textColor="@color/black"
-        android:textSize="14sp"/>
+        android:textSize="14sp" />
 
     <ImageView
         android:id="@+id/img_down"
@@ -28,7 +28,7 @@
         android:layout_below="@+id/play_list_title"
         android:layout_marginLeft="72dp"
         android:layout_marginTop="8dp"
-        android:src="@drawable/have_down"/>
+        android:src="@drawable/have_down" />
 
     <TextView
         android:id="@+id/play_list_info"
@@ -41,7 +41,7 @@
         android:layout_toRightOf="@+id/img_down"
         android:text="17首,9首已下载"
         android:textColor="@color/gray"
-        android:textSize="11sp"/>
+        android:textSize="11sp" />
 
 
     <ImageView
@@ -50,7 +50,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="15dp"
-        android:src="@drawable/item_enter"/>
+        android:src="@drawable/item_enter" />
 
 
     <View
@@ -58,6 +58,6 @@
         android:layout_height="0.5dp"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="72dp"
-        android:background="@color/split_color"/>
+        android:background="@color/split_color" />
 
 </RelativeLayout>

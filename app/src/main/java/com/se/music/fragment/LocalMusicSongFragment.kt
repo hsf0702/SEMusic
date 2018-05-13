@@ -9,10 +9,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.se.music.MusicApplication
+import com.se.music.R
 import com.se.music.adapter.MusicListAdapter
 import com.se.music.entity.MusicEntity
-import com.se.music.pastmusic.R
 import com.se.music.singleton.ApplicationSingleton
 import com.se.music.utils.MConstants
 import com.se.music.utils.MusicUtils

@@ -17,11 +17,11 @@ import java.util.List;
 public class DefaultLrcParser implements ILrcParser {
     private static final DefaultLrcParser istance = new DefaultLrcParser();
 
-    public static final DefaultLrcParser getIstance() {
-        return istance;
+    private DefaultLrcParser() {
     }
 
-    private DefaultLrcParser() {
+    public static final DefaultLrcParser getIstance() {
+        return istance;
     }
 
     /***

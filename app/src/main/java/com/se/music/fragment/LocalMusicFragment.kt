@@ -3,25 +3,22 @@ package com.se.music.fragment
 
 import android.os.Bundle
 import android.support.design.widget.TabLayout
-import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.se.music.R
 import com.se.music.adapter.LocalFragmentAdapter
-import com.se.music.pastmusic.R
 import com.se.music.utils.MConstants
 import com.se.music.utils.MusicUtils
-import java.util.*
 
 /**
- * A simple [Fragment] subclass.
- * Use the [KtUiLocalMusicFragment.newInstance] factory method to
- * create an instance of this fragment.
+ * Author: gaojin
+ * Time: 2018/5/13 下午6:26
  */
 class LocalMusicFragment : KtBaseFragment() {
 
-    internal var mAdapter: LocalFragmentAdapter? = null
+    private var mAdapter: LocalFragmentAdapter? = null
     private var mTabNames: List<String>? = null
     private var position: Int = 0
     private var mTabLayout: TabLayout? = null

@@ -7,7 +7,7 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.se.music.GlideApp
-import com.se.music.pastmusic.R
+import com.se.music.R
 
 /**
  * Created by gaojin on 2017/12/31.

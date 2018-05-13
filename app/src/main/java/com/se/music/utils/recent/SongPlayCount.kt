@@ -336,7 +336,7 @@ class SongPlayCount {
         val sortedList = LongArray(uniqueIds.size)
 
         // now query for the songs
-        val database = mMusicDatabase.getReadableDatabase()
+        val database = mMusicDatabase.readableDatabase
         var topSongsCursor: Cursor? = null
         var idx = 0
 

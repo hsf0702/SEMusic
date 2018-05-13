@@ -4,9 +4,9 @@ import android.content.Context
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import com.se.music.R
 import com.se.music.mine.MvpMineFragment
 import com.se.music.online.MvpMusicFragment
-import com.se.music.pastmusic.R
 
 /**
  * Creator：gaojin

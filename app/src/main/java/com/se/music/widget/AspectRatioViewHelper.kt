@@ -3,7 +3,7 @@ package com.se.music.widget
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.View
-import com.se.music.pastmusic.R
+import com.se.music.R
 import java.util.regex.Pattern
 
 /**

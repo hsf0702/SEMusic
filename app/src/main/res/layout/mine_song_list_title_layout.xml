@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="@color/white"
-              android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,7 +24,7 @@
             android:paddingRight="25dp"
             android:paddingTop="15dp"
             android:text="@string/created_song_list"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/tv_title_collected"
@@ -36,7 +36,7 @@
             android:paddingLeft="25dp"
             android:paddingTop="15dp"
             android:text="@string/collect_song_list"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -52,25 +52,25 @@
             android:layout_gravity="center_vertical"
             android:textColor="@color/light_black"
             android:textSize="12sp"
-            tools:text="9个歌单"/>
+            tools:text="9个歌单" />
 
         <android.support.v4.widget.Space
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
         <ImageView
             android:id="@+id/add_song_list"
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:layout_marginRight="20dp"
-            android:src="@drawable/plus"/>
+            android:src="@drawable/plus" />
 
         <ImageView
             android:id="@+id/manage_song_list"
             android:layout_width="22dp"
             android:layout_height="22dp"
-            android:src="@drawable/list_icn_mng"/>
+            android:src="@drawable/list_icn_mng" />
     </LinearLayout>
 
     <LinearLayout
@@ -84,7 +84,7 @@
             android:layout_height="60dp"
             android:background="@color/light_gray"
             android:scaleType="centerInside"
-            android:src="@drawable/plus_40"/>
+            android:src="@drawable/plus_40" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -93,7 +93,7 @@
             android:layout_marginLeft="10dp"
             android:text="@string/create_new_song_list"
             android:textColor="@color/light_black"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
     </LinearLayout>
 
@@ -105,6 +105,6 @@
         android:text="@string/no_collected_song_list"
         android:textColor="@color/gray"
         android:textSize="14sp"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </LinearLayout>

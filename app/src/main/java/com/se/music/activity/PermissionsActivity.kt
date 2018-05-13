@@ -10,7 +10,7 @@ import android.provider.Settings
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import com.se.music.pastmusic.R
+import com.se.music.R
 import com.se.music.utils.PermissionsChecker
 
 

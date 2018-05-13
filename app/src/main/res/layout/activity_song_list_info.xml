@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rl_hot_list"
@@ -13,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="60dp"
-        android:background="@color/white"/>
+        android:background="@color/white" />
 
     <FrameLayout
         android:id="@+id/bottom_container"
@@ -21,7 +20,7 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
-        android:background="@color/white"/>
+        android:background="@color/white" />
 
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/parent_view"
@@ -33,7 +32,7 @@
             android:id="@+id/head_image"
             android:layout_width="match_parent"
             android:layout_height="280dp"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -48,7 +47,7 @@
                 android:paddingLeft="20dp"
                 android:paddingTop="7dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/back_white"/>
+                android:src="@drawable/back_white" />
 
             <TextView
                 android:id="@+id/hot_list_title"
@@ -57,14 +56,14 @@
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
                 android:textColor="@color/white"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
         </RelativeLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/nested_recycle_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/header_scrolling_behavior"/>
+            app:layout_behavior="@string/header_scrolling_behavior" />
     </android.support.design.widget.CoordinatorLayout>
 
     <LinearLayout
@@ -75,14 +74,14 @@
         android:background="@color/white"
         android:orientation="vertical">
 
-        <include layout="@layout/toolbar"/>
+        <include layout="@layout/toolbar" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="50dp"
-            android:src="@drawable/album_empty"/>
+            android:src="@drawable/album_empty" />
 
         <TextView
             android:id="@+id/text1"
@@ -92,7 +91,7 @@
             android:gravity="center"
             android:text="歌单里没有歌曲"
             android:textColor="@color/gray"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/text2"
@@ -102,7 +101,7 @@
             android:gravity="center"
             android:text="你可以挑一些歌曲添加到这里"
             android:textColor="@color/gray"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/add_music"
@@ -112,7 +111,7 @@
             android:layout_marginTop="15dp"
             android:background="@drawable/textview_border"
             android:text="添加歌曲"
-            android:textColor="@color/medium_sea_green"/>
+            android:textColor="@color/medium_sea_green" />
     </LinearLayout>
 
 </RelativeLayout>

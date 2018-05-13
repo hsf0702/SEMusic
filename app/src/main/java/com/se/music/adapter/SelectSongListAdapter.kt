@@ -9,13 +9,12 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.facebook.drawee.view.SimpleDraweeView
+import com.se.music.R
 import com.se.music.activity.SelectSongListActivity
 import com.se.music.database.provider.MusicInfoDBService
 import com.se.music.database.provider.SongListDBService
 import com.se.music.entity.MusicEntity
 import com.se.music.entity.SongListEntity
-import com.se.music.pastmusic.R
-import org.greenrobot.eventbus.EventBus
 
 /**
  * Created by gaojin on 2017/12/14.

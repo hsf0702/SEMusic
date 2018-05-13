@@ -7,8 +7,8 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import butterknife.ButterKnife
 import com.se.music.IMediaAidlInterface
+import com.se.music.R
 import com.se.music.fragment.QuickControlsFragment
-import com.se.music.pastmusic.R
 import com.se.music.service.MediaService
 import com.se.music.service.MusicPlayer
 import com.se.music.utils.MConstants

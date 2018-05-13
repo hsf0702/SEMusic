@@ -14,8 +14,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.Scroller;
 
-import com.se.music.MusicApplication;
-import com.se.music.pastmusic.R;
+import com.se.music.R;
 import com.se.music.singleton.ApplicationSingleton;
 import com.se.music.utils.DensityUtil;
 
@@ -36,9 +35,13 @@ import java.util.List;
  */
 public class LrcView extends View implements ILrcView {
     /**
-     * 所有的歌词
-     ***/
-    private List<LrcRow> mLrcRows;
+     * 歌词的最大缩放比例
+     **/
+    public static final float MAX_SCALING_FACTOR = 1.5f;
+    /**
+     * 歌词的最小缩放比例
+     **/
+    public static final float MIN_SCALING_FACTOR = 0.5f;
     /**
      * 无歌词数据的时候 显示的默认文字
      **/
@@ -47,55 +50,22 @@ public class LrcView extends View implements ILrcView {
      * 默认文字的字体大小
      **/
     private static final float SIZE_FOR_DEFAULT_TEXT = DensityUtil.Companion.dip2px(ApplicationSingleton.Companion.getInstance(), 17);
-
-    /**
-     * 画高亮歌词的画笔
-     ***/
-    private Paint mPaintForHighLightLrc;
     /**
      * 高亮歌词的默认字体大小
      ***/
     private static final float DEFAULT_SIZE_FOR_HIGHT_LIGHT_LRC = DensityUtil.Companion.dip2px(ApplicationSingleton.Companion.getInstance(), 15);
     /**
-     * 高亮歌词当前的字体大小
-     ***/
-    private float mCurSizeForHightLightLrc = DEFAULT_SIZE_FOR_HIGHT_LIGHT_LRC;
-    /**
      * 高亮歌词的默认字体颜色
      **/
     private static final int DEFAULT_COLOR_FOR_HIGHT_LIGHT_LRC = 0xffffffff;
-
-    /**
-     * 高亮歌词当前的字体颜色
-     **/
-    private int mCurColorForHightLightLrc = DEFAULT_COLOR_FOR_HIGHT_LIGHT_LRC;
-
-    /**
-     * 画其他歌词的画笔
-     ***/
-    private Paint mPaintForOtherLrc;
     /**
      * 其他歌词的默认字体大小
      ***/
     private static final float DEFAULT_SIZE_FOR_OTHER_LRC = DensityUtil.Companion.dip2px(ApplicationSingleton.Companion.getInstance(), 15);
     /**
-     * 其他歌词当前的字体大小
-     ***/
-    private float mCurSizeForOtherLrc = DEFAULT_SIZE_FOR_OTHER_LRC;
-    /**
      * 其他歌词的默认字体颜色
      **/
     private static final int DEFAULT_COLOR_FOR_OTHER_LRC = 0x80ffffff;
-    /**
-     * 其他歌词当前的字体颜色
-     **/
-    private int mCurColorForOtherLrc = DEFAULT_COLOR_FOR_OTHER_LRC;
-
-
-    /**
-     * 画时间线的画笔
-     ***/
-    private Paint mPaintForTimeLine;
     /***
      * 时间线的颜色
      **/
@@ -105,40 +75,13 @@ public class LrcView extends View implements ILrcView {
      **/
     private static final int SIZE_FOR_TIME = DensityUtil.Companion.dip2px(ApplicationSingleton.Companion.getInstance(), 12);
     /**
-     * 是否画时间线
-     **/
-    private boolean mIsDrawTimeLine = false;
-
-    /**
      * 歌词间默认的行距
      **/
     private static final float DEFAULT_PADDING = DensityUtil.Companion.dip2px(ApplicationSingleton.Companion.getInstance(), 17);
     /**
-     * 歌词当前的行距
-     **/
-    private float mCurPadding = DEFAULT_PADDING;
-
-    /**
-     * 歌词的最大缩放比例
-     **/
-    public static final float MAX_SCALING_FACTOR = 1.5f;
-    /**
-     * 歌词的最小缩放比例
-     **/
-    public static final float MIN_SCALING_FACTOR = 0.5f;
-    /**
      * 默认缩放比例
      **/
     private static final float DEFAULT_SCALING_FACTOR = 1.0f;
-    /**
-     * 歌词的当前缩放比例
-     **/
-    private float mCurScalingFactor = DEFAULT_SCALING_FACTOR;
-
-    /**
-     * 实现歌词竖直方向平滑滚动的辅助对象
-     **/
-    private Scroller mScroller;
     /***
      * 移动一句歌词的持续时间
      **/
@@ -147,7 +90,54 @@ public class LrcView extends View implements ILrcView {
      * 停止触摸时 如果View需要滚动 时的持续时间
      **/
     private static final int DURATION_FOR_ACTION_UP = 400;
-
+    /**
+     * 所有的歌词
+     ***/
+    private List<LrcRow> mLrcRows;
+    /**
+     * 画高亮歌词的画笔
+     ***/
+    private Paint mPaintForHighLightLrc;
+    /**
+     * 高亮歌词当前的字体大小
+     ***/
+    private float mCurSizeForHightLightLrc = DEFAULT_SIZE_FOR_HIGHT_LIGHT_LRC;
+    /**
+     * 高亮歌词当前的字体颜色
+     **/
+    private int mCurColorForHightLightLrc = DEFAULT_COLOR_FOR_HIGHT_LIGHT_LRC;
+    /**
+     * 画其他歌词的画笔
+     ***/
+    private Paint mPaintForOtherLrc;
+    /**
+     * 其他歌词当前的字体大小
+     ***/
+    private float mCurSizeForOtherLrc = DEFAULT_SIZE_FOR_OTHER_LRC;
+    /**
+     * 其他歌词当前的字体颜色
+     **/
+    private int mCurColorForOtherLrc = DEFAULT_COLOR_FOR_OTHER_LRC;
+    /**
+     * 画时间线的画笔
+     ***/
+    private Paint mPaintForTimeLine;
+    /**
+     * 是否画时间线
+     **/
+    private boolean mIsDrawTimeLine = false;
+    /**
+     * 歌词当前的行距
+     **/
+    private float mCurPadding = DEFAULT_PADDING;
+    /**
+     * 歌词的当前缩放比例
+     **/
+    private float mCurScalingFactor = DEFAULT_SCALING_FACTOR;
+    /**
+     * 实现歌词竖直方向平滑滚动的辅助对象
+     **/
+    private Scroller mScroller;
     /**
      * 控制文字缩放的因子
      **/
@@ -155,7 +145,51 @@ public class LrcView extends View implements ILrcView {
     private int mTouchSlop;
 
     private Bitmap arrowBitmap;
+    private int mTotleDrawRow;
+    /**
+     * 是否可拖动歌词
+     **/
+    private boolean canDrag = false;
+    /**
+     * 事件的第一次的y坐标
+     **/
+    private float firstY;
+    /**
+     * 事件的上一次的y坐标
+     **/
+    private float lastY;
+    private float lastX;
+    /**
+     * 当前高亮歌词的行号
+     **/
+    private int mCurRow = -1;
+    /**
+     * 上一次的高亮歌词的行号
+     **/
+    private int mLastRow = -1;
+    /**
+     * 控制歌词水平滚动的属性动画
+     ***/
+    private ValueAnimator mAnimator;
+    /**
+     * 高亮歌词当前的其实x轴绘制坐标
+     **/
+    private float mCurTextXForHighLightLrc;
+    /***
+     * 监听属性动画的数值值的改变
+     */
+    AnimatorUpdateListener updateListener = new AnimatorUpdateListener() {
 
+        @Override
+        public void onAnimationUpdate(ValueAnimator animation) {
+            //TODO
+            mCurTextXForHighLightLrc = (Float) animation.getAnimatedValue();
+            log("mCurTextXForHighLightLrc=" + mCurTextXForHighLightLrc);
+            invalidate();
+        }
+    };
+    private OnSeekToListener onSeekToListener;
+    private OnLrcClickListener onLrcClickListener;
     public LrcView(Context context) {
         super(context);
 
@@ -166,7 +200,6 @@ public class LrcView extends View implements ILrcView {
         super(context, attrs);
         init(context);
     }
-
 
     /**
      * 初始化画笔等
@@ -195,8 +228,6 @@ public class LrcView extends View implements ILrcView {
         options.inTargetDensity = 30;
         arrowBitmap = BitmapFactory.decodeResource(context.getResources(), R.raw.lrc_arrow, options);
     }
-
-    private int mTotleDrawRow;
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -277,20 +308,6 @@ public class LrcView extends View implements ILrcView {
 
     }
 
-    /**
-     * 是否可拖动歌词
-     **/
-    private boolean canDrag = false;
-    /**
-     * 事件的第一次的y坐标
-     **/
-    private float firstY;
-    /**
-     * 事件的上一次的y坐标
-     **/
-    private float lastY;
-    private float lastX;
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (mLrcRows == null || mLrcRows.size() == 0) {
@@ -369,15 +386,6 @@ public class LrcView extends View implements ILrcView {
         invalidate();
     }
 
-    /**
-     * 当前高亮歌词的行号
-     **/
-    private int mCurRow = -1;
-    /**
-     * 上一次的高亮歌词的行号
-     **/
-    private int mLastRow = -1;
-
     @Override
     public void seekTo(int progress, boolean fromSeekBar, boolean fromSeekBarByUser) {
         if (mLrcRows == null || mLrcRows.size() == 0) {
@@ -421,11 +429,6 @@ public class LrcView extends View implements ILrcView {
     }
 
     /**
-     * 控制歌词水平滚动的属性动画
-     ***/
-    private ValueAnimator mAnimator;
-
-    /**
      * 开始水平滚动歌词
      *
      * @param endX     歌词第一个字的最终的x坐标
@@ -456,24 +459,6 @@ public class LrcView extends View implements ILrcView {
     }
 
     /**
-     * 高亮歌词当前的其实x轴绘制坐标
-     **/
-    private float mCurTextXForHighLightLrc;
-    /***
-     * 监听属性动画的数值值的改变
-     */
-    AnimatorUpdateListener updateListener = new AnimatorUpdateListener() {
-
-        @Override
-        public void onAnimationUpdate(ValueAnimator animation) {
-            //TODO
-            mCurTextXForHighLightLrc = (Float) animation.getAnimatedValue();
-            log("mCurTextXForHighLightLrc=" + mCurTextXForHighLightLrc);
-            invalidate();
-        }
-    };
-
-    /**
      * 设置歌词的缩放比例
      */
     @Override
@@ -501,7 +486,6 @@ public class LrcView extends View implements ILrcView {
         scrollTo(getScrollX(), 0);
         invalidate();
     }
-
 
     /**
      * 平滑的移动到某处
@@ -540,27 +524,23 @@ public class LrcView extends View implements ILrcView {
         return mCurScalingFactor;
     }
 
-    private OnSeekToListener onSeekToListener;
-
     public void setOnSeekToListener(OnSeekToListener onSeekToListener) {
         this.onSeekToListener = onSeekToListener;
+    }
+
+    public void setOnLrcClickListener(OnLrcClickListener onLrcClickListener) {
+        this.onLrcClickListener = onLrcClickListener;
+    }
+
+    public void log(Object o) {
+        Log.d("LrcView", o + "");
     }
 
     public interface OnSeekToListener {
         void onSeekTo(int progress);
     }
 
-    private OnLrcClickListener onLrcClickListener;
-
-    public void setOnLrcClickListener(OnLrcClickListener onLrcClickListener) {
-        this.onLrcClickListener = onLrcClickListener;
-    }
-
     public interface OnLrcClickListener {
         void onClick();
-    }
-
-    public void log(Object o) {
-        Log.d("LrcView", o + "");
     }
 }

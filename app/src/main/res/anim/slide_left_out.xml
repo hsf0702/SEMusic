@@ -4,11 +4,11 @@
     <translate
         android:duration="@integer/card_flip_time_full"
         android:fromXDelta="0%p"
-        android:toXDelta="-100%p"/>
+        android:toXDelta="-100%p" />
 
     <alpha
         android:duration="@integer/card_flip_time_full"
         android:fromAlpha="1.0"
-        android:toAlpha="0.5"/>
+        android:toAlpha="0.5" />
 
 </set>

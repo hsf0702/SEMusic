@@ -4,9 +4,9 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
+import com.se.music.R
 import com.se.music.activity.BaseActivity
 import com.se.music.online.subfragment.OnLineSingerFragment
-import com.se.music.pastmusic.R
 
 /**
  * Created by gaojin on 2017/12/30.

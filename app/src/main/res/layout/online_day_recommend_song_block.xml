@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -13,7 +13,7 @@
             android:layout_gravity="center"
             android:text="@string/online_day_recommend_song"
             android:textColor="@color/black"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
         <ImageView
             android:id="@+id/recommend_icon_enter"
@@ -21,12 +21,12 @@
             android:layout_height="match_parent"
             android:layout_gravity="right"
             android:padding="@dimen/app_base_left_right_padding"
-            android:src="@drawable/icon_enter"/>
+            android:src="@drawable/icon_enter" />
     </FrameLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recommend_recycle_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
 </merge>

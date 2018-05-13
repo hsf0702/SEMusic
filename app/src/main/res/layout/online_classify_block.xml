@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@
             android:gravity="center_vertical"
             android:text="@string/classify_singer"
             android:textColor="@color/black"
-            android:textSize="@dimen/online_classify_text_size"/>
+            android:textSize="@dimen/online_classify_text_size" />
 
         <TextView
             android:id="@+id/classify_rank"
@@ -30,7 +30,7 @@
             android:gravity="center_vertical"
             android:text="@string/classify_rank"
             android:textColor="@color/black"
-            android:textSize="@dimen/online_classify_text_size"/>
+            android:textSize="@dimen/online_classify_text_size" />
 
         <TextView
             android:id="@+id/classify_radio"
@@ -42,7 +42,7 @@
             android:gravity="center_vertical"
             android:text="@string/classify_radio"
             android:textColor="@color/black"
-            android:textSize="@dimen/online_classify_text_size"/>
+            android:textSize="@dimen/online_classify_text_size" />
     </LinearLayout>
 
     <LinearLayout
@@ -60,7 +60,7 @@
             android:gravity="center_vertical"
             android:text="@string/classify_song_list"
             android:textColor="@color/black"
-            android:textSize="@dimen/online_classify_text_size"/>
+            android:textSize="@dimen/online_classify_text_size" />
 
         <TextView
             android:id="@+id/classify_mv"
@@ -72,7 +72,7 @@
             android:gravity="center_vertical"
             android:text="@string/classify_mv"
             android:textColor="@color/black"
-            android:textSize="@dimen/online_classify_text_size"/>
+            android:textSize="@dimen/online_classify_text_size" />
 
         <TextView
             android:id="@+id/classify_album"
@@ -84,7 +84,7 @@
             android:gravity="center_vertical"
             android:text="@string/classify_album"
             android:textColor="@color/black"
-            android:textSize="@dimen/online_classify_text_size"/>
+            android:textSize="@dimen/online_classify_text_size" />
     </LinearLayout>
 
 </merge>

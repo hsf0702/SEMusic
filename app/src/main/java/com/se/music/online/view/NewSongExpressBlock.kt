@@ -8,8 +8,8 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import com.se.music.R
 import com.se.music.online.model.ExpressInfoModel
-import com.se.music.pastmusic.R
 import com.se.music.widget.GridItemDecoration
 import com.se.music.widget.RecommendItemView
 

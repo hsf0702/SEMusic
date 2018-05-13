@@ -4,8 +4,8 @@ import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.widget.DrawerLayout
+import com.se.music.R
 import com.se.music.fragment.AppMainFragment
-import com.se.music.pastmusic.R
 import com.se.music.utils.PermissionsChecker
 
 class MainActivity : BaseActivity() {

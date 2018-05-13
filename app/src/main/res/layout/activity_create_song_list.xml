@@ -1,51 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_gray"
     android:fitsSystemWindows="true"
-    android:orientation="vertical"
-    tools:context="com.se.music.activity.CreateSongListActivity">
-
-    <RelativeLayout
-        android:id="@+id/base_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:background="@color/colorPrimary">
-
-        <ImageView
-            android:id="@+id/back"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingBottom="7dp"
-            android:paddingLeft="20dp"
-            android:paddingTop="7dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/back_white"/>
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:textColor="@color/white"
-            android:textSize="14sp"/>
-
-
-        <TextView
-            android:id="@+id/save"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:gravity="center"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="保存"
-            android:textColor="@color/white"
-            android:textSize="14sp"/>
-    </RelativeLayout>
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="wrap_content"
@@ -54,23 +13,18 @@
         android:gravity="center"
         android:text="歌单名称"
         android:textColor="@color/black"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
 
-    <RelativeLayout
+
+    <EditText
+        android:id="@+id/et_list_name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white">
-
-        <EditText
-            android:id="@+id/et_list_name"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:background="@null"
-            android:focusable="true"
-            android:textColorHint="@color/black"
-            android:textSize="16sp"/>
-    </RelativeLayout>
+        android:layout_height="40dp"
+        android:background="@color/white"
+        android:focusable="true"
+        android:paddingLeft="10dp"
+        android:textColorHint="@color/black"
+        android:textSize="16sp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -79,24 +33,17 @@
         android:gravity="center"
         android:text="歌单信息"
         android:textColor="@color/black"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
 
-    <RelativeLayout
+    <EditText
+        android:id="@+id/et_list_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white">
-
-        <EditText
-            android:id="@+id/et_list_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="3dp"
-            android:background="@null"
-            android:gravity="left|top"
-            android:inputType="textMultiLine"
-            android:minLines="6"
-            android:textSize="16sp"/>
-    </RelativeLayout>
+        android:background="@color/white"
+        android:gravity="left|top"
+        android:inputType="textMultiLine"
+        android:minLines="6"
+        android:paddingLeft="10dp"
+        android:textSize="16sp" />
 
 </LinearLayout>

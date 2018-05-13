@@ -7,8 +7,8 @@ import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.se.music.R
 import com.se.music.adapter.MainFragmentAdapter
-import com.se.music.pastmusic.R
 import com.se.music.widget.TitleZoomTabLayout
 
 class AppMainFragment : Fragment() {

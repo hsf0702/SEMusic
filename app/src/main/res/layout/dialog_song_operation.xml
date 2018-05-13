@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:background="@color/white"
-             android:gravity="center_horizontal"
-             android:orientation="vertical"
-             android:scrollbars="none">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:scrollbars="none">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,12 +21,12 @@
             android:paddingLeft="20dp"
             android:paddingTop="10dp"
             android:text="歌曲："
-            android:textSize="13.5sp"/>
+            android:textSize="13.5sp" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/pop_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fadeScrollbars="true"/>
+            android:fadeScrollbars="true" />
     </LinearLayout>
 </FrameLayout>

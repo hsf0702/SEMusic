@@ -12,12 +12,11 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.facebook.drawee.view.SimpleDraweeView
+import com.se.music.R
 import com.se.music.activity.CreateSongListActivity
-import com.se.music.activity.SongListInfoActivity.startActivity
 import com.se.music.database.provider.MusicInfoDBService
 import com.se.music.database.provider.SongListDBService
 import com.se.music.entity.SongListEntity
-import com.se.music.pastmusic.R
 
 /**
  * Created by gaojin on 2017/12/7.
@@ -110,7 +109,6 @@ class CreateSongListAdapter constructor(context: Context) : RecyclerView.Adapter
         var mItemLayout: RelativeLayout? = null
 
         private fun favorItem() {
-            startActivity(mContext, mList!![adapterPosition - 1].id, mList!![adapterPosition - 1].name)
         }
 
         init {

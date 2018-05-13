@@ -45,11 +45,11 @@ import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.se.music.R;
 import com.se.music.fragment.RoundFragment;
 import com.se.music.lrc.DefaultLrcParser;
 import com.se.music.lrc.LrcRow;
 import com.se.music.lrc.LrcView;
-import com.se.music.pastmusic.R;
 import com.se.music.service.MediaService;
 import com.se.music.service.MusicPlayer;
 import com.se.music.utils.HandlerUtil;
@@ -77,7 +77,53 @@ public class PlayMusicActivity extends BaseActivity {
     private static final int PRE_MUSIC = 1;
     private static final int VIEWPAGER_SCROLL_TIME = 390;
     private static final int TIME_DELAY = 500;
+    @BindView(R.id.playing_mode)
+    ImageView mPlayMode;
+    @BindView(R.id.playing_play)
+    ImageView mPlay;
+    @BindView(R.id.play_seek)
+    PlayerSeekBar mProgress;
+    @BindView(R.id.music_duration_played)
+    TextView mTimePlayed;
+    @BindView(R.id.music_duration)
+    TextView mDuration;
+    @BindView(R.id.lrcview)
+    LrcView mLrcView;
+    @BindView(R.id.frame_content)
+    FrameLayout mBackAlbum;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.view_pager)
+    AlbumViewPager mViewPager;
+    @BindView(R.id.lrcviewContainer)
+    RelativeLayout mLrcViewContainer;
+    @BindView(R.id.headerView)
+    FrameLayout mAlbumLayout;
+    @BindView(R.id.music_tool)
+    LinearLayout mMusicTool;
+    @BindView(R.id.tragetlrc)
+    TextView mTryGetLrc;
+    @BindView(R.id.needle)
+    ImageView mNeedle;
+    LrcView.OnLrcClickListener onLrcClickListener = new LrcView.OnLrcClickListener() {
 
+        @Override
+        public void onClick() {
+
+            if (mLrcViewContainer.getVisibility() == View.VISIBLE) {
+                mLrcViewContainer.setVisibility(View.INVISIBLE);
+                mAlbumLayout.setVisibility(View.VISIBLE);
+                mMusicTool.setVisibility(View.VISIBLE);
+            }
+        }
+    };
+    LrcView.OnSeekToListener onSeekToListener = new LrcView.OnSeekToListener() {
+
+        @Override
+        public void onSeekTo(int progress) {
+            MusicPlayer.Companion.seek(progress);
+        }
+    };
     private Handler mPlayHandler;
     private PlayMusic mPlayThread;
     private ObjectAnimator mNeedleAnim, mRotateAnim;
@@ -91,18 +137,66 @@ public class PlayMusicActivity extends BaseActivity {
     private boolean isNextOrPreSetPage = false; //判断viewpager由手动滑动 还是setcruuentitem换页
     private WeakReference<View> mViewWeakReference = new WeakReference<View>(null);
     private View mActiveView;
+    private Runnable mUpAlbumRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (MusicPlayer.Companion.getAlbumPic() == null) {
 
-    @BindView(R.id.playing_mode)
-    ImageView mPlayMode;
+            } else {
+                ImageRequest imageRequest = ImageRequestBuilder
+                        .newBuilderWithSource(Uri.parse(MusicPlayer.Companion.getAlbumPic()))
+                        .setProgressiveRenderingEnabled(true)
+                        .build();
+                ImagePipeline imagePipeline = Fresco.getImagePipeline();
+                DataSource<CloseableReference<CloseableImage>> dataSource = imagePipeline.fetchDecodedImage(imageRequest, PlayMusicActivity.this);
+                dataSource.subscribe(new BaseBitmapDataSubscriber() {
+                    @Override
+                    public void onNewResultImpl(@Nullable Bitmap bitmap) {
+                        // You can use the bitmap in only limited ways
+                        // No need to do any cleanup.
+                        if (bitmap != null) {
+                            mBitmap = bitmap;
+                            Drawable drawable = null;
+                            drawable = ImageUtils.createBlurredImageFromBitmap(mBitmap, PlayMusicActivity.this.getApplication(), 3);
+                            mBackAlbum.setBackground(drawable);
+                        }
+                    }
+
+                    @Override
+                    public void onFailureImpl(DataSource dataSource) {
+                        // No cleanup required here.
+                        mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.placeholder_disk_210);
+                    }
+                }, CallerThreadExecutor.getInstance());
+            }
+        }
+    };
+    private Runnable mUpdateProgress = new Runnable() {
+
+        @Override
+        public void run() {
+
+            if (mProgress != null) {
+                long position = MusicPlayer.Companion.position();
+                long duration = MusicPlayer.Companion.duration();
+                if (duration > 0 && duration < 627080716) {
+                    mProgress.setProgress((int) (1000 * position / duration));
+                    mTimePlayed.setText(MusicUtils.Companion.makeTimeString(position));
+                }
+                if (MusicPlayer.Companion.getIsPlaying()) {
+                    mProgress.postDelayed(mUpdateProgress, 200);
+                } else {
+                    mProgress.removeCallbacks(mUpdateProgress);
+                }
+            }
+        }
+    };
 
     @OnClick(R.id.playing_mode)
     void changeMode() {
         MusicPlayer.Companion.cycleRepeat();
         updatePlaymode();
     }
-
-    @BindView(R.id.playing_play)
-    ImageView mPlay;
 
     @OnClick(R.id.playing_next)
     void next() {
@@ -139,43 +233,6 @@ public class PlayMusicActivity extends BaseActivity {
     @OnClick(R.id.playing_playlist)
     void play_list() {
     }
-
-    @BindView(R.id.play_seek)
-    PlayerSeekBar mProgress;
-
-    @BindView(R.id.music_duration_played)
-    TextView mTimePlayed;
-
-    @BindView(R.id.music_duration)
-    TextView mDuration;
-
-    @BindView(R.id.lrcview)
-    LrcView mLrcView;
-
-    @BindView(R.id.frame_content)
-    FrameLayout mBackAlbum;
-
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-
-    @BindView(R.id.view_pager)
-    AlbumViewPager mViewPager;
-
-    @BindView(R.id.lrcviewContainer)
-    RelativeLayout mLrcViewContainer;
-
-    @BindView(R.id.headerView)
-    FrameLayout mAlbumLayout;
-
-    @BindView(R.id.music_tool)
-    LinearLayout mMusicTool;
-
-    @BindView(R.id.tragetlrc)
-    TextView mTryGetLrc;
-
-    @BindView(R.id.needle)
-    ImageView mNeedle;
-
 
     @SuppressLint("WrongConstant")
     @Override
@@ -378,27 +435,6 @@ public class PlayMusicActivity extends BaseActivity {
 //        });
     }
 
-    LrcView.OnLrcClickListener onLrcClickListener = new LrcView.OnLrcClickListener() {
-
-        @Override
-        public void onClick() {
-
-            if (mLrcViewContainer.getVisibility() == View.VISIBLE) {
-                mLrcViewContainer.setVisibility(View.INVISIBLE);
-                mAlbumLayout.setVisibility(View.VISIBLE);
-                mMusicTool.setVisibility(View.VISIBLE);
-            }
-        }
-    };
-
-    LrcView.OnSeekToListener onSeekToListener = new LrcView.OnSeekToListener() {
-
-        @Override
-        public void onSeekTo(int progress) {
-            MusicPlayer.Companion.seek(progress);
-        }
-    };
-
     @Override
     public void updateLrc() {
         List<LrcRow> list = getLrcRows();
@@ -454,41 +490,6 @@ public class PlayMusicActivity extends BaseActivity {
             mAnimatorSet = null;
         }
     }
-
-    private Runnable mUpAlbumRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (MusicPlayer.Companion.getAlbumPic() == null) {
-
-            } else {
-                ImageRequest imageRequest = ImageRequestBuilder
-                        .newBuilderWithSource(Uri.parse(MusicPlayer.Companion.getAlbumPic()))
-                        .setProgressiveRenderingEnabled(true)
-                        .build();
-                ImagePipeline imagePipeline = Fresco.getImagePipeline();
-                DataSource<CloseableReference<CloseableImage>> dataSource = imagePipeline.fetchDecodedImage(imageRequest, PlayMusicActivity.this);
-                dataSource.subscribe(new BaseBitmapDataSubscriber() {
-                    @Override
-                    public void onNewResultImpl(@Nullable Bitmap bitmap) {
-                        // You can use the bitmap in only limited ways
-                        // No need to do any cleanup.
-                        if (bitmap != null) {
-                            mBitmap = bitmap;
-                            Drawable drawable = null;
-                            drawable = ImageUtils.createBlurredImageFromBitmap(mBitmap, PlayMusicActivity.this.getApplication(), 3);
-                            mBackAlbum.setBackground(drawable);
-                        }
-                    }
-
-                    @Override
-                    public void onFailureImpl(DataSource dataSource) {
-                        // No cleanup required here.
-                        mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.placeholder_disk_210);
-                    }
-                }, CallerThreadExecutor.getInstance());
-            }
-        }
-    };
 
     private void setViewPager() {
         mViewPager.setOffscreenPageLimit(2);
@@ -551,6 +552,77 @@ public class PlayMusicActivity extends BaseActivity {
             public void onPageScrollStateChanged(int pState) {
             }
         });
+    }
+
+    private void setSeekBarListener() {
+        if (mProgress != null)
+            mProgress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                int progress = 0;
+
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                    i = (int) (i * MusicPlayer.Companion.duration() / 1000);
+                    mLrcView.seekTo(i, true, b);
+                    if (b) {
+                        MusicPlayer.Companion.seek((long) i);
+                        mTimePlayed.setText(MusicUtils.Companion.makeTimeString(i));
+                    }
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        stopAnim();
+        mProgress.removeCallbacks(mUpdateProgress);
+    }
+
+    private void updatePlaymode() {
+        if (MusicPlayer.Companion.getShuffleMode() == MediaService.SHUFFLE_NORMAL) {
+            mPlayMode.setImageResource(R.drawable.play_icn_shuffle);
+            Toast.makeText(PlayMusicActivity.this.getApplication(), getResources().getString(R.string.random_play),
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            switch (MusicPlayer.Companion.getRepeatMode()) {
+                case MediaService.REPEAT_ALL:
+                    mPlayMode.setImageResource(R.drawable.play_icn_loop);
+                    Toast.makeText(PlayMusicActivity.this.getApplication(), getResources().getString(R.string.loop_play),
+                            Toast.LENGTH_SHORT).show();
+                    break;
+                case MediaService.REPEAT_CURRENT:
+                    mPlayMode.setImageResource(R.drawable.play_icn_one);
+                    Toast.makeText(PlayMusicActivity.this.getApplication(), getResources().getString(R.string.play_one),
+                            Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPlayHandler.removeCallbacksAndMessages(null);
+        mPlayHandler.getLooper().quit();
+        mPlayHandler = null;
+
+        mProgress.removeCallbacks(mUpdateProgress);
+        stopAnim();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        this.overridePendingTransition(R.anim.push_up_in, R.anim.push_down_out);
     }
 
     public class MyScroller extends Scroller {
@@ -655,81 +727,6 @@ public class PlayMusicActivity extends BaseActivity {
 
     }
 
-    private Runnable mUpdateProgress = new Runnable() {
-
-        @Override
-        public void run() {
-
-            if (mProgress != null) {
-                long position = MusicPlayer.Companion.position();
-                long duration = MusicPlayer.Companion.duration();
-                if (duration > 0 && duration < 627080716) {
-                    mProgress.setProgress((int) (1000 * position / duration));
-                    mTimePlayed.setText(MusicUtils.Companion.makeTimeString(position));
-                }
-                if (MusicPlayer.Companion.getIsPlaying()) {
-                    mProgress.postDelayed(mUpdateProgress, 200);
-                } else {
-                    mProgress.removeCallbacks(mUpdateProgress);
-                }
-            }
-        }
-    };
-
-    private void setSeekBarListener() {
-        if (mProgress != null)
-            mProgress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                int progress = 0;
-
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                    i = (int) (i * MusicPlayer.Companion.duration() / 1000);
-                    mLrcView.seekTo(i, true, b);
-                    if (b) {
-                        MusicPlayer.Companion.seek((long) i);
-                        mTimePlayed.setText(MusicUtils.Companion.makeTimeString(i));
-                    }
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                }
-            });
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        stopAnim();
-        mProgress.removeCallbacks(mUpdateProgress);
-    }
-
-    private void updatePlaymode() {
-        if (MusicPlayer.Companion.getShuffleMode() == MediaService.SHUFFLE_NORMAL) {
-            mPlayMode.setImageResource(R.drawable.play_icn_shuffle);
-            Toast.makeText(PlayMusicActivity.this.getApplication(), getResources().getString(R.string.random_play),
-                    Toast.LENGTH_SHORT).show();
-        } else {
-            switch (MusicPlayer.Companion.getRepeatMode()) {
-                case MediaService.REPEAT_ALL:
-                    mPlayMode.setImageResource(R.drawable.play_icn_loop);
-                    Toast.makeText(PlayMusicActivity.this.getApplication(), getResources().getString(R.string.loop_play),
-                            Toast.LENGTH_SHORT).show();
-                    break;
-                case MediaService.REPEAT_CURRENT:
-                    mPlayMode.setImageResource(R.drawable.play_icn_one);
-                    Toast.makeText(PlayMusicActivity.this.getApplication(), getResources().getString(R.string.play_one),
-                            Toast.LENGTH_SHORT).show();
-                    break;
-            }
-        }
-
-    }
-
     public class PlayMusic extends Thread {
         public void run() {
             if (Looper.myLooper() == null)
@@ -753,22 +750,5 @@ public class PlayMusicActivity extends BaseActivity {
             };
             Looper.loop();
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mPlayHandler.removeCallbacksAndMessages(null);
-        mPlayHandler.getLooper().quit();
-        mPlayHandler = null;
-
-        mProgress.removeCallbacks(mUpdateProgress);
-        stopAnim();
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        this.overridePendingTransition(R.anim.push_up_in, R.anim.push_down_out);
     }
 }

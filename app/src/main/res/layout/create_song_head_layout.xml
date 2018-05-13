@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="@color/white"
-                android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/info"
@@ -13,7 +13,7 @@
         android:gravity="center"
         android:text="12个歌单"
         android:textColor="@color/gray"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/tv_manage"
@@ -26,7 +26,7 @@
         android:gravity="center"
         android:text="管理"
         android:textColor="@color/black"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
 
     <ImageView
         android:id="@+id/create_song_list"
@@ -38,6 +38,6 @@
         android:paddingLeft="3dp"
         android:paddingRight="3dp"
         android:scaleType="center"
-        android:src="@drawable/plus"/>
+        android:src="@drawable/plus" />
 
 </RelativeLayout>

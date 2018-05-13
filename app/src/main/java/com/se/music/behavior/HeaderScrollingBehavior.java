@@ -11,7 +11,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Scroller;
 
-import com.se.music.pastmusic.R;
+import com.se.music.R;
 
 import java.lang.ref.WeakReference;
 
@@ -29,14 +29,32 @@ public class HeaderScrollingBehavior extends CoordinatorLayout.Behavior<Recycler
     private boolean isExpanded = false;
     private boolean isScrolling = false;
 
-    /** 依赖视图的一个弱引用 */
+    /**
+     * 依赖视图的一个弱引用
+     */
     private WeakReference<View> dependentView;
-    /** 实现释放手指后的滑动动画 */
+    /**
+     * 实现释放手指后的滑动动画
+     */
     private Scroller scroller;
-    /** 用来驱动Scroller的运行 */
+    /**
+     * 用来驱动Scroller的运行
+     */
     private Handler handler;
 
     private ArgbEvaluator argbEvaluator;
+    private Runnable flingRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (scroller.computeScrollOffset()) {
+                getDependentView().setTranslationY(scroller.getCurrY());
+                handler.post(this);
+            } else {
+                isExpanded = getDependentView().getTranslationY() != 0;
+                isScrolling = false;
+            }
+        }
+    };
 
     public HeaderScrollingBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -179,17 +197,4 @@ public class HeaderScrollingBehavior extends CoordinatorLayout.Behavior<Recycler
     private View getDependentView() {
         return dependentView.get();
     }
-
-    private Runnable flingRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (scroller.computeScrollOffset()) {
-                getDependentView().setTranslationY(scroller.getCurrY());
-                handler.post(this);
-            } else {
-                isExpanded = getDependentView().getTranslationY() != 0;
-                isScrolling = false;
-            }
-        }
-    };
 }

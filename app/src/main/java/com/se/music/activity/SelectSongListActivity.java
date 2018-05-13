@@ -10,9 +10,9 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.se.music.R;
 import com.se.music.adapter.SelectSongListAdapter;
 import com.se.music.entity.MusicEntity;
-import com.se.music.pastmusic.R;
 import com.se.music.utils.ImageUtils;
 
 import butterknife.BindView;
@@ -35,6 +35,15 @@ public class SelectSongListActivity extends AppCompatActivity {
 
     @BindView(R.id.song_list_recycle_view)
     RecyclerView mRecyclerView;
+    SelectSongListAdapter adapter;
+    private MusicEntity selectMusicEntity;
+
+    public static void startActivity(Context context, MusicEntity musicEntity) {
+        Intent intent = new Intent(context, SelectSongListActivity.class);
+        intent.putExtra(MUSIC_ENTITY, musicEntity);
+        context.startActivity(intent);
+        ((Activity) context).overridePendingTransition(R.anim.push_down_in, R.anim.push_up_out);
+    }
 
     @OnClick(R.id.cancel)
     void cancel() {
@@ -47,17 +56,6 @@ public class SelectSongListActivity extends AppCompatActivity {
         this.startActivity(intent);
         overridePendingTransition(R.anim.push_down_in, R.anim.push_up_out);
     }
-
-    private MusicEntity selectMusicEntity;
-
-    public static void startActivity(Context context, MusicEntity musicEntity) {
-        Intent intent = new Intent(context, SelectSongListActivity.class);
-        intent.putExtra(MUSIC_ENTITY, musicEntity);
-        context.startActivity(intent);
-        ((Activity) context).overridePendingTransition(R.anim.push_down_in, R.anim.push_up_out);
-    }
-
-    SelectSongListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

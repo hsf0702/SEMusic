@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.se.music.R
 import com.se.music.entity.OverFlowItem
-import com.se.music.pastmusic.R
 
 /**
  * Created by gaojin on 2017/12/13.

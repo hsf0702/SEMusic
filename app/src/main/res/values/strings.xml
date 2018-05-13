@@ -11,14 +11,17 @@
     <string name="play_one">单曲播放</string>
     <string name="durationformatshort" translatable="false"><xliff:g id="format">%2$d:%3$02d</xliff:g></string>
     <string name="durationformatlong" translatable="false"><xliff:g id="format">%1$d:%2$02d:%3$02d</xliff:g></string>
+    <string name="search_net_music">搜索音乐、歌手、歌词、…</string>
+    <string name="string_help_text">当前应用缺少必要的权限</string>
+
+
     <string name="sure">确定</string>
     <string name="cancel">取消</string>
     <string name="search">搜索</string>
-    <string name="search_net_music">搜索音乐、歌手、歌词、…</string>
     <string name="help">帮助</string>
-    <string name="string_help_text">当前应用缺少必要的权限</string>
     <string name="quit">退出</string>
     <string name="settings">设置</string>
+    <string name="save">保存</string>
 
     <string name="local_music_tab">我的</string>
     <string name="online_music_tab">音乐馆</string>

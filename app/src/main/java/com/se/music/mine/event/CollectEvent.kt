@@ -5,5 +5,4 @@ package com.se.music.mine.event
  *Time: 2018/5/12 下午8:06
  */
 
-class CollectEvent {
-}
+class CollectEvent

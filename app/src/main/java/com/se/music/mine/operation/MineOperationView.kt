@@ -8,6 +8,7 @@ import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import com.se.music.R
 import com.se.music.activity.BaseActivity
 import com.se.music.activity.CollectedActivity
 import com.se.music.base.BaseConfig
@@ -16,7 +17,6 @@ import com.se.music.fragment.LocalMusicFragment
 import com.se.music.fragment.RecentMusicFragment
 import com.se.music.kmvp.KBaseView
 import com.se.music.kmvp.KMvpPresenter
-import com.se.music.pastmusic.R
 
 /**
  * Author: gaojin

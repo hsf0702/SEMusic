@@ -2,8 +2,6 @@ package com.se.music.pastmusic;
 
 import org.junit.Test;
 
-import java.sql.SQLOutput;
-
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -13,7 +11,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class ExampleUnitTest {
     @Test
-    public void addition_isCorrect() throws Exception {
+    public void addition_isCorrect() {
         assertEquals(4, 2 + 2);
     }
 
@@ -23,7 +21,7 @@ public class ExampleUnitTest {
         System.out.println(s);
         assertEquals(4, 2 + 2);
         String string = "111222333444555222";
-        System.out.println("string.replace(\"222\",\"ddd\") = " + string.replace("222","ddd"));
-        
+        System.out.println("string.replace(\"222\",\"ddd\") = " + string.replace("222", "ddd"));
+
     }
 }

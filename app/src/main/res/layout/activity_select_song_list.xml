@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -22,7 +21,7 @@
             android:paddingRight="10dp"
             android:text="取消"
             android:textColor="@color/white"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/title"
@@ -31,7 +30,7 @@
             android:layout_centerInParent="true"
             android:text="添加到歌单"
             android:textColor="@color/white"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
 
         <TextView
@@ -45,7 +44,7 @@
             android:text="新建"
             android:textColor="@color/white"
             android:textSize="14sp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -61,7 +60,7 @@
             android:layout_height="45dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="7.5dp"
-            android:background="@drawable/placeholder_disk_210"/>
+            android:background="@drawable/placeholder_disk_210" />
 
         <TextView
             android:id="@+id/add_song_title"
@@ -71,7 +70,7 @@
             android:layout_marginTop="10dp"
             android:text="周杰伦"
             android:textColor="@color/black"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/add_song_info"
@@ -82,13 +81,13 @@
             android:layout_marginTop="7dp"
             android:text="17首,9首已下载"
             android:textColor="@color/gray"
-            android:textSize="12sp"/>
+            android:textSize="12sp" />
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/song_list_recycle_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/rl_song_item"/>
+        android:layout_below="@+id/rl_song_item" />
 
 </RelativeLayout>

@@ -11,15 +11,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.se.music.R;
 import com.se.music.activity.PlayMusicActivity;
-import com.se.music.pastmusic.R;
 import com.se.music.service.MusicPlayer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-;
 
 /**
  * =======================================================
@@ -30,8 +28,6 @@ import butterknife.OnClick;
  * =======================================================
  */
 public class QuickControlsFragment extends BaseFragment {
-
-    private static final String TAG = "QuickControlsFragment";
 
     @BindView(R.id.playbar_img)
     SimpleDraweeView mAlbum;
@@ -54,6 +50,10 @@ public class QuickControlsFragment extends BaseFragment {
     @BindView(R.id.play_next)
     ImageView mPlayNext;
 
+    public static QuickControlsFragment newInstance() {
+        return new QuickControlsFragment();
+    }
+
     @OnClick(R.id.rl_layout)
     void rlLayout() {
         Intent intent = new Intent(getActivity(), PlayMusicActivity.class);
@@ -73,11 +73,6 @@ public class QuickControlsFragment extends BaseFragment {
     @OnClick(R.id.play_next)
     void playNext() {
         MusicPlayer.Companion.nextPlay();
-    }
-
-
-    public static QuickControlsFragment newInstance() {
-        return new QuickControlsFragment();
     }
 
     @Override

@@ -24,6 +24,13 @@
         <item name="android:textColor">@color/gray</item>
     </style>
 
+    <style name="ToolbarTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="actionMenuTextColor">@color/white</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:background">@color/medium_sea_green</item>
+        <item name="colorControlNormal">@color/white</item>
+    </style>
+
     <style name="style_dialog" parent="android:style/Theme.Dialog">
         <item name="android:windowBackground">@color/content_bg</item>
         <item name="android:windowNoTitle">true</item>
@@ -42,7 +49,7 @@
     </style>
 
     <declare-styleable name="AspectRatioView">
-        <attr name="aspectRatio" format="string"/>
+        <attr name="aspectRatio" format="string" />
     </declare-styleable>
 
 </resources>

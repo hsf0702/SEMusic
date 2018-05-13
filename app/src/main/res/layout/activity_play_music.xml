@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             android:id="@+id/frame_content"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/frame_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#70000000"/>
+        android:background="#70000000" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -23,7 +23,7 @@
             android:fitsSystemWindows="true"
             android:minHeight="?attr/actionBarSize"
             android:theme="@style/Theme.AppCompat"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         <FrameLayout
             android:id="@+id/headerView"
@@ -44,7 +44,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="60dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/play_disc_halo"/>
+                    android:src="@drawable/play_disc_halo" />
 
                 <com.se.music.widget.AlbumViewPager
                     android:id="@+id/view_pager"
@@ -52,14 +52,14 @@
                     android:layout_height="263dp"
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="60dp"/>
+                    android:layout_marginTop="60dp" />
 
                 <View
                     android:id="@+id/view_line"
                     android:layout_width="match_parent"
                     android:layout_height="1.0dip"
                     android:layout_alignParentTop="true"
-                    android:background="@drawable/play_topbar_line"/>
+                    android:background="@drawable/play_topbar_line" />
 
                 <ImageView
                     android:id="@+id/needle"
@@ -72,7 +72,7 @@
                     android:rotation="-30"
                     android:src="@drawable/play_needle"
                     android:transformPivotX="15.1dp"
-                    android:transformPivotY="15.1dp"/>
+                    android:transformPivotY="15.1dp" />
             </RelativeLayout>
 
         </FrameLayout>
@@ -97,7 +97,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="20dp"
-                    android:src="@drawable/play_icn_speaker"/>
+                    android:src="@drawable/play_icn_speaker" />
 
                 <SeekBar
                     style="@style/Widget.AppCompat.ProgressBar.Horizontal"
@@ -112,7 +112,7 @@
                     android:progress="30"
                     android:progressDrawable="@drawable/volume_seekbar"
                     android:thumb="@drawable/play_volumebar_btn"
-                    android:thumbOffset="3.0dip"/>
+                    android:thumbOffset="3.0dip" />
             </LinearLayout>
 
             <TextView
@@ -128,14 +128,14 @@
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="获取封面和歌词"
-                android:textAlignment="center"/>
+                android:textAlignment="center" />
 
             <com.se.music.lrc.LrcView
                 android:id="@+id/lrcview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/volume_layout"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginTop="10dp" />
         </RelativeLayout>
 
         <LinearLayout
@@ -161,28 +161,28 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:src="@drawable/play_rdi_icn_love"/>
+                    android:src="@drawable/play_rdi_icn_love" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:src="@drawable/play_icn_dlded_dis"/>
+                    android:src="@drawable/play_icn_dlded_dis" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:src="@drawable/play_icn_cmt_number_dis"/>
+                    android:src="@drawable/play_icn_cmt_number_dis" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:src="@drawable/play_icn_more"/>
+                    android:src="@drawable/play_icn_more" />
             </LinearLayout>
 
             <LinearLayout
@@ -202,7 +202,7 @@
                     android:singleLine="true"
                     android:text="00:00"
                     android:textColor="@color/white_text"
-                    android:textSize="10sp"/>
+                    android:textSize="10sp" />
 
                 <com.se.music.widget.PlayerSeekBar
                     android:id="@+id/play_seek"
@@ -215,7 +215,7 @@
                     android:minHeight="8dp"
                     android:progressDrawable="@drawable/play_seekbar"
                     android:secondaryProgress="0"
-                    android:thumb="@drawable/play_plybar_btn"/>
+                    android:thumb="@drawable/play_plybar_btn" />
 
                 <TextView
                     android:id="@+id/music_duration"
@@ -226,7 +226,7 @@
                     android:singleLine="true"
                     android:text="00:00"
                     android:textColor="@color/white_text"
-                    android:textSize="10sp"/>
+                    android:textSize="10sp" />
             </LinearLayout>
 
 
@@ -242,7 +242,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:src="@drawable/play_icn_loop_prs"/>
+                    android:src="@drawable/play_icn_loop_prs" />
 
                 <ImageView
                     android:id="@+id/playing_pre"
@@ -250,7 +250,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:src="@drawable/play_btn_prev"/>
+                    android:src="@drawable/play_btn_prev" />
 
                 <ImageView
                     android:id="@+id/playing_play"
@@ -258,7 +258,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:src="@drawable/play_rdi_btn_play"/>
+                    android:src="@drawable/play_rdi_btn_play" />
 
                 <ImageView
                     android:id="@+id/playing_next"
@@ -266,7 +266,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:src="@drawable/play_btn_next"/>
+                    android:src="@drawable/play_btn_next" />
 
                 <ImageView
                     android:id="@+id/playing_playlist"
@@ -274,7 +274,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:src="@drawable/play_icn_src_prs"/>
+                    android:src="@drawable/play_icn_src_prs" />
 
             </LinearLayout>
         </LinearLayout>

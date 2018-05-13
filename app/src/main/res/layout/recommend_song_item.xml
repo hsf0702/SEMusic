@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:fresco="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:background="@color/transparent"
-                android:clickable="true">
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="55dp"
+    android:background="@color/transparent"
+    android:clickable="true">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/recommend_img_singer"
@@ -15,7 +15,7 @@
         android:scaleType="centerCrop"
         fresco:actualImageScaleType="centerInside"
         fresco:placeholderImage="@drawable/placeholder_disk_210"
-        fresco:placeholderImageScaleType="fitXY"/>
+        fresco:placeholderImageScaleType="fitXY" />
 
     <LinearLayout
 
@@ -35,7 +35,7 @@
             android:maxLines="1"
             android:text="如果我变成回忆"
             android:textColor="@color/black"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/recommend_singer_list_info"
@@ -45,7 +45,7 @@
             android:maxLines="1"
             android:text="14首"
             android:textColor="@color/gray"
-            android:textSize="12sp"/>
+            android:textSize="12sp" />
     </LinearLayout>
 
     <View
@@ -53,6 +53,6 @@
         android:layout_height="0.5dp"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="62dp"
-        android:background="@color/split_color"/>
+        android:background="@color/split_color" />
 
 </RelativeLayout>

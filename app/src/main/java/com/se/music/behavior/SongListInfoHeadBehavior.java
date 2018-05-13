@@ -6,7 +6,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.se.music.pastmusic.R;
+import com.se.music.R;
 
 import java.lang.ref.WeakReference;
 

@@ -4,11 +4,12 @@ import android.annotation.SuppressLint
 import android.support.annotation.Keep
 import android.view.LayoutInflater
 import android.view.View
-import com.se.music.activity.WebViewActivity
+import com.se.music.R
+import com.se.music.activity.BaseActivity
+import com.se.music.fragment.SEWebViewFragment
 import com.se.music.kmvp.KBaseView
 import com.se.music.kmvp.KMvpPresenter
 import com.se.music.online.model.HallModel
-import com.se.music.pastmusic.R
 import com.se.music.utils.GlideImageLoader
 import com.youth.banner.Banner
 import com.youth.banner.listener.OnBannerListener
@@ -44,7 +45,9 @@ class OnLineBannerView(presenter: KMvpPresenter, viewId: Int) : KBaseView(presen
     }
 
     override fun OnBannerClick(position: Int) {
-        WebViewActivity.startWebViewActivity(getContext(), "", bannerList?.get(position)?.linkUrl)
-
+        val ft = (getActivity() as BaseActivity).supportFragmentManager.beginTransaction()
+        ft.addToBackStack(null)
+        ft.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_left_out, R.anim.slide_left_in, R.anim.slide_right_out)
+        ft.add(R.id.content, SEWebViewFragment.newInstance(bannerList?.get(position)?.linkUrl)).commit()
     }
 }

@@ -1,7 +1,5 @@
 package com.se.music.online.model
 
-import com.google.gson.annotations.SerializedName
-
 /**
  * Created by gaojin on 2018/1/28.
  */

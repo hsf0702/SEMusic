@@ -1,6 +1,5 @@
 package com.se.music.database.provider
 
-import android.annotation.SuppressLint
 import android.content.ContentValues
 import com.se.music.database.MusicDBHelper
 import com.se.music.database.entity.SongListCache

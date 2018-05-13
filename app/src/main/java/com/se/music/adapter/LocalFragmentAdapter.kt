@@ -7,7 +7,6 @@ import com.se.music.fragment.FolderFragment
 import com.se.music.fragment.LocalAlbumFragment
 import com.se.music.fragment.LocalMusicSongFragment
 import com.se.music.fragment.LocalSingerFragment
-import java.util.*
 
 /**
  * Created by gaojin on 2017/12/7.

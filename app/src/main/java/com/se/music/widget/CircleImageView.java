@@ -26,9 +26,8 @@ import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewOutlineProvider;
-import android.widget.ImageView;
 
-import com.se.music.pastmusic.R;
+import com.se.music.R;
 
 public class CircleImageView extends AppCompatImageView {
 
@@ -312,6 +311,11 @@ public class CircleImageView extends AppCompatImageView {
     }
 
     @Override
+    public ColorFilter getColorFilter() {
+        return mColorFilter;
+    }
+
+    @Override
     public void setColorFilter(ColorFilter cf) {
         if (cf == mColorFilter) {
             return;
@@ -320,11 +324,6 @@ public class CircleImageView extends AppCompatImageView {
         mColorFilter = cf;
         applyColorFilter();
         invalidate();
-    }
-
-    @Override
-    public ColorFilter getColorFilter() {
-        return mColorFilter;
     }
 
     private void applyColorFilter() {

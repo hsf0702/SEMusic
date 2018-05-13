@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="55dp"
-              android:orientation="horizontal">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="55dp"
+    android:orientation="horizontal">
 
     <com.se.music.widget.CircleImageView
         android:id="@+id/singer_avatar"
@@ -11,7 +11,7 @@
         android:layout_height="42dp"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"/>
+        android:layout_marginRight="15dp" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -26,13 +26,13 @@
             android:gravity="center"
             android:textColor="@color/black"
             android:textSize="16sp"
-            tools:text="周杰伦"/>
+            tools:text="周杰伦" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_gravity="bottom"
-            android:background="@color/select_gray"/>
+            android:background="@color/select_gray" />
 
 
         <ImageView
@@ -42,7 +42,7 @@
             android:layout_gravity="right|center_vertical"
             android:layout_marginRight="@dimen/app_base_left_right_padding"
             android:scaleType="centerCrop"
-            android:src="@drawable/singer_item_enter"/>
+            android:src="@drawable/singer_item_enter" />
     </FrameLayout>
 
 </LinearLayout>

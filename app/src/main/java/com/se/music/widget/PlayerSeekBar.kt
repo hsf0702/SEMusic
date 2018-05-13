@@ -10,7 +10,7 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import android.util.AttributeSet
 import android.widget.SeekBar
-import com.se.music.pastmusic.R
+import com.se.music.R
 
 /**
  * Created by gaojin on 2018/2/4.

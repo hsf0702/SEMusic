@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:fresco="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="?android:attr/selectableItemBackground"
-              android:baselineAligned="false"
-              android:orientation="horizontal"
-              android:padding="6dp">
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:padding="6dp">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -20,7 +20,7 @@
             android:layout_marginLeft="10dp"
             android:scaleType="centerInside"
             fresco:actualImageScaleType="centerInside"
-            fresco:placeholderImage="@drawable/placeholder_disk_210"/>
+            fresco:placeholderImage="@drawable/placeholder_disk_210" />
 
 
     </LinearLayout>
@@ -45,7 +45,7 @@
                 android:singleLine="true"
                 android:text="如果我变成回忆"
                 android:textColor="@color/gray"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -62,7 +62,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="3dp"
                 android:src="@drawable/play_icn_love"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/down_artist"
@@ -73,7 +73,7 @@
                 android:text="00:00"
                 android:textColor="@color/gray"
                 android:textSize="10sp"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <ProgressBar
                 android:id="@+id/down_progress"
@@ -86,7 +86,7 @@
                 android:maxHeight="3dp"
                 android:progress="10"
                 android:secondaryProgress="100"
-                android:secondaryProgressTint="@color/gray"/>
+                android:secondaryProgressTint="@color/gray" />
 
             <TextView
                 android:id="@+id/down_count"
@@ -96,7 +96,7 @@
                 android:singleLine="true"
                 android:text="00:00"
                 android:textColor="@color/gray"
-                android:textSize="10sp"/>
+                android:textSize="10sp" />
 
         </LinearLayout>
 
@@ -117,7 +117,7 @@
             android:focusable="false"
             android:foregroundTint="#434343"
             android:padding="6dp"
-            android:src="@drawable/list_icn_more"/>
+            android:src="@drawable/list_icn_more" />
     </LinearLayout>
 
 </LinearLayout>

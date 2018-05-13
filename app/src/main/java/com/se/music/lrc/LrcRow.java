@@ -30,38 +30,6 @@ public class LrcRow implements Comparable<LrcRow> {
      **/
     private int totalTime;
 
-    public long getTotalTime() {
-        return totalTime;
-    }
-
-    public void setTotalTime(int totalTime) {
-        this.totalTime = totalTime;
-    }
-
-    public String getTimeStr() {
-        return timeStr;
-    }
-
-    public void setTimeStr(String timeStr) {
-        this.timeStr = timeStr;
-    }
-
-    public int getTime() {
-        return time;
-    }
-
-    public void setTime(int time) {
-        this.time = time;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
     public LrcRow() {
         super();
     }
@@ -113,7 +81,7 @@ public class LrcRow implements Comparable<LrcRow> {
     /****
      * 把歌词时间转换为毫秒值  如 将00:10.00  转为10000
      *
-     * @param tem
+     * @param timeStr
      * @return
      */
     private static int formatTime(String timeStr) {
@@ -123,6 +91,38 @@ public class LrcRow implements Comparable<LrcRow> {
         return Integer.parseInt(times[0]) * 60 * 1000
                 + Integer.parseInt(times[1]) * 1000
                 + Integer.parseInt(times[2]);
+    }
+
+    public long getTotalTime() {
+        return totalTime;
+    }
+
+    public void setTotalTime(int totalTime) {
+        this.totalTime = totalTime;
+    }
+
+    public String getTimeStr() {
+        return timeStr;
+    }
+
+    public void setTimeStr(String timeStr) {
+        this.timeStr = timeStr;
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     @Override

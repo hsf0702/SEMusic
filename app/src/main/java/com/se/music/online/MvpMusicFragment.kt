@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.se.music.R
 import com.se.music.kmvp.KBasePresenter
 import com.se.music.kmvp.KMvpPage
 import com.se.music.kmvp.KMvpPresenter
@@ -19,7 +20,6 @@ import com.se.music.online.mvpview.OnLineBannerView
 import com.se.music.online.mvpview.OnLineClassifyView
 import com.se.music.online.mvpview.OnLineExpressView
 import com.se.music.online.mvpview.OnLineRecommendView
-import com.se.music.pastmusic.R
 import com.se.music.utils.IdUtils
 
 /**

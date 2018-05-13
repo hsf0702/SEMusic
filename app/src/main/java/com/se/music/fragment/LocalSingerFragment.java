@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.se.music.R;
 import com.se.music.entity.ArtistEntity;
-import com.se.music.pastmusic.R;
 import com.se.music.utils.MusicUtils;
 
 import java.util.ArrayList;
@@ -106,13 +106,13 @@ public class LocalSingerFragment extends BaseFragment {
         @BindView(R.id.singer_list_info)
         TextView mInfo;
 
-        @OnClick(R.id.rl_singer_item)
-        void click() {
-        }
-
         public SingerItemViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        @OnClick(R.id.rl_singer_item)
+        void click() {
         }
 
         public void onBindData(final ArtistEntity artistEntity) {

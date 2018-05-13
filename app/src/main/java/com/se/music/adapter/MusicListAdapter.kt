@@ -8,8 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.se.music.R
 import com.se.music.entity.MusicEntity
-import com.se.music.pastmusic.R
 import com.se.music.service.MusicPlayer
 import com.se.music.utils.HandlerUtil
 import com.se.music.utils.MusicUtils

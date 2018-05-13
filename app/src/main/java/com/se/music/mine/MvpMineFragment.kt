@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowId
+import com.se.music.R
 import com.se.music.database.provider.SongListDBService
 import com.se.music.entity.SongListEntity
 import com.se.music.kmvp.KBasePresenter
@@ -20,7 +20,6 @@ import com.se.music.mine.listname.MineSongListNameView
 import com.se.music.mine.operation.MineOperationView
 import com.se.music.mine.personal.MinePersonalInfoView
 import com.se.music.mine.root.MineAdapter
-import com.se.music.pastmusic.R
 
 /**
  * Author: gaojin

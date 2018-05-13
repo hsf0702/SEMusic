@@ -1,12 +1,15 @@
 package com.se.music.activity
 
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.view.LayoutInflater
 import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
-import com.se.music.pastmusic.R
+import com.se.music.R
 
 /**
  * Creator：gaojin
@@ -18,16 +21,18 @@ abstract class ToolBarActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(getLayoutId())
+        val inflater = LayoutInflater.from(this)
+        val rootView = inflater.inflate(R.layout.fragment_base, null) as LinearLayout
+        rootView.addView(createContentView(inflater, rootView))
+        setContentView(rootView)
         mToolBar = findViewById(R.id.base_toolbar)
         mTitle = findViewById(R.id.toolbar_title)
-
         setSupportActionBar(mToolBar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
     }
 
-    protected abstract fun getLayoutId(): Int
+    protected abstract fun createContentView(inflater: LayoutInflater, rootView: ViewGroup): View
 
     override fun setTitle(title: CharSequence) {
         mTitle!!.text = title

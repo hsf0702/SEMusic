@@ -2,7 +2,6 @@ package com.se.music.utils
 
 import android.content.Context
 import android.widget.ImageView
-import com.bumptech.glide.Glide
 import com.se.music.GlideApp
 import com.youth.banner.loader.ImageLoader
 

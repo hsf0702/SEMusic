@@ -1,7 +1,6 @@
 package com.se.music.fragment
 
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
@@ -12,7 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.se.music.pastmusic.R
+import com.se.music.R
 
 /**
  * Created by gaojin on 2018/2/28.

@@ -14,11 +14,11 @@ class MusicTrack() : Parcelable {
     /**
      * 音乐的ID
      */
-    public var mId: Long = 0
+    var mId: Long = 0
     /**
      * 此首歌在播放列表中的位置
      */
-    public var mSourcePosition: Int = 0
+    var mSourcePosition: Int = 0
 
     constructor(mId: Long, mSourcePosition: Int) : this() {
         this.mId = mId

@@ -7,7 +7,8 @@ import com.google.gson.Gson
  */
 class GsonFactory {
     companion object {
-        @Volatile private var gson: Gson? = null
+        @Volatile
+        private var gson: Gson? = null
 
         fun getInstance(): Gson {
             if (null == gson) {

@@ -16,7 +16,7 @@ import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.se.music.pastmusic.R;
+import com.se.music.R;
 
 import java.lang.ref.WeakReference;
 

@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.se.music.R;
 import com.se.music.entity.MusicEntity;
-import com.se.music.pastmusic.R;
 import com.se.music.service.MusicPlayer;
 import com.se.music.utils.HandlerUtil;
 import com.se.music.utils.MConstants;
@@ -23,12 +23,11 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by wm on 2016/1/18.
+ * Author: gaojin
+ * Time: 2018/5/13 下午6:26
  */
 public class DownMusicFragment extends BaseFragment {
     private String folder_path;
-    private LinearLayoutManager layoutManager;
-    private RecyclerView recyclerView;
     private FolderDetailAdapter folderDetailAdapter;
 
     public static DownMusicFragment newInstance(String id, boolean useTransition, String transitionName) {
@@ -55,8 +54,8 @@ public class DownMusicFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.down_music_recylerview, container, false);
 
-        layoutManager = new LinearLayoutManager(getContext());
-        recyclerView = view.findViewById(R.id.recyclerview);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(layoutManager);
         folderDetailAdapter = new FolderDetailAdapter(null);
         recyclerView.setAdapter(folderDetailAdapter);
