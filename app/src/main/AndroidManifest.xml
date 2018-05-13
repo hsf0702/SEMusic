@@ -48,7 +48,6 @@
             android:process=":remote" />
 
         <activity android:name="com.se.music.activity.CollectedActivity" />
-        <activity android:name="com.se.music.activity.SelectSongListActivity"></activity>
         <activity android:name="com.se.music.activity.CreateSongListActivity"></activity>
 
         <activity android:name="com.se.music.activity.PermissionsActivity"></activity>
