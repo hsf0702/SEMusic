@@ -21,14 +21,14 @@ class MusicInfoDBService {
         val db = MusicDBHelper.instance.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(MusicInfoCache.ID, UUID.randomUUID().toString())
-        contentValues.put(MusicInfoCache.NAME, musicEntity.getMusicName())
-        contentValues.put(MusicInfoCache.ALBUM_ID, musicEntity.getAlbumId())
-        contentValues.put(MusicInfoCache.ALBUM_NAME, musicEntity.getAlbumName())
-        contentValues.put(MusicInfoCache.ALBUM_PIC, musicEntity.getAlbumPic())
-        contentValues.put(MusicInfoCache.ARTIST_ID, musicEntity.getArtistId())
-        contentValues.put(MusicInfoCache.ARTIST_NAME, musicEntity.getArtist())
-        contentValues.put(MusicInfoCache.SONG_ID, musicEntity.getSongId())
-        if (musicEntity.islocal()) {
+        contentValues.put(MusicInfoCache.NAME, musicEntity.musicName)
+        contentValues.put(MusicInfoCache.ALBUM_ID, musicEntity.albumId)
+        contentValues.put(MusicInfoCache.ALBUM_NAME, musicEntity.albumName)
+        contentValues.put(MusicInfoCache.ALBUM_PIC, musicEntity.albumPic)
+        contentValues.put(MusicInfoCache.ARTIST_ID, musicEntity.artistId)
+        contentValues.put(MusicInfoCache.ARTIST_NAME, musicEntity.artist)
+        contentValues.put(MusicInfoCache.SONG_ID, musicEntity.songId)
+        if (musicEntity.islocal) {
             contentValues.put(MusicInfoCache.IS_LOCAL, 0)
         } else {
             contentValues.put(MusicInfoCache.IS_LOCAL, 1)
@@ -47,36 +47,26 @@ class MusicInfoDBService {
         if (cursor.count > 0) {
             cursor.moveToFirst()
             val musicEntity = MusicEntity()
-            musicEntity.setSongId(java.lang.Long.parseLong(cursor.getString(0)))
-            musicEntity.setMusicName(cursor.getString(2))
-            musicEntity.setAlbumId(cursor.getInt(3))
-            musicEntity.setAlbumName(cursor.getString(4))
-            musicEntity.setAlbumPic(cursor.getString(5))
-            musicEntity.setArtistId(java.lang.Long.parseLong(cursor.getString(6)))
-            musicEntity.setArtist(cursor.getString(7))
-            val a = cursor.getInt(9)
-            if (a == 0) {
-                musicEntity.setIslocal(true)
-            } else {
-                musicEntity.setIslocal(false)
-            }
+            musicEntity.songId = cursor.getString(0).toLong()
+            musicEntity.musicName = cursor.getString(2)
+            musicEntity.albumId = cursor.getInt(3)
+            musicEntity.albumName = cursor.getString(4)
+            musicEntity.albumPic = cursor.getString(5)
+            musicEntity.artistId = cursor.getString(6).toLong()
+            musicEntity.artist = cursor.getString(7)
+            musicEntity.islocal = (cursor.getInt(9) == 0)
             list.add(musicEntity)
         }
         while (cursor.moveToNext()) {
             val musicEntity = MusicEntity()
-            musicEntity.setSongId(java.lang.Long.parseLong(cursor.getString(0)))
-            musicEntity.setMusicName(cursor.getString(2))
-            musicEntity.setAlbumId(cursor.getInt(3))
-            musicEntity.setAlbumName(cursor.getString(4))
-            musicEntity.setAlbumPic(cursor.getString(5))
-            musicEntity.setArtistId(java.lang.Long.parseLong(cursor.getString(6)))
-            musicEntity.setArtist(cursor.getString(7))
-            val a = cursor.getInt(9)
-            if (a == 0) {
-                musicEntity.setIslocal(true)
-            } else {
-                musicEntity.setIslocal(false)
-            }
+            musicEntity.songId = cursor.getString(0).toLong()
+            musicEntity.musicName = cursor.getString(2)
+            musicEntity.albumId = cursor.getInt(3)
+            musicEntity.albumName = cursor.getString(4)
+            musicEntity.albumPic = cursor.getString(5)
+            musicEntity.artistId = cursor.getString(6).toLong()
+            musicEntity.artist = cursor.getString(7)
+            musicEntity.islocal = (cursor.getInt(9) == 0)
             list.add(musicEntity)
         }
         return list
@@ -109,19 +99,14 @@ class MusicInfoDBService {
         if (cursor.count > 0) {
             cursor.moveToFirst()
             musicEntity = MusicEntity()
-            musicEntity.setSongId(java.lang.Long.parseLong(cursor.getString(0)))
-            musicEntity.setMusicName(cursor.getString(2))
-            musicEntity.setAlbumId(cursor.getInt(3))
-            musicEntity.setAlbumName(cursor.getString(4))
-            musicEntity.setAlbumPic(cursor.getString(5))
-            musicEntity.setArtistId(java.lang.Long.parseLong(cursor.getString(6)))
-            musicEntity.setArtist(cursor.getString(7))
-            val a = cursor.getInt(9)
-            if (a == 0) {
-                musicEntity.setIslocal(true)
-            } else {
-                musicEntity.setIslocal(false)
-            }
+            musicEntity.songId = cursor.getString(0).toLong()
+            musicEntity.musicName = cursor.getString(2)
+            musicEntity.albumId = cursor.getInt(3)
+            musicEntity.albumName = cursor.getString(4)
+            musicEntity.albumPic = cursor.getString(5)
+            musicEntity.artistId = cursor.getString(6).toLong()
+            musicEntity.artist = cursor.getString(7)
+            musicEntity.islocal = (cursor.getInt(9) == 0)
         }
         return musicEntity
     }
@@ -132,7 +117,6 @@ class MusicInfoDBService {
         var total = 0
         var local = 0
         val db = MusicDBHelper.instance.readableDatabase
-        val list = ArrayList<MusicEntity>()
         val sql = "select * from " + MusicDBHelper.MUSICINFO_TABLE + " where " + MusicInfoCache.SONG_LIST_ID + " = '" + songListId + "'"
         val cursor = db.rawQuery(sql, null)
         if (cursor.count > 0) {

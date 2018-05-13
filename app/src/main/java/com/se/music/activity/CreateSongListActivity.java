@@ -7,10 +7,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.se.music.database.provider.SongListDBService;
-import com.se.music.event.CreateSongListEvent;
 import com.se.music.pastmusic.R;
-
-import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,7 +38,6 @@ public class CreateSongListActivity extends AppCompatActivity {
         listInfo = infoInput.getText().toString();
         if (!TextUtils.isEmpty(listName)) {
             SongListDBService.Companion.getInstance().insert(listName, listInfo);
-            EventBus.getDefault().post(new CreateSongListEvent());
         }
         finish();
     }

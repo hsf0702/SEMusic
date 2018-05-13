@@ -48,7 +48,7 @@ class LocalMusicSongFragment : Fragment() {
 
     }
 
-    public fun refreshAdapter() {
+    private fun refreshAdapter() {
         Log.e("gj", "refreshAdapter")
         object : AsyncTask<Void, Void, String>() {
             override fun doInBackground(vararg params: Void?): String {

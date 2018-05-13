@@ -110,7 +110,7 @@ class CreateSongListAdapter constructor(context: Context) : RecyclerView.Adapter
         var mItemLayout: RelativeLayout? = null
 
         private fun favorItem() {
-            startActivity(mContext, mList!![adapterPosition - 1].getId(), mList!![adapterPosition - 1].getName())
+            startActivity(mContext, mList!![adapterPosition - 1].id, mList!![adapterPosition - 1].name)
         }
 
         init {
@@ -124,9 +124,9 @@ class CreateSongListAdapter constructor(context: Context) : RecyclerView.Adapter
         }
 
         fun onBind(songListEntity: SongListEntity) {
-            songListPic!!.setImageURI(songListEntity.getList_pic())
-            mPlayListTitle!!.text = songListEntity.getName()
-            mPlayListInfo!!.text = MusicInfoDBService.instance.getLocalCount(songListEntity.getId())
+            songListPic!!.setImageURI(songListEntity.listPic)
+            mPlayListTitle!!.text = songListEntity.name
+            mPlayListInfo!!.text = MusicInfoDBService.instance.getLocalCount(songListEntity.id!!)
         }
     }
 

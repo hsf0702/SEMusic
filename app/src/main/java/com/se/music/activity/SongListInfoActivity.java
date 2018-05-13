@@ -106,10 +106,6 @@ public class SongListInfoActivity extends ToolBarActivity {
         adapter.updateList(mList);
     }
 
-    @Override
-    public void setStatusBar() {
-    }
-
     public void setStatusBar_C() {
         if (MusicInfoDBService.Companion.getInstance().haveSong(mId) != null) {
             mEmptyLayout.setVisibility(View.GONE);

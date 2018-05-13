@@ -120,8 +120,6 @@ class MusicListAdapter constructor(context: Context) : RecyclerView.Adapter<Recy
 
         override fun onClick(v: View) {
             if (v.id == R.id.viewpager_list_button) {
-//            songOperationDialog = SongOperationDialog(mContext, mList.get(adapterPosition - 1), MConstants.MUSICOVERFLOW)
-//            songOperationDialog.show()
             } else {
                 if (playMusic != null)
                     handler!!.removeCallbacks(playMusic)
@@ -133,8 +131,8 @@ class MusicListAdapter constructor(context: Context) : RecyclerView.Adapter<Recy
         }
 
         fun onBindData(musicEntity: MusicEntity, position: Int) {
-            mMusicName!!.text = musicEntity.getMusicName()
-            mMusicInfo!!.text = musicEntity.getArtist()
+            mMusicName!!.text = musicEntity.musicName
+            mMusicInfo!!.text = musicEntity.artist
         }
     }
 

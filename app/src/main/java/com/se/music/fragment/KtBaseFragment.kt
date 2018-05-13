@@ -18,12 +18,9 @@ import com.se.music.pastmusic.R
  * Created by gaojin on 2018/2/28.
  */
 abstract class KtBaseFragment : Fragment() {
-
-    private var mAppBarLayout: AppBarLayout? = null
     private var mToolBar: Toolbar? = null
     private var mTitle: TextView? = null
-
-    var fm: FragmentManager? = null
+    protected var fm: FragmentManager? = null
 
     fun setTitle(title: String?) {
         mTitle!!.text = title
@@ -33,7 +30,6 @@ abstract class KtBaseFragment : Fragment() {
         val linearLayout = inflater.inflate(R.layout.fragment_base, container, false) as LinearLayout?
         linearLayout!!.addView(createContentView(inflater, container))
 
-        mAppBarLayout = linearLayout.findViewById(R.id.appbar_layout)
         mToolBar = linearLayout.findViewById(R.id.base_toolbar)
         mTitle = linearLayout.findViewById(R.id.toolbar_title)
         fm = fragmentManager

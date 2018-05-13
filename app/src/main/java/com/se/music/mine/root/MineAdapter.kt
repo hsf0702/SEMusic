@@ -39,7 +39,7 @@ class MineAdapter constructor(private var context: Context, private val list: Li
         if (holder is ListItemHolder) {
             val songListEntity: SongListEntity = list[position - 1]
             GlideApp.with(context)
-                    .load(songListEntity.list_pic)
+                    .load(songListEntity.listPic)
                     .into(holder.imageView!!)
 
             holder.songListTitle!!.text = songListEntity.name

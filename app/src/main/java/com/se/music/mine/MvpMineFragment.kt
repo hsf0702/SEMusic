@@ -25,6 +25,7 @@ import com.se.music.pastmusic.R
 /**
  * Author: gaojin
  * Time: 2018/4/22 下午9:35
+ * 首页【我的】Tab页面
  */
 class MvpMineFragment : Fragment(), KMvpPage {
 

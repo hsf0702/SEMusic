@@ -12,12 +12,7 @@ import java.util.*
 /**
  * Created by gaojin on 2017/12/7.
  */
-class LocalFragmentAdapter constructor(fm: FragmentManager?, list: List<String>) : FragmentStatePagerAdapter(fm) {
-    private var tabNames = ArrayList<String>()
-
-    init {
-        tabNames = list as ArrayList<String>
-    }
+class LocalFragmentAdapter constructor(fm: FragmentManager?, private val list: List<String>) : FragmentStatePagerAdapter(fm) {
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
@@ -33,6 +28,6 @@ class LocalFragmentAdapter constructor(fm: FragmentManager?, list: List<String>)
     }
 
     override fun getPageTitle(position: Int): CharSequence {
-        return tabNames[position % 4]
+        return list[position % 4]
     }
 }

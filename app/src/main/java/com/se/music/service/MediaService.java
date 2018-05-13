@@ -628,8 +628,8 @@ public class MediaService extends Service {
         MusicEntity info = mPlaylistInfo.get(trackId);
         if (mPlaylistInfo.get(trackId) != null) {
             MatrixCursor cursor = new MatrixCursor(PROJECTION);
-            cursor.addRow(new Object[]{info.songId, info.artist, info.albumName, info.musicName
-                    , info.data, info.albumData, info.albumId, info.artistId, info.albumPic});
+            cursor.addRow(new Object[]{info.getSongId(), info.getArtist(), info.getAlbumName(), info.getMusicName()
+                    , info.getData(), info.getAlbumData(), info.getAlbumId(), info.getArtistId(), info.getAlbumPic()});
             cursor.moveToFirst();
             mCursor = cursor;
             cursor.close();
@@ -740,7 +740,7 @@ public class MediaService extends Service {
             if (mPlaylistInfo.get(id) == null) {
                 return;
             }
-            if (!mPlaylistInfo.get(id).islocal) {
+            if (!mPlaylistInfo.get(id).getIslocal()) {
                 if (mRequestUrl != null) {
                     mRequestUrl.stop();
                     mUrlHandler.removeCallbacks(mRequestUrl);
@@ -1018,7 +1018,7 @@ public class MediaService extends Service {
         if (mNextPlayPos >= 0 && mPlaylist != null && mNextPlayPos < mPlaylist.size()) {
             final long id = mPlaylist.get(mNextPlayPos).getMId();
             if (mPlaylistInfo.get(id) != null) {
-                if (mPlaylistInfo.get(id).islocal) {
+                if (mPlaylistInfo.get(id).getIslocal()) {
                     mPlayer.setNextDataSource(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI + "/" + id);
                 } else {
                     mPlayer.setNextDataSource(null);
@@ -1107,7 +1107,7 @@ public class MediaService extends Service {
             if (info == null) {
                 return true;
             }
-            return info.islocal;
+            return info.getIslocal();
         }
     }
 
@@ -1182,7 +1182,7 @@ public class MediaService extends Service {
                 String[] albums = new String[len];
                 long[] queue = getQueue();
                 for (int i = 0; i < len; i++) {
-                    albums[i] = mPlaylistInfo.get(queue[i]).albumData;
+                    albums[i] = mPlaylistInfo.get(queue[i]).getAlbumData();
                 }
                 return albums;
             } catch (Exception e) {
@@ -1199,7 +1199,7 @@ public class MediaService extends Service {
                 String[] albums = new String[len];
                 long[] queue = getQueue();
                 for (int i = 0; i < len; i++) {
-                    albums[i] = mPlaylistInfo.get(queue[i]).albumPic;
+                    albums[i] = mPlaylistInfo.get(queue[i]).getAlbumPic();
                 }
                 return albums;
             } catch (Exception e) {
@@ -1362,7 +1362,7 @@ public class MediaService extends Service {
         @Override
         public void run() {
             if (!stop) {
-                final File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + LRC_PATH + musicInfo.songId);
+                final File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + LRC_PATH + musicInfo.getSongId());
             }
         }
     }

@@ -12,6 +12,9 @@ public interface MusicStateListener {
      */
     void updatePlayInfo();
 
+    /**
+     * 更新播放时间
+     */
     void updateTime();
 
     void reloadAdapter();

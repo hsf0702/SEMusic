@@ -111,9 +111,9 @@ public class LocalAlbumFragment extends BaseFragment {
         }
 
         public void onBindData(AlbumEntity albumEntity) {
-            mTitle.setText(albumEntity.album_name);
-            mInfo.setText(albumEntity.number_of_songs + "首");
-            simpleDraweeView.setImageURI(albumEntity.album_art + "");
+            mTitle.setText(albumEntity.getAlbumName());
+            mInfo.setText(albumEntity.getNumberOfSongs() + "首");
+            simpleDraweeView.setImageURI(albumEntity.getAlbumArt() + "");
         }
     }
 }

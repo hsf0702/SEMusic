@@ -79,8 +79,8 @@ class SongListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
                 relativeLayout.setBackgroundColor(Color.WHITE)
                 mLine.visibility = View.VISIBLE
             }
-            mTitle.text = musicEntity.getMusicName()
-            mInfo.text = musicEntity.getArtist()
+            mTitle.text = musicEntity.musicName
+            mInfo.text = musicEntity.artist
             ImageUtils.setImageSource(mContext, mImgSong, musicEntity)
         }
 

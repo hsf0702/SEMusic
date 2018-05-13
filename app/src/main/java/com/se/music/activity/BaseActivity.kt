@@ -1,5 +1,6 @@
 package com.se.music.activity
 
+import android.annotation.SuppressLint
 import android.content.*
 import android.os.IBinder
 import android.support.v7.app.AppCompatActivity
@@ -15,11 +16,11 @@ import java.lang.ref.WeakReference
 import java.util.*
 
 
-
 /**
  * Creator：gaojin
  * date：2017/11/6 下午7:57
  */
+@SuppressLint("Registered")
 open class BaseActivity : AppCompatActivity(), ServiceConnection {
 
     private var mToken: MusicPlayer.ServiceToken? = null
@@ -126,10 +127,8 @@ open class BaseActivity : AppCompatActivity(), ServiceConnection {
      */
     open fun baseUpdatePlayInfo() {
         for (listener in mMusicListener) {
-            if (listener != null) {
-                listener.reloadAdapter()
-                listener.updatePlayInfo()
-            }
+            listener.reloadAdapter()
+            listener.updatePlayInfo()
         }
     }
 

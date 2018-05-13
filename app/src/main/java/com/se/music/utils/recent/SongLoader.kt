@@ -96,7 +96,7 @@ open class SongLoader {
                 selectionStatement = "$selectionStatement AND $selection"
             }
 
-            return context.contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, arrayOf("_id", "title", "artist", "album", "duration", "track", "artist_id", "album_id"), selectionStatement, paramArrayOfString, songSortOrder)
+            return context.contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, arrayOf("_id", "title", "artist", "album", "duration", "track", "artistId", "albumId"), selectionStatement, paramArrayOfString, songSortOrder)
         }
     }
 }

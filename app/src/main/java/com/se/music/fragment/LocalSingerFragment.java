@@ -116,8 +116,8 @@ public class LocalSingerFragment extends BaseFragment {
         }
 
         public void onBindData(final ArtistEntity artistEntity) {
-            mTitle.setText(artistEntity.artist_name);
-            mInfo.setText(artistEntity.getNumber_of_tracks() + "首");
+            mTitle.setText(artistEntity.getArtistName());
+            mInfo.setText(artistEntity.getNumberOfTracks() + "首");
         }
     }
 }

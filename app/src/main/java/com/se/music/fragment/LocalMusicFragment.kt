@@ -14,7 +14,6 @@ import com.se.music.utils.MConstants
 import com.se.music.utils.MusicUtils
 import java.util.*
 
-
 /**
  * A simple [Fragment] subclass.
  * Use the [KtUiLocalMusicFragment.newInstance] factory method to
@@ -23,7 +22,7 @@ import java.util.*
 class LocalMusicFragment : KtBaseFragment() {
 
     internal var mAdapter: LocalFragmentAdapter? = null
-    private val mTabNames = ArrayList<String>()
+    private var mTabNames: List<String>? = null
     private var position: Int = 0
     private var mTabLayout: TabLayout? = null
     private var mViewPager: ViewPager? = null
@@ -37,10 +36,11 @@ class LocalMusicFragment : KtBaseFragment() {
         val singerCount = MusicUtils.queryArtist(context!!).size
         val albumCount = MusicUtils.queryAlbums(context!!).size
         val folderCount = MusicUtils.queryFolder(context!!).size
-        mTabNames.add(context!!.getString(R.string.local_music_song, localCount))
-        mTabNames.add(context!!.getString(R.string.local_music_singer, singerCount))
-        mTabNames.add(context!!.getString(R.string.local_music_album, albumCount))
-        mTabNames.add(context!!.getString(R.string.local_music_folder, folderCount))
+
+        mTabNames = listOf(context!!.getString(R.string.local_music_song, localCount)
+                , context!!.getString(R.string.local_music_singer, singerCount)
+                , context!!.getString(R.string.local_music_album, albumCount)
+                , context!!.getString(R.string.local_music_folder, folderCount))
     }
 
     override fun createContentView(inflater: LayoutInflater, container: ViewGroup?): View {
@@ -54,7 +54,7 @@ class LocalMusicFragment : KtBaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setTitle(context!!.getString(R.string.local_music_title))
-        mAdapter = LocalFragmentAdapter(fm, mTabNames)
+        mAdapter = LocalFragmentAdapter(fm, mTabNames!!)
         mViewPager!!.adapter = mAdapter
         mViewPager!!.currentItem = position
         mTabLayout!!.setupWithViewPager(mViewPager)

@@ -156,8 +156,8 @@ public class DownMusicFragment extends BaseFragment {
             }
             if (holder instanceof ListItemViewHolder) {
                 MusicEntity musicInfo = mList.get(position - 1);
-                ((ListItemViewHolder) holder).mainTitle.setText(musicInfo.musicName);
-                ((ListItemViewHolder) holder).title.setText(musicInfo.artist);
+                ((ListItemViewHolder) holder).mainTitle.setText(musicInfo.getMusicName());
+                ((ListItemViewHolder) holder).title.setText(musicInfo.getArtist());
             }
         }
 
@@ -188,9 +188,9 @@ public class DownMusicFragment extends BaseFragment {
                         HashMap<Long, MusicEntity> infos = new HashMap();
                         for (int i = 0; i < mList.size(); i++) {
                             MusicEntity info = mList.get(i);
-                            list[i] = info.songId;
-                            info.islocal = true;
-                            info.albumData = MusicUtils.Companion.getAlbumArtUri(info.albumId) + "";
+                            list[i] = info.getSongId();
+                            info.setIslocal(true);
+                            info.setAlbumData(MusicUtils.Companion.getAlbumArtUri(info.getAlbumId()) + "");
                             infos.put(list[i], mList.get(i));
                         }
                         MusicPlayer.Companion.playAll(infos, list, 0, false);
@@ -216,8 +216,6 @@ public class DownMusicFragment extends BaseFragment {
                 moreOverflow.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        MoreFragment moreFragment = new MoreFragment().newInstance(mList.get(getAdapterPosition() - 1), IConstants.MUSICOVERFLOW);
-//                        moreFragment.show(getFragmentManager(), "music");
                     }
                 });
                 view.setOnClickListener(this);
@@ -234,9 +232,9 @@ public class DownMusicFragment extends BaseFragment {
                         HashMap<Long, MusicEntity> infos = new HashMap();
                         for (int i = 0; i < mList.size(); i++) {
                             MusicEntity info = mList.get(i);
-                            list[i] = info.songId;
-                            info.islocal = true;
-                            info.albumData = MusicUtils.Companion.getAlbumArtUri(info.albumId) + "";
+                            list[i] = info.getSongId();
+                            info.setIslocal(true);
+                            info.setAlbumData(MusicUtils.Companion.getAlbumArtUri(info.getAlbumId()) + "");
                             infos.put(list[i], mList.get(i));
                         }
                         if (getAdapterPosition() > 0)

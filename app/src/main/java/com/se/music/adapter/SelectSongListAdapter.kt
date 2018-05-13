@@ -14,7 +14,6 @@ import com.se.music.database.provider.MusicInfoDBService
 import com.se.music.database.provider.SongListDBService
 import com.se.music.entity.MusicEntity
 import com.se.music.entity.SongListEntity
-import com.se.music.event.CreateSongListEvent
 import com.se.music.pastmusic.R
 import org.greenrobot.eventbus.EventBus
 
@@ -48,8 +47,7 @@ class SelectSongListAdapter(context: Context, musicEntity: MusicEntity) : Recycl
         var mItemLayout: RelativeLayout = itemView.findViewById(R.id.rl_favor_item)
 
         private fun favorItem() {
-            MusicInfoDBService.instance.insert(musicEntity, mList[adapterPosition].getId())
-            EventBus.getDefault().post(CreateSongListEvent())
+            MusicInfoDBService.instance.insert(musicEntity, mList[adapterPosition].id!!)
             (mContext as SelectSongListActivity).finish()
         }
 
@@ -58,9 +56,9 @@ class SelectSongListAdapter(context: Context, musicEntity: MusicEntity) : Recycl
         }
 
         fun onBind(songListEntity: SongListEntity) {
-            songListPic.setImageURI(songListEntity.getList_pic())
-            mPlayListTitle.text = songListEntity.getName()
-            mPlayListInfo.text = MusicInfoDBService.instance.getLocalCount(songListEntity.getId())
+            songListPic.setImageURI(songListEntity.listPic)
+            mPlayListTitle.text = songListEntity.name
+            mPlayListInfo.text = MusicInfoDBService.instance.getLocalCount(songListEntity.id!!)
         }
     }
 }

@@ -8,5 +8,4 @@ import com.bumptech.glide.module.AppGlideModule
  * Time: 2018/5/6 下午4:53
  */
 @GlideModule
-class MyAppGlideModule : AppGlideModule() {
-}
+class MyAppGlideModule : AppGlideModule()
