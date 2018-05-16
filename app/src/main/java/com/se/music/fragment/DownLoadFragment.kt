@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.se.music.R
+import com.se.music.base.KtBaseFragment
 
 /**
  * Creator：gaojin

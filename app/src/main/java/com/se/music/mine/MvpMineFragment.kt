@@ -9,17 +9,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.se.music.R
-import com.se.music.database.provider.SongListDBService
-import com.se.music.entity.SongListEntity
-import com.se.music.kmvp.KBasePresenter
-import com.se.music.kmvp.KMvpPage
-import com.se.music.kmvp.KMvpPresenter
+import com.se.music.base.kmvp.KBasePresenter
+import com.se.music.base.kmvp.KMvpPage
+import com.se.music.base.kmvp.KMvpPresenter
+import com.se.music.common.entity.SongListEntity
 import com.se.music.mine.event.CollectEvent
 import com.se.music.mine.event.CreateEvent
 import com.se.music.mine.listname.MineSongListNameView
 import com.se.music.mine.operation.MineOperationView
 import com.se.music.mine.personal.MinePersonalInfoView
 import com.se.music.mine.root.MineAdapter
+import com.se.music.utils.database.provider.SongListDBService
 
 /**
  * Author: gaojin

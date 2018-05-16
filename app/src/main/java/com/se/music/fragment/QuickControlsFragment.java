@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.se.music.R;
 import com.se.music.activity.PlayMusicActivity;
+import com.se.music.base.BaseFragment;
 import com.se.music.service.MusicPlayer;
 
 import butterknife.BindView;

@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Context
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.se.music.base.BaseConfig
-import com.se.music.singleton.ApplicationSingleton
+import com.se.music.utils.singleton.ApplicationSingleton
 
 /**
  * Author: gaojin

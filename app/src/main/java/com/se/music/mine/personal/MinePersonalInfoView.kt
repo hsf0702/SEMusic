@@ -3,8 +3,8 @@ package com.se.music.mine.personal
 import android.view.LayoutInflater
 import android.view.View
 import com.se.music.R
-import com.se.music.kmvp.KBaseView
-import com.se.music.kmvp.KMvpPresenter
+import com.se.music.base.kmvp.KBaseView
+import com.se.music.base.kmvp.KMvpPresenter
 
 /**
  * Author: gaojin

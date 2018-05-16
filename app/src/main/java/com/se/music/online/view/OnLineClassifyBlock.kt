@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
 import com.se.music.R
-import com.se.music.activity.BaseActivity
+import com.se.music.base.BaseActivity
 import com.se.music.online.subfragment.OnLineSingerFragment
 
 /**

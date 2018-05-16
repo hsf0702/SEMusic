@@ -26,13 +26,13 @@ import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.se.music.IMediaAidlInterface
 import com.se.music.R
-import com.se.music.activity.MainActivity
-import com.se.music.database.provider.ImageDBService
-import com.se.music.database.provider.RecentStore
-import com.se.music.entity.MusicEntity
-import com.se.music.singleton.ApplicationSingleton
-import com.se.music.singleton.GsonSingleton
+import com.se.music.common.entity.MusicEntity
+import com.se.music.main.MainActivity
 import com.se.music.utils.SharePreferencesUtils
+import com.se.music.utils.database.provider.ImageDBService
+import com.se.music.utils.database.provider.RecentStore
+import com.se.music.utils.singleton.ApplicationSingleton
+import com.se.music.utils.singleton.GsonSingleton
 import java.io.*
 import java.lang.ref.WeakReference
 import java.util.*
@@ -45,58 +45,58 @@ import java.util.*
 class MediaService : Service() {
 
     companion object {
-        val PLAYSTATE_CHANGED = "com.past.music.play_state_changed"
-        val POSITION_CHANGED = "com.past.music.positionchanged"
-        val SEND_PROGRESS = "com.past.music.progress"
-        val META_CHANGED = "com.past.music.meta_changed"
-        val MUSIC_CHANGED = "com.past.music.change_music"
-        val QUEUE_CHANGED = "com.past.music.queuechanged"
-        val TRACK_ERROR = "com.past.music.trackerror"
-        val TRACK_PREPARED = "com.past.music.prepared"
-        val REFRESH = "com.past.music.refresh"
-        val PREVIOUS_FORCE_ACTION = "com.past.music.previous.force"
-        val PREVIOUS_ACTION = "com.past.music.previous"
-        val REPEATMODE_CHANGED = "com.past.music.repeatmodechanged"
-        val SHUFFLEMODE_CHANGED = "com.past.music.shufflemodechanged"
-        val LRC_UPDATED = "com.past.music.updatelrc"
-        val TRY_GET_TRACKINFO = "com.past.music.gettrackinfo"
-        val TIMBER_PACKAGE_NAME = "com.past.music"
-        val MUSIC_PACKAGE_NAME = "com.android.music"
-        val TOGGLEPAUSE_ACTION = "com.past.music.togglepause"
-        val NEXT_ACTION = "com.past.music.next"
-        val STOP_ACTION = "com.past.music.stop"
-        val BUFFER_UP = "com.past.music.bufferup"
-        val MUSIC_LODING = "com.past.music.loading"
-        val REPEAT_ACTION = "com.past.music.repeat"
-        val SHUFFLE_ACTION = "com.past.music.shuffle"
-        val NEXT = 2
-        val LAST = 3
-        val SHUFFLE_NONE = 0
-        val SHUFFLE_NORMAL = 1
-        val SHUFFLE_AUTO = 2
-        val REPEAT_NONE = 2
-        val REPEAT_CURRENT = 1
-        val REPEAT_ALL = 2
-        val MAX_HISTORY_SIZE = 1000
-        val LRC_PATH = "/pastmusic/lrc/"
-        private val TAG = "MediaService"
-        private val SHUTDOWN = "com.past.music.shutdown"
-        private val TRACK_NAME = "trackname"
-        private val ALNUM_PIC = "album_pic"
-        private val IDCOLIDX = 0
-        private val TRACK_ENDED = 1
-        private val TRACK_WENT_TO_NEXT = 2
-        private val RELEASE_WAKELOCK = 3
-        private val SERVER_DIED = 4
-        private val FOCUSCHANGE = 5
-        private val FADEDOWN = 6
-        private val FADEUP = 7
-        private val LRC_DOWNLOADED = -10
-        private val NOTIFY_MODE_NONE = 0
-        private val NOTIFY_MODE_FOREGROUND = 1
-        private val NOTIFY_MODE_BACKGROUND = 2
-        private val IDLE_DELAY = 5 * 60 * 1000
-        private val REWIND_INSTEAD_PREVIOUS_THRESHOLD: Long = 3000
+        const val PLAYSTATE_CHANGED = "com.past.music.play_state_changed"
+        const val POSITION_CHANGED = "com.past.music.positionchanged"
+        const val SEND_PROGRESS = "com.past.music.progress"
+        const val META_CHANGED = "com.past.music.meta_changed"
+        const val MUSIC_CHANGED = "com.past.music.change_music"
+        const val QUEUE_CHANGED = "com.past.music.queuechanged"
+        const val TRACK_ERROR = "com.past.music.trackerror"
+        const val TRACK_PREPARED = "com.past.music.prepared"
+        const val REFRESH = "com.past.music.refresh"
+        const val PREVIOUS_FORCE_ACTION = "com.past.music.previous.force"
+        const val PREVIOUS_ACTION = "com.past.music.previous"
+        const val REPEATMODE_CHANGED = "com.past.music.repeatmodechanged"
+        const val SHUFFLEMODE_CHANGED = "com.past.music.shufflemodechanged"
+        const val LRC_UPDATED = "com.past.music.updatelrc"
+        const val TRY_GET_TRACKINFO = "com.past.music.gettrackinfo"
+        const val TIMBER_PACKAGE_NAME = "com.past.music"
+        const val MUSIC_PACKAGE_NAME = "com.android.music"
+        const val TOGGLEPAUSE_ACTION = "com.past.music.togglepause"
+        const val NEXT_ACTION = "com.past.music.next"
+        const val STOP_ACTION = "com.past.music.stop"
+        const val BUFFER_UP = "com.past.music.bufferup"
+        const val MUSIC_LODING = "com.past.music.loading"
+        const val REPEAT_ACTION = "com.past.music.repeat"
+        const val SHUFFLE_ACTION = "com.past.music.shuffle"
+        const val NEXT = 2
+        const val LAST = 3
+        const val SHUFFLE_NONE = 0
+        const val SHUFFLE_NORMAL = 1
+        const val SHUFFLE_AUTO = 2
+        const val REPEAT_NONE = 2
+        const val REPEAT_CURRENT = 1
+        const val REPEAT_ALL = 2
+        const val MAX_HISTORY_SIZE = 1000
+        const val LRC_PATH = "/pastmusic/lrc/"
+        private const val TAG = "MediaService"
+        private const val SHUTDOWN = "com.past.music.shutdown"
+        private const val TRACK_NAME = "trackname"
+        private const val ALNUM_PIC = "album_pic"
+        private const val IDCOLIDX = 0
+        private const val TRACK_ENDED = 1
+        private const val TRACK_WENT_TO_NEXT = 2
+        private const val RELEASE_WAKELOCK = 3
+        private const val SERVER_DIED = 4
+        private const val FOCUSCHANGE = 5
+        private const val FADEDOWN = 6
+        private const val FADEUP = 7
+        private const val LRC_DOWNLOADED = -10
+        private const val NOTIFY_MODE_NONE = 0
+        private const val NOTIFY_MODE_FOREGROUND = 1
+        private const val NOTIFY_MODE_BACKGROUND = 2
+        private const val IDLE_DELAY = 5 * 60 * 1000
+        private const val REWIND_INSTEAD_PREVIOUS_THRESHOLD: Long = 3000
         private val PROJECTION = arrayOf("audio._id AS _id", MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.MIME_TYPE, MediaStore.Audio.Media.ALBUM_ID, MediaStore.Audio.Media.ARTIST_ID, ALNUM_PIC)
         private val PROJECTION_MATRIX = arrayOf("_id", MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.MIME_TYPE, MediaStore.Audio.Media.ALBUM_ID, MediaStore.Audio.Media.ARTIST_ID)
         private val mShuffler = Shuffler()

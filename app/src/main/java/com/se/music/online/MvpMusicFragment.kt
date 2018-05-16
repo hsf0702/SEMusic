@@ -7,9 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.se.music.R
-import com.se.music.kmvp.KBasePresenter
-import com.se.music.kmvp.KMvpPage
-import com.se.music.kmvp.KMvpPresenter
+import com.se.music.base.kmvp.KBasePresenter
+import com.se.music.base.kmvp.KMvpPage
+import com.se.music.base.kmvp.KMvpPresenter
 import com.se.music.online.model.ExpressInfoModel
 import com.se.music.online.model.HallModel
 import com.se.music.online.model.RecommendListModel

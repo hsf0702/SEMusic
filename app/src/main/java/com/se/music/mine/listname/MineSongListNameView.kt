@@ -7,12 +7,12 @@ import android.view.View
 import android.widget.TextView
 import com.se.music.R
 import com.se.music.activity.CreateSongListActivity
-import com.se.music.database.provider.SongListDBService
-import com.se.music.kmvp.KBaseView
-import com.se.music.kmvp.KMvpOnResume
-import com.se.music.kmvp.KMvpPresenter
+import com.se.music.base.kmvp.KBaseView
+import com.se.music.base.kmvp.KMvpOnResume
+import com.se.music.base.kmvp.KMvpPresenter
 import com.se.music.mine.event.CollectEvent
 import com.se.music.mine.event.CreateEvent
+import com.se.music.utils.database.provider.SongListDBService
 
 /**
  * Author: gaojin

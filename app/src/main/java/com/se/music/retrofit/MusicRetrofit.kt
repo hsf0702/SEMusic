@@ -6,7 +6,7 @@ import com.se.music.online.model.RecommendListModel
 import com.se.music.online.model.SingerModel
 import com.se.music.online.params.CommonPostParams
 import com.se.music.online.params.ExpressPostParams
-import com.se.music.singleton.GsonFactory
+import com.se.music.utils.singleton.GsonFactory
 import retrofit2.Call
 import retrofit2.Retrofit
 

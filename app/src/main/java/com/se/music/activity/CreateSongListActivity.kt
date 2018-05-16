@@ -5,7 +5,8 @@ import android.text.TextUtils
 import android.view.*
 import android.widget.EditText
 import com.se.music.R
-import com.se.music.database.provider.SongListDBService
+import com.se.music.common.ToolBarActivity
+import com.se.music.utils.database.provider.SongListDBService
 
 /**
  *Author: gaojin

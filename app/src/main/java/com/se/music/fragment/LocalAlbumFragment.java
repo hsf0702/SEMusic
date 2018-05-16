@@ -11,7 +11,8 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.se.music.R;
-import com.se.music.entity.AlbumEntity;
+import com.se.music.base.BaseFragment;
+import com.se.music.common.entity.AlbumEntity;
 import com.se.music.utils.MusicUtils;
 
 import java.util.ArrayList;

@@ -7,10 +7,10 @@ import android.net.Uri
 import android.provider.MediaStore
 import com.github.promeg.pinyinhelper.Pinyin
 import com.se.music.R
-import com.se.music.entity.AlbumEntity
-import com.se.music.entity.ArtistEntity
-import com.se.music.entity.FolderEntity
-import com.se.music.entity.MusicEntity
+import com.se.music.common.entity.AlbumEntity
+import com.se.music.common.entity.ArtistEntity
+import com.se.music.common.entity.FolderEntity
+import com.se.music.common.entity.MusicEntity
 import com.se.music.utils.MConstants.Companion.START_FROM_ALBUM
 import com.se.music.utils.MConstants.Companion.START_FROM_ARTIST
 import com.se.music.utils.MConstants.Companion.START_FROM_FOLDER

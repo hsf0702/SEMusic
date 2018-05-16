@@ -1,8 +1,8 @@
 package com.se.music.online.mvpview
 
 import android.view.View
-import com.se.music.kmvp.KBaseView
-import com.se.music.kmvp.KMvpPresenter
+import com.se.music.base.kmvp.KBaseView
+import com.se.music.base.kmvp.KMvpPresenter
 import com.se.music.online.view.OnLineClassifyBlock
 
 /**

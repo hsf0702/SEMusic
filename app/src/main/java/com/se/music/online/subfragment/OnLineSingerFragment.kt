@@ -13,7 +13,7 @@ import android.widget.TextView
 import com.se.music.GlideApp
 import com.se.music.R
 import com.se.music.base.BaseConfig
-import com.se.music.fragment.KtBaseFragment
+import com.se.music.base.KtBaseFragment
 import com.se.music.online.model.SingerModel
 import com.se.music.retrofit.MusicRetrofit
 import com.se.music.retrofit.callback.CallLoaderCallbacks

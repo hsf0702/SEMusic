@@ -10,14 +10,15 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.se.music.R
-import com.se.music.database.provider.RecentStore
-import com.se.music.entity.MusicEntity
+import com.se.music.base.KtBaseFragment
+import com.se.music.common.entity.MusicEntity
 import com.se.music.service.MusicPlayer
 import com.se.music.utils.HandlerUtil
 import com.se.music.utils.MusicUtils
-import com.se.music.database.recent.Song
-import com.se.music.database.recent.SongLoader
-import com.se.music.database.recent.TopTracksLoader
+import com.se.music.utils.database.provider.RecentStore
+import com.se.music.utils.database.recent.Song
+import com.se.music.utils.database.recent.SongLoader
+import com.se.music.utils.database.recent.TopTracksLoader
 import java.util.*
 
 /**

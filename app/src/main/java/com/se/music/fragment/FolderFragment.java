@@ -10,7 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.se.music.R;
-import com.se.music.entity.FolderEntity;
+import com.se.music.base.BaseFragment;
+import com.se.music.common.entity.FolderEntity;
 import com.se.music.utils.MusicUtils;
 
 import java.util.ArrayList;

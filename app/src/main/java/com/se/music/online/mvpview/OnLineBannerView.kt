@@ -5,10 +5,10 @@ import android.support.annotation.Keep
 import android.view.LayoutInflater
 import android.view.View
 import com.se.music.R
-import com.se.music.activity.BaseActivity
-import com.se.music.fragment.SEWebViewFragment
-import com.se.music.kmvp.KBaseView
-import com.se.music.kmvp.KMvpPresenter
+import com.se.music.base.BaseActivity
+import com.se.music.base.kmvp.KBaseView
+import com.se.music.base.kmvp.KMvpPresenter
+import com.se.music.common.SEWebViewFragment
 import com.se.music.online.model.HallModel
 import com.se.music.utils.GlideImageLoader
 import com.youth.banner.Banner

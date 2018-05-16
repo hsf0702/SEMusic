@@ -10,7 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.se.music.GlideApp
 import com.se.music.R
-import com.se.music.entity.SongListEntity
+import com.se.music.common.entity.SongListEntity
 import com.se.music.utils.CollectionUtils
 
 /**

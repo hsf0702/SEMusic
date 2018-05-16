@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.se.music.R
 import com.se.music.adapter.LocalFragmentAdapter
+import com.se.music.base.KtBaseFragment
 import com.se.music.utils.MConstants
 import com.se.music.utils.MusicUtils
 

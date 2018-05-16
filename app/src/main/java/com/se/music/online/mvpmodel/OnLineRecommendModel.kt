@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.support.v4.content.Loader
 import android.util.Log
-import com.se.music.kmvp.KBaseModel
-import com.se.music.kmvp.KMvpPresenter
+import com.se.music.base.kmvp.KBaseModel
+import com.se.music.base.kmvp.KMvpPresenter
 import com.se.music.online.model.RecommendListModel
 import com.se.music.retrofit.MusicRetrofit
 import com.se.music.retrofit.callback.CallLoaderCallbacks

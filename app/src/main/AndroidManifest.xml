@@ -27,7 +27,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="com.se.music.activity.MainActivity"
+            android:name="com.se.music.main.MainActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -50,7 +50,7 @@
         <activity android:name="com.se.music.activity.CollectedActivity" />
         <activity android:name="com.se.music.activity.CreateSongListActivity"></activity>
 
-        <activity android:name="com.se.music.activity.PermissionsActivity"></activity>
+        <activity android:name="com.se.music.main.init.PermissionsActivity"></activity>
     </application>
 
 </manifest>

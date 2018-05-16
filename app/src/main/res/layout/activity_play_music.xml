@@ -130,7 +130,7 @@
                 android:text="获取封面和歌词"
                 android:textAlignment="center" />
 
-            <com.se.music.lrc.LrcView
+            <com.se.music.widget.lrc.LrcView
                 android:id="@+id/lrcview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
