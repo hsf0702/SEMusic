@@ -56,7 +56,7 @@ class NewSongExpressBlock : LinearLayout {
         private val ITEMCOUNT = 3
         private var mData: ExpressInfoModel = data
         private val imgUrl = "http://y.gtimg.cn/music/photo_new/T002R150x150M000%s.jpg?max_age=2592000"
-        override fun onBindViewHolder(holderRecommend: RecommendViewHolder?, position: Int) {
+        override fun onBindViewHolder(holderRecommend: RecommendViewHolder, position: Int) {
             when (position) {
                 0 -> {
                     val description = StringBuilder()
@@ -71,8 +71,7 @@ class NewSongExpressBlock : LinearLayout {
                     }
                     description.append(songData?.name)
 
-                    holderRecommend?.recommendView?.setImageView(String.format(imgUrl, songData?.album?.mid))
-                            ?.setDescription(description.toString())
+                    holderRecommend.recommendView.setImageView(String.format(imgUrl, songData?.album?.mid)).setDescription(description.toString())
                 }
                 1 -> {
                     val albumData = mData.new_song?.data?.album_list?.get(0)
@@ -89,8 +88,7 @@ class NewSongExpressBlock : LinearLayout {
                     if (description.isNotEmpty()) {
                         description.replace(description.length - 1, description.length, "")
                     }
-                    holderRecommend?.recommendView?.setImageView(String.format(imgUrl, albumData?.album?.mid))
-                            ?.setDescription(description.toString())
+                    holderRecommend.recommendView.setImageView(String.format(imgUrl, albumData?.album?.mid)).setDescription(description.toString())
                 }
                 2 -> {
                     val albumData = mData.new_song?.data?.album_list?.get(1)
@@ -107,8 +105,7 @@ class NewSongExpressBlock : LinearLayout {
                     if (description.isNotEmpty()) {
                         description.replace(description.length - 1, description.length, "")
                     }
-                    holderRecommend?.recommendView?.setImageView(String.format(imgUrl, albumData?.album?.mid))
-                            ?.setDescription(description.toString())
+                    holderRecommend.recommendView.setImageView(String.format(imgUrl, albumData?.album?.mid)).setDescription(description.toString())
                 }
             }
         }
@@ -117,7 +114,7 @@ class NewSongExpressBlock : LinearLayout {
             return ITEMCOUNT
         }
 
-        override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecommendViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecommendViewHolder {
             return RecommendViewHolder(RecommendItemView(context))
         }
     }

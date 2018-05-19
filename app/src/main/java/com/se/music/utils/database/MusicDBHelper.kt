@@ -15,12 +15,11 @@ import com.se.music.utils.singleton.ApplicationSingleton
  * Time: 2018/5/6 下午1:52
  */
 class MusicDBHelper(context: Context, name: String?, factory: SQLiteDatabase.CursorFactory?, version: Int) : SQLiteOpenHelper(context, name, factory, version) {
+
     companion object {
-        const val DB_NAME = "PastMusic.db"
         const val IMAGE_TABLE = "ImageCacheTable"
         const val SONGLIST_TABLE = "SongListTable"
         const val MUSICINFO_TABLE = "MusicInfoTable"
-        private const val DB_VERSION = 1
 
         val instance: MusicDBHelper by lazy { MusicDBHelper() }
     }
@@ -57,7 +56,7 @@ class MusicDBHelper(context: Context, name: String?, factory: SQLiteDatabase.Cur
             "PRIMARY KEY (" + MusicInfoCache.ID + ")" +
             ");"
 
-    constructor() : this(ApplicationSingleton.instance!!.applicationContext, DB_NAME, null, DB_VERSION)
+    constructor() : this(ApplicationSingleton.instance!!.applicationContext, DataBaseMetaData.DATABASE_NAME, null, DataBaseMetaData.DATABASE_VERSION)
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(IMAGE_TABLE_CREATE)

@@ -69,11 +69,11 @@ class OnLineSingerFragment : KtBaseFragment() {
     }
 
     inner class SingerAdapter : RecyclerView.Adapter<ItemViewHolder>() {
-        override fun onBindViewHolder(holder: ItemViewHolder?, position: Int) {
-            holder?.singerName?.text = singerList!![position].Fsinger_name
+        override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
+            holder.singerName?.text = singerList!![position].Fsinger_name
             GlideApp.with(context!!)
                     .load(String.format(BaseConfig.picBaseUrl, singerList!![position].Fsinger_mid))
-                    .into(holder?.singerAvatar!!)
+                    .into(holder.singerAvatar!!)
         }
 
         override fun getItemCount(): Int {
@@ -84,8 +84,8 @@ class OnLineSingerFragment : KtBaseFragment() {
             }
         }
 
-        override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ItemViewHolder {
-            return ItemViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.online_singer_item, parent, false))
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
+            return ItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.online_singer_item, parent, false))
         }
     }
 

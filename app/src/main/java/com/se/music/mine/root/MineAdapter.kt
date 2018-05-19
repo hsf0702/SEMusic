@@ -27,15 +27,15 @@ class MineAdapter constructor(private var context: Context, private val list: Li
         header = LayoutInflater.from(context).inflate(R.layout.mine_header_view_layout, null)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == HEADER) {
             HeadItemHolder(header!!)
         } else {
-            ListItemHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.mine_list_view_layout, parent, false))
+            ListItemHolder(LayoutInflater.from(parent.context).inflate(R.layout.mine_list_view_layout, parent, false))
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ListItemHolder) {
             val songListEntity: SongListEntity = list[position - 1]
             GlideApp.with(context)

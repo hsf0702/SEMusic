@@ -36,7 +36,7 @@ class MusicListAdapter constructor(context: Context) : RecyclerView.Adapter<Recy
         this.mList = list
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is CommonItemViewHolder) {
 
         } else {
@@ -44,11 +44,11 @@ class MusicListAdapter constructor(context: Context) : RecyclerView.Adapter<Recy
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == HEAD_LAYOUT) {
-            CommonItemViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.common_item, parent, false))
+            CommonItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.common_item, parent, false))
         } else {
-            ListItemViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.fragment_musci_common_item, parent, false))
+            ListItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.fragment_musci_common_item, parent, false))
         }
     }
 

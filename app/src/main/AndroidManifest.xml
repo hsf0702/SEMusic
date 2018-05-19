@@ -48,9 +48,12 @@
             android:process=":remote" />
 
         <activity android:name="com.se.music.activity.CollectedActivity" />
-        <activity android:name="com.se.music.activity.CreateSongListActivity"></activity>
+        <activity android:name="com.se.music.activity.CreateSongListActivity" />
+        <activity android:name="com.se.music.main.init.PermissionsActivity" />
 
-        <activity android:name="com.se.music.main.init.PermissionsActivity"></activity>
+        <provider
+            android:name="com.se.music.utils.database.provider.SongListContentProvider"
+            android:authorities="com.se.music.SongListContentProvider" />
     </application>
 
 </manifest>

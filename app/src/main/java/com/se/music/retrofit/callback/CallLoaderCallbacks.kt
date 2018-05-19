@@ -17,15 +17,15 @@ abstract class CallLoaderCallbacks<E> constructor(context: Context) : LoaderMana
         return CallLoader(context, onCreateCall(id, args), errorResume(id, args))
     }
 
-    override fun onLoadFinished(loader: Loader<Try<E>>?, data: Try<E>?) {
+    override fun onLoadFinished(loader: Loader<Try<E>>, data: Try<E>?) {
         if (data?.isSuccess()!!) {
-            onSuccess(loader!!, data.get()!!)
+            onSuccess(loader, data.get()!!)
         } else {
-            onFailure(loader!!, data.throwable()!!)
+            onFailure(loader, data.throwable()!!)
         }
     }
 
-    override fun onLoaderReset(loader: Loader<Try<E>>?) {
+    override fun onLoaderReset(loader: Loader<Try<E>>) {
     }
 
     /**

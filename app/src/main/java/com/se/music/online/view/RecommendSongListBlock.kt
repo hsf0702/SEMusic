@@ -58,10 +58,9 @@ class RecommendSongListBlock : LinearLayout {
         private var context: Context = context
         private val ITEMCOUNT = 6
         private var hotList = v_hot
-        override fun onBindViewHolder(holderRecommend: RecommendViewHolder?, position: Int) {
+        override fun onBindViewHolder(holderRecommend: RecommendViewHolder, position: Int) {
             val vHotBean = hotList?.get(position)
-            holderRecommend?.recommendView?.setImageView(vHotBean?.cover!!)
-                    ?.setDescription(vHotBean.title!!)
+            holderRecommend.recommendView.setImageView(vHotBean?.cover!!).setDescription(vHotBean.title!!)
         }
 
         override fun getItemCount(): Int {
@@ -72,7 +71,7 @@ class RecommendSongListBlock : LinearLayout {
             }
         }
 
-        override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecommendViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecommendViewHolder {
             return RecommendViewHolder(RecommendItemView(context))
         }
     }
