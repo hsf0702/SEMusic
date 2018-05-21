@@ -121,6 +121,12 @@ class KBasePresenter(private var page: KMvpPage) : KMvpPresenter {
                 .forEach { it?.load() }
     }
 
+    override fun reload(vararg modelIds: Int) {
+        modelIds
+                .map { mvpModelMap.get(it) }
+                .forEach { it?.reload() }
+    }
+
     override fun onCreate(savedInstanceState: Bundle) {
         val onCreate = KMvpOnCreate()
         onCreate.savedInstanceState = savedInstanceState

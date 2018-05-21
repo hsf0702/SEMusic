@@ -15,6 +15,9 @@ import retrofit2.Call
  * Created by gaojin on 2018/3/7.
  */
 class OnLineExpressModel(presenter: KMvpPresenter, modelId: Int) : KBaseModel<ExpressInfoModel>(presenter, modelId) {
+    override fun reload() {
+    }
+
     override fun load() {
         (getActivity() as FragmentActivity).supportLoaderManager.initLoader(getId(), null, buildExpressInfoCallBack())
     }

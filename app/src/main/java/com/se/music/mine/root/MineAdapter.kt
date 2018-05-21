@@ -1,6 +1,7 @@
 package com.se.music.mine.root
 
 import android.content.Context
+import android.database.Cursor
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -10,18 +11,18 @@ import android.widget.TextView
 import android.widget.Toast
 import com.se.music.GlideApp
 import com.se.music.R
-import com.se.music.common.entity.SongListEntity
-import com.se.music.utils.CollectionUtils
 
 /**
  * Author: gaojin
  * Time: 2018/5/4 下午10:50
  */
-class MineAdapter constructor(private var context: Context, private val list: List<SongListEntity>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MineAdapter constructor(private var context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val HEADER = 0X01
     private val LIST = 0X02
     var header: View? = null
+    var cursor: Cursor? = null
+    var currentCursor = true
 
     init {
         header = LayoutInflater.from(context).inflate(R.layout.mine_header_view_layout, null)
@@ -37,22 +38,29 @@ class MineAdapter constructor(private var context: Context, private val list: Li
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ListItemHolder) {
-            val songListEntity: SongListEntity = list[position - 1]
+            if (position == 1) {
+                cursor!!.moveToFirst()
+                currentCursor = true
+            }
+            if (!currentCursor) {
+                return
+            }
             GlideApp.with(context)
-                    .load(songListEntity.listPic)
+                    .load(cursor!!.getString(5))
                     .into(holder.imageView!!)
 
-            holder.songListTitle!!.text = songListEntity.name
-            holder.songListInfo!!.text = songListEntity.info
+            holder.songListTitle!!.text = cursor!!.getString(1)
+            holder.songListInfo!!.text = cursor!!.getString(6)
             holder.songListItem!!.setOnClickListener { Toast.makeText(context, "gj_jump", Toast.LENGTH_SHORT).show() }
+            currentCursor = cursor!!.moveToNext()
         }
     }
 
     override fun getItemCount(): Int {
-        return if (CollectionUtils.isEmpty(list)) {
+        return if (cursor == null) {
             1
         } else {
-            list.size + 1
+            cursor!!.count + 1
         }
     }
 

@@ -12,4 +12,6 @@ interface KMvpModel {
     fun load()
 
     fun getId(): Int
+
+    fun reload()
 }

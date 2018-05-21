@@ -15,6 +15,9 @@ import retrofit2.Call
  * Created by gaojin on 2018/3/6.
  */
 class OnLineRecommendModel(presenter: KMvpPresenter, modelId: Int) : KBaseModel<RecommendListModel>(presenter, modelId) {
+    override fun reload() {
+    }
+
     override fun load() {
         (getActivity() as FragmentActivity).supportLoaderManager.initLoader(getId(), null, buildRecommendListCallBack())
     }

@@ -49,6 +49,8 @@ interface KMvpPresenter {
 
     fun start(vararg modelIds: Int)
 
+    fun reload(vararg modelIds: Int)
+
     fun onCreate(savedInstanceState: Bundle)
 
     fun onStart()

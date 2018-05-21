@@ -1,6 +1,7 @@
 package com.se.music.mine.listname
 
 import android.content.Intent
+import android.database.Cursor
 import android.support.annotation.Keep
 import android.view.LayoutInflater
 import android.view.View
@@ -8,11 +9,9 @@ import android.widget.TextView
 import com.se.music.R
 import com.se.music.activity.CreateSongListActivity
 import com.se.music.base.kmvp.KBaseView
-import com.se.music.base.kmvp.KMvpOnResume
 import com.se.music.base.kmvp.KMvpPresenter
 import com.se.music.mine.event.CollectEvent
 import com.se.music.mine.event.CreateEvent
-import com.se.music.utils.database.provider.SongListDBService
 
 /**
  * Author: gaojin
@@ -110,9 +109,9 @@ class MineSongListNameView(presenter: KMvpPresenter
     }
 
     @Keep
-    fun onDataChanged(onResume: KMvpOnResume) {
-        createSongListSize = SongListDBService.instance.query().size
-        collectedSongListSize = SongListDBService.instance.query().size
+    fun onDataChanged(cursor: Cursor) {
+        createSongListSize = cursor.count
+        collectedSongListSize = cursor.count
 
         if (isCreateTab) {
             songListCount!!.text = getContext()!!.resources.getString(R.string.song_list_count, createSongListSize)

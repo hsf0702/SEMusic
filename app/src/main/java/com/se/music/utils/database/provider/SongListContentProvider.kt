@@ -44,7 +44,7 @@ class SongListContentProvider : ContentProvider() {
     }
 
     override fun insert(uri: Uri?, values: ContentValues?): Uri {
-        val db = dbHelper!!.readableDatabase
+        val db = dbHelper!!.writableDatabase
         val rowId = db.insert(TABLE_NAME, null, values)
         if (rowId > 0) {
             val rowUri = ContentUris.withAppendedId(DataBaseMetaData.SongList.CONTENT_URI, rowId)
@@ -73,11 +73,19 @@ class SongListContentProvider : ContentProvider() {
     }
 
     override fun update(uri: Uri?, values: ContentValues?, selection: String?, selectionArgs: Array<out String>?): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val db = dbHelper!!.writableDatabase
+        val count: Int
+        count = db.update(TABLE_NAME, values, selection, selectionArgs)
+        context.contentResolver.notifyChange(uri, null)
+        return count
     }
 
     override fun delete(uri: Uri?, selection: String?, selectionArgs: Array<out String>?): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val db = dbHelper!!.writableDatabase
+        val count: Int
+        count = db.delete(TABLE_NAME, selection, selectionArgs)
+        context.contentResolver.notifyChange(uri, null)
+        return count
     }
 
     override fun getType(uri: Uri?): String {

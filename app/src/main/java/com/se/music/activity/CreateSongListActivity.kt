@@ -1,12 +1,14 @@
 package com.se.music.activity
 
+import android.content.ContentValues
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.*
 import android.widget.EditText
 import com.se.music.R
 import com.se.music.common.ToolBarActivity
-import com.se.music.utils.database.provider.SongListDBService
+import com.se.music.utils.database.DataBaseMetaData
+import com.se.music.utils.database.entity.SongListCache
+import java.util.*
 
 /**
  *Author: gaojin
@@ -48,9 +50,13 @@ class CreateSongListActivity : ToolBarActivity() {
     fun save() {
         val listName = nameInput!!.text.toString()
         val listInfo = infoInput!!.text.toString()
-        if (!TextUtils.isEmpty(listName)) {
-            SongListDBService.instance.insert(listName, listInfo)
-        }
+
+        val values = ContentValues()
+        values.put(SongListCache.ID, UUID.randomUUID().toString())
+        values.put(SongListCache.NAME, listName)
+        values.put(SongListCache.CREATE_TIME, System.currentTimeMillis())
+        values.put(SongListCache.INFO, listInfo)
+        contentResolver.insert(DataBaseMetaData.SongList.CONTENT_URI, values)
         finish()
     }
 

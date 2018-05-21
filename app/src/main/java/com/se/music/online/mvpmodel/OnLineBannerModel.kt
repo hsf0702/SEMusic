@@ -15,6 +15,9 @@ import retrofit2.Call
  * Created by gaojin on 2018/2/4.
  */
 class OnLineBannerModel(presenter: KMvpPresenter, modelId: Int) : KBaseModel<HallModel>(presenter, modelId) {
+    override fun reload() {
+    }
+
     override fun load() {
         (getActivity() as FragmentActivity).supportLoaderManager.initLoader(getId(), null, buildHallCallBack())
     }

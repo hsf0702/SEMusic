@@ -1,5 +1,6 @@
 package com.se.music.mine
 
+import android.database.Cursor
 import android.os.Bundle
 import android.support.annotation.Keep
 import android.support.v4.app.Fragment
@@ -12,14 +13,14 @@ import com.se.music.R
 import com.se.music.base.kmvp.KBasePresenter
 import com.se.music.base.kmvp.KMvpPage
 import com.se.music.base.kmvp.KMvpPresenter
-import com.se.music.common.entity.SongListEntity
 import com.se.music.mine.event.CollectEvent
 import com.se.music.mine.event.CreateEvent
 import com.se.music.mine.listname.MineSongListNameView
+import com.se.music.mine.model.QuerySongListModel
 import com.se.music.mine.operation.MineOperationView
 import com.se.music.mine.personal.MinePersonalInfoView
 import com.se.music.mine.root.MineAdapter
-import com.se.music.utils.database.provider.SongListDBService
+import com.se.music.utils.IdUtils
 
 /**
  * Author: gaojin
@@ -31,9 +32,6 @@ class MvpMineFragment : Fragment(), KMvpPage {
     private val presenter: KMvpPresenter = KBasePresenter(this)
     private var recyclerView: RecyclerView? = null
     private var adapter: MineAdapter? = null
-    private var list = ArrayList<SongListEntity>()
-    private var localSongList: List<SongListEntity>? = null
-    private var collectedSongList: List<SongListEntity>? = null
 
     companion object {
         fun newInstance(): MvpMineFragment {
@@ -48,7 +46,7 @@ class MvpMineFragment : Fragment(), KMvpPage {
         val rootView: View = inflater.inflate(R.layout.fragment_mine_mvp, container, false)
         recyclerView = rootView.findViewById(R.id.mine_recycler_view)
         recyclerView!!.layoutManager = LinearLayoutManager(context)
-        adapter = MineAdapter(context!!, list)
+        adapter = MineAdapter(context!!)
         recyclerView!!.adapter = adapter
         return rootView
     }
@@ -57,6 +55,10 @@ class MvpMineFragment : Fragment(), KMvpPage {
         presenter.add(MinePersonalInfoView(presenter, R.id.mine_personal_info, adapter!!.header!!))
         presenter.add(MineOperationView(presenter, R.id.mine_fun_area, adapter!!.header!!))
         presenter.add(MineSongListNameView(presenter, R.id.mine_song_list_title, adapter!!.header!!))
+
+        presenter.add(QuerySongListModel(presenter, IdUtils.QUERY_SONG_LIST))
+
+        presenter.start(IdUtils.QUERY_SONG_LIST)
     }
 
     override fun onStart() {
@@ -67,27 +69,24 @@ class MvpMineFragment : Fragment(), KMvpPage {
     override fun onResume() {
         super.onResume()
         presenter.onResume()
-        list.clear()
-        localSongList = SongListDBService.instance.query()
-        collectedSongList = SongListDBService.instance.query()
-        list.addAll(localSongList!!)
-        if (!list.isEmpty()) {
-            adapter!!.notifyItemRangeChanged(1, list.size)
-        }
+        presenter.reload(IdUtils.QUERY_SONG_LIST)
     }
 
     @Keep
     fun onViewChanged(id: Int, collectEvent: CollectEvent) {
-        list.clear()
-        list.addAll(collectedSongList!!)
         adapter!!.notifyDataSetChanged()
     }
 
     @Keep
     fun onViewChanged(id: Int, createEvent: CreateEvent) {
-        list.clear()
-        list.addAll(localSongList!!)
         adapter!!.notifyDataSetChanged()
+    }
+
+    @Keep
+    fun onModelChanged(id: Int, cursor: Cursor) {
+        adapter!!.cursor = cursor
+        adapter!!.notifyItemRangeChanged(1, cursor.count)
+        presenter.dispatchModelDataToView(id, cursor, R.id.mine_song_list_title)
     }
 
     override fun onPause() {

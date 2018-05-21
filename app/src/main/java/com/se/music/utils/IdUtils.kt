@@ -14,7 +14,7 @@ class IdUtils {
          *
          * @return loaderId
          */
-        fun generateLoaderId(): Int {
+        private fun generateLoaderId(): Int {
             return integer.getAndIncrement()
         }
 
@@ -22,5 +22,6 @@ class IdUtils {
         val GET_RECOMMEND_LIST = generateLoaderId()
         val GET_SINGER_LIST = generateLoaderId()
         val GET_EXPRESS_SONG = generateLoaderId()
+        val QUERY_SONG_LIST = generateLoaderId()
     }
 }
