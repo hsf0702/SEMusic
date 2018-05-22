@@ -9,7 +9,7 @@
         android:layout_height="70dp"
         android:layout_centerVertical="true"
         android:scaleType="centerCrop"
-        android:src="@drawable/placeholder_disk_210" />
+        android:src="@drawable/placeholder_disk" />
 
     <LinearLayout
         android:layout_width="wrap_content"

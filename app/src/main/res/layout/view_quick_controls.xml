@@ -18,7 +18,7 @@
         android:layout_marginLeft="6dp"
         android:layout_marginTop="3dp"
         android:layout_weight="0"
-        fresco:placeholderImage="@drawable/placeholder_disk_210"
+        fresco:placeholderImage="@drawable/placeholder_disk"
         fresco:placeholderImageScaleType="fitXY" />
 
     <LinearLayout

@@ -164,7 +164,7 @@ public class PlayMusicActivity extends BaseActivity {
                     @Override
                     public void onFailureImpl(DataSource dataSource) {
                         // No cleanup required here.
-                        mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.placeholder_disk_210);
+                        mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.placeholder_disk);
                     }
                 }, CallerThreadExecutor.getInstance());
             }

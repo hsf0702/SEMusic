@@ -52,7 +52,7 @@
         <activity android:name="com.se.music.main.init.PermissionsActivity" />
 
         <provider
-            android:name="com.se.music.utils.database.provider.SongListContentProvider"
+            android:name="com.se.music.provider.SongListContentProvider"
             android:authorities="com.se.music.SongListContentProvider" />
     </application>
 

@@ -2,7 +2,7 @@ package com.se.music.utils.database.provider
 
 import android.content.ContentValues
 import com.se.music.common.entity.MusicEntity
-import com.se.music.utils.database.MusicDBHelper
+import com.se.music.provider.MusicDBHelper
 import com.se.music.utils.database.entity.MusicInfoCache
 import java.util.*
 

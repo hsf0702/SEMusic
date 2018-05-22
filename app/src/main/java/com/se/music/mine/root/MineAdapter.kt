@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.se.music.GlideApp
 import com.se.music.R
+import com.se.music.provider.MetaData
 
 /**
  * Author: gaojin
@@ -46,11 +47,12 @@ class MineAdapter constructor(private var context: Context) : RecyclerView.Adapt
                 return
             }
             GlideApp.with(context)
-                    .load(cursor!!.getString(5))
+                    .load(cursor!!.getString(MetaData.SongList.PIC_INDEX))
+                    .placeholder(R.drawable.placeholder_disk)
                     .into(holder.imageView!!)
 
-            holder.songListTitle!!.text = cursor!!.getString(1)
-            holder.songListInfo!!.text = cursor!!.getString(6)
+            holder.songListTitle!!.text = cursor!!.getString(MetaData.SongList.NAME_INDEX)
+            holder.songListInfo!!.text = cursor!!.getString(MetaData.SongList.INFO_INDEX)
             holder.songListItem!!.setOnClickListener { Toast.makeText(context, "gj_jump", Toast.LENGTH_SHORT).show() }
             currentCursor = cursor!!.moveToNext()
         }

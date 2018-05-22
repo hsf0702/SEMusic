@@ -6,8 +6,8 @@ import android.view.*
 import android.widget.EditText
 import com.se.music.R
 import com.se.music.common.ToolBarActivity
-import com.se.music.utils.database.DataBaseMetaData
-import com.se.music.utils.database.entity.SongListCache
+import com.se.music.provider.MetaData
+import com.se.music.utils.IdUtils
 import java.util.*
 
 /**
@@ -16,6 +16,11 @@ import java.util.*
  */
 
 class CreateSongListActivity : ToolBarActivity() {
+
+    companion object {
+        val resultCode = IdUtils.generateLoaderId()
+    }
+
     var nameInput: EditText? = null
     var infoInput: EditText? = null
 
@@ -52,11 +57,12 @@ class CreateSongListActivity : ToolBarActivity() {
         val listInfo = infoInput!!.text.toString()
 
         val values = ContentValues()
-        values.put(SongListCache.ID, UUID.randomUUID().toString())
-        values.put(SongListCache.NAME, listName)
-        values.put(SongListCache.CREATE_TIME, System.currentTimeMillis())
-        values.put(SongListCache.INFO, listInfo)
-        contentResolver.insert(DataBaseMetaData.SongList.CONTENT_URI, values)
+        values.put(MetaData.SongList.ID, UUID.randomUUID().toString())
+        values.put(MetaData.SongList.NAME, listName)
+        values.put(MetaData.SongList.CREATE_TIME, System.currentTimeMillis())
+        values.put(MetaData.SongList.INFO, listInfo)
+        contentResolver.insert(MetaData.SongList.CONTENT_URI, values)
+        setResult(resultCode)
         finish()
     }
 

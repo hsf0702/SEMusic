@@ -4,7 +4,7 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.view.animation.AccelerateInterpolator
-import com.se.music.utils.database.MusicDBHelper
+import com.se.music.provider.MusicDBHelper
 import java.util.*
 
 /**

@@ -3,7 +3,7 @@ package com.se.music.utils.database.provider
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.se.music.utils.database.MusicDBHelper
+import com.se.music.provider.MusicDBHelper
 
 /**
  * Author: gaojin

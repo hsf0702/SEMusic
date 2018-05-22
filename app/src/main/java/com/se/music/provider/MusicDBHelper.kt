@@ -1,11 +1,10 @@
-package com.se.music.utils.database
+package com.se.music.provider
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.se.music.utils.database.entity.ImageCache
 import com.se.music.utils.database.entity.MusicInfoCache
-import com.se.music.utils.database.entity.SongListCache
 import com.se.music.utils.database.provider.RecentStore
 import com.se.music.utils.database.provider.SearchHistory
 import com.se.music.utils.singleton.ApplicationSingleton
@@ -30,14 +29,14 @@ class MusicDBHelper(context: Context, name: String?, factory: SQLiteDatabase.Cur
             ImageCache.URL + " text not null);"
 
     private val SONGLIST_TABLE_CREATE = "create table " + SONGLIST_TABLE +
-            " (" + SongListCache.ID + " varchar(128), " +
-            SongListCache.NAME + " varchar(50) NOT NULL," +
-            SongListCache.COUNT + " int," +
-            SongListCache.CREATOR + " varchar(20)," +
-            SongListCache.CREATE_TIME + " varchar(30) NOT NULL," +
-            SongListCache.LIST_PIC + " varchar(50)," +
-            SongListCache.INFO + " varchar(50)," +
-            "PRIMARY KEY (" + SongListCache.ID + ")" +
+            " (" + MetaData.SongList.ID + " varchar(128), " +
+            MetaData.SongList.NAME + " varchar(50) NOT NULL," +
+            MetaData.SongList.COUNT + " int," +
+            MetaData.SongList.CREATOR + " varchar(20)," +
+            MetaData.SongList.CREATE_TIME + " varchar(30) NOT NULL," +
+            MetaData.SongList.PIC + " varchar(50)," +
+            MetaData.SongList.INFO + " varchar(50)," +
+            "PRIMARY KEY (" + MetaData.SongList.ID + ")" +
             ");"
 
     private val MUSICINFO_TABLE_CREATE = "create table " + MUSICINFO_TABLE +
@@ -56,7 +55,7 @@ class MusicDBHelper(context: Context, name: String?, factory: SQLiteDatabase.Cur
             "PRIMARY KEY (" + MusicInfoCache.ID + ")" +
             ");"
 
-    constructor() : this(ApplicationSingleton.instance!!.applicationContext, DataBaseMetaData.DATABASE_NAME, null, DataBaseMetaData.DATABASE_VERSION)
+    constructor() : this(ApplicationSingleton.instance!!.applicationContext, MetaData.DATABASE_NAME, null, MetaData.DATABASE_VERSION)
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(IMAGE_TABLE_CREATE)

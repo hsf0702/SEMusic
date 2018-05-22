@@ -16,7 +16,7 @@
         android:layout_marginLeft="10dp"
         android:scaleType="centerCrop"
         fresco:actualImageScaleType="centerInside"
-        fresco:placeholderImage="@drawable/placeholder_disk_210"
+        fresco:placeholderImage="@drawable/placeholder_disk"
         fresco:placeholderImageScaleType="fitXY" />
 
     <LinearLayout

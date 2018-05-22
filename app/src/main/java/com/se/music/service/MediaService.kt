@@ -17,19 +17,11 @@ import android.support.v4.app.NotificationCompat
 import android.text.TextUtils
 import android.util.Log
 import android.widget.RemoteViews
-import com.facebook.common.executors.CallerThreadExecutor
-import com.facebook.common.references.CloseableReference
-import com.facebook.datasource.DataSource
-import com.facebook.drawee.backends.pipeline.Fresco
-import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber
-import com.facebook.imagepipeline.image.CloseableImage
-import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.se.music.IMediaAidlInterface
 import com.se.music.R
 import com.se.music.common.entity.MusicEntity
 import com.se.music.main.MainActivity
 import com.se.music.utils.SharePreferencesUtils
-import com.se.music.utils.database.provider.ImageDBService
 import com.se.music.utils.database.provider.RecentStore
 import com.se.music.utils.singleton.ApplicationSingleton
 import com.se.music.utils.singleton.GsonSingleton
@@ -1586,29 +1578,6 @@ class MediaService : Service() {
         val mMainIntent = Intent(this, MainActivity::class.java)
         val mainIntent = PendingIntent.getActivity(this, 0, mMainIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        if (ImageDBService.instance.query(getArtistName()!!.replace(";", "")) != null) {
-            val imagePipeline = Fresco.getImagePipeline()
-            val uri = Uri.parse(ImageDBService.instance.query(getArtistName()!!.replace(";", "")))
-            val imageRequest = ImageRequestBuilder
-                    .newBuilderWithSource(uri)
-                    .setProgressiveRenderingEnabled(true)
-                    .build()
-            val dataSource = imagePipeline.fetchDecodedImage(imageRequest, this)
-            dataSource.subscribe(object : BaseBitmapDataSubscriber() {
-                override fun onNewResultImpl(bitmap: Bitmap?) {
-                    // You can use the bitmap in only limited ways
-                    // No need to do any cleanup.
-                    if (bitmap != null) {
-                        remoteViews.setImageViewBitmap(R.id.remote_img, bitmap)
-                        //                        updateNotification();
-                    }
-                }
-
-                override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>) {
-
-                }
-            }, CallerThreadExecutor.getInstance())
-        }
         if (mNotificationPostTime == 0L) {
             mNotificationPostTime = System.currentTimeMillis()
         }

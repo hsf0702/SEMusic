@@ -1,4 +1,4 @@
-package com.se.music.utils.database.provider
+package com.se.music.provider
 
 import android.content.ContentProvider
 import android.content.ContentUris
@@ -8,8 +8,6 @@ import android.database.Cursor
 import android.database.SQLException
 import android.database.sqlite.SQLiteQueryBuilder
 import android.net.Uri
-import com.se.music.utils.database.DataBaseMetaData
-import com.se.music.utils.database.MusicDBHelper
 
 /**
  *Author: gaojin
@@ -27,8 +25,8 @@ class SongListContentProvider : ContentProvider() {
      */
     val SINGLE = 1
 
-    val AUTHORITIES = DataBaseMetaData.SongList.AUTHORITIES
-    val TABLE_NAME = DataBaseMetaData.SongList.TABLE_NAME
+    val AUTHORITIES = MetaData.SongList.AUTHORITIES
+    val TABLE_NAME = MetaData.SongList.TABLE_NAME
 
     private var uriMatcher: UriMatcher = UriMatcher(UriMatcher.NO_MATCH)
     private var dbHelper: MusicDBHelper? = null
@@ -47,7 +45,7 @@ class SongListContentProvider : ContentProvider() {
         val db = dbHelper!!.writableDatabase
         val rowId = db.insert(TABLE_NAME, null, values)
         if (rowId > 0) {
-            val rowUri = ContentUris.withAppendedId(DataBaseMetaData.SongList.CONTENT_URI, rowId)
+            val rowUri = ContentUris.withAppendedId(MetaData.SongList.CONTENT_URI, rowId)
             context.contentResolver.notifyChange(rowUri, null)
             return rowUri
         }
@@ -57,15 +55,6 @@ class SongListContentProvider : ContentProvider() {
     override fun query(uri: Uri?, projection: Array<out String>?, selection: String?, selectionArgs: Array<out String>?, sortOrder: String?): Cursor {
         val queryBuilder = SQLiteQueryBuilder()
         val db = dbHelper!!.readableDatabase
-//        when (uriMatcher.match(uri)) {
-//            ALL -> {
-//                queryBuilder.tables = TABLE_NAME
-//
-//            }
-//            SINGLE -> {
-//
-//            }
-//        }
         queryBuilder.tables = TABLE_NAME
         val c = queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder)
         c.setNotificationUri(context.contentResolver, uri)

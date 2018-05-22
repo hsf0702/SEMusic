@@ -14,7 +14,7 @@ class IdUtils {
          *
          * @return loaderId
          */
-        private fun generateLoaderId(): Int {
+        public fun generateLoaderId(): Int {
             return integer.getAndIncrement()
         }
 

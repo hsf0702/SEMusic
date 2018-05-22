@@ -45,6 +45,7 @@ class MainActivity : BaseActivity() {
         if (requestCode == REQUEST_CODE && resultCode == PermissionsActivity.PERMISSIONS_DENIED) {
             finish()
         }
+        supportFragmentManager.findFragmentById(R.id.content)?.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun finish() {

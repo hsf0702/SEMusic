@@ -1,4 +1,4 @@
-package com.se.music.mine.listname
+package com.se.music.mine.listtitle
 
 import android.content.Intent
 import android.database.Cursor
@@ -17,9 +17,9 @@ import com.se.music.mine.event.CreateEvent
  * Author: gaojin
  * Time: 2018/5/7 下午9:22
  */
-class MineSongListNameView(presenter: KMvpPresenter
-                           , viewId: Int
-                           , view: View) : KBaseView(presenter, viewId), View.OnClickListener {
+class MineSongListTitleView(presenter: KMvpPresenter
+                            , viewId: Int
+                            , view: View) : KBaseView(presenter, viewId), View.OnClickListener {
 
     private var titleCreated: TextView? = null
     private var titleCollected: TextView? = null
@@ -95,7 +95,7 @@ class MineSongListNameView(presenter: KMvpPresenter
 
     private fun createNewSongList() {
         val intent = Intent(getContext(), CreateSongListActivity::class.java)
-        getActivity()!!.startActivity(intent)
+        getActivity()!!.startActivityForResult(intent, 0)
         getActivity()!!.overridePendingTransition(R.anim.push_down_in, R.anim.push_up_out)
     }
 

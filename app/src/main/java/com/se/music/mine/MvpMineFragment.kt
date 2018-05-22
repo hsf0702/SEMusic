@@ -1,5 +1,6 @@
 package com.se.music.mine
 
+import android.content.Intent
 import android.database.Cursor
 import android.os.Bundle
 import android.support.annotation.Keep
@@ -10,12 +11,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.se.music.R
+import com.se.music.activity.CreateSongListActivity
 import com.se.music.base.kmvp.KBasePresenter
 import com.se.music.base.kmvp.KMvpPage
 import com.se.music.base.kmvp.KMvpPresenter
 import com.se.music.mine.event.CollectEvent
 import com.se.music.mine.event.CreateEvent
-import com.se.music.mine.listname.MineSongListNameView
+import com.se.music.mine.listtitle.MineSongListTitleView
 import com.se.music.mine.model.QuerySongListModel
 import com.se.music.mine.operation.MineOperationView
 import com.se.music.mine.personal.MinePersonalInfoView
@@ -54,11 +56,18 @@ class MvpMineFragment : Fragment(), KMvpPage {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         presenter.add(MinePersonalInfoView(presenter, R.id.mine_personal_info, adapter!!.header!!))
         presenter.add(MineOperationView(presenter, R.id.mine_fun_area, adapter!!.header!!))
-        presenter.add(MineSongListNameView(presenter, R.id.mine_song_list_title, adapter!!.header!!))
+        presenter.add(MineSongListTitleView(presenter, R.id.mine_song_list_title, adapter!!.header!!))
 
         presenter.add(QuerySongListModel(presenter, IdUtils.QUERY_SONG_LIST))
 
         presenter.start(IdUtils.QUERY_SONG_LIST)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == CreateSongListActivity.resultCode) {
+            presenter.reload(IdUtils.QUERY_SONG_LIST)
+        }
     }
 
     override fun onStart() {
@@ -69,7 +78,6 @@ class MvpMineFragment : Fragment(), KMvpPage {
     override fun onResume() {
         super.onResume()
         presenter.onResume()
-        presenter.reload(IdUtils.QUERY_SONG_LIST)
     }
 
     @Keep

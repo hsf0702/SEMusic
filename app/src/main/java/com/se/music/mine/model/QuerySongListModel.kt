@@ -8,7 +8,7 @@ import android.support.v4.content.Loader
 import com.se.music.base.BaseActivity
 import com.se.music.base.kmvp.KBaseModel
 import com.se.music.base.kmvp.KMvpPresenter
-import com.se.music.utils.database.DataBaseMetaData
+import com.se.music.provider.MetaData
 
 /**
  *Author: gaojin
@@ -18,7 +18,7 @@ import com.se.music.utils.database.DataBaseMetaData
 class QuerySongListModel(presenter: KMvpPresenter, private val modelId: Int) : KBaseModel<Cursor>(presenter, modelId), LoaderManager.LoaderCallbacks<Cursor> {
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
-        val uri = DataBaseMetaData.SongList.CONTENT_URI
+        val uri = MetaData.SongList.CONTENT_URI
         return CursorLoader(getContext()!!, uri, null, null, null, null)
     }
 
