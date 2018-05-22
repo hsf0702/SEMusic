@@ -40,7 +40,7 @@ class MusicListAdapter constructor(context: Context) : RecyclerView.Adapter<Recy
         if (holder is CommonItemViewHolder) {
 
         } else {
-            (holder as ListItemViewHolder).onBindData(mList!![position - 1], position)
+            (holder as ListItemViewHolder).onBindData(mList!![position - 1])
         }
     }
 
@@ -130,7 +130,7 @@ class MusicListAdapter constructor(context: Context) : RecyclerView.Adapter<Recy
             }
         }
 
-        fun onBindData(musicEntity: MusicEntity, position: Int) {
+        fun onBindData(musicEntity: MusicEntity) {
             mMusicName!!.text = musicEntity.musicName
             mMusicInfo!!.text = musicEntity.artist
         }

@@ -98,7 +98,7 @@ class MineOperationView(presenter: KMvpPresenter, viewId: Int, view: View) : KBa
         val ft = (getActivity() as BaseActivity).supportFragmentManager.beginTransaction()
         ft.addToBackStack(null)
         ft.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_left_out, R.anim.slide_left_in, R.anim.slide_right_out)
-        ft.add(R.id.content, RecentMusicFragment.newInstance(0)).commit()
+        ft.add(R.id.content, RecentMusicFragment.newInstance()).commit()
     }
 
     private fun loveMusic() {

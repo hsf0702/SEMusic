@@ -1,6 +1,7 @@
 package com.se.music.online.view
 
 import android.content.Context
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -45,7 +46,7 @@ class RecommendSongListBlock : LinearLayout {
         recommendRecycleView!!.layoutManager = GridLayoutManager(context, 3)
 
         val mDividerItemDecoration = GridItemDecoration(context, LinearLayoutManager.HORIZONTAL, 3)
-        mDividerItemDecoration.setDrawable(context.resources.getDrawable(R.drawable.transparent_divider))
+        mDividerItemDecoration.setDrawable(ContextCompat.getDrawable(context, R.drawable.transparent_divider)!!)
         recommendRecycleView!!.addItemDecoration(mDividerItemDecoration)
         recommendRecycleView!!.isNestedScrollingEnabled = false
     }

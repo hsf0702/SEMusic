@@ -28,7 +28,7 @@ class AppMainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mTabLayout!!.tabGravity = TitleZoomTabLayout.GRAVITY_CENTER
+        mTabLayout!!.setTabGravity(TitleZoomTabLayout.GRAVITY_CENTER)
         mAdapter = MainFragmentAdapter(context!!, activity?.supportFragmentManager)
         mViewPager!!.adapter = mAdapter
         mTabLayout!!.selectTextAppend(10F)

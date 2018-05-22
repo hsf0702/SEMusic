@@ -1335,7 +1335,7 @@ class MediaService : Service() {
                 i++
             }
 
-            mPlaylistInfo!!.remove(id)
+            mPlaylistInfo.remove(id)
         }
 
 
@@ -1349,16 +1349,14 @@ class MediaService : Service() {
         var first = first
         var last = last
         synchronized(this) {
-            if (last < first) {
-                return 0
-            } else if (first < 0) {
-                first = 0
-            } else if (last >= mPlaylist.size) {
-                last = mPlaylist.size - 1
+            when {
+                last < first -> return 0
+                first < 0 -> first = 0
+                last >= mPlaylist.size -> last = mPlaylist.size - 1
             }
 
             var gotonext = false
-            if (first <= mPlayPos && mPlayPos <= last) {
+            if (mPlayPos in first..last) {
                 mPlayPos = first
                 gotonext = true
             } else if (mPlayPos > last) {
@@ -1373,7 +1371,7 @@ class MediaService : Service() {
                 mHistory.clear()
             } else {
                 for (i in 0 until numToRemove) {
-                    mPlaylistInfo!!.remove(mPlaylist[first].mId)
+                    mPlaylistInfo.remove(mPlaylist[first].mId)
                     mPlaylist.removeAt(first)
 
                 }
@@ -1381,7 +1379,7 @@ class MediaService : Service() {
                 val positionIterator = mHistory.listIterator()
                 while (positionIterator.hasNext()) {
                     val pos = positionIterator.next()
-                    if (pos >= first && pos <= last) {
+                    if (pos in first..last) {
                         positionIterator.remove()
                     } else if (pos > last) {
                         positionIterator.set(pos - numToRemove)

@@ -167,12 +167,6 @@ class CircleImageView : AppCompatImageView {
         invalidate()
     }
 
-
-    @Deprecated("Use {@link #setBorderColor(int)} instead")
-    fun setBorderColorResource(@ColorRes borderColorRes: Int) {
-        setBorderColor(context.resources.getColor(borderColorRes))
-    }
-
     fun getCircleBackgroundColor(): Int {
         return mCircleBackgroundColor
     }
@@ -189,16 +183,6 @@ class CircleImageView : AppCompatImageView {
 
     fun setCircleBackgroundColorResource(@ColorRes circleBackgroundRes: Int) {
         setCircleBackgroundColor(context.resources.getColor(circleBackgroundRes))
-    }
-
-    /**
-     * Return the color drawn behind the circle-shaped drawable.
-     *
-     * @return The color drawn behind the drawable
-     */
-    @Deprecated("Use {@link #getCircleBackgroundColor()} instead.")
-    fun getFillColor(): Int {
-        return getCircleBackgroundColor()
     }
 
     /**

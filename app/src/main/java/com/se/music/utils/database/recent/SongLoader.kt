@@ -71,7 +71,6 @@ open class SongLoader {
                 cursor.moveToNext()
             }
             cursor.close()
-            cursor = null
             return list
         }
 

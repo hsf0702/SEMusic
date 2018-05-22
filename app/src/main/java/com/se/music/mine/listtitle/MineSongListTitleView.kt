@@ -3,6 +3,7 @@ package com.se.music.mine.listtitle
 import android.content.Intent
 import android.database.Cursor
 import android.support.annotation.Keep
+import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
@@ -60,8 +61,8 @@ class MineSongListTitleView(presenter: KMvpPresenter
 
     private fun bindView() {
         if (isCreateTab) {
-            titleCreated!!.setTextColor(getContext()!!.resources.getColor(R.color.light_black))
-            titleCollected!!.setTextColor(getContext()!!.resources.getColor(R.color.gray))
+            titleCreated!!.setTextColor(ContextCompat.getColor(getContext()!!, R.color.light_black))
+            titleCollected!!.setTextColor(ContextCompat.getColor(getContext()!!, R.color.gray))
         }
     }
 
@@ -69,8 +70,8 @@ class MineSongListTitleView(presenter: KMvpPresenter
         if (isCreateTab) {
             return
         }
-        titleCreated!!.setTextColor(getContext()!!.resources.getColor(R.color.light_black))
-        titleCollected!!.setTextColor(getContext()!!.resources.getColor(R.color.gray))
+        titleCreated!!.setTextColor(ContextCompat.getColor(getContext()!!, R.color.light_black))
+        titleCollected!!.setTextColor(ContextCompat.getColor(getContext()!!, R.color.gray))
         songListCount!!.text = getContext()!!.resources.getString(R.string.song_list_count, createSongListSize)
         addSongList!!.visibility = View.VISIBLE
         tvNoCollectedSongList!!.visibility = View.GONE
@@ -83,8 +84,8 @@ class MineSongListTitleView(presenter: KMvpPresenter
         if (!isCreateTab) {
             return
         }
-        titleCollected!!.setTextColor(getContext()!!.resources.getColor(R.color.light_black))
-        titleCreated!!.setTextColor(getContext()!!.resources.getColor(R.color.gray))
+        titleCollected!!.setTextColor(ContextCompat.getColor(getContext()!!, R.color.light_black))
+        titleCreated!!.setTextColor(ContextCompat.getColor(getContext()!!, R.color.gray))
         songListCount!!.text = getContext()!!.resources.getString(R.string.song_list_count, collectedSongListSize)
         addSongList!!.visibility = View.GONE
         llCreateNewSongList!!.visibility = View.GONE

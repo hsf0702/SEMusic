@@ -40,13 +40,12 @@ class RecentMusicFragment : KtBaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         recentStore = RecentStore.instance
-        val recentloader = TopTracksLoader(TopTracksLoader.QueryType.RecentSongs)
         val recentsongs = SongLoader.getSongsForCursor(TopTracksLoader.getCursor(context!!))
-        val songCountInt = recentsongs.size
         mList = recentsongs
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container:
+    ViewGroup?, savedInstanceState: Bundle?): View? {
         LoadSongs().execute("")
         return super.onCreateView(inflater, container, savedInstanceState)!!
     }
@@ -99,7 +98,7 @@ class RecentMusicFragment : KtBaseFragment() {
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             if (holder is CommonItemViewHolder) {
             } else {
-                (holder as ListItemViewHolder).onBindData(mList!![position - 1], position)
+                (holder as ListItemViewHolder).onBindData(mList!![position - 1])
             }
         }
 
@@ -176,7 +175,7 @@ class RecentMusicFragment : KtBaseFragment() {
                 }, 70)
             }
 
-            fun onBindData(song: Song, position: Int) {
+            fun onBindData(song: Song) {
                 mMusicName!!.text = song.title
                 mMusicInfo!!.text = song.artistName
             }
@@ -187,7 +186,7 @@ class RecentMusicFragment : KtBaseFragment() {
         val HEAD_LAYOUT = 0X01
         val CONTENT_LAYOUT = 0X02
 
-        fun newInstance(position: Int): RecentMusicFragment {
+        fun newInstance(): RecentMusicFragment {
             val fragment = RecentMusicFragment()
             val args = Bundle()
             fragment.arguments = args

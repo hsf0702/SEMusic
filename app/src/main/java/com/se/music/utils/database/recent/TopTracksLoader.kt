@@ -55,7 +55,7 @@ class TopTracksLoader(type: QueryType) : SongLoader() {
 
         fun makeTopTracksCursor(context: Context): SortedCursor? {
 
-            var songs: Cursor? = SongPlayCount.instance.getTopPlayedResults(NUMBER_OF_SONGS)
+            val songs: Cursor? = SongPlayCount.instance.getTopPlayedResults(NUMBER_OF_SONGS)
 
             try {
                 return makeSortedCursor(context, songs,
@@ -63,7 +63,6 @@ class TopTracksLoader(type: QueryType) : SongLoader() {
             } finally {
                 if (songs != null) {
                     songs.close()
-                    songs = null
                 }
             }
         }
