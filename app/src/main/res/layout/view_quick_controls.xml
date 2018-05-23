@@ -1,60 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/rl_layout"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:background="@color/transparent_half">
+    android:background="@color/transparent_half"
+    android:orientation="horizontal">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/split_color" />
-
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/playbar_img"
+    <ImageView
+        android:id="@+id/play_bar_img"
         android:layout_width="43dp"
         android:layout_height="43dp"
         android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
         android:layout_marginTop="3dp"
-        android:layout_weight="0"
-        fresco:placeholderImage="@drawable/placeholder_disk"
-        fresco:placeholderImageScaleType="fitXY" />
+        android:scaleType="centerCrop" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_toLeftOf="@+id/img_control"
-        android:layout_toRightOf="@id/playbar_img"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_weight="1"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/playbar_info"
-            android:layout_width="wrap_content"
-            android:layout_height="23dp"
+            android:id="@+id/play_bar_song_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:ellipsize="marquee"
             android:singleLine="true"
-            android:text="晴天"
-            android:textSize="17dp" />
+            android:textSize="16sp"
+            tools:text="晴天" />
 
         <TextView
-            android:id="@+id/playbar_singer"
-            android:layout_width="wrap_content"
-            android:layout_height="16dp"
+            android:id="@+id/play_bar_singer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLength="20"
             android:maxLines="1"
-            android:text="周杰伦"
-            android:textSize="10dp" />
+            android:textSize="12sp"
+            tools:text="周杰伦" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/img_control"
         android:layout_width="150dp"
         android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
         android:orientation="horizontal">
 
         <ImageView
@@ -84,4 +76,4 @@
             android:padding="16dp"
             android:src="@drawable/playbar_btn_next" />
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

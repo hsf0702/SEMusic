@@ -43,9 +43,9 @@ class DownLoadFragment : KtBaseFragment() {
 
         override fun getItem(position: Int): Fragment {
             return if (position == 0) {
-                DownMusicFragment.newInstance("/storage/emulated/0/pastmusic", false, null)
+                LocalMusicSongFragment.newInstance()
             } else {
-                DownMusicFragment.newInstance("/storage/emulated/0/pastmusic", false, null)
+                LocalMusicSongFragment.newInstance()
             }
 
         }

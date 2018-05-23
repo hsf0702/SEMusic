@@ -3,7 +3,6 @@ package com.se.music.adapter
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
-import com.se.music.fragment.FolderFragment
 import com.se.music.fragment.LocalAlbumFragment
 import com.se.music.fragment.LocalMusicSongFragment
 import com.se.music.fragment.LocalSingerFragment
@@ -18,7 +17,7 @@ class LocalFragmentAdapter constructor(fm: FragmentManager?, private val list: L
             0 -> LocalMusicSongFragment.newInstance()
             1 -> LocalSingerFragment.newInstance()
             2 -> LocalAlbumFragment.newInstance()
-            else -> FolderFragment.newInstance()
+            else -> LocalMusicSongFragment.newInstance()
         }
     }
 
