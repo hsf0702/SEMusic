@@ -36,11 +36,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name="com.se.music.activity.PlayMusicActivity"
-            android:label="@string/title_activity_play_music"
-            android:theme="@style/AppTheme" />
-
         <service
             android:name="com.se.music.service.MediaService"
             android:enabled="true"

@@ -9,7 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.se.music.GlideApp
 import com.se.music.R
-import com.se.music.activity.PlayMusicActivity
+import com.se.music.activity.CreateSongListActivity
 import com.se.music.base.BaseFragment
 import com.se.music.service.MusicPlayer
 
@@ -62,7 +62,7 @@ class QuickControlsFragment : BaseFragment(), View.OnClickListener {
             v.id == R.id.control -> MusicPlayer.playOrPause()
             v.id == R.id.play_next -> MusicPlayer.nextPlay()
             else -> {
-                val intent = Intent(activity, PlayMusicActivity::class.java)
+                val intent = Intent(activity, CreateSongListActivity::class.java)
                 startActivity(intent)
                 activity!!.overridePendingTransition(R.anim.push_down_in, R.anim.push_up_out)
             }
@@ -73,7 +73,7 @@ class QuickControlsFragment : BaseFragment(), View.OnClickListener {
         updateFragment()
     }
 
-    fun updateFragment() {
+    private fun updateFragment() {
         playBarSongName!!.text = MusicPlayer.getTrackName()
         playBarSinger!!.text = MusicPlayer.getArtistName()
         if (MusicPlayer.getIsPlaying()) {

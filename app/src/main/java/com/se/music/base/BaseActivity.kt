@@ -5,7 +5,6 @@ import android.content.*
 import android.os.IBinder
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
-import butterknife.ButterKnife
 import com.se.music.IMediaAidlInterface
 import com.se.music.R
 import com.se.music.base.listener.MusicStateListener
@@ -32,7 +31,6 @@ open class BaseActivity : AppCompatActivity(), ServiceConnection {
 
     override fun setContentView(layoutResID: Int) {
         super.setContentView(layoutResID)
-        ButterKnife.bind(this)
         //每次新建一个activity都会连接一次，然后把上下文和Sc保存在一个WeakHashMap中
         mToken = MusicPlayer.bindToService(this, this)
         setStatusBar()

@@ -1,12 +1,8 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">SEMusic</string>
-    <string name="title_activity_play_music">PlayMusicActivity</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 
-    <string name="random_play">随机播放</string>
-    <string name="loop_play">列表循环</string>
-    <string name="play_one">单曲播放</string>
     <string name="durationformatshort" translatable="false"><xliff:g id="format">%2$d:%3$02d</xliff:g></string>
     <string name="durationformatlong" translatable="false"><xliff:g id="format">%1$d:%2$02d:%3$02d</xliff:g></string>
     <string name="string_help_text">当前应用缺少必要的权限</string>
