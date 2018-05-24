@@ -49,6 +49,7 @@
         <provider
             android:name="com.se.music.provider.SongListContentProvider"
             android:authorities="com.se.music.SongListContentProvider" />
+
     </application>
 
 </manifest>

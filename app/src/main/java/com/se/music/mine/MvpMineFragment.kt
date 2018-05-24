@@ -7,6 +7,7 @@ import android.support.annotation.Keep
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,10 +19,12 @@ import com.se.music.base.kmvp.KMvpPresenter
 import com.se.music.mine.event.CollectEvent
 import com.se.music.mine.event.CreateEvent
 import com.se.music.mine.listtitle.MineSongListTitleView
+import com.se.music.mine.model.QueryLocalSongModel
 import com.se.music.mine.model.QuerySongListModel
 import com.se.music.mine.operation.MineOperationView
 import com.se.music.mine.personal.MinePersonalInfoView
 import com.se.music.mine.root.MineAdapter
+import com.se.music.provider.MetaData
 import com.se.music.utils.IdUtils
 
 /**
@@ -59,15 +62,10 @@ class MvpMineFragment : Fragment(), KMvpPage {
         presenter.add(MineSongListTitleView(presenter, R.id.mine_song_list_title, adapter!!.header!!))
 
         presenter.add(QuerySongListModel(presenter, IdUtils.QUERY_SONG_LIST))
+        presenter.add(QueryLocalSongModel(presenter, IdUtils.QUERY_LOCAL_SONG, MetaData.LocalMusic.START_FROM_LOCAL))
 
-        presenter.start(IdUtils.QUERY_SONG_LIST)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == CreateSongListActivity.resultCode) {
-            presenter.reload(IdUtils.QUERY_SONG_LIST)
-        }
+        presenter.start(IdUtils.QUERY_SONG_LIST
+                , IdUtils.QUERY_LOCAL_SONG)
     }
 
     override fun onStart() {
@@ -78,6 +76,13 @@ class MvpMineFragment : Fragment(), KMvpPage {
     override fun onResume() {
         super.onResume()
         presenter.onResume()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == CreateSongListActivity.resultCode) {
+//            presenter.reload(IdUtils.QUERY_SONG_LIST)
+        }
     }
 
     @Keep
@@ -92,9 +97,14 @@ class MvpMineFragment : Fragment(), KMvpPage {
 
     @Keep
     fun onModelChanged(id: Int, cursor: Cursor) {
-        adapter!!.cursor = cursor
-        adapter!!.notifyItemRangeChanged(1, cursor.count)
-        presenter.dispatchModelDataToView(id, cursor, R.id.mine_song_list_title)
+        Log.e("gj", id.toString())
+        if (id == IdUtils.QUERY_SONG_LIST) {
+            adapter!!.cursor = cursor
+            adapter!!.notifyItemRangeChanged(1, cursor.count)
+            presenter.dispatchModelDataToView(id, cursor, R.id.mine_song_list_title)
+        } else if (id == IdUtils.QUERY_LOCAL_SONG) {
+            presenter.dispatchModelDataToView(id, cursor, R.id.mine_fun_area)
+        }
     }
 
     override fun onPause() {

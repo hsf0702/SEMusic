@@ -1,6 +1,8 @@
 package com.se.music.mine.operation
 
 import android.content.Intent
+import android.database.Cursor
+import android.support.annotation.Keep
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,15 +26,22 @@ import com.se.music.fragment.RecentMusicFragment
  */
 class MineOperationView(presenter: KMvpPresenter, viewId: Int, view: View) : KBaseView(presenter, viewId), View.OnClickListener {
 
+    private var rootView: GridLayout? = null
+
     init {
         initView(view)
     }
 
     override fun createView(): View {
-        val rootView = LayoutInflater.from(getContext()).inflate(R.layout.mine_func_layout, null) as GridLayout
+        rootView = LayoutInflater.from(getContext()).inflate(R.layout.mine_func_layout, null) as GridLayout
+        return rootView!!
+    }
+
+    @Keep
+    fun onDataChanged(cursor: Cursor) {
 
         val dataList = listOf(DataHolder(getContext()!!.resources.getString(R.string.mine_local_music)
-                , "1", R.drawable.item_music, R.id.local_music)
+                , cursor.count.toString(), R.drawable.item_music, R.id.local_music)
                 , DataHolder(getContext()!!.resources.getString(R.string.mine_down_music)
                 , "2", R.drawable.item_download, R.id.download_music)
                 , DataHolder(getContext()!!.resources.getString(R.string.mine_recent_music)
@@ -43,13 +52,11 @@ class MineOperationView(presenter: KMvpPresenter, viewId: Int, view: View) : KBa
                 , "5", R.drawable.item_singer, R.id.love_singer)
                 , DataHolder(getContext()!!.resources.getString(R.string.mine_buy_music)
                 , "6", R.drawable.item_buy, R.id.buy_music))
-
-        addViewToGridLayout(rootView, dataList)
-        return rootView
+        rootView!!.removeAllViews()
+        addViewToGridLayout(rootView!!, dataList)
     }
 
     private fun addViewToGridLayout(container: ViewGroup, dataList: List<DataHolder>) {
-
         dataList.forEach {
             val itemView = LayoutInflater.from(getContext()).inflate(R.layout.view_mine_item_view, container, false)
             val params: GridLayout.LayoutParams = itemView.layoutParams as GridLayout.LayoutParams

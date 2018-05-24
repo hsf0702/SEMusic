@@ -23,5 +23,6 @@ class IdUtils {
         val GET_SINGER_LIST = generateLoaderId()
         val GET_EXPRESS_SONG = generateLoaderId()
         val QUERY_SONG_LIST = generateLoaderId()
+        val QUERY_LOCAL_SONG = generateLoaderId()
     }
 }
