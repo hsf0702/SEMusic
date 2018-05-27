@@ -9,7 +9,9 @@ import android.support.v4.content.Loader
 import com.se.music.base.BaseActivity
 import com.se.music.base.mvp.BaseModel
 import com.se.music.base.mvp.MvpPresenter
-import com.se.music.provider.LocalMusic
+import com.se.music.provider.metadata.START_FROM_ALBUM
+import com.se.music.provider.metadata.START_FROM_ARTIST
+import com.se.music.provider.metadata.START_FROM_LOCAL
 import com.se.music.utils.SharePreferencesUtils
 
 /**
@@ -50,14 +52,14 @@ class QueryLocalSongModel(presenter: MvpPresenter, private var modelId: Int, pri
         select.append(" and " + MediaStore.Audio.Media.DURATION + " > " + mFilterDuration)
 
         return when (from) {
-            LocalMusic.START_FROM_LOCAL -> {
+            START_FROM_LOCAL -> {
                 CursorLoader(getContext()!!, mUri, infoMusic, select.toString(), null, SharePreferencesUtils.instance.getSongSortOrder())
             }
-            LocalMusic.START_FROM_ARTIST -> {
+            START_FROM_ARTIST -> {
                 select.append(" and " + MediaStore.Audio.Media.ARTIST_ID + " = " + id)
                 CursorLoader(getContext()!!, mUri, infoMusic, select.toString(), null, SharePreferencesUtils.instance.getArtistSortOrder())
             }
-            LocalMusic.START_FROM_ALBUM -> {
+            START_FROM_ALBUM -> {
                 select.append(" and " + MediaStore.Audio.Media.ALBUM_ID + " = " + id)
                 CursorLoader(getContext()!!, mUri, infoMusic, select.toString(), null, SharePreferencesUtils.instance.getAlbumSortOrder())
             }

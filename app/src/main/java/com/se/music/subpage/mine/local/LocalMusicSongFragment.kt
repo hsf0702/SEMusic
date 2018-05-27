@@ -11,7 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.se.music.R
 import com.se.music.common.MusicEntity
-import com.se.music.utils.MConstants
+import com.se.music.provider.metadata.START_FROM_LOCAL
 import com.se.music.utils.MusicUtils
 import com.se.music.utils.singleton.ApplicationSingleton
 
@@ -51,7 +51,7 @@ class LocalMusicSongFragment : Fragment() {
         object : AsyncTask<Void, Void, String>() {
             override fun doInBackground(vararg params: Void?): String {
                 musicList.clear()
-                musicList.addAll(MusicUtils.queryMusic(ApplicationSingleton.instance!!, MConstants.START_FROM_LOCAL) as ArrayList)
+                musicList.addAll(MusicUtils.queryMusic(ApplicationSingleton.instance!!, START_FROM_LOCAL) as ArrayList)
                 mAdapter!!.updateDataSet(musicList)
                 return ""
             }

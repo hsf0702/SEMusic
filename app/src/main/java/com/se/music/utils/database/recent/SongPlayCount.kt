@@ -91,7 +91,7 @@ class SongPlayCount {
      * @return column index of that week
      */
     private fun getColumnIndexForWeek(week: Int): Int {
-        // ID, followed by the weeks columns
+        // SL_ID, followed by the weeks columns
         return 1 + week
     }
 

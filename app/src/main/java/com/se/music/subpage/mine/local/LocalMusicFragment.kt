@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.se.music.R
 import com.se.music.base.KtBaseFragment
-import com.se.music.utils.MConstants
+import com.se.music.provider.metadata.START_FROM_LOCAL
 import com.se.music.utils.MusicUtils
 
 /**
@@ -29,7 +29,7 @@ class LocalMusicFragment : KtBaseFragment() {
         if (arguments != null) {
             position = arguments!!.getInt(POSITION)
         }
-        val localCount = MusicUtils.queryMusic(context!!, MConstants.START_FROM_LOCAL).size
+        val localCount = MusicUtils.queryMusic(context!!, START_FROM_LOCAL).size
         val singerCount = MusicUtils.queryArtist(context!!).size
         val albumCount = MusicUtils.queryAlbums(context!!).size
         val folderCount = MusicUtils.queryFolder(context!!).size

@@ -11,10 +11,10 @@ import com.se.music.common.AlbumEntity
 import com.se.music.common.ArtistEntity
 import com.se.music.common.FolderEntity
 import com.se.music.common.MusicEntity
-import com.se.music.utils.MConstants.Companion.START_FROM_ALBUM
-import com.se.music.utils.MConstants.Companion.START_FROM_ARTIST
-import com.se.music.utils.MConstants.Companion.START_FROM_FOLDER
-import com.se.music.utils.MConstants.Companion.START_FROM_LOCAL
+import com.se.music.provider.metadata.START_FROM_ALBUM
+import com.se.music.provider.metadata.START_FROM_ARTIST
+import com.se.music.provider.metadata.START_FROM_FOLDER
+import com.se.music.provider.metadata.START_FROM_LOCAL
 import java.io.File
 import java.util.*
 

@@ -1175,10 +1175,10 @@ class TitleZoomTabLayout : FrameLayout {
          * Set a custom view to be used for this tab.
          *
          *
-         * If the inflated layout contains a [TextView] with an ID of
+         * If the inflated layout contains a [TextView] with an SL_ID of
          * [android.R.id.text1] then that will be updated with the value given
          * to [.setText]. Similarly, if this layout contains an
-         * [ImageView] with ID [android.R.id.icon] then it will be updated with
+         * [ImageView] with SL_ID [android.R.id.icon] then it will be updated with
          * the value given to [.setIcon].
          *
          *
@@ -1194,10 +1194,10 @@ class TitleZoomTabLayout : FrameLayout {
          * Set a custom view to be used for this tab.
          *
          *
-         * If the provided view contains a [TextView] with an ID of
+         * If the provided view contains a [TextView] with an SL_ID of
          * [android.R.id.text1] then that will be updated with the value given
          * to [.setText]. Similarly, if this layout contains an
-         * [ImageView] with ID [android.R.id.icon] then it will be updated with
+         * [ImageView] with SL_ID [android.R.id.icon] then it will be updated with
          * the value given to [.setIcon].
          *
          *
@@ -1222,7 +1222,7 @@ class TitleZoomTabLayout : FrameLayout {
         /**
          * Set the icon displayed on this tab.
          *
-         * @param resId A resource ID referring to the icon that should be displayed
+         * @param resId A resource SL_ID referring to the icon that should be displayed
          * @return The current instance for call chaining
          */
         fun setIcon(@DrawableRes resId: Int): Tab {
@@ -1245,7 +1245,7 @@ class TitleZoomTabLayout : FrameLayout {
          * Set the text displayed on this tab. Text may be truncated if there is not room to display
          * the entire string.
          *
-         * @param resId A resource ID referring to the text that should be displayed
+         * @param resId A resource SL_ID referring to the text that should be displayed
          * @return The current instance for call chaining
          */
         fun setText(@StringRes resId: Int): Tab {
@@ -1294,7 +1294,7 @@ class TitleZoomTabLayout : FrameLayout {
          * Set a description of this tab's content for use in accessibility support. If no content
          * description is provided the title will be used.
          *
-         * @param resId A resource ID referring to the description text
+         * @param resId A resource SL_ID referring to the description text
          * @return The current instance for call chaining
          * @see .setContentDescription
          * @see .getContentDescription

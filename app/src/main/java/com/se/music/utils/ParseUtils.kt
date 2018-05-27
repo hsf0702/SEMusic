@@ -2,7 +2,7 @@ package com.se.music.utils
 
 import android.database.Cursor
 import com.se.music.common.SongListEntity
-import com.se.music.provider.SongList
+import com.se.music.provider.metadata.*
 
 /**
  *Author: gaojin
@@ -13,14 +13,14 @@ fun parseCursorToSongList(id: Int, cursor: Cursor): ArrayList<SongListEntity> {
     val list = ArrayList<SongListEntity>()
     if (id == IdUtils.QUERY_SONG_LIST) {
         while (cursor.moveToNext()) {
-            val songListEntity = SongListEntity(cursor.getString(SongList.ID_INDEX)
-                    , cursor.getString(SongList.NAME_INDEX)
-                    , cursor.getString(SongList.CREATE_TIME_INDEX))
+            val songListEntity = SongListEntity(cursor.getString(SL_ID_INDEX)
+                    , cursor.getString(SL_NAME_INDEX)
+                    , cursor.getString(SL_CREATE_TIME_INDEX))
 
-            songListEntity.count = cursor.getInt(SongList.COUNT_INDEX)
-            songListEntity.creator = cursor.getString(SongList.CREATOR_INDEX)
-            songListEntity.listPic = cursor.getString(SongList.PIC_INDEX)
-            songListEntity.info = cursor.getString(SongList.INFO_INDEX)
+            songListEntity.count = cursor.getInt(SL_COUNT_INDEX)
+            songListEntity.creator = cursor.getString(SL_CREATOR_INDEX)
+            songListEntity.listPic = cursor.getString(SL_PIC_INDEX)
+            songListEntity.info = cursor.getString(SL_INFO_INDEX)
             list.add(songListEntity)
         }
     }

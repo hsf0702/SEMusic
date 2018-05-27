@@ -3,7 +3,7 @@ package com.se.music.provider
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import com.se.music.utils.database.entity.ImageCache
+import com.se.music.provider.metadata.*
 import com.se.music.utils.database.entity.MusicInfoCache
 import com.se.music.utils.database.provider.RecentStore
 import com.se.music.utils.database.provider.SearchHistory
@@ -16,27 +16,21 @@ import com.se.music.utils.singleton.ApplicationSingleton
 class MusicDBHelper(context: Context, name: String?, factory: SQLiteDatabase.CursorFactory?, version: Int) : SQLiteOpenHelper(context, name, factory, version) {
 
     companion object {
-        const val IMAGE_TABLE = "ImageCacheTable"
         const val SONGLIST_TABLE = "SongListTable"
         const val MUSICINFO_TABLE = "MusicInfoTable"
 
         val instance: MusicDBHelper by lazy { MusicDBHelper() }
     }
 
-    private val IMAGE_TABLE_CREATE = "create table " + IMAGE_TABLE +
-            " (" + ImageCache.ID + " integer primary key autoincrement, " +
-            ImageCache.NAME + " text not null, " +
-            ImageCache.URL + " text not null);"
-
     private val SONGLIST_TABLE_CREATE = "create table " + SONGLIST_TABLE +
-            " (" + SongList.ID + " varchar(128), " +
-            SongList.NAME + " varchar(50) NOT NULL," +
-            SongList.COUNT + " int," +
-            SongList.CREATOR + " varchar(20)," +
-            SongList.CREATE_TIME + " varchar(30) NOT NULL," +
-            SongList.PIC + " varchar(50)," +
-            SongList.INFO + " varchar(50)," +
-            "PRIMARY KEY (" + SongList.ID + ")" +
+            " (" + SL_ID + " varchar(128), " +
+            SL_NAME + " varchar(50) NOT NULL," +
+            SL_COUNT + " int," +
+            SL_CREATOR + " varchar(20)," +
+            SL_CREATE_TIME + " varchar(30) NOT NULL," +
+            SL_PIC + " varchar(50)," +
+            SL_INFO + " varchar(50)," +
+            "PRIMARY KEY (" + SL_ID + ")" +
             ");"
 
     private val MUSICINFO_TABLE_CREATE = "create table " + MUSICINFO_TABLE +
@@ -58,7 +52,6 @@ class MusicDBHelper(context: Context, name: String?, factory: SQLiteDatabase.Cur
     constructor() : this(ApplicationSingleton.instance!!.applicationContext, DATABASE_NAME, null, DATABASE_VERSION)
 
     override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL(IMAGE_TABLE_CREATE)
         db.execSQL(SONGLIST_TABLE_CREATE)
         db.execSQL(MUSICINFO_TABLE_CREATE)
         RecentStore.instance.onCreate(db)
@@ -66,7 +59,6 @@ class MusicDBHelper(context: Context, name: String?, factory: SQLiteDatabase.Cur
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS $IMAGE_TABLE")
         db.execSQL("DROP TABLE IF EXISTS $SONGLIST_TABLE")
         db.execSQL("DROP TABLE IF EXISTS $MUSICINFO_TABLE")
         RecentStore.instance.onUpgrade(db, oldVersion, newVersion)

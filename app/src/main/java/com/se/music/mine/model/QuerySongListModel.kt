@@ -8,7 +8,7 @@ import android.support.v4.content.Loader
 import com.se.music.base.BaseActivity
 import com.se.music.base.mvp.BaseModel
 import com.se.music.base.mvp.MvpPresenter
-import com.se.music.provider.SongList
+import com.se.music.provider.metadata.SL_CONTENT_URI
 
 /**
  *Author: gaojin
@@ -18,7 +18,7 @@ import com.se.music.provider.SongList
 class QuerySongListModel(presenter: MvpPresenter, private val modelId: Int) : BaseModel<Cursor>(presenter, modelId), LoaderManager.LoaderCallbacks<Cursor> {
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
-        val uri = SongList.CONTENT_URI
+        val uri = SL_CONTENT_URI
         return CursorLoader(getContext()!!, uri, null, null, null, null)
     }
 

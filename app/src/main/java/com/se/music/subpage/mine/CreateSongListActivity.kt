@@ -6,7 +6,7 @@ import android.view.*
 import android.widget.EditText
 import com.se.music.R
 import com.se.music.common.ToolBarActivity
-import com.se.music.provider.SongList
+import com.se.music.provider.metadata.*
 import com.se.music.utils.IdUtils
 import java.util.*
 
@@ -21,8 +21,8 @@ class CreateSongListActivity : ToolBarActivity() {
         val resultCode = IdUtils.generateLoaderId()
     }
 
-    lateinit var nameInput: EditText
-    lateinit var infoInput: EditText
+    private lateinit var nameInput: EditText
+    private lateinit var infoInput: EditText
 
     override fun createContentView(inflater: LayoutInflater, rootView: ViewGroup): View {
         return inflater.inflate(R.layout.activity_create_song_list, rootView, false)
@@ -57,11 +57,11 @@ class CreateSongListActivity : ToolBarActivity() {
         val listInfo = infoInput!!.text.toString()
 
         val values = ContentValues()
-        values.put(SongList.ID, UUID.randomUUID().toString())
-        values.put(SongList.NAME, listName)
-        values.put(SongList.CREATE_TIME, System.currentTimeMillis())
-        values.put(SongList.INFO, listInfo)
-        contentResolver.insert(SongList.CONTENT_URI, values)
+        values.put(SL_ID, UUID.randomUUID().toString())
+        values.put(SL_NAME, listName)
+        values.put(SL_CREATE_TIME, System.currentTimeMillis())
+        values.put(SL_INFO, listInfo)
+        contentResolver.insert(SL_CONTENT_URI, values)
         setResult(resultCode)
         finish()
     }

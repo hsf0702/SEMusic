@@ -17,15 +17,15 @@ import com.se.music.base.KtBaseFragment
 
 class SEWebViewFragment : KtBaseFragment() {
 
-    var mWebView: WebView? = null
+    private var mWebView: WebView? = null
     private var mWebUrl: String? = null
 
     companion object {
-        val WEBURL = "WebView_WEBURL"
+        private const val mWebUrl = "WebView_WEBURL"
         fun newInstance(url: String?): SEWebViewFragment {
             val fragment = SEWebViewFragment()
             val args = Bundle()
-            args.putString(WEBURL, url)
+            args.putString(mWebUrl, url)
             fragment.arguments = args
             return fragment
         }
@@ -40,7 +40,7 @@ class SEWebViewFragment : KtBaseFragment() {
         super.onCreate(savedInstanceState)
         val bundle = arguments
         if (bundle != null) {
-            mWebUrl = bundle.getString(WEBURL)
+            mWebUrl = bundle.getString(mWebUrl)
         }
     }
 

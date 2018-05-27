@@ -23,7 +23,7 @@ import com.se.music.mine.model.QuerySongListModel
 import com.se.music.mine.operation.MineOperationView
 import com.se.music.mine.personal.MinePersonalInfoView
 import com.se.music.mine.root.MineAdapter
-import com.se.music.provider.LocalMusic
+import com.se.music.provider.metadata.START_FROM_LOCAL
 import com.se.music.subpage.mine.CreateSongListActivity
 import com.se.music.utils.IdUtils
 import com.se.music.utils.parseCursorToSongList
@@ -63,7 +63,7 @@ class MvpMineFragment : Fragment(), MvpPage {
         presenter.add(MineSongListTitleView(presenter, R.id.mine_song_list_title, adapter.header!!))
 
         presenter.add(QuerySongListModel(presenter, IdUtils.QUERY_SONG_LIST))
-        presenter.add(QueryLocalSongModel(presenter, IdUtils.QUERY_LOCAL_SONG, LocalMusic.START_FROM_LOCAL))
+        presenter.add(QueryLocalSongModel(presenter, IdUtils.QUERY_LOCAL_SONG, START_FROM_LOCAL))
 
         presenter.start(IdUtils.QUERY_SONG_LIST
                 , IdUtils.QUERY_LOCAL_SONG)

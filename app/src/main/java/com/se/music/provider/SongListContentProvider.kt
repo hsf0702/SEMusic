@@ -8,6 +8,9 @@ import android.database.Cursor
 import android.database.SQLException
 import android.database.sqlite.SQLiteQueryBuilder
 import android.net.Uri
+import com.se.music.provider.metadata.SL_AUTHORITIES
+import com.se.music.provider.metadata.SL_CONTENT_URI
+import com.se.music.provider.metadata.SL_TABLE_NAME
 
 /**
  *Author: gaojin
@@ -25,15 +28,12 @@ class SongListContentProvider : ContentProvider() {
      */
     val SINGLE = 1
 
-    val AUTHORITIES = SongList.AUTHORITIES
-    val TABLE_NAME = SongList.TABLE_NAME
-
     private var uriMatcher: UriMatcher = UriMatcher(UriMatcher.NO_MATCH)
     private var dbHelper: MusicDBHelper? = null
 
     init {
-        uriMatcher.addURI(AUTHORITIES, "/$TABLE_NAME", ALL)
-        uriMatcher.addURI(AUTHORITIES, "/$TABLE_NAME/#", SINGLE)
+        uriMatcher.addURI(SL_AUTHORITIES, "/$SL_TABLE_NAME", ALL)
+        uriMatcher.addURI(SL_AUTHORITIES, "/$SL_TABLE_NAME/#", SINGLE)
     }
 
     override fun onCreate(): Boolean {
@@ -43,9 +43,9 @@ class SongListContentProvider : ContentProvider() {
 
     override fun insert(uri: Uri?, values: ContentValues?): Uri {
         val db = dbHelper!!.writableDatabase
-        val rowId = db.insert(TABLE_NAME, null, values)
+        val rowId = db.insert(SL_TABLE_NAME, null, values)
         if (rowId > 0) {
-            val rowUri = ContentUris.withAppendedId(SongList.CONTENT_URI, rowId)
+            val rowUri = ContentUris.withAppendedId(SL_CONTENT_URI, rowId)
             context.contentResolver.notifyChange(rowUri, null)
             return rowUri
         }
@@ -55,7 +55,7 @@ class SongListContentProvider : ContentProvider() {
     override fun query(uri: Uri?, projection: Array<out String>?, selection: String?, selectionArgs: Array<out String>?, sortOrder: String?): Cursor {
         val queryBuilder = SQLiteQueryBuilder()
         val db = dbHelper!!.readableDatabase
-        queryBuilder.tables = TABLE_NAME
+        queryBuilder.tables = SL_TABLE_NAME
         val c = queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder)
         c.setNotificationUri(context.contentResolver, uri)
         return c
@@ -64,7 +64,7 @@ class SongListContentProvider : ContentProvider() {
     override fun update(uri: Uri?, values: ContentValues?, selection: String?, selectionArgs: Array<out String>?): Int {
         val db = dbHelper!!.writableDatabase
         val count: Int
-        count = db.update(TABLE_NAME, values, selection, selectionArgs)
+        count = db.update(SL_TABLE_NAME, values, selection, selectionArgs)
         context.contentResolver.notifyChange(uri, null)
         return count
     }
@@ -72,7 +72,7 @@ class SongListContentProvider : ContentProvider() {
     override fun delete(uri: Uri?, selection: String?, selectionArgs: Array<out String>?): Int {
         val db = dbHelper!!.writableDatabase
         val count: Int
-        count = db.delete(TABLE_NAME, selection, selectionArgs)
+        count = db.delete(SL_TABLE_NAME, selection, selectionArgs)
         context.contentResolver.notifyChange(uri, null)
         return count
     }
