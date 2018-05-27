@@ -18,8 +18,9 @@ import com.se.music.base.mvp.BaseView
 import com.se.music.base.mvp.MvpPresenter
 import com.se.music.subpage.mine.DownLoadFragment
 import com.se.music.subpage.mine.RecentMusicFragment
-import com.se.music.subpage.mine.local.LocalMusicFragment
+import com.se.music.subpage.mine.local.LocalMusicTabFragment
 import com.se.music.subpage.mine.love.CollectedActivity
+import com.se.music.utils.jumpToFragment
 
 /**
  * Author: gaojin
@@ -93,24 +94,15 @@ class MineOperationView(presenter: MvpPresenter, viewId: Int, view: View) : Base
     }
 
     private fun localMusic() {
-        val ft = (getActivity() as BaseActivity).supportFragmentManager.beginTransaction()
-        ft.addToBackStack(null)
-        ft.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_left_out, R.anim.slide_left_in, R.anim.slide_right_out)
-        ft.add(R.id.content, LocalMusicFragment.newInstance(0)).commit()
+        jumpToFragment(getActivity()!!, LocalMusicTabFragment.newInstance(0))
     }
 
     private fun downloadMusic() {
-        val ft = (getActivity() as BaseActivity).supportFragmentManager.beginTransaction()
-        ft.addToBackStack(null)
-        ft.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_left_out, R.anim.slide_left_in, R.anim.slide_right_out)
-        ft.add(R.id.content, DownLoadFragment.newInstance()).commit()
+        jumpToFragment(getActivity()!!, DownLoadFragment.newInstance())
     }
 
     private fun recentMusic() {
-        val ft = (getActivity() as BaseActivity).supportFragmentManager.beginTransaction()
-        ft.addToBackStack(null)
-        ft.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_left_out, R.anim.slide_left_in, R.anim.slide_right_out)
-        ft.add(R.id.content, RecentMusicFragment.newInstance()).commit()
+        jumpToFragment(getActivity()!!, RecentMusicFragment.newInstance())
     }
 
     private fun loveMusic() {
@@ -119,10 +111,7 @@ class MineOperationView(presenter: MvpPresenter, viewId: Int, view: View) : Base
     }
 
     private fun loveSinger() {
-        val ft = (getActivity() as BaseActivity).supportFragmentManager.beginTransaction()
-        ft.addToBackStack(null)
-        ft.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_left_out, R.anim.slide_left_in, R.anim.slide_right_out)
-        ft.add(R.id.content, LocalMusicFragment.newInstance(0)).commit()
+        jumpToFragment(getActivity()!!, LocalMusicTabFragment.newInstance(0))
     }
 
     private fun buyMusic() {

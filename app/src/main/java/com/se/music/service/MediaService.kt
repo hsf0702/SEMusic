@@ -937,7 +937,7 @@ class MediaService : Service() {
                                 false
                             }
                         } else {
-                            //                        updateCursorForDownloadedFile(this, mUri);
+                            //                        updateCursorForDownloadedFile(this, localMusicUri);
                             shouldAddToPlaylist = false
                         }
                     } else {

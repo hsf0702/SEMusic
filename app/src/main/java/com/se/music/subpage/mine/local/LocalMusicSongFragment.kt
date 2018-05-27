@@ -1,19 +1,14 @@
 package com.se.music.subpage.mine.local
 
-import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.se.music.R
 import com.se.music.common.MusicEntity
-import com.se.music.provider.metadata.START_FROM_LOCAL
-import com.se.music.utils.MusicUtils
-import com.se.music.utils.singleton.ApplicationSingleton
 
 
 /**
@@ -43,22 +38,8 @@ class LocalMusicSongFragment : Fragment() {
         mRecyclerView!!.setHasFixedSize(true)
         mRecyclerView!!.adapter = mAdapter
         refreshAdapter()
-
     }
 
     private fun refreshAdapter() {
-        Log.e("gj", "refreshAdapter")
-        object : AsyncTask<Void, Void, String>() {
-            override fun doInBackground(vararg params: Void?): String {
-                musicList.clear()
-                musicList.addAll(MusicUtils.queryMusic(ApplicationSingleton.instance!!, START_FROM_LOCAL) as ArrayList)
-                mAdapter!!.updateDataSet(musicList)
-                return ""
-            }
-
-            override fun onPostExecute(result: String?) {
-                mAdapter!!.notifyDataSetChanged()
-            }
-        }.execute()
     }
 }

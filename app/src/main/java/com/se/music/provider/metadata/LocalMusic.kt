@@ -1,9 +1,32 @@
 package com.se.music.provider.metadata
 
+import android.provider.MediaStore
+
 /**
  *Author: gaojin
  *Time: 2018/5/27 下午7:04
  */
+
+val localMusicUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI!!
+//查询数据库的列名称
+val infoMusic = arrayOf(MediaStore.Audio.Media._ID          //音乐ID
+        , MediaStore.Audio.Media.TITLE      //音乐的标题
+        , MediaStore.Audio.Media.DATA       //日期
+        , MediaStore.Audio.Media.ALBUM_ID   //专辑ID
+        , MediaStore.Audio.Media.ALBUM      //专辑
+        , MediaStore.Audio.Media.ARTIST     //艺术家
+        , MediaStore.Audio.Media.ARTIST_ID  //艺术家ID
+        , MediaStore.Audio.Media.DURATION   //音乐时长
+        , MediaStore.Audio.Media.SIZE)     //音乐大小
+
+//用于检索本地文件
+public const val mFilterSize = 1024 * 1024// 1MB
+public const val mFilterDuration = 60 * 1000// 1分钟
+// 查询语句：检索出.mp3为后缀名，时长大于1分钟，文件大小大于1MB的媒体文件
+val songSelection = StringBuilder(" 1=1 and title != ''")
+        .append(" and " + MediaStore.Audio.Media.SIZE + " > " + mFilterSize)
+        .append(" and " + MediaStore.Audio.Media.DURATION + " > " + mFilterDuration)!!
+
 
 //歌手和专辑列表点击都会进入MyMusic 此时要传递参数表明是从哪里进入的
 const val START_FROM_ARTIST = 1
@@ -11,3 +34,4 @@ const val START_FROM_ALBUM = 2
 const val START_FROM_LOCAL = 3
 const val START_FROM_FOLDER = 4
 const val START_FROM_FAVORITE = 5
+

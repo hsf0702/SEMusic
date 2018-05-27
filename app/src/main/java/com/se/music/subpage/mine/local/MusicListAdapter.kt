@@ -10,9 +10,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.se.music.R
 import com.se.music.common.MusicEntity
+import com.se.music.provider.metadata.getAlbumArtUri
 import com.se.music.service.MusicPlayer
 import com.se.music.utils.HandlerUtil
-import com.se.music.utils.MusicUtils
 import java.util.*
 
 /**
@@ -28,11 +28,6 @@ class MusicListAdapter constructor(private val context: Context) : RecyclerView.
 
     init {
         handler = HandlerUtil.instance
-    }
-
-    //更新adpter的数据
-    fun updateDataSet(list: ArrayList<MusicEntity>) {
-        this.mList = list
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -75,7 +70,7 @@ class MusicListAdapter constructor(private val context: Context) : RecyclerView.
                 val info = mList!![i]
                 list[i] = info.songId
                 info.islocal = true
-                info.albumData = MusicUtils.getAlbumArtUri(info.albumId.toLong()).toString() + ""
+                info.albumData = getAlbumArtUri(info.albumId.toLong()).toString()
                 infos[list[i]] = mList!![i]
             }
             if (position > -1)
