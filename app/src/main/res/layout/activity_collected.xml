@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.se.music.activity.CollectedActivity">
+    tools:context="com.se.music.subpage.mine.love.CollectedActivity">
 
     <include layout="@layout/toolbar" />
 

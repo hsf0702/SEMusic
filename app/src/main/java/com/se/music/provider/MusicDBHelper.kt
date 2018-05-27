@@ -29,14 +29,14 @@ class MusicDBHelper(context: Context, name: String?, factory: SQLiteDatabase.Cur
             ImageCache.URL + " text not null);"
 
     private val SONGLIST_TABLE_CREATE = "create table " + SONGLIST_TABLE +
-            " (" + MetaData.SongList.ID + " varchar(128), " +
-            MetaData.SongList.NAME + " varchar(50) NOT NULL," +
-            MetaData.SongList.COUNT + " int," +
-            MetaData.SongList.CREATOR + " varchar(20)," +
-            MetaData.SongList.CREATE_TIME + " varchar(30) NOT NULL," +
-            MetaData.SongList.PIC + " varchar(50)," +
-            MetaData.SongList.INFO + " varchar(50)," +
-            "PRIMARY KEY (" + MetaData.SongList.ID + ")" +
+            " (" + SongList.ID + " varchar(128), " +
+            SongList.NAME + " varchar(50) NOT NULL," +
+            SongList.COUNT + " int," +
+            SongList.CREATOR + " varchar(20)," +
+            SongList.CREATE_TIME + " varchar(30) NOT NULL," +
+            SongList.PIC + " varchar(50)," +
+            SongList.INFO + " varchar(50)," +
+            "PRIMARY KEY (" + SongList.ID + ")" +
             ");"
 
     private val MUSICINFO_TABLE_CREATE = "create table " + MUSICINFO_TABLE +
@@ -55,7 +55,7 @@ class MusicDBHelper(context: Context, name: String?, factory: SQLiteDatabase.Cur
             "PRIMARY KEY (" + MusicInfoCache.ID + ")" +
             ");"
 
-    constructor() : this(ApplicationSingleton.instance!!.applicationContext, MetaData.DATABASE_NAME, null, MetaData.DATABASE_VERSION)
+    constructor() : this(ApplicationSingleton.instance!!.applicationContext, DATABASE_NAME, null, DATABASE_VERSION)
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(IMAGE_TABLE_CREATE)

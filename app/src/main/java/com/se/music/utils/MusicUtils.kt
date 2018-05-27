@@ -7,10 +7,10 @@ import android.net.Uri
 import android.provider.MediaStore
 import com.github.promeg.pinyinhelper.Pinyin
 import com.se.music.R
-import com.se.music.common.entity.AlbumEntity
-import com.se.music.common.entity.ArtistEntity
-import com.se.music.common.entity.FolderEntity
-import com.se.music.common.entity.MusicEntity
+import com.se.music.common.AlbumEntity
+import com.se.music.common.ArtistEntity
+import com.se.music.common.FolderEntity
+import com.se.music.common.MusicEntity
 import com.se.music.utils.MConstants.Companion.START_FROM_ALBUM
 import com.se.music.utils.MConstants.Companion.START_FROM_ARTIST
 import com.se.music.utils.MConstants.Companion.START_FROM_FOLDER
@@ -74,11 +74,11 @@ class MusicUtils : MConstants {
         fun getFolderList(cursor: Cursor?): List<FolderEntity> {
             val list = ArrayList<FolderEntity>()
             while (cursor!!.moveToNext()) {
-                val info = FolderEntity()
                 val filePath = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA))
-                info.folder_path = filePath.substring(0, filePath.lastIndexOf(File.separator))
-                info.folder_name = info.folder_path!!.substring(info.folder_path!!.lastIndexOf(File.separator) + 1)
-                info.folder_sort = Pinyin.toPinyin(info.folder_name!![0]).substring(0, 1).toUpperCase()
+                val folderPath = filePath.substring(0, filePath.lastIndexOf(File.separator))
+                val folderName = folderPath.substring(folderPath.lastIndexOf(File.separator) + 1)
+                val folderSort = Pinyin.toPinyin(folderName[0]).substring(0, 1).toUpperCase()
+                val info = FolderEntity(folderName, folderPath, folderSort)
                 list.add(info)
             }
             //cursor一定一定要关闭
@@ -134,29 +134,29 @@ class MusicUtils : MConstants {
 
             val musicList = ArrayList<MusicEntity>()
             while (cursor.moveToNext()) {
-                val music = MusicEntity()
-                music.songId = cursor.getInt(cursor
+                val songId = cursor.getInt(cursor
                         .getColumnIndex(MediaStore.Audio.Media._ID)).toLong()
-                music.albumId = cursor.getInt(cursor
+                val albumId = cursor.getInt(cursor
                         .getColumnIndex(MediaStore.Audio.Media.ALBUM_ID))
-                music.albumName = cursor.getString(cursor
+                val albumName = cursor.getString(cursor
                         .getColumnIndex(MediaStore.Audio.Albums.ALBUM))
-                music.albumData = getAlbumArtUri(music.albumId.toLong()).toString() + ""
-                music.duration = cursor.getInt(cursor
+                val albumData = getAlbumArtUri(albumId.toLong()).toString() + ""
+                val duration = cursor.getInt(cursor
                         .getColumnIndex(MediaStore.Audio.Media.DURATION))
-                music.musicName = cursor.getString(cursor
+                val musicName = cursor.getString(cursor
                         .getColumnIndex(MediaStore.Audio.Media.TITLE))
-                music.artist = cursor.getString(cursor
+                val size = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE))
+                val artist = cursor.getString(cursor
                         .getColumnIndex(MediaStore.Audio.Media.ARTIST))
-                music.artistId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID))
+                val artistId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID))
                 val filePath = cursor.getString(cursor
                         .getColumnIndex(MediaStore.Audio.Media.DATA))
-                music.data = filePath
-                music.folder = filePath.substring(0, filePath.lastIndexOf(File.separator))
-                music.size = cursor.getInt(cursor
-                        .getColumnIndex(MediaStore.Audio.Media.SIZE))
-                music.islocal = true
-                music.sort = Pinyin.toPinyin(music.musicName!![0]).substring(0, 1).toUpperCase()
+                val data = filePath
+                val folderPath = filePath.substring(0,
+                        filePath.lastIndexOf(File.separator))
+                val folder = folderPath
+                val sort = Pinyin.toPinyin(musicName!![0]).substring(0, 1).toUpperCase()
+                val music = MusicEntity(songId, albumName)
                 musicList.add(music)
             }
             cursor.close()
@@ -193,11 +193,10 @@ class MusicUtils : MConstants {
         fun getArtistList(cursor: Cursor?): List<ArtistEntity> {
             val list = ArrayList<ArtistEntity>()
             while (cursor!!.moveToNext()) {
-                val info = ArtistEntity()
-                info.artistName = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Artists.ARTIST))
-                info.numberOfTracks = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Artists.NUMBER_OF_TRACKS))
-                info.artistId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Artists._ID))
-                info.artistSort = Pinyin.toPinyin(info.artistName!![0]).substring(0, 1).toUpperCase()
+                val info = ArtistEntity(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Artists.ARTIST))
+                        , cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Artists.NUMBER_OF_TRACKS))
+                        , cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Artists._ID))
+                        , Pinyin.toPinyin(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Artists.ARTIST))[0]).substring(0, 1).toUpperCase())
                 list.add(info)
             }
             cursor.close()
@@ -231,52 +230,16 @@ class MusicUtils : MConstants {
         fun getAlbumList(cursor: Cursor?): List<AlbumEntity> {
             val list = ArrayList<AlbumEntity>()
             while (cursor!!.moveToNext()) {
-                val info = AlbumEntity()
-                info.albumName = cursor.getString(cursor
-                        .getColumnIndex(MediaStore.Audio.Albums.ALBUM))
-                info.albumId = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Albums._ID))
-                info.numberOfSongs = cursor.getInt(cursor
-                        .getColumnIndex(MediaStore.Audio.Albums.NUMBER_OF_SONGS))
-                info.albumArt = getAlbumArtUri(info.albumId.toLong()).toString() + ""
-                info.albumArtist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ARTIST))
-                info.albumSort = Pinyin.toPinyin(info.albumName!![0]).substring(0, 1).toUpperCase()
+                val info = AlbumEntity(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM))
+                        , cursor.getColumnIndex(MediaStore.Audio.Albums._ID)
+                        , cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Albums.NUMBER_OF_SONGS))
+                        , getAlbumArtUri(cursor.getColumnIndex(MediaStore.Audio.Albums._ID).toLong()).toString()
+                        , cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ARTIST))
+                        , Pinyin.toPinyin(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM)).substring(0, 1)[0]).toUpperCase())
                 list.add(info)
             }
             cursor.close()
             return list
-        }
-
-        fun getMusicInfo(context: Context, id: Long): MusicEntity? {
-            val cr = context.contentResolver
-            val cursor = cr.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, proj_music, "_id = " + id.toString(), null, null)
-                    ?: return null
-            val music = MusicEntity()
-            while (cursor.moveToNext()) {
-                music.songId = cursor.getInt(cursor
-                        .getColumnIndex(MediaStore.Audio.Media._ID)).toLong()
-                music.albumId = cursor.getInt(cursor
-                        .getColumnIndex(MediaStore.Audio.Media.ALBUM_ID))
-                music.albumName = cursor.getString(cursor
-                        .getColumnIndex(MediaStore.Audio.Albums.ALBUM))
-                music.albumData = getAlbumArtUri(music.albumId.toLong()).toString() + ""
-                music.duration = cursor.getInt(cursor
-                        .getColumnIndex(MediaStore.Audio.Media.DURATION))
-                music.musicName = cursor.getString(cursor
-                        .getColumnIndex(MediaStore.Audio.Media.TITLE))
-                music.size = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE))
-                music.artist = cursor.getString(cursor
-                        .getColumnIndex(MediaStore.Audio.Media.ARTIST))
-                music.artistId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID))
-                val filePath = cursor.getString(cursor
-                        .getColumnIndex(MediaStore.Audio.Media.DATA))
-                music.data = filePath
-                val folderPath = filePath.substring(0,
-                        filePath.lastIndexOf(File.separator))
-                music.folder = folderPath
-                music.sort = Pinyin.toPinyin(music.musicName!![0]).substring(0, 1).toUpperCase()
-            }
-            cursor.close()
-            return music
         }
 
         fun makeTimeString(milliSecs: Long): String {

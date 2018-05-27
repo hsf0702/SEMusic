@@ -16,7 +16,7 @@ class MainActivity : BaseActivity() {
 
     private var mPermissionsChecker: PermissionsChecker? = null
 
-    private var mDrawerLayout: DrawerLayout? = null
+    private lateinit var mDrawerLayout: DrawerLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

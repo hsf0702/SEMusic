@@ -19,7 +19,7 @@ import android.util.Log
 import android.widget.RemoteViews
 import com.se.music.IMediaAidlInterface
 import com.se.music.R
-import com.se.music.common.entity.MusicEntity
+import com.se.music.common.MusicEntity
 import com.se.music.main.MainActivity
 import com.se.music.utils.SharePreferencesUtils
 import com.se.music.utils.database.provider.RecentStore
@@ -937,7 +937,7 @@ class MediaService : Service() {
                                 false
                             }
                         } else {
-                            //                        updateCursorForDownloadedFile(this, uri);
+                            //                        updateCursorForDownloadedFile(this, mUri);
                             shouldAddToPlaylist = false
                         }
                     } else {

@@ -24,5 +24,5 @@ interface RetrofitService {
     fun getSinger(@QueryMap map: Map<String, String>, @Query("pagesize") pagesize: Int, @Query("pagenum") pagenum: Int): Call<SingerModel>
 
     @GET("cgi-bin/musicu.fcg")
-    fun getExpressInfo(@Query("data") data: String): Call<ExpressInfoModel>
+    fun getNewSongInfo(@Query("data") data: String): Call<ExpressInfoModel>
 }

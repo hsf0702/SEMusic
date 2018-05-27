@@ -1,5 +1,6 @@
 package com.se.music.mine.personal
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import com.se.music.R
@@ -16,6 +17,7 @@ class MinePersonalInfoView(presenter: KMvpPresenter, viewId: Int, header: View) 
         initView(header)
     }
 
+    @SuppressLint("InflateParams")
     override fun createView(): View {
         return LayoutInflater.from(getContext()).inflate(R.layout.mine_head_layout, null)
     }

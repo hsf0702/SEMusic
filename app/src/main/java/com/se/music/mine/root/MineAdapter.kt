@@ -1,7 +1,7 @@
 package com.se.music.mine.root
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.database.Cursor
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -11,27 +11,23 @@ import android.widget.TextView
 import android.widget.Toast
 import com.se.music.GlideApp
 import com.se.music.R
-import com.se.music.provider.MetaData
+import com.se.music.common.SongListEntity
 
 /**
  * Author: gaojin
  * Time: 2018/5/4 下午10:50
  */
-class MineAdapter constructor(private var context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MineAdapter constructor(private val context: Context, private val list: ArrayList<SongListEntity>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val HEADER = 0X01
-    private val LIST = 0X02
-    var header: View? = null
-    var cursor: Cursor? = null
-    var currentCursor = true
+    private val mHEADER = 0X01
+    private val mLIST = 0X02
 
-    init {
-        header = LayoutInflater.from(context).inflate(R.layout.mine_header_view_layout, null)
-    }
+    @SuppressLint("InflateParams")
+    var header: View = LayoutInflater.from(context).inflate(R.layout.mine_header_view_layout, null)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return if (viewType == HEADER) {
-            HeadItemHolder(header!!)
+        return if (viewType == mHEADER) {
+            HeadItemHolder(header)
         } else {
             ListItemHolder(LayoutInflater.from(parent.context).inflate(R.layout.mine_list_view_layout, parent, false))
         }
@@ -39,38 +35,30 @@ class MineAdapter constructor(private var context: Context) : RecyclerView.Adapt
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ListItemHolder) {
-            if (position == 1) {
-                cursor!!.moveToFirst()
-                currentCursor = true
-            }
-            if (!currentCursor) {
-                return
-            }
             GlideApp.with(context)
-                    .load(cursor!!.getString(MetaData.SongList.PIC_INDEX))
+                    .load(list[position - 1].listPic)
                     .placeholder(R.drawable.placeholder_disk)
                     .into(holder.imageView!!)
 
-            holder.songListTitle!!.text = cursor!!.getString(MetaData.SongList.NAME_INDEX)
-            holder.songListInfo!!.text = cursor!!.getString(MetaData.SongList.INFO_INDEX)
+            holder.songListTitle!!.text = list[position - 1].name
+            holder.songListInfo!!.text = list[position - 1].info
             holder.songListItem!!.setOnClickListener { Toast.makeText(context, "gj_jump", Toast.LENGTH_SHORT).show() }
-            currentCursor = cursor!!.moveToNext()
         }
     }
 
     override fun getItemCount(): Int {
-        return if (cursor == null) {
+        return if (list.isEmpty()) {
             1
         } else {
-            cursor!!.count + 1
+            list.size + 1
         }
     }
 
     override fun getItemViewType(position: Int): Int {
         return if (position == 0) {
-            HEADER
+            mHEADER
         } else {
-            LIST
+            mLIST
         }
     }
 

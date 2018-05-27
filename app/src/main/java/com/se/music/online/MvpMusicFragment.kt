@@ -10,16 +10,16 @@ import com.se.music.R
 import com.se.music.base.kmvp.KBasePresenter
 import com.se.music.base.kmvp.KMvpPage
 import com.se.music.base.kmvp.KMvpPresenter
+import com.se.music.online.banner.OnLineBannerModel
+import com.se.music.online.banner.OnLineBannerView
+import com.se.music.online.classify.OnLineClassifyView
 import com.se.music.online.model.ExpressInfoModel
 import com.se.music.online.model.HallModel
 import com.se.music.online.model.RecommendListModel
-import com.se.music.online.mvpmodel.OnLineBannerModel
-import com.se.music.online.mvpmodel.OnLineExpressModel
-import com.se.music.online.mvpmodel.OnLineRecommendModel
-import com.se.music.online.mvpview.OnLineBannerView
-import com.se.music.online.mvpview.OnLineClassifyView
-import com.se.music.online.mvpview.OnLineExpressView
-import com.se.music.online.mvpview.OnLineRecommendView
+import com.se.music.online.newsong.OnLineNewSongModel
+import com.se.music.online.newsong.OnLineNewSongView
+import com.se.music.online.recommend.OnLineRecommendModel
+import com.se.music.online.recommend.OnLineRecommendView
 import com.se.music.utils.IdUtils
 
 /**
@@ -54,8 +54,8 @@ class MvpMusicFragment : Fragment(), KMvpPage {
         presenter.add(OnLineRecommendView(presenter, R.id.online_recommend))
         presenter.add(OnLineRecommendModel(presenter, IdUtils.GET_RECOMMEND_LIST))
 
-        presenter.add(OnLineExpressView(presenter, R.id.online_express))
-        presenter.add(OnLineExpressModel(presenter, IdUtils.GET_EXPRESS_SONG))
+        presenter.add(OnLineNewSongView(presenter, R.id.online_express))
+        presenter.add(OnLineNewSongModel(presenter, IdUtils.GET_EXPRESS_SONG))
         loadData()
     }
 

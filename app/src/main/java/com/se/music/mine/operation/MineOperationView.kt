@@ -1,5 +1,6 @@
 package com.se.music.mine.operation
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.database.Cursor
 import android.support.annotation.Keep
@@ -11,14 +12,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.se.music.R
-import com.se.music.activity.CollectedActivity
 import com.se.music.base.BaseActivity
 import com.se.music.base.BaseConfig
 import com.se.music.base.kmvp.KBaseView
 import com.se.music.base.kmvp.KMvpPresenter
-import com.se.music.fragment.DownLoadFragment
-import com.se.music.fragment.LocalMusicFragment
-import com.se.music.fragment.RecentMusicFragment
+import com.se.music.subpage.mine.DownLoadFragment
+import com.se.music.subpage.mine.RecentMusicFragment
+import com.se.music.subpage.mine.local.LocalMusicFragment
+import com.se.music.subpage.mine.love.CollectedActivity
 
 /**
  * Author: gaojin
@@ -26,20 +27,21 @@ import com.se.music.fragment.RecentMusicFragment
  */
 class MineOperationView(presenter: KMvpPresenter, viewId: Int, view: View) : KBaseView(presenter, viewId), View.OnClickListener {
 
-    private var rootView: GridLayout? = null
+    private lateinit var rootView: GridLayout
 
     init {
         initView(view)
     }
 
+    @SuppressLint("InflateParams")
     override fun createView(): View {
         rootView = LayoutInflater.from(getContext()).inflate(R.layout.mine_func_layout, null) as GridLayout
-        return rootView!!
+        addViewToGridLayout(rootView)
+        return rootView
     }
 
     @Keep
     fun onDataChanged(cursor: Cursor) {
-
         val dataList = listOf(DataHolder(getContext()!!.resources.getString(R.string.mine_local_music)
                 , cursor.count.toString(), R.drawable.item_music, R.id.local_music)
                 , DataHolder(getContext()!!.resources.getString(R.string.mine_down_music)
@@ -52,27 +54,30 @@ class MineOperationView(presenter: KMvpPresenter, viewId: Int, view: View) : KBa
                 , "5", R.drawable.item_singer, R.id.love_singer)
                 , DataHolder(getContext()!!.resources.getString(R.string.mine_buy_music)
                 , "6", R.drawable.item_buy, R.id.buy_music))
-        rootView!!.removeAllViews()
-        addViewToGridLayout(rootView!!, dataList)
+        bindDataToView(dataList)
     }
 
-    private fun addViewToGridLayout(container: ViewGroup, dataList: List<DataHolder>) {
-        dataList.forEach {
+    private fun addViewToGridLayout(container: ViewGroup) {
+        for (i in 0..5) {
             val itemView = LayoutInflater.from(getContext()).inflate(R.layout.view_mine_item_view, container, false)
             val params: GridLayout.LayoutParams = itemView.layoutParams as GridLayout.LayoutParams
             params.width = BaseConfig.width / 3
             itemView.layoutParams = params
+            container.addView(itemView)
+        }
+    }
 
+    private fun bindDataToView(list: List<DataHolder>) {
+        list.forEachIndexed { index, dataHolder ->
+            val itemView = rootView.getChildAt(index)
             val imageView: ImageView = itemView.findViewById(R.id.img_item)
             val itemName: TextView = itemView.findViewById(R.id.tv_item_name)
             val itemCount: TextView = itemView.findViewById(R.id.tv_item_count)
-            itemName.text = it.itemName
-            imageView.setBackgroundResource(it.drawablePic)
-            itemCount.text = it.itemInfo
-
+            itemView.id = dataHolder.id
             itemView.setOnClickListener(this)
-            itemView.id = it.id
-            container.addView(itemView)
+            itemName.text = dataHolder.itemName
+            imageView.setBackgroundResource(dataHolder.drawablePic)
+            itemCount.text = dataHolder.itemInfo
         }
     }
 

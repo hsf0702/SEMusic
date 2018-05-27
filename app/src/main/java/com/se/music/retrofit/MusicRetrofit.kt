@@ -46,7 +46,7 @@ class MusicRetrofit private constructor() {
         return baseCRetrofit.create(RetrofitService::class.java).getSinger(map, pagesize, pagenum)
     }
 
-    fun getExpressInfo(): Call<ExpressInfoModel> {
+    fun getNewSongInfo(): Call<ExpressInfoModel> {
 
         val expressPostParams = ExpressPostParams()
         expressPostParams.new_album.method = "GetNewSong"
@@ -62,7 +62,7 @@ class MusicRetrofit private constructor() {
         expressPostParams.new_song.param.end = 1
 
         return baseURetrofit.create(RetrofitService::class.java)
-                .getExpressInfo(GsonFactory.getInstance().toJson(expressPostParams))
+                .getNewSongInfo(GsonFactory.getInstance().toJson(expressPostParams))
     }
 
     companion object {

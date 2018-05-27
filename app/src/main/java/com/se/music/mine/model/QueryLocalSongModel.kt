@@ -9,7 +9,7 @@ import android.support.v4.content.Loader
 import com.se.music.base.BaseActivity
 import com.se.music.base.kmvp.KBaseModel
 import com.se.music.base.kmvp.KMvpPresenter
-import com.se.music.provider.MetaData
+import com.se.music.provider.LocalMusic
 import com.se.music.utils.SharePreferencesUtils
 
 /**
@@ -20,9 +20,9 @@ import com.se.music.utils.SharePreferencesUtils
 class QueryLocalSongModel(presenter: KMvpPresenter, private var modelId: Int, private var from: Int) : KBaseModel<Cursor>(presenter, modelId)
         , LoaderManager.LoaderCallbacks<Cursor> {
     //用于检索本地文件
-    val FILTER_SIZE = 1024 * 1024// 1MB
-    val FILTER_DURATION = 60 * 1000// 1分钟
-    val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+    private val mFilterSize = 1024 * 1024// 1MB
+    private val mFilterDuration = 60 * 1000// 1分钟
+    private val mUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI!!
 
     //查询数据库的列名称
     private val infoMusic = arrayOf(MediaStore.Audio.Media._ID          //音乐ID
@@ -46,23 +46,23 @@ class QueryLocalSongModel(presenter: KMvpPresenter, private var modelId: Int, pr
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
         val select = StringBuilder(" 1=1 and title != ''")
         // 查询语句：检索出.mp3为后缀名，时长大于1分钟，文件大小大于1MB的媒体文件
-        select.append(" and " + MediaStore.Audio.Media.SIZE + " > " + FILTER_SIZE)
-        select.append(" and " + MediaStore.Audio.Media.DURATION + " > " + FILTER_DURATION)
+        select.append(" and " + MediaStore.Audio.Media.SIZE + " > " + mFilterSize)
+        select.append(" and " + MediaStore.Audio.Media.DURATION + " > " + mFilterDuration)
 
         return when (from) {
-            MetaData.LocalMusic.START_FROM_LOCAL -> {
-                CursorLoader(getContext()!!, uri, infoMusic, select.toString(), null, SharePreferencesUtils.instance.getSongSortOrder())
+            LocalMusic.START_FROM_LOCAL -> {
+                CursorLoader(getContext()!!, mUri, infoMusic, select.toString(), null, SharePreferencesUtils.instance.getSongSortOrder())
             }
-            MetaData.LocalMusic.START_FROM_ARTIST -> {
+            LocalMusic.START_FROM_ARTIST -> {
                 select.append(" and " + MediaStore.Audio.Media.ARTIST_ID + " = " + id)
-                CursorLoader(getContext()!!, uri, infoMusic, select.toString(), null, SharePreferencesUtils.instance.getArtistSortOrder())
+                CursorLoader(getContext()!!, mUri, infoMusic, select.toString(), null, SharePreferencesUtils.instance.getArtistSortOrder())
             }
-            MetaData.LocalMusic.START_FROM_ALBUM -> {
+            LocalMusic.START_FROM_ALBUM -> {
                 select.append(" and " + MediaStore.Audio.Media.ALBUM_ID + " = " + id)
-                CursorLoader(getContext()!!, uri, infoMusic, select.toString(), null, SharePreferencesUtils.instance.getAlbumSortOrder())
+                CursorLoader(getContext()!!, mUri, infoMusic, select.toString(), null, SharePreferencesUtils.instance.getAlbumSortOrder())
             }
             else -> {
-                CursorLoader(getContext()!!, uri, infoMusic, select.toString(), null, SharePreferencesUtils.instance.getSongSortOrder())
+                CursorLoader(getContext()!!, mUri, infoMusic, select.toString(), null, SharePreferencesUtils.instance.getSongSortOrder())
             }
         }
     }

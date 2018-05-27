@@ -1,7 +1,7 @@
 package com.se.music.utils.database.provider
 
 import android.content.ContentValues
-import com.se.music.common.entity.MusicEntity
+import com.se.music.common.MusicEntity
 import com.se.music.provider.MusicDBHelper
 import com.se.music.utils.database.entity.MusicInfoCache
 import java.util.*
@@ -37,41 +37,6 @@ class MusicInfoDBService {
         db.insert(MusicDBHelper.MUSICINFO_TABLE, null, contentValues)
     }
 
-
-    @Synchronized
-    fun query(songListId: String): List<MusicEntity> {
-        val db = MusicDBHelper.instance.readableDatabase
-        val list = ArrayList<MusicEntity>()
-        val sql = "select * from " + MusicDBHelper.MUSICINFO_TABLE + " where " + MusicInfoCache.SONG_LIST_ID + " = '" + songListId + "'"
-        val cursor = db.rawQuery(sql, null)
-        if (cursor.count > 0) {
-            cursor.moveToFirst()
-            val musicEntity = MusicEntity()
-            musicEntity.songId = cursor.getString(0).toLong()
-            musicEntity.musicName = cursor.getString(2)
-            musicEntity.albumId = cursor.getInt(3)
-            musicEntity.albumName = cursor.getString(4)
-            musicEntity.albumPic = cursor.getString(5)
-            musicEntity.artistId = cursor.getString(6).toLong()
-            musicEntity.artist = cursor.getString(7)
-            musicEntity.islocal = (cursor.getInt(9) == 0)
-            list.add(musicEntity)
-        }
-        while (cursor.moveToNext()) {
-            val musicEntity = MusicEntity()
-            musicEntity.songId = cursor.getString(0).toLong()
-            musicEntity.musicName = cursor.getString(2)
-            musicEntity.albumId = cursor.getInt(3)
-            musicEntity.albumName = cursor.getString(4)
-            musicEntity.albumPic = cursor.getString(5)
-            musicEntity.artistId = cursor.getString(6).toLong()
-            musicEntity.artist = cursor.getString(7)
-            musicEntity.islocal = (cursor.getInt(9) == 0)
-            list.add(musicEntity)
-        }
-        return list
-    }
-
     @Synchronized
     fun haveSong(songListId: String): String? {
         val db = MusicDBHelper.instance.readableDatabase
@@ -88,27 +53,6 @@ class MusicInfoDBService {
         } else {
             return null
         }
-    }
-
-    @Synchronized
-    fun firstEntity(songListId: String): MusicEntity? {
-        val db = MusicDBHelper.instance.readableDatabase
-        val sql = "select * from " + MusicDBHelper.MUSICINFO_TABLE + " where " + MusicInfoCache.SONG_LIST_ID + " = '" + songListId + "'"
-        var musicEntity: MusicEntity? = null
-        val cursor = db.rawQuery(sql, null)
-        if (cursor.count > 0) {
-            cursor.moveToFirst()
-            musicEntity = MusicEntity()
-            musicEntity.songId = cursor.getString(0).toLong()
-            musicEntity.musicName = cursor.getString(2)
-            musicEntity.albumId = cursor.getInt(3)
-            musicEntity.albumName = cursor.getString(4)
-            musicEntity.albumPic = cursor.getString(5)
-            musicEntity.artistId = cursor.getString(6).toLong()
-            musicEntity.artist = cursor.getString(7)
-            musicEntity.islocal = (cursor.getInt(9) == 0)
-        }
-        return musicEntity
     }
 
 

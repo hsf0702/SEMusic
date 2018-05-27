@@ -1,5 +1,6 @@
 package com.se.music.mine.listtitle
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.database.Cursor
 import android.support.annotation.Keep
@@ -8,11 +9,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import com.se.music.R
-import com.se.music.activity.CreateSongListActivity
 import com.se.music.base.kmvp.KBaseView
 import com.se.music.base.kmvp.KMvpPresenter
 import com.se.music.mine.event.CollectEvent
 import com.se.music.mine.event.CreateEvent
+import com.se.music.subpage.mine.CreateSongListActivity
 
 /**
  * Author: gaojin
@@ -22,14 +23,13 @@ class MineSongListTitleView(presenter: KMvpPresenter
                             , viewId: Int
                             , view: View) : KBaseView(presenter, viewId), View.OnClickListener {
 
-    private var titleCreated: TextView? = null
-    private var titleCollected: TextView? = null
-
-    private var songListCount: TextView? = null
-    private var addSongList: View? = null
-    private var manageSongList: View? = null
-    private var llCreateNewSongList: View? = null
-    private var tvNoCollectedSongList: View? = null
+    private lateinit var titleCreated: TextView
+    private lateinit var titleCollected: TextView
+    private lateinit var songListCount: TextView
+    private lateinit var addSongList: View
+    private lateinit var manageSongList: View
+    private lateinit var llCreateNewSongList: View
+    private lateinit var tvNoCollectedSongList: View
 
     private var createSongListSize = 0
     private var collectedSongListSize = 0
@@ -39,6 +39,7 @@ class MineSongListTitleView(presenter: KMvpPresenter
         initView(view)
     }
 
+    @SuppressLint("InflateParams")
     override fun createView(): View {
         val rootView = LayoutInflater.from(getContext()).inflate(R.layout.mine_song_list_title_layout, null)
         titleCreated = rootView.findViewById(R.id.tv_title_created)
@@ -49,11 +50,11 @@ class MineSongListTitleView(presenter: KMvpPresenter
         llCreateNewSongList = rootView.findViewById(R.id.ll_create_new_song_list)
         tvNoCollectedSongList = rootView.findViewById(R.id.no_collected_song_list)
 
-        titleCreated!!.setOnClickListener(this)
-        titleCollected!!.setOnClickListener(this)
-        addSongList!!.setOnClickListener(this)
-        manageSongList!!.setOnClickListener(this)
-        llCreateNewSongList!!.setOnClickListener(this)
+        titleCreated.setOnClickListener(this)
+        titleCollected.setOnClickListener(this)
+        addSongList.setOnClickListener(this)
+        manageSongList.setOnClickListener(this)
+        llCreateNewSongList.setOnClickListener(this)
 
         bindView()
         return rootView
@@ -61,8 +62,8 @@ class MineSongListTitleView(presenter: KMvpPresenter
 
     private fun bindView() {
         if (isCreateTab) {
-            titleCreated!!.setTextColor(ContextCompat.getColor(getContext()!!, R.color.light_black))
-            titleCollected!!.setTextColor(ContextCompat.getColor(getContext()!!, R.color.gray))
+            titleCreated.setTextColor(ContextCompat.getColor(getContext()!!, R.color.light_black))
+            titleCollected.setTextColor(ContextCompat.getColor(getContext()!!, R.color.gray))
         }
     }
 
@@ -70,12 +71,12 @@ class MineSongListTitleView(presenter: KMvpPresenter
         if (isCreateTab) {
             return
         }
-        titleCreated!!.setTextColor(ContextCompat.getColor(getContext()!!, R.color.light_black))
-        titleCollected!!.setTextColor(ContextCompat.getColor(getContext()!!, R.color.gray))
-        songListCount!!.text = getContext()!!.resources.getString(R.string.song_list_count, createSongListSize)
-        addSongList!!.visibility = View.VISIBLE
-        tvNoCollectedSongList!!.visibility = View.GONE
-        llCreateNewSongList!!.visibility = if (createSongListSize == 0) View.VISIBLE else View.GONE
+        titleCreated.setTextColor(ContextCompat.getColor(getContext()!!, R.color.light_black))
+        titleCollected.setTextColor(ContextCompat.getColor(getContext()!!, R.color.gray))
+        songListCount.text = getContext()!!.resources.getString(R.string.song_list_count, createSongListSize)
+        addSongList.visibility = View.VISIBLE
+        tvNoCollectedSongList.visibility = View.GONE
+        llCreateNewSongList.visibility = if (createSongListSize == 0) View.VISIBLE else View.GONE
         dispatchData(CreateEvent())
         isCreateTab = true
     }
@@ -84,12 +85,12 @@ class MineSongListTitleView(presenter: KMvpPresenter
         if (!isCreateTab) {
             return
         }
-        titleCollected!!.setTextColor(ContextCompat.getColor(getContext()!!, R.color.light_black))
-        titleCreated!!.setTextColor(ContextCompat.getColor(getContext()!!, R.color.gray))
-        songListCount!!.text = getContext()!!.resources.getString(R.string.song_list_count, collectedSongListSize)
-        addSongList!!.visibility = View.GONE
-        llCreateNewSongList!!.visibility = View.GONE
-        tvNoCollectedSongList!!.visibility = if (collectedSongListSize == 0) View.VISIBLE else View.GONE
+        titleCollected.setTextColor(ContextCompat.getColor(getContext()!!, R.color.light_black))
+        titleCreated.setTextColor(ContextCompat.getColor(getContext()!!, R.color.gray))
+        songListCount.text = getContext()!!.resources.getString(R.string.song_list_count, collectedSongListSize)
+        addSongList.visibility = View.GONE
+        llCreateNewSongList.visibility = View.GONE
+        tvNoCollectedSongList.visibility = if (collectedSongListSize == 0) View.VISIBLE else View.GONE
         dispatchData(CollectEvent())
         isCreateTab = false
     }
@@ -115,13 +116,13 @@ class MineSongListTitleView(presenter: KMvpPresenter
         collectedSongListSize = cursor.count
 
         if (isCreateTab) {
-            songListCount!!.text = getContext()!!.resources.getString(R.string.song_list_count, createSongListSize)
-            tvNoCollectedSongList!!.visibility = View.GONE
-            llCreateNewSongList!!.visibility = if (createSongListSize == 0) View.VISIBLE else View.GONE
+            songListCount.text = getContext()!!.resources.getString(R.string.song_list_count, createSongListSize)
+            tvNoCollectedSongList.visibility = View.GONE
+            llCreateNewSongList.visibility = if (createSongListSize == 0) View.VISIBLE else View.GONE
         } else {
-            songListCount!!.text = getContext()!!.resources.getString(R.string.song_list_count, collectedSongListSize)
-            llCreateNewSongList!!.visibility = View.GONE
-            tvNoCollectedSongList!!.visibility = if (collectedSongListSize == 0) View.VISIBLE else View.GONE
+            songListCount.text = getContext()!!.resources.getString(R.string.song_list_count, collectedSongListSize)
+            llCreateNewSongList.visibility = View.GONE
+            tvNoCollectedSongList.visibility = if (collectedSongListSize == 0) View.VISIBLE else View.GONE
         }
     }
 }

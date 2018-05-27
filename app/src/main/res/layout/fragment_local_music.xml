@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.se.music.fragment.LocalMusicFragment">
+    tools:context="com.se.music.subpage.mine.local.LocalMusicFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/local_music_recycle"

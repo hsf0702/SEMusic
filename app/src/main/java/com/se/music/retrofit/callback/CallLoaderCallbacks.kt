@@ -9,9 +9,7 @@ import retrofit2.Call
 /**
  * Created by gaojin on 2017/12/23.
  */
-abstract class CallLoaderCallbacks<E> constructor(context: Context) : LoaderManager.LoaderCallbacks<Try<E>> {
-
-    private val context: Context = context
+abstract class CallLoaderCallbacks<E> constructor(private val context: Context) : LoaderManager.LoaderCallbacks<Try<E>> {
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Try<E>> {
         return CallLoader(context, onCreateCall(id, args), errorResume(id, args))

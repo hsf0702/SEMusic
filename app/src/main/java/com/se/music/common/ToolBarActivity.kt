@@ -16,8 +16,8 @@ import com.se.music.R
  * date：2017/11/6 下午8:32
  */
 abstract class ToolBarActivity : AppCompatActivity() {
-    private var mToolBar: Toolbar? = null
-    private var mTitle: TextView? = null
+    private lateinit var mToolBar: Toolbar
+    private lateinit var mTitle: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +35,7 @@ abstract class ToolBarActivity : AppCompatActivity() {
     protected abstract fun createContentView(inflater: LayoutInflater, rootView: ViewGroup): View
 
     override fun setTitle(title: CharSequence) {
-        mTitle!!.text = title
+        mTitle.text = title
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {

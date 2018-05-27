@@ -8,7 +8,7 @@ import android.widget.Toast
 import com.se.music.IMediaAidlInterface
 import com.se.music.R
 import com.se.music.base.listener.MusicStateListener
-import com.se.music.fragment.QuickControlsFragment
+import com.se.music.main.QuickControlsFragment
 import com.se.music.service.MediaService
 import com.se.music.service.MusicPlayer
 import com.se.music.utils.MConstants
@@ -153,7 +153,7 @@ open class BaseActivity : AppCompatActivity(), ServiceConnection {
         unregisterReceiver(mPlaybackStatus)
     }
 
-    fun unbindService() {
+    private fun unbindService() {
         if (mToken != null) {
             MusicPlayer.unbindFromService(mToken)
             mToken = null

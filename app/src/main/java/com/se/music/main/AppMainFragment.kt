@@ -12,10 +12,10 @@ import com.se.music.widget.TitleZoomTabLayout
 
 class AppMainFragment : Fragment() {
 
-    private var mToolBar: Toolbar? = null
-    private var mTabLayout: TitleZoomTabLayout? = null
-    private var mViewPager: ViewPager? = null
-    private var mAdapter: MainFragmentAdapter? = null
+    private lateinit var mToolBar: Toolbar
+    private lateinit var mTabLayout: TitleZoomTabLayout
+    private lateinit var mViewPager: ViewPager
+    private lateinit var mAdapter: MainFragmentAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -28,11 +28,11 @@ class AppMainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mTabLayout!!.setTabGravity(TitleZoomTabLayout.GRAVITY_CENTER)
+        mTabLayout.setTabGravity(TitleZoomTabLayout.GRAVITY_CENTER)
         mAdapter = MainFragmentAdapter(context!!, activity?.supportFragmentManager)
-        mViewPager!!.adapter = mAdapter
-        mTabLayout!!.selectTextAppend(10F)
-        mTabLayout!!.setupWithViewPager(mViewPager)
+        mViewPager.adapter = mAdapter
+        mTabLayout.selectTextAppend(10F)
+        mTabLayout.setupWithViewPager(mViewPager)
     }
 
     companion object {

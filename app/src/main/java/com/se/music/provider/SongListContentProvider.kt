@@ -25,8 +25,8 @@ class SongListContentProvider : ContentProvider() {
      */
     val SINGLE = 1
 
-    val AUTHORITIES = MetaData.SongList.AUTHORITIES
-    val TABLE_NAME = MetaData.SongList.TABLE_NAME
+    val AUTHORITIES = SongList.AUTHORITIES
+    val TABLE_NAME = SongList.TABLE_NAME
 
     private var uriMatcher: UriMatcher = UriMatcher(UriMatcher.NO_MATCH)
     private var dbHelper: MusicDBHelper? = null
@@ -45,7 +45,7 @@ class SongListContentProvider : ContentProvider() {
         val db = dbHelper!!.writableDatabase
         val rowId = db.insert(TABLE_NAME, null, values)
         if (rowId > 0) {
-            val rowUri = ContentUris.withAppendedId(MetaData.SongList.CONTENT_URI, rowId)
+            val rowUri = ContentUris.withAppendedId(SongList.CONTENT_URI, rowId)
             context.contentResolver.notifyChange(rowUri, null)
             return rowUri
         }

@@ -42,8 +42,8 @@
             android:exported="true"
             android:process=":remote" />
 
-        <activity android:name="com.se.music.activity.CollectedActivity" />
-        <activity android:name="com.se.music.activity.CreateSongListActivity" />
+        <activity android:name="com.se.music.subpage.mine.love.CollectedActivity" />
+        <activity android:name="com.se.music.subpage.mine.CreateSongListActivity" />
         <activity android:name="com.se.music.main.init.PermissionsActivity" />
 
         <provider

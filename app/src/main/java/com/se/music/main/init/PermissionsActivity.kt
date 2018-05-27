@@ -5,8 +5,10 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.support.annotation.RequiresApi
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
@@ -24,7 +26,7 @@ class PermissionsActivity : AppCompatActivity() {
 
     companion object {
 
-        val EXTRA_PERMISSIONS = "com.past.music.permission"
+        val EXTRA_PERMISSIONS = "com.se.music.permission"
         const val PERMISSIONS_GRANTED = 0 // 权限授权
         const val PERMISSIONS_DENIED = 1 // 权限拒绝
 
@@ -47,6 +49,7 @@ class PermissionsActivity : AppCompatActivity() {
         isRequireCheck = true
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onResume() {
         super.onResume()
         if (isRequireCheck) {
