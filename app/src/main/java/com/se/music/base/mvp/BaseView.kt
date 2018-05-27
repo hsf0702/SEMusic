@@ -1,4 +1,4 @@
-package com.se.music.base.kmvp
+package com.se.music.base.mvp
 
 import android.app.Activity
 import android.content.Context
@@ -13,7 +13,7 @@ import kotlin.reflect.full.declaredMemberFunctions
  * Created by gaojin on 2018/2/4.
  * MVP - View实现
  */
-abstract class KBaseView(private var presenter: KMvpPresenter, private val viewId: Int) : KMvpView {
+abstract class BaseView(private var presenter: MvpPresenter, private val viewId: Int) : MvpView {
 
     private var view: View? = null
 
@@ -23,7 +23,7 @@ abstract class KBaseView(private var presenter: KMvpPresenter, private val viewI
         return presenter.getActivity()
     }
 
-    override fun setPresenter(presenter: KMvpPresenter) {
+    override fun setPresenter(presenter: MvpPresenter) {
         this.presenter = presenter
     }
 

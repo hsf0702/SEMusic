@@ -1,4 +1,4 @@
-package com.se.music.base.kmvp
+package com.se.music.base.mvp
 
 import android.app.Activity
 
@@ -6,7 +6,7 @@ import android.app.Activity
  * Created by gaojin on 2018/2/4.
  * MVP - 主界面的实现 Activity或者Fragment实现这个接口
  */
-interface KMvpPage {
+interface MvpPage {
     fun getActivity(): Activity?
 
     /**

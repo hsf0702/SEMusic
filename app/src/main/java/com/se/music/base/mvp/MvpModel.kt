@@ -1,11 +1,11 @@
-package com.se.music.base.kmvp
+package com.se.music.base.mvp
 
 /**
  * Created by gaojin on 2018/2/4.
  * MVP - Model
  */
-interface KMvpModel {
-    fun setPresenter(presenter: KMvpPresenter)
+interface MvpModel {
+    fun setPresenter(presenter: MvpPresenter)
 
     fun <D : Any> onDataChanged(data: D)
 

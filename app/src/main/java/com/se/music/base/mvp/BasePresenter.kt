@@ -1,4 +1,4 @@
-package com.se.music.base.kmvp
+package com.se.music.base.mvp
 
 import android.app.Activity
 import android.os.Bundle
@@ -13,10 +13,10 @@ import kotlin.reflect.full.declaredMemberFunctions
  * Created by gaojin on 2018/2/4.
  * MVP - Presenter实现
  */
-class KBasePresenter(private var page: KMvpPage) : KMvpPresenter {
+class BasePresenter(private var page: MvpPage) : MvpPresenter {
 
-    private val mvpViewMap = SparseArray<KMvpView>()
-    private val mvpModelMap = SparseArray<KMvpModel>()
+    private val mvpViewMap = SparseArray<MvpView>()
+    private val mvpModelMap = SparseArray<MvpModel>()
     private val modelTypeMap = SparseArray<KType>()
 
     init {
@@ -73,15 +73,15 @@ class KBasePresenter(private var page: KMvpPage) : KMvpPresenter {
         page.onPageError(exception)
     }
 
-    override fun add(view: KMvpView) {
+    override fun add(view: MvpView) {
         mvpViewMap.put(view.getId(), view)
     }
 
-    override fun add(model: KMvpModel) {
+    override fun add(model: MvpModel) {
         mvpModelMap.put(model.getId(), model)
     }
 
-    override fun getView(viewId: Int): KMvpView? {
+    override fun getView(viewId: Int): MvpView? {
         return if (mvpViewMap.indexOfKey(viewId) >= 0) {
             mvpViewMap.get(viewId)
         } else null
@@ -128,32 +128,32 @@ class KBasePresenter(private var page: KMvpPage) : KMvpPresenter {
     }
 
     override fun onCreate(savedInstanceState: Bundle) {
-        val onCreate = KMvpOnCreate()
+        val onCreate = MvpOnCreate()
         onCreate.savedInstanceState = savedInstanceState
         dispatchLifeCycle(onCreate)
     }
 
     override fun onStart() {
-        dispatchLifeCycle(KMvpOnStart())
+        dispatchLifeCycle(MvpOnStart())
     }
 
     override fun onResume() {
-        dispatchLifeCycle(KMvpOnResume())
+        dispatchLifeCycle(MvpOnResume())
     }
 
     override fun onPause() {
-        dispatchLifeCycle(KMvpOnPause())
+        dispatchLifeCycle(MvpOnPause())
     }
 
     override fun onStop() {
-        dispatchLifeCycle(KMvpOnStop())
+        dispatchLifeCycle(MvpOnStop())
     }
 
     override fun onDestroy() {
-        dispatchLifeCycle(KMvpOnDestroy())
+        dispatchLifeCycle(MvpOnDestroy())
     }
 
-    private fun dispatchLifeCycle(lifeCycle: KMvpLifeCycle) {
+    private fun dispatchLifeCycle(lifeCycle: MvpLifeCycle) {
         (0 until mvpViewMap.size())
                 .map { mvpViewMap.valueAt(it) }
                 .forEach { it.onDataChanged(lifeCycle) }

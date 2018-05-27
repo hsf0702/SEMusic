@@ -6,8 +6,8 @@ import android.support.v4.app.LoaderManager
 import android.support.v4.content.CursorLoader
 import android.support.v4.content.Loader
 import com.se.music.base.BaseActivity
-import com.se.music.base.kmvp.KBaseModel
-import com.se.music.base.kmvp.KMvpPresenter
+import com.se.music.base.mvp.BaseModel
+import com.se.music.base.mvp.MvpPresenter
 import com.se.music.provider.SongList
 
 /**
@@ -15,7 +15,7 @@ import com.se.music.provider.SongList
  *Time: 2018/5/21 下午10:22
  */
 
-class QuerySongListModel(presenter: KMvpPresenter, private val modelId: Int) : KBaseModel<Cursor>(presenter, modelId), LoaderManager.LoaderCallbacks<Cursor> {
+class QuerySongListModel(presenter: MvpPresenter, private val modelId: Int) : BaseModel<Cursor>(presenter, modelId), LoaderManager.LoaderCallbacks<Cursor> {
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
         val uri = SongList.CONTENT_URI

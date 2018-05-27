@@ -9,8 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import com.se.music.R
-import com.se.music.base.kmvp.KBaseView
-import com.se.music.base.kmvp.KMvpPresenter
+import com.se.music.base.mvp.BaseView
+import com.se.music.base.mvp.MvpPresenter
 import com.se.music.mine.event.CollectEvent
 import com.se.music.mine.event.CreateEvent
 import com.se.music.subpage.mine.CreateSongListActivity
@@ -19,9 +19,9 @@ import com.se.music.subpage.mine.CreateSongListActivity
  * Author: gaojin
  * Time: 2018/5/7 下午9:22
  */
-class MineSongListTitleView(presenter: KMvpPresenter
+class MineSongListTitleView(presenter: MvpPresenter
                             , viewId: Int
-                            , view: View) : KBaseView(presenter, viewId), View.OnClickListener {
+                            , view: View) : BaseView(presenter, viewId), View.OnClickListener {
 
     private lateinit var titleCreated: TextView
     private lateinit var titleCollected: TextView

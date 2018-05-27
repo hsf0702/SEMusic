@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import com.se.music.R
 import com.se.music.base.BaseActivity
-import com.se.music.base.kmvp.KBaseView
-import com.se.music.base.kmvp.KMvpPresenter
+import com.se.music.base.mvp.BaseView
+import com.se.music.base.mvp.MvpPresenter
 import com.se.music.common.SEWebViewFragment
 import com.se.music.online.model.HallModel
 import com.se.music.utils.GlideImageLoader
@@ -18,7 +18,7 @@ import com.youth.banner.listener.OnBannerListener
  * Created by gaojin on 2018/2/4.
  * Banner模块
  */
-class OnLineBannerView(presenter: KMvpPresenter, viewId: Int) : KBaseView(presenter, viewId), OnBannerListener {
+class OnLineBannerView(presenter: MvpPresenter, viewId: Int) : BaseView(presenter, viewId), OnBannerListener {
 
     @SuppressLint("InflateParams")
     private var banner: Banner = LayoutInflater.from(getContext()!!).inflate(R.layout.view_banner, null) as Banner

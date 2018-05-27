@@ -1,4 +1,4 @@
-package com.se.music.base.kmvp
+package com.se.music.base.mvp
 
 import android.view.View
 
@@ -6,8 +6,8 @@ import android.view.View
  * Created by gaojin on 2018/2/4.
  * MVP - View 接口定义
  */
-interface KMvpView {
-    fun setPresenter(presenter: KMvpPresenter)
+interface MvpView {
+    fun setPresenter(presenter: MvpPresenter)
 
     fun <D : Any> onDataChanged(data: D)
 

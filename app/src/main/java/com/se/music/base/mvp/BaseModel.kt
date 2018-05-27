@@ -1,4 +1,4 @@
-package com.se.music.base.kmvp
+package com.se.music.base.mvp
 
 import android.app.Activity
 import android.content.Context
@@ -10,8 +10,8 @@ import kotlin.reflect.full.declaredMemberFunctions
  * Created by gaojin on 2018/2/4.
  * MVP - Model实现
  */
-abstract class KBaseModel<in T : Any>(private var presenter: KMvpPresenter, private val modelId: Int) : KMvpModel {
-    override fun setPresenter(presenter: KMvpPresenter) {
+abstract class BaseModel<in T : Any>(private var presenter: MvpPresenter, private val modelId: Int) : MvpModel {
+    override fun setPresenter(presenter: MvpPresenter) {
         this.presenter = presenter
     }
 

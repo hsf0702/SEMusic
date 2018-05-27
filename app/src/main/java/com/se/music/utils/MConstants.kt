@@ -5,11 +5,11 @@ package com.se.music.utils
  */
 interface MConstants {
     companion object {
-        val MUSIC_COUNT_CHANGED = "com.past.music.musiccountchanged"
-        val PLAYLIST_ITEM_MOVED = "com.past.music.moved"
-        val PLAYLIST_COUNT_CHANGED = "com.past.music.playlistcountchanged"
-        val EMPTY_LIST = "com.past.music.emptyplaylist"
-        val PACKAGE = "com.past.music"
+        val MUSIC_COUNT_CHANGED = "com.se.music.musiccountchanged"
+        val PLAYLIST_ITEM_MOVED = "com.se.music.moved"
+        val PLAYLIST_COUNT_CHANGED = "com.se.music.playlistcountchanged"
+        val EMPTY_LIST = "com.se.music.emptyplaylist"
+        val PACKAGE = "com.se.music"
 
         const val MUSICOVERFLOW = 0
         const val ARTISTOVERFLOW = 1

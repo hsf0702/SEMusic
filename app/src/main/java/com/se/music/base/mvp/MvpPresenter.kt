@@ -1,4 +1,4 @@
-package com.se.music.base.kmvp
+package com.se.music.base.mvp
 
 import android.app.Activity
 import android.os.Bundle
@@ -7,7 +7,7 @@ import android.os.Bundle
  * Created by gaojin on 2018/2/4.
  * MVP - Presenter
  */
-interface KMvpPresenter {
+interface MvpPresenter {
     /**
      * view变化的回调
      *
@@ -31,11 +31,11 @@ interface KMvpPresenter {
      */
     fun onError(exception: Exception)
 
-    fun add(view: KMvpView)
+    fun add(view: MvpView)
 
-    fun add(model: KMvpModel)
+    fun add(model: MvpModel)
 
-    fun getView(viewId: Int): KMvpView?
+    fun getView(viewId: Int): MvpView?
 
     fun getActivity(): Activity?
 

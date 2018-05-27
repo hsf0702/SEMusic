@@ -14,8 +14,8 @@ import android.widget.Toast
 import com.se.music.R
 import com.se.music.base.BaseActivity
 import com.se.music.base.BaseConfig
-import com.se.music.base.kmvp.KBaseView
-import com.se.music.base.kmvp.KMvpPresenter
+import com.se.music.base.mvp.BaseView
+import com.se.music.base.mvp.MvpPresenter
 import com.se.music.subpage.mine.DownLoadFragment
 import com.se.music.subpage.mine.RecentMusicFragment
 import com.se.music.subpage.mine.local.LocalMusicFragment
@@ -25,7 +25,7 @@ import com.se.music.subpage.mine.love.CollectedActivity
  * Author: gaojin
  * Time: 2018/5/7 下午4:22
  */
-class MineOperationView(presenter: KMvpPresenter, viewId: Int, view: View) : KBaseView(presenter, viewId), View.OnClickListener {
+class MineOperationView(presenter: MvpPresenter, viewId: Int, view: View) : BaseView(presenter, viewId), View.OnClickListener {
 
     private lateinit var rootView: GridLayout
 

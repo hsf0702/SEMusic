@@ -7,9 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.se.music.R
-import com.se.music.base.kmvp.KBasePresenter
-import com.se.music.base.kmvp.KMvpPage
-import com.se.music.base.kmvp.KMvpPresenter
+import com.se.music.base.mvp.BasePresenter
+import com.se.music.base.mvp.MvpPage
+import com.se.music.base.mvp.MvpPresenter
 import com.se.music.online.banner.OnLineBannerModel
 import com.se.music.online.banner.OnLineBannerView
 import com.se.music.online.classify.OnLineClassifyView
@@ -26,9 +26,9 @@ import com.se.music.utils.IdUtils
  * Created by gaojin on 2018/2/4.
  * 音乐馆Fragment
  */
-class MvpMusicFragment : Fragment(), KMvpPage {
+class MvpMusicFragment : Fragment(), MvpPage {
 
-    private val presenter: KMvpPresenter = KBasePresenter(this)
+    private val presenter: MvpPresenter = BasePresenter(this)
 
     companion object {
         fun newInstance(): MvpMusicFragment {

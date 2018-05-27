@@ -7,8 +7,8 @@ import android.support.v4.app.LoaderManager
 import android.support.v4.content.CursorLoader
 import android.support.v4.content.Loader
 import com.se.music.base.BaseActivity
-import com.se.music.base.kmvp.KBaseModel
-import com.se.music.base.kmvp.KMvpPresenter
+import com.se.music.base.mvp.BaseModel
+import com.se.music.base.mvp.MvpPresenter
 import com.se.music.provider.LocalMusic
 import com.se.music.utils.SharePreferencesUtils
 
@@ -17,7 +17,7 @@ import com.se.music.utils.SharePreferencesUtils
  *Time: 2018/5/24 下午11:49
  */
 
-class QueryLocalSongModel(presenter: KMvpPresenter, private var modelId: Int, private var from: Int) : KBaseModel<Cursor>(presenter, modelId)
+class QueryLocalSongModel(presenter: MvpPresenter, private var modelId: Int, private var from: Int) : BaseModel<Cursor>(presenter, modelId)
         , LoaderManager.LoaderCallbacks<Cursor> {
     //用于检索本地文件
     private val mFilterSize = 1024 * 1024// 1MB

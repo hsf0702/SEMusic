@@ -11,9 +11,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.se.music.R
-import com.se.music.base.kmvp.KBasePresenter
-import com.se.music.base.kmvp.KMvpPage
-import com.se.music.base.kmvp.KMvpPresenter
+import com.se.music.base.mvp.BasePresenter
+import com.se.music.base.mvp.MvpPage
+import com.se.music.base.mvp.MvpPresenter
 import com.se.music.common.SongListEntity
 import com.se.music.mine.event.CollectEvent
 import com.se.music.mine.event.CreateEvent
@@ -33,8 +33,8 @@ import com.se.music.utils.parseCursorToSongList
  * Time: 2018/4/22 下午9:35
  * 首页【我的】Tab页面
  */
-class MvpMineFragment : Fragment(), KMvpPage {
-    private val presenter: KMvpPresenter = KBasePresenter(this)
+class MvpMineFragment : Fragment(), MvpPage {
+    private val presenter: MvpPresenter = BasePresenter(this)
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MineAdapter
     private val list = ArrayList<SongListEntity>()
