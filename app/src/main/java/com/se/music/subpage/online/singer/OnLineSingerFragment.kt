@@ -13,12 +13,12 @@ import android.widget.TextView
 import com.se.music.GlideApp
 import com.se.music.R
 import com.se.music.base.KtBaseFragment
+import com.se.music.base.picBaseUrl_300
 import com.se.music.online.model.SingerModel
 import com.se.music.retrofit.MusicRetrofit
 import com.se.music.retrofit.callback.CallLoaderCallbacks
 import com.se.music.utils.CollectionUtils
 import com.se.music.utils.IdUtils
-import com.se.music.utils.ImageUtils
 import com.se.music.widget.CircleImageView
 import retrofit2.Call
 
@@ -73,7 +73,7 @@ class OnLineSingerFragment : KtBaseFragment() {
         override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
             holder.singerName?.text = singerList!![position].Fsinger_name
             GlideApp.with(context!!)
-                    .load(String.format(ImageUtils.picBaseUrl_300, singerList!![position].Fsinger_mid))
+                    .load(String.format(picBaseUrl_300, singerList!![position].Fsinger_mid))
                     .into(holder.singerAvatar!!)
         }
 

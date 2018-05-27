@@ -10,8 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.se.music.R
+import com.se.music.base.picBaseUrl_150
 import com.se.music.online.model.ExpressInfoModel
-import com.se.music.utils.ImageUtils
 import com.se.music.widget.GridItemDecoration
 import com.se.music.widget.RecommendItemView
 
@@ -72,7 +72,7 @@ class NewSongExpressBlock : LinearLayout {
                     }
                     description.append(songData?.name)
 
-                    holderRecommend.recommendView.setImageView(String.format(ImageUtils.picBaseUrl_150, songData?.album?.mid)).setDescription(description.toString())
+                    holderRecommend.recommendView.setImageView(String.format(picBaseUrl_150, songData?.album?.mid)).setDescription(description.toString())
                 }
                 1 -> {
                     val albumData = mData.new_song?.data?.album_list?.get(0)
@@ -89,7 +89,7 @@ class NewSongExpressBlock : LinearLayout {
                     if (description.isNotEmpty()) {
                         description.replace(description.length - 1, description.length, "")
                     }
-                    holderRecommend.recommendView.setImageView(String.format(ImageUtils.picBaseUrl_150, albumData?.album?.mid)).setDescription(description.toString())
+                    holderRecommend.recommendView.setImageView(String.format(picBaseUrl_150, albumData?.album?.mid)).setDescription(description.toString())
                 }
                 2 -> {
                     val albumData = mData.new_song?.data?.album_list?.get(1)
@@ -106,7 +106,7 @@ class NewSongExpressBlock : LinearLayout {
                     if (description.isNotEmpty()) {
                         description.replace(description.length - 1, description.length, "")
                     }
-                    holderRecommend.recommendView.setImageView(String.format(ImageUtils.picBaseUrl_150, albumData?.album?.mid)).setDescription(description.toString())
+                    holderRecommend.recommendView.setImageView(String.format(picBaseUrl_150, albumData?.album?.mid)).setDescription(description.toString())
                 }
             }
         }
