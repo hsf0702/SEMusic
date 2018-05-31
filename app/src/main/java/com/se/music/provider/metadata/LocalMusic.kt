@@ -20,12 +20,22 @@ val infoMusic = arrayOf(MediaStore.Audio.Media._ID          //音乐ID
         , MediaStore.Audio.Media.SIZE)     //音乐大小
 
 //用于检索本地文件
-public const val mFilterSize = 1024 * 1024// 1MB
-public const val mFilterDuration = 60 * 1000// 1分钟
+const val mFilterSize = 1024 * 1024// 1MB
+const val mFilterDuration = 60 * 1000// 1分钟
 // 查询语句：检索出.mp3为后缀名，时长大于1分钟，文件大小大于1MB的媒体文件
 val songSelection = StringBuilder(" 1=1 and title != ''")
         .append(" and " + MediaStore.Audio.Media.SIZE + " > " + mFilterSize)
         .append(" and " + MediaStore.Audio.Media.DURATION + " > " + mFilterDuration)!!
+
+const val LM_ID_INDEX = 0
+const val LM_TITLE_INDEX = 1
+const val LM_DATA_INDEX = 2
+const val LM_ALBUM_ID_INDEX = 3
+const val LM_ALBUM_INDEX = 4
+const val LM_ARTIST_INDEX = 5
+const val LM_ARTIST_ID_INDEX = 6
+const val LM_DURATION_INDEX = 7
+const val LM_SIZE_INDEX = 8
 
 
 //歌手和专辑列表点击都会进入MyMusic 此时要传递参数表明是从哪里进入的

@@ -18,10 +18,10 @@ class LocalFragmentAdapter constructor(fm: FragmentManager?, private val context
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
-            0 -> LocalMusicSongFragment.newInstance()
-            1 -> LocalMusicSongFragment.newInstance()
-            2 -> LocalMusicSongFragment.newInstance()
-            else -> LocalMusicSongFragment.newInstance()
+            0 -> LocalSongFragment.newInstance()
+            1 -> LocalSongFragment.newInstance()
+            2 -> LocalSongFragment.newInstance()
+            else -> LocalSongFragment.newInstance()
         }
     }
 

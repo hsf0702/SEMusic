@@ -49,6 +49,11 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
 }
+
+androidExtensions {
+    experimental = true
+}
+
 repositories {
     mavenCentral()
     google()

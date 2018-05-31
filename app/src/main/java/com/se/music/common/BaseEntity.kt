@@ -1,5 +1,8 @@
 package com.se.music.common
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
 /**
  *Author: gaojin
  *Time: 2018/5/26 下午9:35
@@ -33,30 +36,26 @@ data class FolderEntity(var folderName: String
     var folderCount: Int = 0
 }
 
+@Parcelize
 data class MusicEntity(var songId: Long = -1
-                       , var albumName: String
-                       , var albumId: Int = -1) {
-    /**
-     * 数据库中音乐文件的列名
-     */
-
-    var albumData: String? = null        //
-    var albumPic: String? = null
-    var duration: Int = 0
-    var musicName: String? = null
-    var artist: String? = null
-    var artistId: Long = 0
-    var data: String? = null
-    var folder: String? = null
-    var lrc: String? = null
-    var islocal: Boolean = false
-    var sort: String? = null
-
-    var size: Int = 0
-    /**
-     * 0表示没有收藏 1表示收藏
-     */
-    var favorite = 0
+                       , var musicName: String
+                       , var artist: String
+                       , var albumId: Long = -1
+                       , var albumData: String?
+                       , var albumPic: String?
+                       , var duration: Long
+                       , var albumName: String?
+                       , var artistId: Long
+                       , var data: String?
+                       , var size: Long
+                       , var folder: String?
+                       , var lrc: String?
+                       , var sort: String?
+        /**
+         * 0表示没有收藏 1表示收藏
+         */
+                       , var favorite: Int = 0
+                       , var islocal: Boolean) : Parcelable {
 }
 
 data class SongListEntity(var id: String

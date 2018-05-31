@@ -7,7 +7,7 @@ import android.provider.MediaStore
  *Time: 2018/5/28 上午1:15
  */
 
-val folderUri = MediaStore.Files.getContentUri("external")
+val folderUri = MediaStore.Files.getContentUri("external")!!
 
 val info_folder = arrayOf(MediaStore.Files.FileColumns.DATA)
 
@@ -19,4 +19,4 @@ val folderSelection = StringBuilder(MediaStore.Files.FileColumns.MEDIA_TYPE
         // 查询语句：检索出.mp3为后缀名，时长大于1分钟，文件大小大于1MB的媒体文件
         .append(" and " + MediaStore.Audio.Media.SIZE + " > " + mFilterSize)
         .append(" and " + MediaStore.Audio.Media.DURATION + " > " + mFilterDuration)
-        .append(") group by ( " + MediaStore.Files.FileColumns.PARENT)
+        .append(") group by ( " + MediaStore.Files.FileColumns.PARENT)!!

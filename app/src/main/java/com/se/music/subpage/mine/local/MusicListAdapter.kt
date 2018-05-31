@@ -10,7 +10,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.se.music.R
 import com.se.music.common.MusicEntity
-import com.se.music.provider.metadata.getAlbumArtUri
 import com.se.music.service.MusicPlayer
 import com.se.music.utils.HandlerUtil
 import java.util.*
@@ -18,11 +17,10 @@ import java.util.*
 /**
  * Created by gaojin on 2017/12/8.
  */
-class MusicListAdapter constructor(private val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MusicListAdapter constructor(private val context: Context, private val mList: ArrayList<MusicEntity>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val mHeadLayout = 0X01
     private val mContentLayout = 0X02
 
-    private var mList: ArrayList<MusicEntity>? = null
     private var playMusic: PlayMusic? = null
     private var handler: Handler? = null
 
@@ -34,7 +32,7 @@ class MusicListAdapter constructor(private val context: Context) : RecyclerView.
         if (holder is CommonItemViewHolder) {
 
         } else {
-            (holder as ListItemViewHolder).onBindData(mList!![position - 1])
+            (holder as ListItemViewHolder).onBindData(mList[position - 1])
         }
     }
 
@@ -47,7 +45,7 @@ class MusicListAdapter constructor(private val context: Context) : RecyclerView.
     }
 
     override fun getItemCount(): Int {
-        return if (null != mList) mList!!.size + 1 else 0
+        return mList.size + 1
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -58,27 +56,26 @@ class MusicListAdapter constructor(private val context: Context) : RecyclerView.
         }
     }
 
-
     internal inner class PlayMusic(var position: Int) : Runnable {
         /**
          * 运行在主线程
          */
         override fun run() {
-            val list = LongArray(mList!!.size)
+            val list = LongArray(mList.size)
             val infos = hashMapOf<Long, MusicEntity>()
-            for (i in mList!!.indices) {
-                val info = mList!![i]
+            for (i in mList.indices) {
+                val info = mList[i]
                 list[i] = info.songId
                 info.islocal = true
-                info.albumData = getAlbumArtUri(info.albumId.toLong()).toString()
-                infos[list[i]] = mList!![i]
+//                info.albumData = getAlbumArtUri(info.albumId.toLong()).toString()
+                infos[list[i]] = mList[i]
             }
             if (position > -1)
                 MusicPlayer.playAll(infos, list, position, false)
         }
     }
 
-    internal inner class CommonItemViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+    inner class CommonItemViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
         var textView: TextView? = null
         var select: ImageView? = null
 
@@ -98,7 +95,7 @@ class MusicListAdapter constructor(private val context: Context) : RecyclerView.
         }
     }
 
-    internal inner class ListItemViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+    inner class ListItemViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
 
         var mMusicName: TextView? = null
         var mMusicInfo: TextView? = null

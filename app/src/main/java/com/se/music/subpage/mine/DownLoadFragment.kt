@@ -11,7 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.se.music.R
 import com.se.music.base.KtBaseFragment
-import com.se.music.subpage.mine.local.LocalMusicSongFragment
+import com.se.music.subpage.mine.local.LocalSongFragment
 
 /**
  * Creator：gaojin
@@ -44,9 +44,9 @@ class DownLoadFragment : KtBaseFragment() {
 
         override fun getItem(position: Int): Fragment {
             return if (position == 0) {
-                LocalMusicSongFragment.newInstance()
+                LocalSongFragment.newInstance()
             } else {
-                LocalMusicSongFragment.newInstance()
+                LocalSongFragment.newInstance()
             }
 
         }
