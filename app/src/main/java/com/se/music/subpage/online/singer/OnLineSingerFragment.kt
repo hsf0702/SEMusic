@@ -55,7 +55,7 @@ class OnLineSingerFragment : KtBaseFragment() {
     private fun buildSingerCallback(): CallLoaderCallbacks<SingerModel> {
         return object : CallLoaderCallbacks<SingerModel>(context!!) {
             override fun onCreateCall(id: Int, args: Bundle?): Call<SingerModel> {
-                return MusicRetrofit.getInstance().getSinger(100, 1)
+                return MusicRetrofit.instance.getSinger(100, 1)
             }
 
             override fun onSuccess(loader: Loader<*>, data: SingerModel) {

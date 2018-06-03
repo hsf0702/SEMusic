@@ -86,7 +86,7 @@ class RecentMusicFragment : KtBaseFragment() {
             return if (viewType == HEAD_LAYOUT) {
                 CommonItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.common_item, parent, false))
             } else {
-                ListItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.fragment_musci_common_item, parent, false))
+                ListItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.fragment_music_song_item, parent, false))
             }
         }
 
@@ -111,11 +111,9 @@ class RecentMusicFragment : KtBaseFragment() {
 
         internal inner class CommonItemViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
 
-            private var textView: TextView? = null
             private var select: ImageView? = null
 
             init {
-                textView = view.findViewById(R.id.play_all_number)
                 select = view.findViewById(R.id.select)
                 view.setOnClickListener(this)
             }

@@ -7,18 +7,6 @@ import com.google.gson.Gson
  */
 class GsonFactory {
     companion object {
-        @Volatile
-        private var gson: Gson? = null
-
-        fun getInstance(): Gson {
-            if (null == gson) {
-                synchronized(GsonFactory::class.java) {
-                    if (null == gson) {
-                        gson = Gson()
-                    }
-                }
-            }
-            return gson!!
-        }
+        val instance: Gson by lazy { Gson() }
     }
 }

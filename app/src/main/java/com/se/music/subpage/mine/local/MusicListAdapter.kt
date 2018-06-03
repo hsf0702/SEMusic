@@ -1,7 +1,6 @@
 package com.se.music.subpage.mine.local
 
 import android.content.Context
-import android.os.Handler
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -22,11 +21,7 @@ class MusicListAdapter constructor(private val context: Context, private val mLi
     private val mContentLayout = 0X02
 
     private var playMusic: PlayMusic? = null
-    private var handler: Handler? = null
-
-    init {
-        handler = HandlerUtil.instance
-    }
+    private var handler = HandlerUtil.instance
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is CommonItemViewHolder) {
@@ -40,7 +35,7 @@ class MusicListAdapter constructor(private val context: Context, private val mLi
         return if (viewType == mHeadLayout) {
             CommonItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.common_item, parent, false))
         } else {
-            ListItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.fragment_musci_common_item, parent, false))
+            ListItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.fragment_music_song_item, parent, false))
         }
     }
 
@@ -76,36 +71,32 @@ class MusicListAdapter constructor(private val context: Context, private val mLi
     }
 
     inner class CommonItemViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
-        var textView: TextView? = null
         var select: ImageView? = null
 
         init {
-            textView = view.findViewById(R.id.play_all_number)
             select = view.findViewById(R.id.select)
             view.setOnClickListener(this)
         }
 
         override fun onClick(v: View) {
             if (playMusic != null)
-                handler!!.removeCallbacks(playMusic)
+                handler.removeCallbacks(playMusic)
             if (adapterPosition > -1) {
                 playMusic = PlayMusic(0)
-                handler!!.postDelayed(playMusic, 70)
+                handler.postDelayed(playMusic, 70)
             }
         }
     }
 
     inner class ListItemViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
 
-        var mMusicName: TextView? = null
-        var mMusicInfo: TextView? = null
-        var mListButton: ImageView? = null
+        var mMusicName: TextView = view.findViewById(R.id.music_name)
+        var mMusicInfo: TextView = view.findViewById(R.id.music_info)
+        var mAlbumInfo: TextView = view.findViewById(R.id.album_info)
+        var mListButton: ImageView = view.findViewById(R.id.viewpager_list_button)
 
         init {
-            mMusicName = view.findViewById(R.id.music_name)
-            mMusicInfo = view.findViewById(R.id.music_info)
-            mListButton = view.findViewById(R.id.viewpager_list_button)
-            mListButton!!.setOnClickListener(this)
+            mListButton.setOnClickListener(this)
             view.setOnClickListener(this)
         }
 
@@ -113,17 +104,18 @@ class MusicListAdapter constructor(private val context: Context, private val mLi
             if (v.id == R.id.viewpager_list_button) {
             } else {
                 if (playMusic != null)
-                    handler!!.removeCallbacks(playMusic)
+                    handler.removeCallbacks(playMusic)
                 if (adapterPosition > -1) {
                     playMusic = PlayMusic(adapterPosition - 1)
-                    handler!!.postDelayed(playMusic, 70)
+                    handler.postDelayed(playMusic, 70)
                 }
             }
         }
 
         fun onBindData(musicEntity: MusicEntity) {
-            mMusicName!!.text = musicEntity.musicName
-            mMusicInfo!!.text = musicEntity.artist
+            mMusicName.text = musicEntity.musicName
+            mMusicInfo.text = musicEntity.artist
+            mAlbumInfo.text = musicEntity.albumName
         }
     }
 

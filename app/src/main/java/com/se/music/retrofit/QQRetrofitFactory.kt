@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 /**
  * Created by gaojin on 2017/12/18.
  */
-class RetrofitFactory {
+class QQRetrofitFactory {
     companion object {
         fun getInstance(baseUrl: String): Retrofit {
             return Retrofit.Builder()

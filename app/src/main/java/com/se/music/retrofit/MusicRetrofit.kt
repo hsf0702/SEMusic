@@ -6,6 +6,7 @@ import com.se.music.online.model.RecommendListModel
 import com.se.music.online.model.SingerModel
 import com.se.music.online.params.CommonPostParams
 import com.se.music.online.params.ExpressPostParams
+import com.se.music.subpage.entity.ArtistAvatar
 import com.se.music.utils.singleton.GsonFactory
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -16,16 +17,17 @@ import retrofit2.Retrofit
  */
 class MusicRetrofit private constructor() {
 
+    companion object {
+        val instance: MusicRetrofit by lazy { MusicRetrofit() }
+    }
+
     val API_BASE_C_URL = "http://c.y.qq.com/"
     val API_BASE_U_URL = "http://u.y.qq.com/"
+    val API_LAST_FM_URL = "http://ws.audioscrobbler.com/2.0/"
 
-    private val baseCRetrofit: Retrofit
-    private val baseURetrofit: Retrofit
-
-    init {
-        baseCRetrofit = RetrofitFactory.getInstance(API_BASE_C_URL)
-        baseURetrofit = RetrofitFactory.getInstance(API_BASE_U_URL)
-    }
+    private val baseCRetrofit: Retrofit = QQRetrofitFactory.getInstance(API_BASE_C_URL)
+    private val baseURetrofit: Retrofit = QQRetrofitFactory.getInstance(API_BASE_U_URL)
+    private val baseLastFmRetrofit: Retrofit = LastFmRetrofitFactory.getInstance(API_LAST_FM_URL)
 
     fun getMusicHall(): Call<HallModel> {
         return baseCRetrofit.create(RetrofitService::class.java).getMusicHallService()
@@ -38,7 +40,7 @@ class MusicRetrofit private constructor() {
         params.recomPlaylist.param.async = 1
         params.recomPlaylist.param.cmd = 2
         return baseURetrofit.create(RetrofitService::class.java)
-                .getRecommendList(GsonFactory.getInstance().toJson(params))
+                .getRecommendList(GsonFactory.instance.toJson(params))
     }
 
     fun getSinger(pagesize: Int, pagenum: Int): Call<SingerModel> {
@@ -62,23 +64,11 @@ class MusicRetrofit private constructor() {
         expressPostParams.new_song.param.end = 1
 
         return baseURetrofit.create(RetrofitService::class.java)
-                .getNewSongInfo(GsonFactory.getInstance().toJson(expressPostParams))
+                .getNewSongInfo(GsonFactory.instance.toJson(expressPostParams))
     }
 
-    companion object {
-        @Volatile
-        private var sMusicRetrofit: MusicRetrofit? = null
-
-        fun getInstance(): MusicRetrofit {
-            if (null == sMusicRetrofit) {
-                synchronized(Retrofit::class.java) {
-                    if (null == sMusicRetrofit) {
-                        sMusicRetrofit = MusicRetrofit()
-                    }
-                }
-            }
-            return sMusicRetrofit!!
-        }
+    fun getSingAvatar(artist: String): Call<ArtistAvatar> {
+        return baseLastFmRetrofit.create(RetrofitService::class.java)
+                .getSingerAvatar("artist.getinfo", artist)
     }
-
 }

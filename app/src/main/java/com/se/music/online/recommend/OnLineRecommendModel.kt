@@ -25,7 +25,7 @@ class OnLineRecommendModel(presenter: MvpPresenter, modelId: Int) : BaseModel<Re
     private fun buildRecommendListCallBack(): CallLoaderCallbacks<RecommendListModel> {
         return object : CallLoaderCallbacks<RecommendListModel>(getContext()!!) {
             override fun onCreateCall(id: Int, args: Bundle?): Call<RecommendListModel> {
-                return MusicRetrofit.getInstance().getRecommendList()
+                return MusicRetrofit.instance.getRecommendList()
             }
 
             override fun onSuccess(loader: Loader<*>, data: RecommendListModel) {

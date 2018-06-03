@@ -25,7 +25,7 @@ class OnLineNewSongModel(presenter: MvpPresenter, modelId: Int) : BaseModel<Expr
     private fun buildExpressInfoCallBack(): CallLoaderCallbacks<ExpressInfoModel> {
         return object : CallLoaderCallbacks<ExpressInfoModel>(getContext()!!) {
             override fun onCreateCall(id: Int, args: Bundle?): Call<ExpressInfoModel> {
-                return MusicRetrofit.getInstance().getNewSongInfo()
+                return MusicRetrofit.instance.getNewSongInfo()
             }
 
             override fun onSuccess(loader: Loader<*>, data: ExpressInfoModel) {

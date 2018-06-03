@@ -28,7 +28,7 @@ class OnLineBannerModel(presenter: MvpPresenter, modelId: Int) : BaseModel<HallM
     private fun buildHallCallBack(): CallLoaderCallbacks<HallModel> {
         return object : CallLoaderCallbacks<HallModel>(getContext()!!) {
             override fun onCreateCall(id: Int, args: Bundle?): Call<HallModel> {
-                return MusicRetrofit.getInstance().getMusicHall()
+                return MusicRetrofit.instance.getMusicHall()
             }
 
             override fun onSuccess(loader: Loader<*>, data: HallModel) {

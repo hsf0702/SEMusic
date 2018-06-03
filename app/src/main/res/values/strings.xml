@@ -51,6 +51,7 @@
 
 
     <string name="recent_music_title">最近播放</string>
+    <string name="se_play_all">播放全部</string>
 
 
 </resources>

@@ -24,7 +24,7 @@ import com.se.music.main.MainActivity
 import com.se.music.utils.SharePreferencesUtils
 import com.se.music.utils.database.provider.RecentStore
 import com.se.music.utils.singleton.ApplicationSingleton
-import com.se.music.utils.singleton.GsonSingleton
+import com.se.music.utils.singleton.GsonFactory
 import java.io.*
 import java.lang.ref.WeakReference
 import java.util.*
@@ -37,30 +37,30 @@ import java.util.*
 class MediaService : Service() {
 
     companion object {
-        const val PLAYSTATE_CHANGED = "com.past.music.play_state_changed"
-        const val POSITION_CHANGED = "com.past.music.positionchanged"
-        const val SEND_PROGRESS = "com.past.music.progress"
-        const val META_CHANGED = "com.past.music.meta_changed"
-        const val MUSIC_CHANGED = "com.past.music.change_music"
-        const val QUEUE_CHANGED = "com.past.music.queuechanged"
-        const val TRACK_ERROR = "com.past.music.trackerror"
-        const val TRACK_PREPARED = "com.past.music.prepared"
-        const val REFRESH = "com.past.music.refresh"
-        const val PREVIOUS_FORCE_ACTION = "com.past.music.previous.force"
-        const val PREVIOUS_ACTION = "com.past.music.previous"
-        const val REPEATMODE_CHANGED = "com.past.music.repeatmodechanged"
-        const val SHUFFLEMODE_CHANGED = "com.past.music.shufflemodechanged"
-        const val LRC_UPDATED = "com.past.music.updatelrc"
-        const val TRY_GET_TRACKINFO = "com.past.music.gettrackinfo"
-        const val TIMBER_PACKAGE_NAME = "com.past.music"
+        const val PLAYSTATE_CHANGED = "com.se.music.play_state_changed"
+        const val POSITION_CHANGED = "com.se.music.positionchanged"
+        const val SEND_PROGRESS = "com.se.music.progress"
+        const val META_CHANGED = "com.se.music.meta_changed"
+        const val MUSIC_CHANGED = "com.se.music.change_music"
+        const val QUEUE_CHANGED = "com.se.music.queuechanged"
+        const val TRACK_ERROR = "com.se.music.trackerror"
+        const val TRACK_PREPARED = "com.se.music.prepared"
+        const val REFRESH = "com.se.music.refresh"
+        const val PREVIOUS_FORCE_ACTION = "com.se.music.previous.force"
+        const val PREVIOUS_ACTION = "com.se.music.previous"
+        const val REPEATMODE_CHANGED = "com.se.music.repeatmodechanged"
+        const val SHUFFLEMODE_CHANGED = "com.se.music.shufflemodechanged"
+        const val LRC_UPDATED = "com.se.music.updatelrc"
+        const val TRY_GET_TRACKINFO = "com.se.music.gettrackinfo"
+        const val TIMBER_PACKAGE_NAME = "com.se.music"
         const val MUSIC_PACKAGE_NAME = "com.android.music"
-        const val TOGGLEPAUSE_ACTION = "com.past.music.togglepause"
-        const val NEXT_ACTION = "com.past.music.next"
-        const val STOP_ACTION = "com.past.music.stop"
-        const val BUFFER_UP = "com.past.music.bufferup"
-        const val MUSIC_LODING = "com.past.music.loading"
-        const val REPEAT_ACTION = "com.past.music.repeat"
-        const val SHUFFLE_ACTION = "com.past.music.shuffle"
+        const val TOGGLEPAUSE_ACTION = "com.se.music.togglepause"
+        const val NEXT_ACTION = "com.se.music.next"
+        const val STOP_ACTION = "com.se.music.stop"
+        const val BUFFER_UP = "com.se.music.bufferup"
+        const val MUSIC_LODING = "com.se.music.loading"
+        const val REPEAT_ACTION = "com.se.music.repeat"
+        const val SHUFFLE_ACTION = "com.se.music.shuffle"
         const val NEXT = 2
         const val LAST = 3
         const val SHUFFLE_NONE = 0
@@ -72,7 +72,7 @@ class MediaService : Service() {
         const val MAX_HISTORY_SIZE = 1000
         const val LRC_PATH = "/pastmusic/lrc/"
         private const val TAG = "MediaService"
-        private const val SHUTDOWN = "com.past.music.shutdown"
+        private const val SHUTDOWN = "com.se.music.shutdown"
         private const val TRACK_NAME = "trackname"
         private const val ALNUM_PIC = "album_pic"
         private const val IDCOLIDX = 0
@@ -776,7 +776,7 @@ class MediaService : Service() {
         if (full) {
             //            mPlaybackStateStore.saveState(mPlaylist, mShuffleMode != SHUFFLE_NONE ? mHistory : null);
             if (mPlaylistInfo.size > 0) {
-                val temp = GsonSingleton.instance.toJson(mPlaylistInfo)
+                val temp = GsonFactory.instance.toJson(mPlaylistInfo)
                 try {
                     val file = File(cacheDir.absolutePath + "playlist")
                     val ra = RandomAccessFile(file, "rws")
@@ -826,12 +826,12 @@ class MediaService : Service() {
             val numHistory = mHistory.size
             for (i in 0 until numHistory) {
                 val idx = mHistory[i]
-                if (idx >= 0 && idx < numTracks) {
+                if (idx in 0..numTracks - 1) {
                     trackNumPlays[idx]++
                 }
             }
 
-            if (mPlayPos >= 0 && mPlayPos < numTracks) {
+            if (mPlayPos in 0..(numTracks - 1)) {
                 trackNumPlays[mPlayPos]++
             }
 
