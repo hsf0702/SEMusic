@@ -23,10 +23,6 @@ class QueryLocalSongModel(presenter: MvpPresenter, private var modelId: Int, pri
         (getActivity() as BaseActivity).supportLoaderManager.initLoader(modelId, null, this)
     }
 
-    override fun reload() {
-        (getActivity() as BaseActivity).supportLoaderManager.restartLoader(modelId, null, this)
-    }
-
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
         return when (from) {
             START_FROM_LOCAL -> {

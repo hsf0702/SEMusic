@@ -21,12 +21,12 @@ import com.se.music.utils.SharePreferencesUtils
  * Author: gaojin
  * Time: 2018/5/13 下午6:26
  */
-class LocalMusicTabFragment : KtBaseFragment() {
+class LocalMusicContainerFragment : KtBaseFragment() {
 
     companion object {
         private const val mPosition = "mPosition"
-        fun newInstance(position: Int): LocalMusicTabFragment {
-            val fragment = LocalMusicTabFragment()
+        fun newInstance(position: Int): LocalMusicContainerFragment {
+            val fragment = LocalMusicContainerFragment()
             val args = Bundle()
             args.putInt(mPosition, position)
             fragment.arguments = args

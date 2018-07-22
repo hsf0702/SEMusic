@@ -91,6 +91,10 @@ class BasePresenter(private var page: MvpPage) : MvpPresenter {
         return page.getActivity()
     }
 
+    override fun getPage(): MvpPage {
+        return page
+    }
+
     override fun <D : Any> dispatchModelDataToView(modelId: Int, data: D, vararg viewIds: Int) {
         for (id in viewIds) {
             mvpViewMap.get(id)?.onDataChanged(data)
@@ -119,12 +123,6 @@ class BasePresenter(private var page: MvpPage) : MvpPresenter {
         modelIds
                 .map { mvpModelMap.get(it) }
                 .forEach { it?.load() }
-    }
-
-    override fun reload(vararg modelIds: Int) {
-        modelIds
-                .map { mvpModelMap.get(it) }
-                .forEach { it?.reload() }
     }
 
     override fun onCreate(savedInstanceState: Bundle) {

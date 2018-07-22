@@ -1,4 +1,4 @@
-package com.se.music.utils.database.recent
+package com.se.music.provider.database.recent
 
 /**
  * Author: gaojin

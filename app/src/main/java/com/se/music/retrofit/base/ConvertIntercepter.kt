@@ -10,5 +10,5 @@ import java.lang.reflect.Type
  */
 
 interface ConvertIntercepter {
-    fun onConvert(type: Type, gson: Gson, reader: Reader): SeResult<*>
+    fun onConvert(type: Type, gson: Gson, reader: Reader): Any?
 }

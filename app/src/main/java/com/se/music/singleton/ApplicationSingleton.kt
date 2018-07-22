@@ -1,4 +1,4 @@
-package com.se.music.utils.singleton
+package com.se.music.singleton
 
 import android.annotation.SuppressLint
 import android.app.Application

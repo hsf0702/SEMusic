@@ -17,7 +17,6 @@ open class BaseFragment : Fragment(), MusicStateListener {
     override fun reloadAdapter() {
     }
 
-
     override fun onResume() {
         super.onResume()
         (activity as BaseActivity).setMusicStateListenerListener(this)

@@ -12,6 +12,4 @@ interface MvpModel {
     fun load()
 
     fun getId(): Int
-
-    fun reload()
 }

@@ -2,7 +2,7 @@ package com.se.music.retrofit.base
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.se.music.utils.singleton.GsonFactory
+import com.se.music.singleton.GsonFactory
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Converter
@@ -24,12 +24,13 @@ class SeGsonConverterFactory private constructor(val mGson: Gson) : Converter.Fa
 
     val list: MutableList<ConvertIntercepter> = mutableListOf()
 
-    fun addConvertIntercepter(intercepter: ConvertIntercepter) {
+    fun addConvertIntercepter(intercepter: ConvertIntercepter): SeGsonConverterFactory {
         list.add(intercepter)
+        return this
     }
 
     override fun responseBodyConverter(type: Type, annotations: Array<out Annotation>, retrofit: Retrofit): Converter<ResponseBody, *>? {
-        return super.responseBodyConverter(type, annotations, retrofit)
+        return SeGsonResponseBodyConverter(mGson, TypeToken.get(type), list)
     }
 
     override fun requestBodyConverter(type: Type, parameterAnnotations: Array<out Annotation>, methodAnnotations: Array<out Annotation>, retrofit: Retrofit): Converter<*, RequestBody>? {

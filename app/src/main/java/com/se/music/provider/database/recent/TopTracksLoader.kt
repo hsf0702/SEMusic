@@ -1,9 +1,9 @@
-package com.se.music.utils.database.recent
+package com.se.music.provider.database.recent
 
 import android.content.Context
 import android.database.Cursor
 import android.provider.BaseColumns
-import com.se.music.utils.database.provider.RecentStore
+import com.se.music.provider.database.provider.RecentStore
 
 /**
  * Author: gaojin

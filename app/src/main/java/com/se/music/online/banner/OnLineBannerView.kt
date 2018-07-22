@@ -49,6 +49,6 @@ class OnLineBannerView(presenter: MvpPresenter, viewId: Int) : BaseView(presente
         val ft = (getActivity() as BaseActivity).supportFragmentManager.beginTransaction()
         ft.addToBackStack(null)
         ft.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_left_out, R.anim.slide_left_in, R.anim.slide_right_out)
-        ft.add(R.id.content, SEWebViewFragment.newInstance(bannerList?.get(position)?.linkUrl)).commit()
+        ft.add(R.id.se_main_content, SEWebViewFragment.newInstance(bannerList?.get(position)?.linkUrl)).commit()
     }
 }

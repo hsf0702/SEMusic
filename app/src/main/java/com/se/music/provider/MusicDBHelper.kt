@@ -3,11 +3,11 @@ package com.se.music.provider
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.se.music.provider.database.entity.MusicInfoCache
+import com.se.music.provider.database.provider.ImageStore
+import com.se.music.provider.database.provider.RecentStore
 import com.se.music.provider.metadata.*
-import com.se.music.utils.database.entity.MusicInfoCache
-import com.se.music.utils.database.provider.RecentStore
-import com.se.music.utils.database.provider.SearchHistory
-import com.se.music.utils.singleton.ApplicationSingleton
+import com.se.music.singleton.ApplicationSingleton
 
 /**
  * Author: gaojin
@@ -18,7 +18,7 @@ class MusicDBHelper(context: Context, name: String?, factory: SQLiteDatabase.Cur
     companion object {
         const val SONGLIST_TABLE = "SongListTable"
         const val MUSICINFO_TABLE = "MusicInfoTable"
-
+        const val IMAGE_TABLE = "ImageTable"
         val instance: MusicDBHelper by lazy { MusicDBHelper() }
     }
 
@@ -55,14 +55,14 @@ class MusicDBHelper(context: Context, name: String?, factory: SQLiteDatabase.Cur
         db.execSQL(SONGLIST_TABLE_CREATE)
         db.execSQL(MUSICINFO_TABLE_CREATE)
         RecentStore.instance.onCreate(db)
-        SearchHistory.instance.onCreate(db)
+        ImageStore.instance.onCreate(db)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL("DROP TABLE IF EXISTS $SONGLIST_TABLE")
         db.execSQL("DROP TABLE IF EXISTS $MUSICINFO_TABLE")
         RecentStore.instance.onUpgrade(db, oldVersion, newVersion)
-        SearchHistory.instance.onUpgrade(db, oldVersion, newVersion)
+        ImageStore.instance.onUpgrade(db, oldVersion, newVersion)
         onCreate(db)
     }
 }

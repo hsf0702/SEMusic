@@ -1,9 +1,10 @@
 package com.se.music.retrofit
 
+import com.se.music.retrofit.base.ConverterDataInterceptor
+import com.se.music.retrofit.base.SeGsonConverterFactory
 import com.se.music.retrofit.interceptor.LastFmCommonInterceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 /**
  *Author: gaojin
@@ -19,7 +20,8 @@ class LastFmRetrofitFactory {
         fun getInstance(baseUrl: String): Retrofit {
             return Retrofit.Builder()
                     .baseUrl(baseUrl)
-                    .addConverterFactory(GsonConverterFactory.create()) //设置数据解析器
+                    .addConverterFactory(SeGsonConverterFactory.create()
+                            .addConvertIntercepter(ConverterDataInterceptor())) //设置数据解析器
                     .client(okHttpClient)
                     .build()!!
         }

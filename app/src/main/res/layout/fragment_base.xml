@@ -5,6 +5,11 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <include layout="@layout/toolbar" />
+    <View
+        android:id="@+id/fake_status_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/statusbar_view_height"
+        android:background="@color/medium_sea_green" />
 
+    <include layout="@layout/toolbar" />
 </LinearLayout>

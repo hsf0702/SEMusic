@@ -41,7 +41,7 @@ class SongListContentProvider : ContentProvider() {
         return dbHelper != null
     }
 
-    override fun insert(uri: Uri?, values: ContentValues?): Uri {
+    override fun insert(uri: Uri, values: ContentValues?): Uri {
         val db = dbHelper!!.writableDatabase
         val rowId = db.insert(SL_TABLE_NAME, null, values)
         if (rowId > 0) {
@@ -52,7 +52,7 @@ class SongListContentProvider : ContentProvider() {
         throw SQLException("Failed to insert row into" + uri + "嘤嘤嘤")
     }
 
-    override fun query(uri: Uri?, projection: Array<out String>?, selection: String?, selectionArgs: Array<out String>?, sortOrder: String?): Cursor {
+    override fun query(uri: Uri, projection: Array<out String>?, selection: String?, selectionArgs: Array<out String>?, sortOrder: String?): Cursor {
         val queryBuilder = SQLiteQueryBuilder()
         val db = dbHelper!!.readableDatabase
         queryBuilder.tables = SL_TABLE_NAME
@@ -61,7 +61,7 @@ class SongListContentProvider : ContentProvider() {
         return c
     }
 
-    override fun update(uri: Uri?, values: ContentValues?, selection: String?, selectionArgs: Array<out String>?): Int {
+    override fun update(uri: Uri, values: ContentValues?, selection: String?, selectionArgs: Array<out String>?): Int {
         val db = dbHelper!!.writableDatabase
         val count: Int
         count = db.update(SL_TABLE_NAME, values, selection, selectionArgs)
@@ -69,7 +69,7 @@ class SongListContentProvider : ContentProvider() {
         return count
     }
 
-    override fun delete(uri: Uri?, selection: String?, selectionArgs: Array<out String>?): Int {
+    override fun delete(uri: Uri, selection: String?, selectionArgs: Array<out String>?): Int {
         val db = dbHelper!!.writableDatabase
         val count: Int
         count = db.delete(SL_TABLE_NAME, selection, selectionArgs)
@@ -77,7 +77,7 @@ class SongListContentProvider : ContentProvider() {
         return count
     }
 
-    override fun getType(uri: Uri?): String {
+    override fun getType(uri: Uri): String {
         return ""
     }
 }

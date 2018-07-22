@@ -37,7 +37,6 @@ class MvpMusicFragment : Fragment(), MvpPage {
     }
 
     override fun onPageError(exception: Exception) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

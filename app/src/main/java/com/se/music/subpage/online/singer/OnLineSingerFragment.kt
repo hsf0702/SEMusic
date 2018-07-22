@@ -35,11 +35,6 @@ class OnLineSingerFragment : KtBaseFragment() {
         return LayoutInflater.from(context).inflate(R.layout.fragment_online_singer, container, false)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return super.onCreateView(inflater, container, savedInstanceState)!!
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setTitle(context!!.getString(R.string.classify_singer))
         recycleView = view.findViewById(R.id.online_singer)

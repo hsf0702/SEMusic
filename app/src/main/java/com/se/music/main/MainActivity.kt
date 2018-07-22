@@ -3,27 +3,25 @@ package com.se.music.main
 import android.Manifest
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.widget.DrawerLayout
 import com.se.music.R
 import com.se.music.base.BaseActivity
 import com.se.music.main.init.PermissionsActivity
 import com.se.music.utils.PermissionsChecker
+import com.se.music.utils.setTransparentForWindow
+
 
 class MainActivity : BaseActivity() {
 
     private val REQUEST_CODE = 0x00 // 请求码
-    private val PERMISSIONS = Array(1, { Manifest.permission.READ_EXTERNAL_STORAGE })
+    private val PERMISSIONS = Array(1) { Manifest.permission.READ_EXTERNAL_STORAGE }
 
     private var mPermissionsChecker: PermissionsChecker? = null
-
-    private lateinit var mDrawerLayout: DrawerLayout
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        mDrawerLayout = findViewById(R.id.drawer_layout)
+        setTransparentForWindow(this)
         supportFragmentManager.beginTransaction()
-                .add(R.id.content, AppMainFragment.newInstance())
+                .add(R.id.se_main_content, MainFragment.newInstance(), MainFragment.TAG)
                 .commitAllowingStateLoss()
         mPermissionsChecker = PermissionsChecker(this)
     }
@@ -41,11 +39,10 @@ class MainActivity : BaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        // 拒绝时, 关闭页面, 缺少主要权限, 无法运行
         if (requestCode == REQUEST_CODE && resultCode == PermissionsActivity.PERMISSIONS_DENIED) {
             finish()
         }
-        supportFragmentManager.findFragmentById(R.id.content)?.onActivityResult(requestCode, resultCode, data)
+        supportFragmentManager.findFragmentById(R.id.se_main_content)?.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun finish() {

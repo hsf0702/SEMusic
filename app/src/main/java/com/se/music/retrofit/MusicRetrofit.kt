@@ -6,8 +6,9 @@ import com.se.music.online.model.RecommendListModel
 import com.se.music.online.model.SingerModel
 import com.se.music.online.params.CommonPostParams
 import com.se.music.online.params.ExpressPostParams
-import com.se.music.subpage.entity.ArtistAvatar
-import com.se.music.utils.singleton.GsonFactory
+import com.se.music.singleton.GsonFactory
+import com.se.music.entity.Album
+import com.se.music.entity.Artist
 import retrofit2.Call
 import retrofit2.Retrofit
 
@@ -23,7 +24,7 @@ class MusicRetrofit private constructor() {
 
     val API_BASE_C_URL = "http://c.y.qq.com/"
     val API_BASE_U_URL = "http://u.y.qq.com/"
-    val API_LAST_FM_URL = "http://ws.audioscrobbler.com/2.0/"
+    val API_LAST_FM_URL = "http://ws.audioscrobbler.com/"
 
     private val baseCRetrofit: Retrofit = QQRetrofitFactory.getInstance(API_BASE_C_URL)
     private val baseURetrofit: Retrofit = QQRetrofitFactory.getInstance(API_BASE_U_URL)
@@ -67,8 +68,13 @@ class MusicRetrofit private constructor() {
                 .getNewSongInfo(GsonFactory.instance.toJson(expressPostParams))
     }
 
-    fun getSingAvatar(artist: String): Call<ArtistAvatar> {
+    fun getSingAvatar(artist: String): Call<Artist> {
         return baseLastFmRetrofit.create(RetrofitService::class.java)
                 .getSingerAvatar("artist.getinfo", artist)
+    }
+
+    fun getAlbumInfo(artist: String, album: String): Call<Album> {
+        return baseLastFmRetrofit.create(RetrofitService::class.java)
+                .getAlbumInfo("album.getinfo", artist, album)
     }
 }

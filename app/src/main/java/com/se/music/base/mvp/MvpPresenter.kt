@@ -39,6 +39,8 @@ interface MvpPresenter {
 
     fun getActivity(): Activity?
 
+    fun getPage(): MvpPage
+
     fun <D : Any> dispatchModelDataToView(modelId: Int, data: D, vararg viewIds: Int)
 
     fun <D : Any> dispatchModelDataToModel(modelId: Int, data: D, vararg modelIds: Int)
@@ -48,8 +50,6 @@ interface MvpPresenter {
     fun <D : Any> dispatchViewDataToModel(viewId: Int, data: D, vararg modelIds: Int)
 
     fun start(vararg modelIds: Int)
-
-    fun reload(vararg modelIds: Int)
 
     fun onCreate(savedInstanceState: Bundle)
 

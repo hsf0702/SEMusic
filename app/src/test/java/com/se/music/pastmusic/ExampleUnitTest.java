@@ -1,5 +1,7 @@
 package com.se.music.pastmusic;
 
+import android.view.View;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -17,11 +19,6 @@ public class ExampleUnitTest {
 
     @Test
     public void testColor() {
-        String s = Integer.toHexString(4334209);
-        System.out.println(s);
-        assertEquals(4, 2 + 2);
-        String string = "111222333444555222";
-        System.out.println("string.replace(\"222\",\"ddd\") = " + string.replace("222", "ddd"));
-
+        System.out.println(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
 }

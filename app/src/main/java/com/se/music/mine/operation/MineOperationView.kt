@@ -16,11 +16,12 @@ import com.se.music.base.BaseActivity
 import com.se.music.base.BaseConfig
 import com.se.music.base.mvp.BaseView
 import com.se.music.base.mvp.MvpPresenter
+import com.se.music.main.MainFragment
 import com.se.music.subpage.mine.DownLoadFragment
 import com.se.music.subpage.mine.RecentMusicFragment
-import com.se.music.subpage.mine.local.LocalMusicTabFragment
+import com.se.music.subpage.mine.local.LocalMusicContainerFragment
 import com.se.music.subpage.mine.love.CollectedActivity
-import com.se.music.utils.jumpToFragment
+import com.se.music.utils.startFragment
 
 /**
  * Author: gaojin
@@ -29,6 +30,7 @@ import com.se.music.utils.jumpToFragment
 class MineOperationView(presenter: MvpPresenter, viewId: Int, view: View) : BaseView(presenter, viewId), View.OnClickListener {
 
     private lateinit var rootView: GridLayout
+    private val preFragmentTag = MainFragment.TAG
 
     init {
         initView(view)
@@ -94,15 +96,15 @@ class MineOperationView(presenter: MvpPresenter, viewId: Int, view: View) : Base
     }
 
     private fun localMusic() {
-        jumpToFragment(getActivity()!!, LocalMusicTabFragment.newInstance(0))
+        startFragment(getPage(), LocalMusicContainerFragment.newInstance(0), preFragmentTag)
     }
 
     private fun downloadMusic() {
-        jumpToFragment(getActivity()!!, DownLoadFragment.newInstance())
+        startFragment(getPage(), DownLoadFragment.newInstance(), preFragmentTag)
     }
 
     private fun recentMusic() {
-        jumpToFragment(getActivity()!!, RecentMusicFragment.newInstance())
+        startFragment(getPage(), RecentMusicFragment.newInstance(), preFragmentTag)
     }
 
     private fun loveMusic() {
@@ -111,7 +113,7 @@ class MineOperationView(presenter: MvpPresenter, viewId: Int, view: View) : Base
     }
 
     private fun loveSinger() {
-        jumpToFragment(getActivity()!!, LocalMusicTabFragment.newInstance(0))
+        startFragment(getPage(), LocalMusicContainerFragment.newInstance(0), preFragmentTag)
     }
 
     private fun buyMusic() {

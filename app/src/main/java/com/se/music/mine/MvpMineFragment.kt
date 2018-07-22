@@ -14,7 +14,7 @@ import com.se.music.R
 import com.se.music.base.mvp.BasePresenter
 import com.se.music.base.mvp.MvpPage
 import com.se.music.base.mvp.MvpPresenter
-import com.se.music.common.SongListEntity
+import com.se.music.entity.SongListEntity
 import com.se.music.mine.event.CollectEvent
 import com.se.music.mine.event.CreateEvent
 import com.se.music.mine.listtitle.MineSongListTitleView
@@ -58,9 +58,9 @@ class MvpMineFragment : Fragment(), MvpPage {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        presenter.add(MinePersonalInfoView(presenter, R.id.mine_personal_info, adapter.header!!))
-        presenter.add(MineOperationView(presenter, R.id.mine_fun_area, adapter.header!!))
-        presenter.add(MineSongListTitleView(presenter, R.id.mine_song_list_title, adapter.header!!))
+        presenter.add(MinePersonalInfoView(presenter, R.id.mine_personal_info, adapter.header))
+        presenter.add(MineOperationView(presenter, R.id.mine_fun_area, adapter.header))
+        presenter.add(MineSongListTitleView(presenter, R.id.mine_song_list_title, adapter.header))
 
         presenter.add(QuerySongListModel(presenter, IdUtils.QUERY_SONG_LIST))
         presenter.add(QueryLocalSongModel(presenter, IdUtils.QUERY_LOCAL_SONG, START_FROM_LOCAL))

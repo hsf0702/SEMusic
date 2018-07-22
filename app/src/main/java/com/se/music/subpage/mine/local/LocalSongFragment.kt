@@ -12,7 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.se.music.R
-import com.se.music.common.MusicEntity
+import com.se.music.entity.MusicEntity
 import com.se.music.provider.metadata.infoMusic
 import com.se.music.provider.metadata.localMusicUri
 import com.se.music.provider.metadata.songSelection
@@ -27,8 +27,8 @@ import com.se.music.utils.parseCursorToMusicEntityList
 class LocalSongFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
     private lateinit var mRecyclerView: RecyclerView
-    private lateinit var mAdapter: MusicListAdapter
-    var musicList: ArrayList<MusicEntity> = ArrayList()
+    private lateinit var adapter: MusicListAdapter
+    private val musicList: ArrayList<MusicEntity> = ArrayList()
 
     companion object {
         fun newInstance(): LocalSongFragment {
@@ -37,26 +37,31 @@ class LocalSongFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_local_music, container, false)
+        mRecyclerView = inflater.inflate(R.layout.fragment_local_recycler_view, container, false) as RecyclerView
+        return mRecyclerView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        mAdapter = MusicListAdapter(context!!, musicList)
-        mRecyclerView = view.findViewById(R.id.local_music_recycle)
+        adapter = MusicListAdapter(context!!, musicList)
+
         mRecyclerView.layoutManager = LinearLayoutManager(activity)
         mRecyclerView.setHasFixedSize(true)
-        mRecyclerView.adapter = mAdapter
-
+        mRecyclerView.adapter = adapter
         loaderManager.initLoader(IdUtils.QUERY_LOCAL_SONG, null, this)
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
-        return CursorLoader(context!!, localMusicUri, infoMusic, songSelection.toString(), null, SharePreferencesUtils.instance.getSongSortOrder())
+        return CursorLoader(context!!
+                , localMusicUri
+                , infoMusic
+                , songSelection.toString()
+                , null
+                , SharePreferencesUtils.instance.getSongSortOrder())
     }
 
     override fun onLoadFinished(loader: Loader<Cursor>, data: Cursor) {
-        musicList.addAll(parseCursorToMusicEntityList(IdUtils.QUERY_LOCAL_SONG, data))
-        mAdapter.notifyDataSetChanged()
+        parseCursorToMusicEntityList(IdUtils.QUERY_LOCAL_SONG, data, musicList)
+        adapter.notifyDataSetChanged()
     }
 
     override fun onLoaderReset(loader: Loader<Cursor>) {

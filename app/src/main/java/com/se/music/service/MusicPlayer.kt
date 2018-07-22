@@ -5,7 +5,7 @@ import android.content.*
 import android.os.IBinder
 import android.os.RemoteException
 import com.se.music.IMediaAidlInterface
-import com.se.music.common.MusicEntity
+import com.se.music.entity.MusicEntity
 import java.util.*
 
 /**

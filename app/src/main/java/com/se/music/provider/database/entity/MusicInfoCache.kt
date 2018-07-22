@@ -1,4 +1,4 @@
-package com.se.music.utils.database.entity
+package com.se.music.provider.database.entity
 
 /**
  * Author: gaojin

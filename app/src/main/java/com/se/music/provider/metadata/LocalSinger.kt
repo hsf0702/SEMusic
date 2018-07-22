@@ -16,4 +16,10 @@ val singerSelection = StringBuilder(MediaStore.Audio.Artists._ID + " in (select 
 
 val info_artist = arrayOf(MediaStore.Audio.Artists.ARTIST
         , MediaStore.Audio.Artists.NUMBER_OF_TRACKS
-        , MediaStore.Audio.Artists._ID)
+        , MediaStore.Audio.Artists._ID
+        , MediaStore.Audio.Artists.ARTIST_KEY)
+
+const val LS_ARTIST_KEY = 3
+const val LS_ID_INDEX = 2
+const val LS_ID_NUMBER_OF_TRACKS = 1
+const val LS_ID_ARTIST = 0

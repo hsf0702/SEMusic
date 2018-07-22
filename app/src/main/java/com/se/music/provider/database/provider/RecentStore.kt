@@ -1,4 +1,4 @@
-package com.se.music.utils.database.provider
+package com.se.music.provider.database.provider
 
 import android.content.ContentValues
 import android.database.Cursor
@@ -45,9 +45,7 @@ class RecentStore {
                     }
                 }
             } finally {
-                if (mostRecentItem != null) {
-                    mostRecentItem.close()
-                }
+                mostRecentItem?.close()
             }
 
 
@@ -72,9 +70,7 @@ class RecentStore {
 
                 }
             } finally {
-                if (oldest != null) {
-                    oldest.close()
-                }
+                oldest?.close()
             }
         } finally {
             database.setTransactionSuccessful()

@@ -1,4 +1,4 @@
-package com.se.music.common
+package com.se.music.entity
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
@@ -12,20 +12,23 @@ import kotlinx.android.parcel.Parcelize
 /**
  * 专辑bean
  */
-data class AlbumEntity(var albumName: String
-                       , var albumId: Int = -1
+data class AlbumEntity(var albumId: Int = -1
+                       , var albumName: String
                        , var numberOfSongs: Int
-                       , var albumArt: String
                        , var albumArtist: String
-                       , var albumSort: String)
+                       , var albumKey: String) {
+    var imageId: String? = null
+}
 
 /**
  * 歌手bean
  */
 data class ArtistEntity(var artistName: String
                         , var numberOfTracks: Int
-                        , var artistId: Long
-                        , var artistSort: String)
+                        , var artistId: Int
+                        , var artistKey: String) {
+    var imageId: String? = null
+}
 
 /**
  * 文件夹bean

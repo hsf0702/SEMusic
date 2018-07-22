@@ -1,8 +1,11 @@
 package com.se.music.utils
 
 import android.database.Cursor
-import com.se.music.common.MusicEntity
-import com.se.music.common.SongListEntity
+import com.se.music.entity.AlbumEntity
+import com.se.music.entity.ArtistEntity
+import com.se.music.entity.MusicEntity
+import com.se.music.entity.SongListEntity
+import com.se.music.provider.database.provider.ImageStore
 import com.se.music.provider.metadata.*
 
 /**
@@ -10,6 +13,9 @@ import com.se.music.provider.metadata.*
  *Time: 2018/5/27 下午2:08
  */
 
+/**
+ * 歌单Cursor转化List
+ */
 fun parseCursorToSongList(id: Int, cursor: Cursor): ArrayList<SongListEntity> {
     val list = ArrayList<SongListEntity>()
     if (id == IdUtils.QUERY_SONG_LIST) {
@@ -31,8 +37,7 @@ fun parseCursorToSongList(id: Int, cursor: Cursor): ArrayList<SongListEntity> {
 /**
  * 本地音乐Cursor转化为List
  */
-fun parseCursorToMusicEntityList(id: Int, cursor: Cursor): ArrayList<MusicEntity> {
-    val list = ArrayList<MusicEntity>()
+fun parseCursorToMusicEntityList(id: Int, cursor: Cursor, list: ArrayList<MusicEntity>) {
     if (id == IdUtils.QUERY_LOCAL_SONG) {
         while (cursor.moveToNext()) {
             val musicEntity = MusicEntity(cursor.getLong(LM_ID_INDEX)
@@ -54,5 +59,37 @@ fun parseCursorToMusicEntityList(id: Int, cursor: Cursor): ArrayList<MusicEntity
             list.add(musicEntity)
         }
     }
-    return list
+}
+
+/**
+ * 歌手Cursor转换List
+ */
+fun parseCursorToArtistEntityList(id: Int, cursor: Cursor, list: ArrayList<ArtistEntity>) {
+    if (id == IdUtils.QUERY_LOCAL_SINGER) {
+        while (cursor.moveToNext()) {
+            val artistEntity = ArtistEntity(cursor.getString(LS_ID_ARTIST)
+                    , cursor.getInt(LS_ID_NUMBER_OF_TRACKS)
+                    , cursor.getInt(LS_ID_INDEX)
+                    , cursor.getString(LS_ARTIST_KEY))
+            artistEntity.imageId = ImageStore.instance.query(cursor.getString(LS_ARTIST_KEY))
+            list.add(artistEntity)
+        }
+    }
+}
+
+/**
+ * 专辑Cursor转换List
+ */
+fun parseCursorToAlbumEntityList(id: Int, cursor: Cursor, list: ArrayList<AlbumEntity>) {
+    if (id == IdUtils.QUERY_LOCAL_ALBUM) {
+        while (cursor.moveToNext()) {
+            val albumEntity = AlbumEntity(cursor.getInt(LA_ID)
+                    , cursor.getString(LA_ALBUM)
+                    , cursor.getInt(LA_SONG_NUMBER)
+                    , cursor.getString(LA_ARTIST)
+                    , cursor.getString(LA_ALBUM_KEY))
+            albumEntity.imageId = ImageStore.instance.query(cursor.getString(LA_ALBUM_KEY))
+            list.add(albumEntity)
+        }
+    }
 }

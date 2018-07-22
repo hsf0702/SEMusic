@@ -31,6 +31,10 @@ abstract class BaseView(private var presenter: MvpPresenter, private val viewId:
         return getActivity()
     }
 
+    protected fun getPage(): MvpPage {
+        return presenter.getPage()
+    }
+
     protected fun <D : Any> dispatchData(data: D) {
         presenter.onViewChanged(getId(), data)
     }

@@ -26,12 +26,12 @@ class QuickControlsFragment : BaseFragment(), View.OnClickListener {
         }
     }
 
-    var album: ImageView? = null
-    var playBarSongName: TextView? = null
-    var playBarSinger: TextView? = null
-    var playList: ImageView? = null
-    var control: ImageView? = null
-    var playNext: ImageView? = null
+    lateinit var album: ImageView
+    private lateinit var playBarSongName: TextView
+    private lateinit var playBarSinger: TextView
+    private lateinit var playList: ImageView
+    lateinit var control: ImageView
+    private lateinit var playNext: ImageView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.view_quick_controls, container, false)
@@ -43,9 +43,9 @@ class QuickControlsFragment : BaseFragment(), View.OnClickListener {
         playNext = root.findViewById(R.id.play_next)
 
         root.setOnClickListener(this)
-        playList!!.setOnClickListener(this)
-        control!!.setOnClickListener(this)
-        playNext!!.setOnClickListener(this)
+        playList.setOnClickListener(this)
+        control.setOnClickListener(this)
+        playNext.setOnClickListener(this)
         return root
     }
 
@@ -57,7 +57,6 @@ class QuickControlsFragment : BaseFragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when {
             v!!.id == R.id.play_list -> {
-
             }
             v.id == R.id.control -> MusicPlayer.playOrPause()
             v.id == R.id.play_next -> MusicPlayer.nextPlay()
@@ -74,17 +73,17 @@ class QuickControlsFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun updateFragment() {
-        playBarSongName!!.text = MusicPlayer.getTrackName()
-        playBarSinger!!.text = MusicPlayer.getArtistName()
+        playBarSongName.text = MusicPlayer.getTrackName()
+        playBarSinger.text = MusicPlayer.getArtistName()
         if (MusicPlayer.getIsPlaying()) {
-            control!!.setImageResource(R.drawable.playbar_btn_pause)
+            control.setImageResource(R.drawable.playbar_btn_pause)
         } else {
-            control!!.setImageResource(R.drawable.playbar_btn_play)
+            control.setImageResource(R.drawable.playbar_btn_play)
         }
         if (MusicPlayer.getAlbumPic() != null) {
             GlideApp.with(context!!)
                     .load(MusicPlayer.getAlbumPic())
-                    .into(album!!)
+                    .into(album)
         }
     }
 }

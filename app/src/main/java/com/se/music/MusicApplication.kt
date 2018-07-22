@@ -2,9 +2,8 @@ package com.se.music
 
 import android.app.Application
 import android.content.Context
-import com.facebook.drawee.backends.pipeline.Fresco
 import com.se.music.base.BaseConfig
-import com.se.music.utils.singleton.ApplicationSingleton
+import com.se.music.singleton.ApplicationSingleton
 
 /**
  * Author: gaojin
@@ -20,7 +19,6 @@ class MusicApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        Fresco.initialize(this)
         BaseConfig.init(this)
     }
 }

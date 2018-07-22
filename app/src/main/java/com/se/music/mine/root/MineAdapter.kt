@@ -11,7 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.se.music.GlideApp
 import com.se.music.R
-import com.se.music.common.SongListEntity
+import com.se.music.entity.SongListEntity
 
 /**
  * Author: gaojin

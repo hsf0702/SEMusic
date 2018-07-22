@@ -19,12 +19,12 @@ import android.util.Log
 import android.widget.RemoteViews
 import com.se.music.IMediaAidlInterface
 import com.se.music.R
-import com.se.music.common.MusicEntity
+import com.se.music.entity.MusicEntity
 import com.se.music.main.MainActivity
 import com.se.music.utils.SharePreferencesUtils
-import com.se.music.utils.database.provider.RecentStore
-import com.se.music.utils.singleton.ApplicationSingleton
-import com.se.music.utils.singleton.GsonFactory
+import com.se.music.provider.database.provider.RecentStore
+import com.se.music.singleton.ApplicationSingleton
+import com.se.music.singleton.GsonFactory
 import java.io.*
 import java.lang.ref.WeakReference
 import java.util.*

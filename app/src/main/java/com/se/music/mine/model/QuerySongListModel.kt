@@ -34,8 +34,4 @@ class QuerySongListModel(presenter: MvpPresenter, private val modelId: Int) : Ba
     override fun load() {
         (getActivity() as BaseActivity).supportLoaderManager.initLoader(modelId, null, this)
     }
-
-    override fun reload() {
-        (getActivity() as BaseActivity).supportLoaderManager.restartLoader(modelId, null, this)
-    }
 }

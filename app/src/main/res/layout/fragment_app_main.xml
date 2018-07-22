@@ -4,32 +4,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.se.music.main.AppMainFragment">
+    tools:context="com.se.music.main.MainFragment">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    <com.se.music.widget.TitleZoomTabLayout
+        android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/tool_bar_height"
-        android:background="@color/colorPrimary"
-        app:contentInsetStart="0dp">
-
-        <com.se.music.widget.TitleZoomTabLayout
-            android:id="@+id/tab_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorPrimary"
-            app:tabGravity="center"
-            app:tabIndicatorHeight="0dp"
-            app:tabMode="fixed"
-            app:tabSelectedTextColor="@color/white"
-            app:tabTextAppearance="@style/CustomTabLayout" />
-
-    </android.support.v7.widget.Toolbar>
+        android:background="@color/medium_sea_green"
+        app:tabGravity="center"
+        app:tabIndicatorHeight="0dp"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="@color/white"
+        app:tabTextAppearance="@style/CustomTabLayout" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:background="@color/white" />
 
 </LinearLayout>

@@ -2,7 +2,7 @@ package com.se.music.utils
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.se.music.utils.singleton.ApplicationSingleton
+import com.se.music.singleton.ApplicationSingleton
 
 /**
  * Author: gaojin

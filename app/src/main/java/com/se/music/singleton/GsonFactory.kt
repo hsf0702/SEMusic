@@ -1,4 +1,4 @@
-package com.se.music.utils.singleton
+package com.se.music.singleton
 
 import com.google.gson.Gson
 
