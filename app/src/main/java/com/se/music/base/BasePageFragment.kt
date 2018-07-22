@@ -46,6 +46,10 @@ abstract class BasePageFragment : BaseFragment() {
         statusBar.setBackgroundResource(color)
     }
 
+    fun hideStatStatusBar() {
+        statusBar.visibility = View.GONE
+    }
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
             android.R.id.home -> {
