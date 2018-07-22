@@ -23,8 +23,8 @@ import java.util.*
 @SuppressLint("Registered")
 open class BaseActivity : AppCompatActivity(), ServiceConnection {
 
-    private var mToken: MusicPlayer.ServiceToken? = null
     var mService: IMediaAidlInterface? = null
+    private var mToken: MusicPlayer.ServiceToken? = null
     private var fragment: QuickControlsFragment? = null //底部播放控制栏
     private val mMusicListener = ArrayList<MusicStateListener>()
     private var mPlaybackStatus: PlaybackStatus? = null //BroadCastReceiver 接受播放状态变化等

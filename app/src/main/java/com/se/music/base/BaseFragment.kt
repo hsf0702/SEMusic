@@ -7,7 +7,6 @@ import com.se.music.base.listener.MusicStateListener
  * Created by gaojin on 2018/3/6.
  */
 open class BaseFragment : Fragment(), MusicStateListener {
-
     override fun updatePlayInfo() {
     }
 

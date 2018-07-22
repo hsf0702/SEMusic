@@ -6,10 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.se.music.R
-import com.se.music.base.KtBaseFragment
+import com.se.music.base.BasePageFragment
 import com.se.music.widget.TitleZoomTabLayout
 
-class MainFragment : KtBaseFragment() {
+class MainFragment : BasePageFragment() {
 
     private lateinit var mTabLayout: TitleZoomTabLayout
     private lateinit var mViewPager: ViewPager

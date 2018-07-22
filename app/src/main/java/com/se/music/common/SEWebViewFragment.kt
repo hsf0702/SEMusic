@@ -8,14 +8,14 @@ import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.se.music.R
-import com.se.music.base.KtBaseFragment
+import com.se.music.base.BasePageFragment
 
 /**
  *Author: gaojin
  *Time: 2018/5/13 下午6:30
  */
 
-class SEWebViewFragment : KtBaseFragment() {
+class SEWebViewFragment : BasePageFragment() {
 
     private var mWebView: WebView? = null
     private var mWebUrl: String? = null

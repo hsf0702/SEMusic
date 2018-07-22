@@ -2,7 +2,6 @@ package com.se.music.subpage.mine.local
 
 import android.database.Cursor
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.CursorLoader
 import android.support.v4.content.Loader
@@ -12,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.se.music.R
+import com.se.music.base.BaseFragment
 import com.se.music.entity.MusicEntity
 import com.se.music.provider.metadata.infoMusic
 import com.se.music.provider.metadata.localMusicUri
@@ -24,7 +24,7 @@ import com.se.music.utils.parseCursorToMusicEntityList
 /**
  * Created by gaojin on 2018/2/28.
  */
-class LocalSongFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
+class LocalSongFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var adapter: MusicListAdapter

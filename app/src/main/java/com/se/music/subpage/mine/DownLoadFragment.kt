@@ -10,14 +10,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.se.music.R
-import com.se.music.base.KtBaseFragment
+import com.se.music.base.BasePageFragment
 import com.se.music.subpage.mine.local.LocalSongFragment
 
 /**
  * Creator：gaojin
  * date：2017/11/6 下午8:44
  */
-class DownLoadFragment : KtBaseFragment() {
+class DownLoadFragment : BasePageFragment() {
     override fun createContentView(inflater: LayoutInflater, container: ViewGroup?): View {
         val content = LayoutInflater.from(context).inflate(R.layout.activity_download, container, false)
         mTabLayout = content.findViewById(R.id.local_tab_layout)

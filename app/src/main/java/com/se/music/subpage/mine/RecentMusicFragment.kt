@@ -10,16 +10,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.se.music.R
-import com.se.music.base.KtBaseFragment
+import com.se.music.base.BasePageFragment
 import com.se.music.provider.database.provider.RecentStore
 import com.se.music.provider.database.recent.Song
-import com.se.music.provider.database.recent.SongLoader
-import com.se.music.provider.database.recent.TopTracksLoader
 
 /**
  * Created by gaojin on 2017/12/14.
  */
-class RecentMusicFragment : KtBaseFragment() {
+class RecentMusicFragment : BasePageFragment() {
     override fun createContentView(inflater: LayoutInflater, container: ViewGroup?): View {
         val content = LayoutInflater.from(context).inflate(R.layout.activity_recent_music, container, false)
         mRecyclerView = content.findViewById(R.id.recent_music_recycle)
@@ -29,14 +27,13 @@ class RecentMusicFragment : KtBaseFragment() {
     internal var mRecyclerView: RecyclerView? = null
 
     private var mAdapter: Adapter? = null
-    private var mList: List<Song>? = null
+    private var mList: List<Song> = ArrayList()
     private var recentStore: RecentStore? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         recentStore = RecentStore.instance
-        val recentsongs = SongLoader.getSongsForCursor(TopTracksLoader.getCursor(context!!))
-        mList = recentsongs
+//        val recentsongs = SongLoader.getSongsForCursor(TopTracksLoader.getCursor(context!!))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container:

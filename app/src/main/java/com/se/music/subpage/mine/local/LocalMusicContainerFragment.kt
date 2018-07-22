@@ -12,7 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.se.music.R
-import com.se.music.base.KtBaseFragment
+import com.se.music.base.BasePageFragment
 import com.se.music.provider.metadata.*
 import com.se.music.utils.IdUtils
 import com.se.music.utils.SharePreferencesUtils
@@ -21,7 +21,7 @@ import com.se.music.utils.SharePreferencesUtils
  * Author: gaojin
  * Time: 2018/5/13 下午6:26
  */
-class LocalMusicContainerFragment : KtBaseFragment() {
+class LocalMusicContainerFragment : BasePageFragment() {
 
     companion object {
         private const val mPosition = "mPosition"

@@ -16,7 +16,7 @@ import com.se.music.R
 /**
  * Created by gaojin on 2018/2/28.
  */
-abstract class KtBaseFragment : BaseFragment() {
+abstract class BasePageFragment : BaseFragment() {
     protected lateinit var mToolBar: Toolbar
     private lateinit var mTitle: TextView
     private lateinit var statusBar: View

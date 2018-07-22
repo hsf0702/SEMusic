@@ -12,7 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.se.music.GlideApp
 import com.se.music.R
-import com.se.music.base.KtBaseFragment
+import com.se.music.base.BasePageFragment
 import com.se.music.base.picBaseUrl_300
 import com.se.music.online.model.SingerModel
 import com.se.music.retrofit.MusicRetrofit
@@ -25,7 +25,7 @@ import retrofit2.Call
 /**
  * Created by gaojin on 2018/1/3.
  */
-class OnLineSingerFragment : KtBaseFragment() {
+class OnLineSingerFragment : BasePageFragment() {
 
     private lateinit var recycleView: RecyclerView
     private var singerList: List<SingerModel.Data.Singer>? = null
