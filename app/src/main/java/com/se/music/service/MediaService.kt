@@ -20,7 +20,7 @@ import android.widget.RemoteViews
 import com.se.music.IMediaAidlInterface
 import com.se.music.R
 import com.se.music.entity.MusicEntity
-import com.se.music.main.MainActivity
+import com.se.music.activity.MainActivity
 import com.se.music.utils.SharePreferencesUtils
 import com.se.music.provider.database.provider.RecentStore
 import com.se.music.singleton.ApplicationSingleton
@@ -1543,7 +1543,7 @@ class MediaService : Service() {
     }
 
     private fun getNotification(): Notification {
-        val remoteViews: RemoteViews
+        val remoteViews: RemoteViews = RemoteViews(this.packageName, R.layout.remote_view)
         val PAUSE_FLAG = 0x1
         val NEXT_FLAG = 0x2
         val STOP_FLAG = 0x3
@@ -1551,7 +1551,6 @@ class MediaService : Service() {
         val artistName = getArtistName()
         val isPlaying = isPlaying()
 
-        remoteViews = RemoteViews(this.packageName, R.layout.remote_view)
         val text = if (TextUtils.isEmpty(albumName)) artistName else "$artistName - $albumName"
         remoteViews.setTextViewText(R.id.title, getTrackName())
         remoteViews.setTextViewText(R.id.text, text)
@@ -1582,7 +1581,7 @@ class MediaService : Service() {
         if (mNotification == null) {
             val builder = NotificationCompat.Builder(this)
                     .setContent(remoteViews)
-                    .setSmallIcon(R.drawable.ic_launcher)
+                    .setSmallIcon(R.mipmap.ic_launcher)
                     .setContentIntent(mainIntent)
                     .setWhen(mNotificationPostTime)
             mNotification = builder.build()

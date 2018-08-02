@@ -55,7 +55,6 @@ class CreateSongListActivity : ToolBarActivity() {
     fun save() {
         val listName = nameInput.text.toString()
         val listInfo = infoInput.text.toString()
-
         val values = ContentValues()
         values.put(SL_ID, UUID.randomUUID().toString())
         values.put(SL_NAME, listName)
