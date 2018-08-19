@@ -33,7 +33,6 @@ open class BaseActivity : AppCompatActivity(), ServiceConnection {
         super.setContentView(layoutResID)
         //每次新建一个activity都会连接一次，然后把上下文和Sc保存在一个WeakHashMap中
         mToken = MusicPlayer.bindToService(this, this)
-        setStatusBar()
         mPlaybackStatus = PlaybackStatus(this)
         val intentFilter = IntentFilter()
         intentFilter.addAction(MediaService.PLAYSTATE_CHANGED)
@@ -49,10 +48,7 @@ open class BaseActivity : AppCompatActivity(), ServiceConnection {
         intentFilter.addAction(MConstants.PLAYLIST_COUNT_CHANGED)
         intentFilter.addAction(MediaService.MUSIC_LODING)
         registerReceiver(mPlaybackStatus, intentFilter)
-        showQuickControl(true)
     }
-
-    open fun setStatusBar() {}
 
     /**
      * @param show 显示或关闭底部播放控制栏
@@ -71,7 +67,6 @@ open class BaseActivity : AppCompatActivity(), ServiceConnection {
                 ft.hide(fragment).commitAllowingStateLoss()
         }
     }
-
 
     /**
      * @param p 更新歌曲缓冲进度值，p取值从0~100

@@ -15,8 +15,6 @@ import java.lang.reflect.Type
 class ConverterDataInterceptor : ConvertIntercepter {
     override fun onConvert(type: Type, gson: Gson, reader: Reader): Any? {
         val clz = getConvertDataClass(type) ?: return null
-        //! copy from old code.
-        //! 我也不知道为什么原来的代码要这么写，元素持有集合,然后由元素生成集合对象
         return try {
             val converter = clz.newInstance() as ConvertData<*>
             val rootElement = JsonParser().parse(reader)
@@ -32,7 +30,6 @@ class ConverterDataInterceptor : ConvertIntercepter {
     private fun getConvertDataClass(type: Type): Class<*>? {
 
         val cls = `$Gson$Types`.getRawType(type)
-        //要对list等类型进行判断
         if (type is ParameterizedType) {
             val types = type.actualTypeArguments
             if (types.isNotEmpty()) {

@@ -9,9 +9,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.se.music.GlideApp
 import com.se.music.R
+import com.se.music.activity.PlayingActivity
 import com.se.music.base.BaseFragment
 import com.se.music.service.MusicPlayer
-import com.se.music.subpage.mine.CreateSongListActivity
 
 /**
  *Author: gaojin
@@ -61,7 +61,7 @@ class QuickControlsFragment : BaseFragment(), View.OnClickListener {
             v.id == R.id.control -> MusicPlayer.playOrPause()
             v.id == R.id.play_next -> MusicPlayer.nextPlay()
             else -> {
-                val intent = Intent(activity, CreateSongListActivity::class.java)
+                val intent = Intent(activity, PlayingActivity::class.java)
                 startActivity(intent)
                 activity!!.overridePendingTransition(R.anim.push_down_in, R.anim.push_up_out)
             }

@@ -4,14 +4,15 @@
     android:id="@+id/base_toolbar"
     android:layout_width="match_parent"
     android:layout_height="@dimen/tool_bar_height"
-    app:navigationIcon="@drawable/back_normal_white"
-    app:theme="@style/ToolbarTheme">
+    android:theme="@style/toolbarStyle.Base"
+    app:navigationIcon="@drawable/back_normal_white">
 
     <TextView
         android:id="@+id/toolbar_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:gravity="center"
         android:textColor="@color/white"
         android:textSize="18sp" />
 </android.support.v7.widget.Toolbar>

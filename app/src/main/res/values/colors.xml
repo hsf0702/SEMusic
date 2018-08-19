@@ -7,7 +7,6 @@
     <color name="color_bg">#FFF8F8F8</color>
 
     <color name="transparent">#00000000</color>
-    <color name="transparent_half">#bfffffff</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="gray">#FF999999</color>
@@ -20,6 +19,5 @@
     <color name="background_gray">#F1F1F1</color>
     <color name="split_color">#E3E3E3</color>
 
-    <!--底部栏-->
-
+    <color name="hex_33000000">#80000000</color>
 </resources>

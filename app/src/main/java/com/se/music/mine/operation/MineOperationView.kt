@@ -46,17 +46,17 @@ class MineOperationView(presenter: MvpPresenter, viewId: Int, view: View) : Base
     @Keep
     fun onDataChanged(cursor: Cursor) {
         val dataList = listOf(DataHolder(getContext()!!.resources.getString(R.string.mine_local_music)
-                , cursor.count.toString(), R.drawable.item_music, R.id.local_music)
+                , cursor.count.toString(), R.drawable.ic_my_music_local_song, R.id.local_music)
                 , DataHolder(getContext()!!.resources.getString(R.string.mine_down_music)
-                , "2", R.drawable.item_download, R.id.download_music)
+                , "2", R.drawable.ic_my_music_download_song, R.id.download_music)
                 , DataHolder(getContext()!!.resources.getString(R.string.mine_recent_music)
-                , "3", R.drawable.item_recent, R.id.recent_music)
+                , "3", R.drawable.ic_my_music_recent_playlist, R.id.recent_music)
                 , DataHolder(getContext()!!.resources.getString(R.string.mine_love_music)
-                , "4", R.drawable.item_collect, R.id.love_music)
-                , DataHolder(getContext()!!.resources.getString(R.string.mine_love_singer)
-                , "5", R.drawable.item_singer, R.id.love_singer)
+                , "4", R.drawable.ic_my_music_my_favorite, R.id.love_music)
                 , DataHolder(getContext()!!.resources.getString(R.string.mine_buy_music)
-                , "6", R.drawable.item_buy, R.id.buy_music))
+                , "5", R.drawable.ic_my_music_paid_songs, R.id.buy_music)
+                , DataHolder(getContext()!!.resources.getString(R.string.mine_running_radio)
+                , null, R.drawable.ic_my_music_running_radio, R.id.running_radio))
         bindDataToView(dataList)
     }
 
@@ -79,7 +79,7 @@ class MineOperationView(presenter: MvpPresenter, viewId: Int, view: View) : Base
             itemView.id = dataHolder.id
             itemView.setOnClickListener(this)
             itemName.text = dataHolder.itemName
-            imageView.setBackgroundResource(dataHolder.drawablePic)
+            imageView.setImageDrawable(getActivity()!!.getDrawable(dataHolder.drawablePic))
             itemCount.text = dataHolder.itemInfo
         }
     }
@@ -90,7 +90,7 @@ class MineOperationView(presenter: MvpPresenter, viewId: Int, view: View) : Base
             R.id.download_music -> downloadMusic()
             R.id.recent_music -> recentMusic()
             R.id.love_music -> loveMusic()
-            R.id.love_singer -> loveSinger()
+            R.id.running_radio -> runningRadio()
             R.id.buy_music -> buyMusic()
         }
     }
@@ -112,7 +112,7 @@ class MineOperationView(presenter: MvpPresenter, viewId: Int, view: View) : Base
         (getActivity() as BaseActivity).startActivityByX(intent, true)
     }
 
-    private fun loveSinger() {
+    private fun runningRadio() {
         startFragment(getPage(), LocalMusicContainerFragment.newInstance(0), preFragmentTag)
     }
 
@@ -121,7 +121,7 @@ class MineOperationView(presenter: MvpPresenter, viewId: Int, view: View) : Base
     }
 
     class DataHolder(var itemName: String
-                     , var itemInfo: String
+                     , var itemInfo: String?
                      , var drawablePic: Int
                      , var id: Int)
 }

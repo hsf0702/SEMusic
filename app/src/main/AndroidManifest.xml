@@ -42,8 +42,12 @@
         <activity
             android:name="com.se.music.activity.MainActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Immersion" />
 
+        <activity
+            android:name="com.se.music.activity.PlayingActivity"
+            android:theme="@style/AppTheme.Immersion" />
         <activity android:name="com.se.music.subpage.mine.love.CollectedActivity" />
         <activity android:name="com.se.music.subpage.mine.CreateSongListActivity" />
 

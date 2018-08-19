@@ -7,7 +7,6 @@ import android.widget.Toast
 import com.se.music.R
 import com.se.music.base.BaseActivity
 import com.se.music.main.MainFragment
-import com.se.music.utils.setTransparentForWindow
 
 
 class MainActivity : BaseActivity() {
@@ -18,7 +17,7 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setTransparentForWindow(this)
+        showQuickControl(true)
         supportFragmentManager.beginTransaction()
                 .add(R.id.se_main_content, MainFragment.newInstance(), MainFragment.TAG)
                 .commitAllowingStateLoss()

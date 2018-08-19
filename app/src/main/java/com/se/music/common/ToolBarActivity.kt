@@ -28,7 +28,6 @@ abstract class ToolBarActivity : AppCompatActivity() {
         val rootView = inflater.inflate(R.layout.fragment_base, null) as LinearLayout
         rootView.addView(createContentView(inflater, rootView))
         setContentView(rootView)
-        setTransparentForWindow(this)
         mToolBar = findViewById(R.id.base_toolbar)
         mTitle = findViewById(R.id.toolbar_title)
         statusBar = findViewById(R.id.fake_status_bar)

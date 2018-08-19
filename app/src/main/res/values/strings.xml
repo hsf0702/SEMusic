@@ -3,8 +3,6 @@
 
     <!-- TODO: Remove or change this placeholder text -->
 
-    <string name="durationformatshort" translatable="false"><xliff:g id="format">%2$d:%3$02d</xliff:g></string>
-    <string name="durationformatlong" translatable="false"><xliff:g id="format">%1$d:%2$02d:%3$02d</xliff:g></string>
     <string name="string_help_text">当前应用缺少必要的权限</string>
 
 
@@ -20,7 +18,7 @@
     <string name="mine_down_music">下载歌曲</string>
     <string name="mine_recent_music">最近播放</string>
     <string name="mine_love_music">我喜欢</string>
-    <string name="mine_love_singer">我的歌手</string>
+    <string name="mine_running_radio">跑步电台</string>
     <string name="mine_buy_music">已购音乐</string>
 
 

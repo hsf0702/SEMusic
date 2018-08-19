@@ -31,7 +31,7 @@ class CreateSongListActivity : ToolBarActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         title = resources.getString(R.string.create_new_song_list)
-
+        hideStatStatusBar()
         nameInput = findViewById(R.id.et_list_name)
         infoInput = findViewById(R.id.et_list_info)
         nameInput.setText(resources.getString(R.string.create_new_song_list))

@@ -23,7 +23,7 @@ class LastFmRetrofitFactory {
                     .addConverterFactory(SeGsonConverterFactory.create()
                             .addConvertIntercepter(ConverterDataInterceptor())) //设置数据解析器
                     .client(okHttpClient)
-                    .build()!!
+                    .build()
         }
     }
 }

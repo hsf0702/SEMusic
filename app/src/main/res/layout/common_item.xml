@@ -10,7 +10,6 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/play_all"
             android:layout_width="@dimen/local_music_play_all_size"
             android:layout_height="@dimen/local_music_play_all_size"
             android:layout_gravity="center_vertical"
@@ -19,7 +18,6 @@
             android:src="@drawable/list_icn_play" />
 
         <TextView
-            android:id="@+id/play_all_text"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
