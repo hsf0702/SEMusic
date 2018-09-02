@@ -13,6 +13,7 @@ import com.se.music.R
 import com.se.music.base.BasePageFragment
 import com.se.music.provider.database.provider.RecentStore
 import com.se.music.provider.database.recent.Song
+import com.se.music.utils.inflate
 
 /**
  * Created by gaojin on 2017/12/14.
@@ -81,9 +82,9 @@ class RecentMusicFragment : BasePageFragment() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             return if (viewType == HEAD_LAYOUT) {
-                CommonItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.common_item, parent, false))
+                CommonItemViewHolder(parent.inflate(R.layout.common_item))
             } else {
-                ListItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.fragment_music_song_item, parent, false))
+                ListItemViewHolder(parent.inflate(R.layout.fragment_music_song_item))
             }
         }
 

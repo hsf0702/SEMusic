@@ -24,7 +24,6 @@ class MusicPlayer {
         private var mConnectionMap: WeakHashMap<Context, ServiceConnect> = WeakHashMap()
 
         fun bindToService(context: Context, callback: ServiceConnection): ServiceToken? {
-
             //document:Return the parent activity if this view is an embedded child.
             //如果是内嵌的Activity则获得他所在activity的上下文
             var realActivity: Activity? = (context as Activity).parent
@@ -257,9 +256,9 @@ class MusicPlayer {
         fun previous(context: Context, force: Boolean) {
             val previous = Intent(context, MediaService::class.java)
             if (force) {
-                previous.action = MediaService.PREVIOUS_FORCE_ACTION
+                previous.action = PREVIOUS_FORCE_ACTION
             } else {
-                previous.action = MediaService.PREVIOUS_ACTION
+                previous.action = PREVIOUS_ACTION
             }
             context.startService(previous)
         }
@@ -328,6 +327,7 @@ class MusicPlayer {
                     return mService!!.trackName
                 }
             } catch (ignored: RemoteException) {
+                ignored.printStackTrace()
             }
             return null
         }

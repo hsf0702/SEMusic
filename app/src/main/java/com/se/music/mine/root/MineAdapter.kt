@@ -9,9 +9,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import com.se.music.GlideApp
 import com.se.music.R
 import com.se.music.entity.SongListEntity
+import com.se.music.utils.inflate
+import com.se.music.utils.loadUrl
 
 /**
  * Author: gaojin
@@ -29,20 +30,16 @@ class MineAdapter constructor(private val context: Context, private val list: Ar
         return if (viewType == mHEADER) {
             HeadItemHolder(header)
         } else {
-            ListItemHolder(LayoutInflater.from(parent.context).inflate(R.layout.mine_list_view_layout, parent, false))
+            ListItemHolder(parent.inflate(R.layout.mine_list_view_layout))
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ListItemHolder) {
-            GlideApp.with(context)
-                    .load(list[position - 1].listPic)
-                    .placeholder(R.drawable.placeholder_disk)
-                    .into(holder.imageView!!)
-
-            holder.songListTitle!!.text = list[position - 1].name
-            holder.songListInfo!!.text = list[position - 1].info
-            holder.songListItem!!.setOnClickListener { Toast.makeText(context, "gj_jump", Toast.LENGTH_SHORT).show() }
+            holder.imageView.loadUrl(list[position - 1].listPic, R.drawable.placeholder_disk)
+            holder.songListTitle.text = list[position - 1].name
+            holder.songListInfo.text = list[position - 1].info
+            holder.songListItem.setOnClickListener { Toast.makeText(context, "gj_jump", Toast.LENGTH_SHORT).show() }
         }
     }
 
@@ -62,20 +59,12 @@ class MineAdapter constructor(private val context: Context, private val list: Ar
         }
     }
 
-    inner class HeadItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    class HeadItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
-    inner class ListItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        var imageView: ImageView? = null
-        var songListTitle: TextView? = null
-        var songListInfo: TextView? = null
-        var songListItem: View? = null
-
-        init {
-            imageView = itemView.findViewById(R.id.song_list_image)
-            songListTitle = itemView.findViewById(R.id.song_list_name)
-            songListInfo = itemView.findViewById(R.id.song_list_content)
-            songListItem = itemView.findViewById(R.id.song_list_item)
-        }
+    class ListItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var imageView: ImageView = itemView.findViewById(R.id.song_list_image)
+        var songListTitle: TextView = itemView.findViewById(R.id.song_list_name)
+        var songListInfo: TextView = itemView.findViewById(R.id.song_list_content)
+        var songListItem: View = itemView.findViewById(R.id.song_list_item)
     }
 }

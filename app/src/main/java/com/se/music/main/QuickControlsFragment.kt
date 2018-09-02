@@ -7,11 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.se.music.GlideApp
 import com.se.music.R
 import com.se.music.activity.PlayingActivity
 import com.se.music.base.BaseFragment
 import com.se.music.service.MusicPlayer
+import com.se.music.utils.loadUrl
 
 /**
  *Author: gaojin
@@ -54,9 +54,9 @@ class QuickControlsFragment : BaseFragment(), View.OnClickListener {
         updateFragment()
     }
 
-    override fun onClick(v: View?) {
+    override fun onClick(v: View) {
         when {
-            v!!.id == R.id.play_list -> {
+            v.id == R.id.play_list -> {
             }
             v.id == R.id.control -> MusicPlayer.playOrPause()
             v.id == R.id.play_next -> MusicPlayer.nextPlay()
@@ -81,9 +81,7 @@ class QuickControlsFragment : BaseFragment(), View.OnClickListener {
             control.setImageResource(R.drawable.playbar_btn_play)
         }
         if (MusicPlayer.getAlbumPic() != null) {
-            GlideApp.with(context!!)
-                    .load(MusicPlayer.getAlbumPic())
-                    .into(album)
+            album.loadUrl(MusicPlayer.getAlbumPic())
         }
     }
 }

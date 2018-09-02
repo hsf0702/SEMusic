@@ -6,21 +6,17 @@ import android.os.Bundle
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.se.music.GlideApp
 import com.se.music.R
+import com.se.music.entity.Album
 import com.se.music.entity.AlbumEntity
 import com.se.music.provider.database.provider.ImageStore
 import com.se.music.retrofit.MusicRetrofit
 import com.se.music.retrofit.callback.CallLoaderCallbacks
-import com.se.music.entity.Album
-import com.se.music.utils.IdUtils
-import com.se.music.utils.getImageId
-import com.se.music.utils.getMegaImageUrl
+import com.se.music.utils.*
 import retrofit2.Call
 import java.util.*
 
@@ -33,7 +29,7 @@ import java.util.*
 class AlbumListAdapter constructor(private val context: Context, private val list: ArrayList<AlbumEntity>
                                    , private val loaderManager: LoaderManager) : RecyclerView.Adapter<AlbumViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumViewHolder {
-        return AlbumViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.mine_local_album_item, parent, false))
+        return AlbumViewHolder(parent.inflate(R.layout.mine_local_album_item))
     }
 
     override fun getItemCount(): Int {
@@ -49,9 +45,8 @@ class AlbumListAdapter constructor(private val context: Context, private val lis
                 || list[position].imageId!!.isEmpty()) {
             loaderManager.initLoader(IdUtils.generateLoaderId(), null, buildAlbumCallBacks(holder, position))
         } else {
-            setAlbumPic(albumEntity.imageId!!, holder.albumPic)
+            holder.albumPic.loadUrl(getMegaImageUrl(albumEntity.imageId!!), R.drawable.default_album_avatar)
         }
-
     }
 
     private fun buildAlbumCallBacks(holder: AlbumViewHolder, position: Int): CallLoaderCallbacks<Album> {
@@ -63,7 +58,7 @@ class AlbumListAdapter constructor(private val context: Context, private val lis
             override fun onSuccess(loader: Loader<*>, data: Album) {
                 if (data.image != null && data.image!!.isNotEmpty()) {
                     val imageId = getImageId(data.image!![0].imageUrl!!)
-                    setAlbumPic(imageId, holder.albumPic)
+                    holder.albumPic.loadUrl(getMegaImageUrl(imageId), R.drawable.default_album_avatar)
                     list[position].imageId = imageId
                     //添加图片缓存
                     ImageStore.instance.addImage(list[position].albumKey, imageId)
@@ -75,13 +70,6 @@ class AlbumListAdapter constructor(private val context: Context, private val lis
             override fun onFailure(loader: Loader<*>, throwable: Throwable) {
             }
         }
-    }
-
-    private fun setAlbumPic(imageId: String, imageView: ImageView) {
-        GlideApp.with(context)
-                .load(getMegaImageUrl(imageId))
-                .placeholder(R.drawable.default_album_avatar)
-                .into(imageView)
     }
 }
 

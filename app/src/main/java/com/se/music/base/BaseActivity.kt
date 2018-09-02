@@ -9,9 +9,9 @@ import com.se.music.IMediaAidlInterface
 import com.se.music.R
 import com.se.music.base.listener.MusicStateListener
 import com.se.music.main.QuickControlsFragment
-import com.se.music.service.MediaService
-import com.se.music.service.MusicPlayer
+import com.se.music.service.*
 import com.se.music.utils.MConstants
+import com.se.music.utils.setTransparentForWindow
 import java.lang.ref.WeakReference
 import java.util.*
 
@@ -35,19 +35,22 @@ open class BaseActivity : AppCompatActivity(), ServiceConnection {
         mToken = MusicPlayer.bindToService(this, this)
         mPlaybackStatus = PlaybackStatus(this)
         val intentFilter = IntentFilter()
-        intentFilter.addAction(MediaService.PLAYSTATE_CHANGED)
-        intentFilter.addAction(MediaService.META_CHANGED)
-        intentFilter.addAction(MediaService.MUSIC_CHANGED)
-        intentFilter.addAction(MediaService.QUEUE_CHANGED)
-        intentFilter.addAction(MConstants.MUSIC_COUNT_CHANGED)
-        intentFilter.addAction(MediaService.TRACK_PREPARED)
-        intentFilter.addAction(MediaService.BUFFER_UP)
+        intentFilter.addAction(PLAYSTATE_CHANGED)
+        intentFilter.addAction(META_CHANGED)
+        intentFilter.addAction(MUSIC_CHANGED)
+        intentFilter.addAction(QUEUE_CHANGED)
+        intentFilter.addAction(TRACK_PREPARED)
+        intentFilter.addAction(BUFFER_UP)
+        intentFilter.addAction(MUSIC_CHANGED)
+        intentFilter.addAction(LRC_UPDATED)
+        intentFilter.addAction(MUSIC_LODING)
+
         intentFilter.addAction(MConstants.EMPTY_LIST)
-        intentFilter.addAction(MediaService.MUSIC_CHANGED)
-        intentFilter.addAction(MediaService.LRC_UPDATED)
         intentFilter.addAction(MConstants.PLAYLIST_COUNT_CHANGED)
-        intentFilter.addAction(MediaService.MUSIC_LODING)
+        intentFilter.addAction(MConstants.MUSIC_COUNT_CHANGED)
         registerReceiver(mPlaybackStatus, intentFilter)
+
+        setTransparentForWindow(this)
     }
 
     /**
@@ -181,22 +184,22 @@ open class BaseActivity : AppCompatActivity(), ServiceConnection {
             val baseActivity = mReference.get()
             if (baseActivity != null) {
                 when (action) {
-                    MediaService.META_CHANGED -> baseActivity.baseUpdatePlayInfo()
-                    MediaService.PLAYSTATE_CHANGED -> {
+                    META_CHANGED -> baseActivity.baseUpdatePlayInfo()
+                    PLAYSTATE_CHANGED -> {
                     }
-                    MediaService.TRACK_PREPARED -> baseActivity.updateTime()
-                    MediaService.BUFFER_UP -> baseActivity.updateBuffer(intent.getIntExtra("progress", 0))
-                    MediaService.MUSIC_LODING -> baseActivity.loading(intent.getBooleanExtra("isloading", false))
-                    MediaService.REFRESH -> {
+                    TRACK_PREPARED -> baseActivity.updateTime()
+                    BUFFER_UP -> baseActivity.updateBuffer(intent.getIntExtra("progress", 0))
+                    MUSIC_LODING -> baseActivity.loading(intent.getBooleanExtra("isloading", false))
+                    REFRESH -> {
                     }
                     MConstants.MUSIC_COUNT_CHANGED -> baseActivity.refreshUI()
                     MConstants.PLAYLIST_COUNT_CHANGED -> baseActivity.refreshUI()
-                    MediaService.QUEUE_CHANGED -> baseActivity.updateQueue()
-                    MediaService.TRACK_ERROR -> Toast.makeText(baseActivity, "错误了嘤嘤嘤", Toast.LENGTH_SHORT).show()
-                    MediaService.MUSIC_CHANGED -> {
+                    QUEUE_CHANGED -> baseActivity.updateQueue()
+                    TRACK_ERROR -> Toast.makeText(baseActivity, "错误了嘤嘤嘤", Toast.LENGTH_SHORT).show()
+                    MUSIC_CHANGED -> {
                         baseActivity.updateTrack()
                     }
-                    MediaService.LRC_UPDATED -> baseActivity.updateLrc()
+                    LRC_UPDATED -> baseActivity.updateLrc()
                 }
             }
         }

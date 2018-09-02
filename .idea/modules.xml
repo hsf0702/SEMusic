@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/SEMusic.iml" filepath="$PROJECT_DIR$/SEMusic.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/se-multidex/se-multidex.iml" filepath="$PROJECT_DIR$/se-multidex/se-multidex.iml" />
     </modules>
   </component>
 </project>

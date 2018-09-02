@@ -12,6 +12,7 @@ import android.widget.LinearLayout
 import com.se.music.R
 import com.se.music.base.picBaseUrl_150
 import com.se.music.online.model.ExpressInfoModel
+import com.se.music.utils.inflate
 import com.se.music.widget.GridItemDecoration
 import com.se.music.widget.RecommendItemView
 

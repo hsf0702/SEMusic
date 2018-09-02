@@ -6,15 +6,15 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.se.music.GlideApp
 import com.se.music.R
+import com.se.music.utils.loadUrl
 
 /**
  * Created by gaojin on 2017/12/31.
  */
 class RecommendItemView : LinearLayout {
-    private var itemHeader: AutoHeightImageView? = null
-    private var descriptionView: TextView? = null
+    private lateinit var itemHeader: AutoHeightImageView
+    private lateinit var descriptionView: TextView
 
     constructor(context: Context) : this(context, null)
 
@@ -29,21 +29,17 @@ class RecommendItemView : LinearLayout {
     fun init() {
         orientation = LinearLayout.VERTICAL
         View.inflate(context, R.layout.online_recommend_item_view, this)
-        initView()
-    }
-
-    private fun initView() {
         itemHeader = findViewById(R.id.recommend_item_head)
         descriptionView = findViewById(R.id.song_list_description)
     }
 
     fun setImageView(@Nullable url: String): RecommendItemView {
-        GlideApp.with(context).load(url).into(itemHeader!!)
+        itemHeader.loadUrl(url)
         return this
     }
 
     fun setDescription(@Nullable description: String): RecommendItemView {
-        descriptionView!!.text = description
+        descriptionView.text = description
         return this
     }
 

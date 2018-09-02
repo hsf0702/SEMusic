@@ -8,9 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
-import com.se.music.GlideApp
 import com.se.music.R
 import com.se.music.base.BasePageFragment
 import com.se.music.base.picBaseUrl_300
@@ -19,6 +17,8 @@ import com.se.music.retrofit.MusicRetrofit
 import com.se.music.retrofit.callback.CallLoaderCallbacks
 import com.se.music.utils.CollectionUtils
 import com.se.music.utils.IdUtils
+import com.se.music.utils.inflate
+import com.se.music.utils.loadUrl
 import com.se.music.widget.CircleImageView
 import retrofit2.Call
 
@@ -28,8 +28,14 @@ import retrofit2.Call
 class OnLineSingerFragment : BasePageFragment() {
 
     private lateinit var recycleView: RecyclerView
-    private var singerList: List<SingerModel.Data.Singer>? = null
+    private var singerList: MutableList<SingerModel.Data.Singer> = ArrayList()
     private var singerAdapter: SingerAdapter? = null
+
+    companion object {
+        fun newInstance(): OnLineSingerFragment {
+            return OnLineSingerFragment()
+        }
+    }
 
     override fun createContentView(inflater: LayoutInflater, container: ViewGroup?): View {
         return LayoutInflater.from(context).inflate(R.layout.fragment_online_singer, container, false)
@@ -46,7 +52,6 @@ class OnLineSingerFragment : BasePageFragment() {
         loaderManager.initLoader(IdUtils.GET_SINGER_LIST, null, buildSingerCallback())
     }
 
-
     private fun buildSingerCallback(): CallLoaderCallbacks<SingerModel> {
         return object : CallLoaderCallbacks<SingerModel>(context!!) {
             override fun onCreateCall(id: Int, args: Bundle?): Call<SingerModel> {
@@ -54,7 +59,9 @@ class OnLineSingerFragment : BasePageFragment() {
             }
 
             override fun onSuccess(loader: Loader<*>, data: SingerModel) {
-                singerList = data.data?.list
+                if (!CollectionUtils.isEmpty(data.data?.list)) {
+                    singerList.addAll(data.data?.list!!)
+                }
                 singerAdapter!!.notifyDataSetChanged()
             }
 
@@ -66,42 +73,21 @@ class OnLineSingerFragment : BasePageFragment() {
 
     inner class SingerAdapter : RecyclerView.Adapter<ItemViewHolder>() {
         override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-            holder.singerName?.text = singerList!![position].Fsinger_name
-            GlideApp.with(context!!)
-                    .load(String.format(picBaseUrl_300, singerList!![position].Fsinger_mid))
-                    .into(holder.singerAvatar!!)
+            holder.singerName.text = singerList[position].Fsinger_name
+            holder.singerAvatar.loadUrl(String.format(picBaseUrl_300, singerList[position].Fsinger_mid))
         }
 
         override fun getItemCount(): Int {
-            return if (CollectionUtils.isEmpty(singerList)) {
-                0
-            } else {
-                singerList!!.size
-            }
+            return singerList.size
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-            return ItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.online_singer_item, parent, false))
+            return ItemViewHolder(parent.inflate(R.layout.online_singer_item))
         }
     }
-
 
     inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var singerAvatar: CircleImageView? = null
-        var singerName: TextView? = null
-        var iconEnter: ImageView? = null
-
-        init {
-            singerAvatar = itemView.findViewById(R.id.singer_avatar)
-            singerName = itemView.findViewById(R.id.singer_name)
-            iconEnter = itemView.findViewById(R.id.icon_enter)
-        }
-    }
-
-
-    companion object {
-        fun newInstance(): OnLineSingerFragment {
-            return OnLineSingerFragment()
-        }
+        var singerAvatar: CircleImageView = itemView.findViewById(R.id.singer_avatar)
+        var singerName: TextView = itemView.findViewById(R.id.singer_name)
     }
 }

@@ -2,7 +2,6 @@ package com.se.music.subpage.mine.local
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -11,6 +10,7 @@ import com.se.music.R
 import com.se.music.entity.MusicEntity
 import com.se.music.service.MusicPlayer
 import com.se.music.utils.HandlerUtil
+import com.se.music.utils.inflate
 import java.util.*
 
 /**
@@ -33,9 +33,9 @@ class MusicListAdapter constructor(private val context: Context, private val mLi
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == mHeadLayout) {
-            CommonItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.common_item, parent, false))
+            CommonItemViewHolder(parent.inflate(R.layout.common_item))
         } else {
-            ListItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.fragment_music_song_item, parent, false))
+            ListItemViewHolder(parent.inflate(R.layout.fragment_music_song_item))
         }
     }
 

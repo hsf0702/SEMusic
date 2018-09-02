@@ -37,30 +37,6 @@ import java.util.*
 class MediaService : Service() {
 
     companion object {
-        const val PLAYSTATE_CHANGED = "com.se.music.play_state_changed"
-        const val POSITION_CHANGED = "com.se.music.positionchanged"
-        const val SEND_PROGRESS = "com.se.music.progress"
-        const val META_CHANGED = "com.se.music.meta_changed"
-        const val MUSIC_CHANGED = "com.se.music.change_music"
-        const val QUEUE_CHANGED = "com.se.music.queuechanged"
-        const val TRACK_ERROR = "com.se.music.trackerror"
-        const val TRACK_PREPARED = "com.se.music.prepared"
-        const val REFRESH = "com.se.music.refresh"
-        const val PREVIOUS_FORCE_ACTION = "com.se.music.previous.force"
-        const val PREVIOUS_ACTION = "com.se.music.previous"
-        const val REPEATMODE_CHANGED = "com.se.music.repeatmodechanged"
-        const val SHUFFLEMODE_CHANGED = "com.se.music.shufflemodechanged"
-        const val LRC_UPDATED = "com.se.music.updatelrc"
-        const val TRY_GET_TRACKINFO = "com.se.music.gettrackinfo"
-        const val TIMBER_PACKAGE_NAME = "com.se.music"
-        const val MUSIC_PACKAGE_NAME = "com.android.music"
-        const val TOGGLEPAUSE_ACTION = "com.se.music.togglepause"
-        const val NEXT_ACTION = "com.se.music.next"
-        const val STOP_ACTION = "com.se.music.stop"
-        const val BUFFER_UP = "com.se.music.bufferup"
-        const val MUSIC_LODING = "com.se.music.loading"
-        const val REPEAT_ACTION = "com.se.music.repeat"
-        const val SHUFFLE_ACTION = "com.se.music.shuffle"
         const val NEXT = 2
         const val LAST = 3
         const val SHUFFLE_NONE = 0
@@ -70,7 +46,7 @@ class MediaService : Service() {
         const val REPEAT_CURRENT = 1
         const val REPEAT_ALL = 2
         const val MAX_HISTORY_SIZE = 1000
-        const val LRC_PATH = "/pastmusic/lrc/"
+        const val LRC_PATH = "/semusic/lrc/"
         private const val TAG = "MediaService"
         private const val SHUTDOWN = "com.se.music.shutdown"
         private const val TRACK_NAME = "trackname"
