@@ -7,7 +7,6 @@ import android.database.Cursor
 import android.database.MatrixCursor
 import android.graphics.Bitmap
 import android.media.AudioManager
-import android.media.MediaPlayer
 import android.media.audiofx.AudioEffect
 import android.media.session.MediaSession
 import android.net.Uri
@@ -17,14 +16,12 @@ import android.support.v4.app.NotificationCompat
 import android.text.TextUtils
 import android.util.Log
 import android.widget.RemoteViews
-import com.se.music.IMediaAidlInterface
 import com.se.music.R
-import com.se.music.entity.MusicEntity
 import com.se.music.activity.MainActivity
-import com.se.music.utils.SharePreferencesUtils
+import com.se.music.entity.MusicEntity
 import com.se.music.provider.database.provider.RecentStore
-import com.se.music.singleton.ApplicationSingleton
 import com.se.music.singleton.GsonFactory
+import com.se.music.utils.SharePreferencesUtils
 import java.io.*
 import java.lang.ref.WeakReference
 import java.util.*
@@ -37,8 +34,18 @@ import java.util.*
 class MediaService : Service() {
 
     companion object {
-        const val NEXT = 2
-        const val LAST = 3
+        const val TAG = "MediaService"
+
+        const val IDCOLIDX = 0
+        const val TRACK_ENDED = 1
+        const val TRACK_WENT_TO_NEXT = 2
+        const val RELEASE_WAKELOCK = 3
+        const val SERVER_DIED = 4
+        const val FOCUSCHANGE = 5
+        const val FADEDOWN = 6
+        const val FADEUP = 7
+        const val LRC_DOWNLOADED = -10
+
         const val SHUFFLE_NONE = 0
         const val SHUFFLE_NORMAL = 1
         const val SHUFFLE_AUTO = 2
@@ -46,39 +53,38 @@ class MediaService : Service() {
         const val REPEAT_CURRENT = 1
         const val REPEAT_ALL = 2
         const val MAX_HISTORY_SIZE = 1000
-        const val LRC_PATH = "/semusic/lrc/"
-        private const val TAG = "MediaService"
-        private const val SHUTDOWN = "com.se.music.shutdown"
-        private const val TRACK_NAME = "trackname"
-        private const val ALNUM_PIC = "album_pic"
-        private const val IDCOLIDX = 0
-        private const val TRACK_ENDED = 1
-        private const val TRACK_WENT_TO_NEXT = 2
-        private const val RELEASE_WAKELOCK = 3
-        private const val SERVER_DIED = 4
-        private const val FOCUSCHANGE = 5
-        private const val FADEDOWN = 6
-        private const val FADEUP = 7
-        private const val LRC_DOWNLOADED = -10
-        private const val NOTIFY_MODE_NONE = 0
-        private const val NOTIFY_MODE_FOREGROUND = 1
-        private const val NOTIFY_MODE_BACKGROUND = 2
-        private const val IDLE_DELAY = 5 * 60 * 1000
-        private const val REWIND_INSTEAD_PREVIOUS_THRESHOLD: Long = 3000
-        private val PROJECTION = arrayOf("audio._id AS _id", MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.MIME_TYPE, MediaStore.Audio.Media.ALBUM_ID, MediaStore.Audio.Media.ARTIST_ID, ALNUM_PIC)
-        private val PROJECTION_MATRIX = arrayOf("_id", MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.MIME_TYPE, MediaStore.Audio.Media.ALBUM_ID, MediaStore.Audio.Media.ARTIST_ID)
-        private val mShuffler = Shuffler()
-        //历史歌单
-        private val mHistory = LinkedList<Int>()
-        private var mUrlHandler: Handler? = null
-        private var mLrcHandler: Handler? = null
     }
+
+    //handler
+    private var mUrlHandler: Handler? = null
+    private var mLrcHandler: Handler? = null
+    private var mPlayerHandler: MusicPlayerHandler? = null
+    private lateinit var mHandlerThread: HandlerThread
+
+    //public field
+    var isPlaying = false
+    var mRepeatMode = REPEAT_ALL
+    var mShuffleMode = SHUFFLE_NONE
+    val NEXT = 2
+    val LAST = 3
+    val LRC_PATH = "/semusic/lrc/"
+
+    private val SHUTDOWN = "com.se.music.shutdown"
+    private val TRACK_NAME = "trackname"
+    private val ALNUM_PIC = "album_pic"
+    private val NOTIFY_MODE_NONE = 0
+    private val NOTIFY_MODE_FOREGROUND = 1
+    private val NOTIFY_MODE_BACKGROUND = 2
+    private val IDLE_DELAY = 5 * 60 * 1000
+    private val REWIND_INSTEAD_PREVIOUS_THRESHOLD: Long = 3000
+    private val PROJECTION = arrayOf("audio._id AS _id", MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.MIME_TYPE, MediaStore.Audio.Media.ALBUM_ID, MediaStore.Audio.Media.ARTIST_ID, ALNUM_PIC)
+    private val PROJECTION_MATRIX = arrayOf("_id", MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.MIME_TYPE, MediaStore.Audio.Media.ALBUM_ID, MediaStore.Audio.Media.ARTIST_ID)
+    private val mShuffler = Shuffler()
+    //历史歌单
+    private val mHistory = LinkedList<Int>()
 
     private val mBinder = ServiceStub(this)
     private val mCardId: Int = 0
-    private var mRepeatMode = REPEAT_ALL
-    private var mShuffleMode = SHUFFLE_NONE
-    private var isPlaying = false
     private val mNotificationId = 1000
     //传进来的歌单
     @SuppressLint("UseSparseArrays")
@@ -86,9 +92,7 @@ class MediaService : Service() {
     //播放列表
     private val mPlaylist = ArrayList<MusicTrack>(100)
     private var mAutoShuffleList: LongArray? = null
-    private var mPlayerHandler: MusicPlayerHandler? = null
     private val mAudioFocusListener = AudioManager.OnAudioFocusChangeListener { focusChange -> mPlayerHandler!!.obtainMessage(FOCUSCHANGE, focusChange, 0).sendToTarget() }
-    private var mHandlerThread: HandlerThread? = null
     private var mPlayer: MultiPlayer? = null
     private var mFileToPlay: String? = null
     private var mCursor: Cursor? = null
@@ -117,7 +121,7 @@ class MediaService : Service() {
     private val mNoBit: Bitmap? = null
     private var mNotification: Notification? = null
     private var mNotificationPostTime: Long = 0
-    private val mLastSeekPos: Long = 0
+    var mLastSeekPos: Long = 0
     private var mRequestUrl: RequestPlayUrl? = null
     private var mRequestLrc: RequestLrc? = null
     private var mPreferences: SharedPreferences? = null
@@ -171,8 +175,8 @@ class MediaService : Service() {
         mGetUrlThread.start()
         mLrcThread.start()
         mHandlerThread = HandlerThread("MusicPlayerHandler", android.os.Process.THREAD_PRIORITY_BACKGROUND)
-        mHandlerThread!!.start()
-        mPlayerHandler = MusicPlayerHandler(this, mHandlerThread!!.looper)
+        mHandlerThread.start()
+        mPlayerHandler = MusicPlayerHandler(this, mHandlerThread.looper)
         mPlayer = MultiPlayer(this)
         mPlayer!!.setHandler(mPlayerHandler!!)
         mPreferences = getSharedPreferences("Service", 0)
@@ -420,10 +424,6 @@ class MediaService : Service() {
         }
     }
 
-    fun isPlaying(): Boolean {
-        return isPlaying
-    }
-
     /**
      * 根据URI查找本地音乐文件的相应的column的值
      *
@@ -619,7 +619,8 @@ class MediaService : Service() {
 
             } else {
                 while (true) {
-                    if (mCursor != null && openFile(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.toString() + "/"
+                    if (mCursor != null
+                            && openFile(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.toString() + "/"
                                     + mCursor!!.getLong(IDCOLIDX))) {
                         break
                     }
@@ -700,7 +701,7 @@ class MediaService : Service() {
         }
     }
 
-    private fun notifyChange(what: String) {
+    fun notifyChange(what: String) {
         if (SEND_PROGRESS == what) {
             val intent = Intent(what)
             intent.putExtra("position", position())
@@ -716,7 +717,7 @@ class MediaService : Service() {
         intent.putExtra("artist", getArtistName())
         intent.putExtra("album", getAlbumName())
         intent.putExtra("track", getTrackName())
-        intent.putExtra("playing", isPlaying())
+        intent.putExtra("playing", isPlaying)
         intent.putExtra("albumuri", getAlbumPath())
         intent.putExtra("islocal", isTrackLocal())
         sendStickyBroadcast(intent)
@@ -730,7 +731,7 @@ class MediaService : Service() {
             intent.putExtra("showorhide", "show")
             sendBroadcast(intent1)
             saveQueue(true)
-            if (isPlaying()) {
+            if (isPlaying) {
                 if (mNextPlayPos >= 0 && mNextPlayPos < mPlaylist.size
                         && getShuffleMode() != SHUFFLE_NONE) {
                     setNextTrack(mNextPlayPos)
@@ -791,8 +792,6 @@ class MediaService : Service() {
             } else mPlayPos
         } else if (mShuffleMode == SHUFFLE_NORMAL) {
             val numTracks = mPlaylist.size
-
-
             val trackNumPlays = IntArray(numTracks)
             for (i in 0 until numTracks) {
                 trackNumPlays[i] = 0
@@ -802,7 +801,7 @@ class MediaService : Service() {
             val numHistory = mHistory.size
             for (i in 0 until numHistory) {
                 val idx = mHistory[i]
-                if (idx in 0..numTracks - 1) {
+                if (idx in 0 until numTracks) {
                     trackNumPlays[idx]++
                 }
             }
@@ -822,12 +821,10 @@ class MediaService : Service() {
                 }
             }
 
-
             if (minNumPlays > 0 && numTracksWithMinNumPlays == numTracks
                     && mRepeatMode != REPEAT_ALL && !force) {
                 return -1
             }
-
 
             var skip = mShuffler.nextInt(numTracksWithMinNumPlays)
             for (i in trackNumPlays.indices) {
@@ -1209,13 +1206,13 @@ class MediaService : Service() {
     }
 
     private fun recentlyPlayed(): Boolean {
-        return isPlaying() || System.currentTimeMillis() - mLastPlayedTime < IDLE_DELAY
+        return isPlaying || System.currentTimeMillis() - mLastPlayedTime < IDLE_DELAY
     }
 
     private fun handleCommandIntent(intent: Intent) {
         val action = intent.action
         if (TOGGLEPAUSE_ACTION == action) {
-            if (isPlaying()) {
+            if (isPlaying) {
                 pause()
             } else {
                 play()
@@ -1235,7 +1232,7 @@ class MediaService : Service() {
     }
 
     private fun releaseServiceUiAndStop() {
-        if (isPlaying() || mPlayerHandler!!.hasMessages(TRACK_ENDED)) {
+        if (isPlaying || mPlayerHandler!!.hasMessages(TRACK_ENDED)) {
             return
         }
         cancelNotification()
@@ -1252,7 +1249,7 @@ class MediaService : Service() {
 
     private fun updateNotification() {
         val notifyMode: Int
-        if (isPlaying()) {
+        if (isPlaying) {
             notifyMode = NOTIFY_MODE_FOREGROUND
         } else {
             notifyMode = NOTIFY_MODE_NONE
@@ -1287,7 +1284,7 @@ class MediaService : Service() {
         mNotifyMode = notifyMode
     }
 
-    private fun sendUpdateBuffer(progress: Int) {
+    fun sendUpdateBuffer(progress: Int) {
         val intent = Intent(BUFFER_UP)
         intent.putExtra("progress", progress)
         sendBroadcast(intent)
@@ -1373,7 +1370,7 @@ class MediaService : Service() {
                     } else if (mPlayPos >= mPlaylist.size) {
                         mPlayPos = 0
                     }
-                    val wasPlaying = isPlaying()
+                    val wasPlaying = isPlaying
                     stop(false)
                     openCurrentAndNext()
                     if (wasPlaying) {
@@ -1525,7 +1522,7 @@ class MediaService : Service() {
         val STOP_FLAG = 0x3
         val albumName = getAlbumName()
         val artistName = getArtistName()
-        val isPlaying = isPlaying()
+        val isPlaying = isPlaying
 
         val text = if (TextUtils.isEmpty(albumName)) artistName else "$artistName - $albumName"
         remoteViews.setTextViewText(R.id.title, getTrackName())
@@ -1571,7 +1568,7 @@ class MediaService : Service() {
         super.onDestroy()
         cancelNotification()
         mPlayerHandler!!.removeCallbacksAndMessages(null)
-        mHandlerThread!!.quit()
+        mHandlerThread.quit()
         mPlayer!!.release()
         mPlayer = null
         closeCursor()
@@ -1579,168 +1576,8 @@ class MediaService : Service() {
 
     }
 
-    private class ServiceStub constructor(service: MediaService) : IMediaAidlInterface.Stub() {
-
-        private val mService: WeakReference<MediaService> = WeakReference(service)
-
-        override fun isPlaying(): Boolean {
-            return mService.get()!!.isPlaying
-        }
-
-        override fun stop() {
-            mService.get()!!.stop()
-        }
-
-        override fun pause() {
-            mService.get()!!.pause()
-        }
-
-        override fun play() {
-            mService.get()!!.play(true)
-        }
-
-        override fun nextPlay() {
-            mService.get()!!.nextPlay(true)
-        }
-
-        override fun openFile(path: String) {
-            mService.get()!!.openFile(path)
-        }
-
-        override fun open(infos: Map<*, *>, list: LongArray, position: Int) {
-            mService.get()!!.open(infos as HashMap<Long, MusicEntity>, list, position)
-        }
-
-        override fun getArtistName(): String? {
-            return mService.get()!!.getArtistName()
-        }
-
-        override fun getTrackName(): String? {
-            return mService.get()!!.getTrackName()
-        }
-
-        override fun getAlbumName(): String? {
-            return null
-        }
-
-        override fun getAlbumPath(): String? {
-            return mService.get()!!.getAlbumPath()
-        }
-
-        override fun getAlbumPic(): String? {
-            return mService.get()!!.getAlbumPic()
-        }
-
-        override fun getAlbumId(): Long {
-            return mService.get()!!.getAlbumId()
-        }
-
-        override fun getAlbumPathtAll(): Array<String?> {
-            return mService.get()!!.getAlbumPathAll()
-        }
-
-        override fun getPath(): String? {
-            return null
-        }
-
-        override fun getPlaylistInfo(): Map<*, *> {
-            return mService.get()!!.getPlaylistInfo()
-        }
-
-        override fun getQueue(): LongArray {
-            return mService.get()!!.getQueue()
-        }
-
-        override fun getAudioId(): Long {
-            return mService.get()!!.getAudioId()
-        }
-
-        override fun getQueueSize(): Int {
-            return mService.get()!!.getQueueSize()
-        }
-
-        override fun getQueuePosition(): Int {
-            return mService.get()!!.getQueuePosition()
-        }
-
-        override fun setQueuePosition(index: Int) {
-            mService.get()!!.setQueuePosition(index)
-        }
-
-        override fun removeTrack(id: Long): Int {
-            return mService.get()!!.removeTrack(id)
-        }
-
-        override fun enqueue(list: LongArray, infos: Map<*, *>, action: Int) {
-
-        }
-
-        override fun getShuffleMode(): Int {
-            return mService.get()!!.getShuffleMode()
-        }
-
-        override fun setShuffleMode(shufflemode: Int) {
-            mService.get()!!.setShuffleMode(shufflemode)
-        }
-
-        override fun getRepeatMode(): Int {
-            return mService.get()!!.getRepeatMode()
-        }
-
-        override fun setRepeatMode(repeatmode: Int) {
-            mService.get()!!.setRepeatMode(repeatmode)
-        }
-
-        override fun duration(): Long {
-            return mService.get()!!.duration()
-        }
-
-        override fun position(): Long {
-            return mService.get()!!.position()
-        }
-
-        override fun seek(pos: Long): Long {
-            return mService.get()!!.seek(pos)
-        }
-
-        override fun isTrackLocal(): Boolean {
-            return mService.get()!!.isTrackLocal()
-        }
-
-        override fun secondPosition(): Int {
-            return mService.get()!!.getSecondPosition()
-        }
-
-        override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
-            try {
-                super.onTransact(code, data, reply, flags)
-            } catch (e: RuntimeException) {
-                e.printStackTrace()
-                val file = File(mService.get()!!.cacheDir.absolutePath + "/err/")
-                if (!file.exists()) {
-                    file.mkdirs()
-                }
-                try {
-                    val writer = PrintWriter(mService.get()!!.cacheDir.absolutePath + "/err/" + System.currentTimeMillis() + "_aidl.log")
-                    e.printStackTrace(writer)
-                    writer.close()
-                } catch (e1: Exception) {
-                    e1.printStackTrace()
-                }
-
-                throw e
-            } catch (e: RemoteException) {
-                e.printStackTrace()
-            }
-
-            return true
-        }
-    }
-
     private class MusicPlayerHandler constructor(service: MediaService, looper: Looper) : Handler(looper) {
-
         private val mService: WeakReference<MediaService> = WeakReference(service)
-
         override fun handleMessage(msg: Message) {
             val service = mService.get() ?: return
             synchronized(service) {
@@ -1766,345 +1603,6 @@ class MediaService : Service() {
                     LRC_DOWNLOADED -> service.notifyChange(LRC_UPDATED)
                     else -> {
                     }
-                }
-            }
-        }
-    }
-
-    private class TrackErrorInfo(var mId: Long, var mTrackName: String?)
-
-    private class MultiPlayer(service: MediaService) : MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener {
-
-        private val mService: WeakReference<MediaService> = WeakReference(service)
-        var isTrackPrepared = false
-        var mIsTrackNet = false
-        var mIsNextTrackPrepared = false
-        var mIsNextInitialized = false
-        var mIllegalState = false
-        var preparedNextListener: MediaPlayer.OnPreparedListener = MediaPlayer.OnPreparedListener { mIsNextTrackPrepared = true }
-        private var mCurrentMediaPlayer: MediaPlayer? = MediaPlayer()
-        private var mNextMediaPlayer: MediaPlayer? = null
-        private var mHandler: Handler? = null
-        var isInitialized = false
-        private var mNextMediaPath: String? = null
-        private var isFirstLoad = true
-        internal var preparedListener: MediaPlayer.OnPreparedListener = MediaPlayer.OnPreparedListener { mp ->
-            if (isFirstLoad) {
-                val seekpos = mService.get()!!.mLastSeekPos
-                seek(seekpos)
-                isFirstLoad = false
-            }
-            mService.get()!!.notifyChange(META_CHANGED)
-            mp.setOnCompletionListener(this@MultiPlayer)
-            isTrackPrepared = true
-        }
-        var sencondaryPosition = 0
-        internal var bufferingUpdateListener: MediaPlayer.OnBufferingUpdateListener = MediaPlayer.OnBufferingUpdateListener { mp, percent ->
-            if (sencondaryPosition != 100)
-                mService.get()!!.sendUpdateBuffer(percent)
-            sencondaryPosition = percent
-        }
-        private val handler = Handler()
-        internal var setNextMediaPlayerIfPrepared: Runnable = object : Runnable {
-            internal var count = 0
-
-            override fun run() {
-                if (mIsNextTrackPrepared && isInitialized) {
-                    mCurrentMediaPlayer!!.setNextMediaPlayer(mNextMediaPlayer)
-                } else if (count < 60) {
-                    handler.postDelayed(this, 100)
-                }
-                count++
-            }
-        }
-        var startMediaPlayerIfPrepared: Runnable = object : Runnable {
-
-            override fun run() {
-                if (isTrackPrepared) {
-                    mCurrentMediaPlayer!!.start()
-                    val duration = duration()
-                    if (mService.get()!!.mRepeatMode != REPEAT_CURRENT && duration > 2000
-                            && position() >= duration - 2000) {
-                        mService.get()!!.nextPlay(true)
-                        Log.e("play to go", "")
-                    }
-                    mService.get()!!.loading(false)
-                } else {
-                    handler.postDelayed(this, 700)
-                }
-            }
-        }
-
-        var audioSessionId: Int
-            get() = mCurrentMediaPlayer!!.audioSessionId
-            set(sessionId) {
-                mCurrentMediaPlayer!!.audioSessionId = sessionId
-            }
-
-        init {
-            mCurrentMediaPlayer!!.setWakeMode(mService.get(), PowerManager.PARTIAL_WAKE_LOCK)
-        }
-
-        fun setDataSource(path: String) {
-
-            isInitialized = setDataSourceImpl(mCurrentMediaPlayer!!, path)
-            if (isInitialized) {
-                setNextDataSource(null)
-            }
-        }
-
-        fun setNextDataSource(path: String?) {
-            mNextMediaPath = null
-            mIsNextInitialized = false
-            try {
-                mCurrentMediaPlayer!!.setNextMediaPlayer(null)
-            } catch (ignored: IllegalArgumentException) {
-                Log.i(TAG, "Next media player is current one, continuing")
-            } catch (ignored: IllegalStateException) {
-                Log.e(TAG, "Media player not initialized!")
-                return
-            }
-
-            if (mNextMediaPlayer != null) {
-                mNextMediaPlayer!!.release()
-                mNextMediaPlayer = null
-            }
-            if (path == null) {
-                return
-            }
-            mNextMediaPlayer = MediaPlayer()
-            mNextMediaPlayer!!.setWakeMode(mService.get(), PowerManager.PARTIAL_WAKE_LOCK)
-            mNextMediaPlayer!!.audioSessionId = audioSessionId
-
-            if (setNextDataSourceImpl(mNextMediaPlayer!!, path)) {
-                mNextMediaPath = path
-                mCurrentMediaPlayer!!.setNextMediaPlayer(mNextMediaPlayer)
-
-            } else {
-                if (mNextMediaPlayer != null) {
-                    mNextMediaPlayer!!.release()
-                    mNextMediaPlayer = null
-                }
-            }
-        }
-
-        private fun setDataSourceImpl(player: MediaPlayer, path: String): Boolean {
-            mIsTrackNet = false
-            isTrackPrepared = false
-            try {
-                player.reset()
-                player.setAudioStreamType(AudioManager.STREAM_MUSIC)
-                if (path.startsWith("content://")) {
-                    player.setOnPreparedListener(null)
-                    player.setDataSource(ApplicationSingleton.instance!!, Uri.parse(path))
-                    player.prepare()
-                    isTrackPrepared = true
-                    player.setOnCompletionListener(this)
-
-                } else {
-                    player.setDataSource(path)
-                    player.setOnPreparedListener(preparedListener)
-                    player.prepareAsync()
-                    mIsTrackNet = true
-                }
-                if (mIllegalState) {
-                    mIllegalState = false
-                }
-
-            } catch (ignored: IOException) {
-
-                return false
-            } catch (ignored: IllegalArgumentException) {
-
-                return false
-            } catch (todo: IllegalStateException) {
-                todo.printStackTrace()
-                if (!mIllegalState) {
-                    mCurrentMediaPlayer = null
-                    mCurrentMediaPlayer = MediaPlayer()
-                    mCurrentMediaPlayer!!.setWakeMode(mService.get(), PowerManager.PARTIAL_WAKE_LOCK)
-                    mCurrentMediaPlayer!!.audioSessionId = audioSessionId
-                    setDataSourceImpl(mCurrentMediaPlayer!!, path)
-                    mIllegalState = true
-                } else {
-                    mIllegalState = false
-                    return false
-                }
-            }
-
-            player.setOnErrorListener(this)
-            player.setOnBufferingUpdateListener(bufferingUpdateListener)
-            return true
-        }
-
-        private fun setNextDataSourceImpl(player: MediaPlayer, path: String): Boolean {
-
-            mIsNextTrackPrepared = false
-            try {
-                player.reset()
-                player.setAudioStreamType(AudioManager.STREAM_MUSIC)
-                if (path.startsWith("content://")) {
-                    player.setOnPreparedListener(preparedNextListener)
-                    player.setDataSource(ApplicationSingleton.instance!!, Uri.parse(path))
-                    player.prepare()
-                } else {
-                    player.setDataSource(path)
-                    player.setOnPreparedListener(preparedNextListener)
-                    player.prepare()
-                    mIsNextTrackPrepared = false
-                }
-            } catch (ignored: IOException) {
-                return false
-            } catch (ignored: IllegalArgumentException) {
-                return false
-            }
-
-            player.setOnCompletionListener(this)
-            player.setOnErrorListener(this)
-            return true
-        }
-
-        fun setHandler(handler: Handler) {
-            mHandler = handler
-        }
-
-        fun start() {
-            if (!mIsTrackNet) {
-                mService.get()!!.sendUpdateBuffer(100)
-                sencondaryPosition = 100
-                mCurrentMediaPlayer!!.start()
-            } else {
-                sencondaryPosition = 0
-                mService.get()!!.loading(true)
-                handler.postDelayed(startMediaPlayerIfPrepared, 50)
-            }
-            mService.get()!!.notifyChange(MUSIC_CHANGED)
-        }
-
-        fun stop() {
-            handler.removeCallbacks(setNextMediaPlayerIfPrepared)
-            handler.removeCallbacks(startMediaPlayerIfPrepared)
-            mCurrentMediaPlayer!!.reset()
-            isInitialized = false
-            isTrackPrepared = false
-        }
-
-        fun release() {
-            mCurrentMediaPlayer!!.release()
-        }
-
-        fun pause() {
-            handler.removeCallbacks(startMediaPlayerIfPrepared)
-            mCurrentMediaPlayer!!.pause()
-        }
-
-        fun duration(): Long {
-            return if (isTrackPrepared) {
-                mCurrentMediaPlayer!!.duration.toLong()
-            } else -1
-        }
-
-        fun position(): Long {
-            if (isTrackPrepared) {
-                try {
-                    return mCurrentMediaPlayer!!.currentPosition.toLong()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-
-            }
-            return -1
-        }
-
-        fun secondPosition(): Long {
-            return if (isTrackPrepared) {
-                sencondaryPosition.toLong()
-            } else -1
-        }
-
-        fun seek(whereto: Long): Long {
-            mCurrentMediaPlayer!!.seekTo(whereto.toInt())
-            return whereto
-        }
-
-        fun setVolume(vol: Float) {
-            try {
-                mCurrentMediaPlayer!!.setVolume(vol, vol)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-
-        }
-
-        override fun onError(mp: MediaPlayer, what: Int, extra: Int): Boolean {
-            Log.w(TAG, "Music Server Error what: $what extra: $extra")
-            when (what) {
-                MediaPlayer.MEDIA_ERROR_SERVER_DIED -> {
-                    val service = mService.get()
-                    val errorInfo = TrackErrorInfo(service!!.getAudioId(),
-                            service.getTrackName())
-                    isInitialized = false
-                    isTrackPrepared = false
-                    mCurrentMediaPlayer!!.release()
-                    mCurrentMediaPlayer = MediaPlayer()
-                    mCurrentMediaPlayer!!.setWakeMode(service, PowerManager.PARTIAL_WAKE_LOCK)
-                    val msg = mHandler!!.obtainMessage(SERVER_DIED, errorInfo)
-                    mHandler!!.sendMessageDelayed(msg, 2000)
-                    return true
-                }
-                else -> {
-                }
-            }
-            return false
-        }
-
-
-        override fun onCompletion(mp: MediaPlayer) {
-            Log.w(TAG, "completion")
-            if (mp === mCurrentMediaPlayer && mNextMediaPlayer != null) {
-                mCurrentMediaPlayer!!.release()
-                mCurrentMediaPlayer = mNextMediaPlayer
-                mNextMediaPath = null
-                mNextMediaPlayer = null
-                mHandler!!.sendEmptyMessage(TRACK_WENT_TO_NEXT)
-            } else {
-                //                mService.get().mWakeLock.acquire(30000);
-                mHandler!!.sendEmptyMessage(TRACK_ENDED)
-                mHandler!!.sendEmptyMessage(RELEASE_WAKELOCK)
-            }
-        }
-
-    }
-
-    private class Shuffler {
-
-        private val mHistoryOfNumbers = LinkedList<Int>()
-
-        private val mPreviousNumbers = TreeSet<Int>()
-
-        private val mRandom = Random()
-
-        private var mPrevious: Int = 0
-
-
-        fun nextInt(interval: Int): Int {
-            var next: Int
-            do {
-                next = mRandom.nextInt(interval)
-            } while (next == mPrevious && interval > 1
-                    && !mPreviousNumbers.contains(Integer.valueOf(next)))
-            mPrevious = next
-            mHistoryOfNumbers.add(mPrevious)
-            mPreviousNumbers.add(mPrevious)
-            cleanUpHistory()
-            return next
-        }
-
-
-        private fun cleanUpHistory() {
-            if (!mHistoryOfNumbers.isEmpty() && mHistoryOfNumbers.size >= MAX_HISTORY_SIZE) {
-                for (i in 0 until Math.max(1, MAX_HISTORY_SIZE / 2)) {
-                    mPreviousNumbers.remove(mHistoryOfNumbers.removeFirst())
                 }
             }
         }
@@ -2149,7 +1647,7 @@ class MediaService : Service() {
 
         override fun run() {
             if (!stop) {
-                val file = File(Environment.getExternalStorageDirectory().absolutePath + LRC_PATH + musicInfo!!.songId)
+                val file = File(Environment.getExternalStorageDirectory().absolutePath + LRC_PATH + musicInfo.songId)
             }
         }
     }

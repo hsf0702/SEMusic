@@ -108,6 +108,7 @@ class PlayingActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(v: View) {
         when (v.id) {
             R.id.repeat_mode -> {
+                MusicPlayer.setShuffleMode(0)
             }
             R.id.pre_song -> {
             }
@@ -149,7 +150,7 @@ class PlayingActivity : BaseActivity(), View.OnClickListener {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
             R.id.menu_setting -> Toast.makeText(this, "设置", Toast.LENGTH_SHORT).show()
-            R.id.home -> finish()
+            android.R.id.home -> finish()
         }
         return super.onOptionsItemSelected(item)
     }
