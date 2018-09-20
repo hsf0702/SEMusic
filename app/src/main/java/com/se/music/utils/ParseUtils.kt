@@ -18,7 +18,7 @@ import com.se.music.provider.metadata.*
  */
 fun parseCursorToSongList(id: Int, cursor: Cursor): ArrayList<SongListEntity> {
     val list = ArrayList<SongListEntity>()
-    if (id == IdUtils.QUERY_SONG_LIST) {
+    if (id == QUERY_SONG_LIST) {
         while (cursor.moveToNext()) {
             val songListEntity = SongListEntity(cursor.getString(SL_ID_INDEX)
                     , cursor.getString(SL_NAME_INDEX)
@@ -38,7 +38,7 @@ fun parseCursorToSongList(id: Int, cursor: Cursor): ArrayList<SongListEntity> {
  * 本地音乐Cursor转化为List
  */
 fun parseCursorToMusicEntityList(id: Int, cursor: Cursor, list: ArrayList<MusicEntity>) {
-    if (id == IdUtils.QUERY_LOCAL_SONG) {
+    if (id == QUERY_LOCAL_SONG) {
         while (cursor.moveToNext()) {
             val musicEntity = MusicEntity(cursor.getLong(LM_ID_INDEX)
                     , cursor.getString(LM_TITLE_INDEX)
@@ -65,7 +65,7 @@ fun parseCursorToMusicEntityList(id: Int, cursor: Cursor, list: ArrayList<MusicE
  * 歌手Cursor转换List
  */
 fun parseCursorToArtistEntityList(id: Int, cursor: Cursor, list: ArrayList<ArtistEntity>) {
-    if (id == IdUtils.QUERY_LOCAL_SINGER) {
+    if (id == QUERY_LOCAL_SINGER) {
         while (cursor.moveToNext()) {
             val artistEntity = ArtistEntity(cursor.getString(LS_ID_ARTIST)
                     , cursor.getInt(LS_ID_NUMBER_OF_TRACKS)
@@ -81,7 +81,7 @@ fun parseCursorToArtistEntityList(id: Int, cursor: Cursor, list: ArrayList<Artis
  * 专辑Cursor转换List
  */
 fun parseCursorToAlbumEntityList(id: Int, cursor: Cursor, list: ArrayList<AlbumEntity>) {
-    if (id == IdUtils.QUERY_LOCAL_ALBUM) {
+    if (id == QUERY_LOCAL_ALBUM) {
         while (cursor.moveToNext()) {
             val albumEntity = AlbumEntity(cursor.getInt(LA_ID)
                     , cursor.getString(LA_ALBUM)

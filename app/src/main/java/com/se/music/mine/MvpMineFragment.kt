@@ -25,7 +25,8 @@ import com.se.music.mine.personal.MinePersonalInfoView
 import com.se.music.mine.root.MineAdapter
 import com.se.music.provider.metadata.START_FROM_LOCAL
 import com.se.music.subpage.mine.CreateSongListActivity
-import com.se.music.utils.IdUtils
+import com.se.music.utils.QUERY_LOCAL_SONG
+import com.se.music.utils.QUERY_SONG_LIST
 import com.se.music.utils.parseCursorToSongList
 
 /**
@@ -62,11 +63,10 @@ class MvpMineFragment : Fragment(), MvpPage {
         presenter.add(MineOperationView(presenter, R.id.mine_fun_area, adapter.header))
         presenter.add(MineSongListTitleView(presenter, R.id.mine_song_list_title, adapter.header))
 
-        presenter.add(QuerySongListModel(presenter, IdUtils.QUERY_SONG_LIST))
-        presenter.add(QueryLocalSongModel(presenter, IdUtils.QUERY_LOCAL_SONG, START_FROM_LOCAL))
+        presenter.add(QuerySongListModel(presenter, QUERY_SONG_LIST))
+        presenter.add(QueryLocalSongModel(presenter, QUERY_LOCAL_SONG, START_FROM_LOCAL))
 
-        presenter.start(IdUtils.QUERY_SONG_LIST
-                , IdUtils.QUERY_LOCAL_SONG)
+        presenter.start(QUERY_SONG_LIST, QUERY_LOCAL_SONG)
     }
 
     override fun onStart() {
@@ -98,13 +98,13 @@ class MvpMineFragment : Fragment(), MvpPage {
 
     @Keep
     fun onModelChanged(id: Int, cursor: Cursor) {
-        if (id == IdUtils.QUERY_SONG_LIST) {
+        if (id == QUERY_SONG_LIST) {
             list.addAll(parseCursorToSongList(id, cursor))
             if (!list.isEmpty()) {
                 adapter.notifyItemRangeChanged(1, list.size)
             }
             presenter.dispatchModelDataToView(id, cursor, R.id.mine_song_list_title)
-        } else if (id == IdUtils.QUERY_LOCAL_SONG) {
+        } else if (id == QUERY_LOCAL_SONG) {
             presenter.dispatchModelDataToView(id, cursor, R.id.mine_fun_area)
         }
     }

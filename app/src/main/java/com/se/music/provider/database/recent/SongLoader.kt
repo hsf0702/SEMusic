@@ -5,7 +5,7 @@ import android.database.Cursor
 import android.provider.BaseColumns
 import android.provider.MediaStore
 import android.text.TextUtils
-import com.se.music.utils.SharePreferencesUtils
+import com.se.music.singleton.SharePreferencesUtils
 import java.util.*
 
 /**

@@ -1,8 +1,10 @@
-package com.se.music.utils
+package com.se.music.singleton
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.se.music.singleton.ApplicationSingleton
+import com.se.music.utils.ALBUM_A_Z
+import com.se.music.utils.ARTIST_A_Z
+import com.se.music.utils.SONG_A_Z
 
 /**
  * Author: gaojin
@@ -25,15 +27,15 @@ class SharePreferencesUtils {
 
 
     fun getArtistSortOrder(): String {
-        return mPreferences.getString(ARTIST_SORT_ORDER, SortOrder.ArtistSortOrder.ARTIST_A_Z)
+        return mPreferences.getString(ARTIST_SORT_ORDER, ARTIST_A_Z)
     }
 
     fun getSongSortOrder(): String {
-        return mPreferences.getString(SONG_SORT_ORDER, SortOrder.SongSortOrder.SONG_A_Z)
+        return mPreferences.getString(SONG_SORT_ORDER, SONG_A_Z)
     }
 
     fun getAlbumSortOrder(): String {
-        return mPreferences.getString(ALBUM_SORT_ORDER, SortOrder.AlbumSortOrder.ALBUM_A_Z)
+        return mPreferences.getString(ALBUM_SORT_ORDER, ALBUM_A_Z)
     }
 
     fun setPlayLink(id: Long, link: String) {

@@ -42,7 +42,7 @@ class SingerListAdapter constructor(private val context: Context, private val li
         holder.singerSongCount.text = "${artistEntity.numberOfTracks}首"
         if (artistEntity.imageId == null
                 || artistEntity.imageId!!.isEmpty()) {
-            loaderManager.initLoader(IdUtils.generateLoaderId(), null, buildArtistCallBacks(holder, position))
+            loaderManager.initLoader(generateLoaderId(), null, buildArtistCallBacks(holder, position))
         } else {
             holder.singerAvatar.loadUrl(getMediumImageUrl(artistEntity.imageId!!), R.drawable.default_singer_avatar)
         }

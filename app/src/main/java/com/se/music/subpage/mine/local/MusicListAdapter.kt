@@ -9,7 +9,7 @@ import android.widget.TextView
 import com.se.music.R
 import com.se.music.entity.MusicEntity
 import com.se.music.service.MusicPlayer
-import com.se.music.utils.HandlerUtil
+import com.se.music.singleton.HandlerSingleton
 import com.se.music.utils.inflate
 import java.util.*
 
@@ -21,7 +21,7 @@ class MusicListAdapter constructor(private val context: Context, private val mLi
     private val mContentLayout = 0X02
 
     private var playMusic: PlayMusic? = null
-    private var handler = HandlerUtil.instance
+    private var handler = HandlerSingleton.instance
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is CommonItemViewHolder) {
@@ -66,7 +66,7 @@ class MusicListAdapter constructor(private val context: Context, private val mLi
                 infos[list[i]] = mList[i]
             }
             if (position > -1)
-                MusicPlayer.playAll(infos, list, position, false)
+                MusicPlayer.playAll(infos, list, position)
         }
     }
 

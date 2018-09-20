@@ -15,10 +15,7 @@ import com.se.music.base.picBaseUrl_300
 import com.se.music.online.model.SingerModel
 import com.se.music.retrofit.MusicRetrofit
 import com.se.music.retrofit.callback.CallLoaderCallbacks
-import com.se.music.utils.CollectionUtils
-import com.se.music.utils.IdUtils
-import com.se.music.utils.inflate
-import com.se.music.utils.loadUrl
+import com.se.music.utils.*
 import com.se.music.widget.CircleImageView
 import retrofit2.Call
 
@@ -49,7 +46,7 @@ class OnLineSingerFragment : BasePageFragment() {
         singerAdapter = SingerAdapter()
         recycleView.adapter = singerAdapter
 
-        loaderManager.initLoader(IdUtils.GET_SINGER_LIST, null, buildSingerCallback())
+        loaderManager.initLoader(GET_SINGER_LIST, null, buildSingerCallback())
     }
 
     private fun buildSingerCallback(): CallLoaderCallbacks<SingerModel> {
@@ -59,7 +56,7 @@ class OnLineSingerFragment : BasePageFragment() {
             }
 
             override fun onSuccess(loader: Loader<*>, data: SingerModel) {
-                if (!CollectionUtils.isEmpty(data.data?.list)) {
+                if (data.data?.list?.isEmpty() == false) {
                     singerList.addAll(data.data?.list!!)
                 }
                 singerAdapter!!.notifyDataSetChanged()

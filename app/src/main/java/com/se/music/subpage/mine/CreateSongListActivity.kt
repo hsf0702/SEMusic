@@ -7,7 +7,7 @@ import android.widget.EditText
 import com.se.music.R
 import com.se.music.common.ToolBarActivity
 import com.se.music.provider.metadata.*
-import com.se.music.utils.IdUtils
+import com.se.music.utils.generateLoaderId
 import java.util.*
 
 /**
@@ -18,7 +18,7 @@ import java.util.*
 class CreateSongListActivity : ToolBarActivity() {
 
     companion object {
-        val resultCode = IdUtils.generateLoaderId()
+        val resultCode = generateLoaderId()
     }
 
     private lateinit var nameInput: EditText

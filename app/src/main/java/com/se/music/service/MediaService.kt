@@ -21,7 +21,7 @@ import com.se.music.activity.MainActivity
 import com.se.music.entity.MusicEntity
 import com.se.music.provider.database.provider.RecentStore
 import com.se.music.singleton.GsonFactory
-import com.se.music.utils.SharePreferencesUtils
+import com.se.music.singleton.SharePreferencesUtils
 import java.io.*
 import java.lang.ref.WeakReference
 import java.util.*
@@ -46,12 +46,10 @@ class MediaService : Service() {
         const val FADEUP = 7
         const val LRC_DOWNLOADED = -10
 
-        const val SHUFFLE_NONE = 0
-        const val SHUFFLE_NORMAL = 1
-        const val SHUFFLE_AUTO = 2
-        const val REPEAT_NONE = 2
         const val REPEAT_CURRENT = 1
         const val REPEAT_ALL = 2
+        const val REPEAT_SHUFFLER = 3
+
         const val MAX_HISTORY_SIZE = 1000
     }
 
@@ -64,7 +62,6 @@ class MediaService : Service() {
     //public field
     var isPlaying = false
     var mRepeatMode = REPEAT_ALL
-    var mShuffleMode = SHUFFLE_NONE
     val NEXT = 2
     val LAST = 3
     val LRC_PATH = "/semusic/lrc/"
@@ -93,7 +90,7 @@ class MediaService : Service() {
     private val mPlaylist = ArrayList<MusicTrack>(100)
     private var mAutoShuffleList: LongArray? = null
     private val mAudioFocusListener = AudioManager.OnAudioFocusChangeListener { focusChange -> mPlayerHandler!!.obtainMessage(FOCUSCHANGE, focusChange, 0).sendToTarget() }
-    private var mPlayer: MultiPlayer? = null
+    private lateinit var mPlayer: MultiPlayer
     private var mFileToPlay: String? = null
     private var mCursor: Cursor? = null
     private var mServiceInUse = false
@@ -178,7 +175,7 @@ class MediaService : Service() {
         mHandlerThread.start()
         mPlayerHandler = MusicPlayerHandler(this, mHandlerThread.looper)
         mPlayer = MultiPlayer(this)
-        mPlayer!!.setHandler(mPlayerHandler!!)
+        mPlayer.setHandler(mPlayerHandler!!)
         mPreferences = getSharedPreferences("Service", 0)
         mRecentStore = RecentStore.instance
 
@@ -244,13 +241,13 @@ class MediaService : Service() {
 
     fun seek(position: Long): Long {
         var position = position
-        if (mPlayer!!.isInitialized) {
+        if (mPlayer.isInitialized) {
             if (position < 0) {
                 position = 0
-            } else if (position > mPlayer!!.duration()) {
-                position = mPlayer!!.duration()
+            } else if (position > mPlayer.duration()) {
+                position = mPlayer.duration()
             }
-            val result = mPlayer!!.seek(position)
+            val result = mPlayer.seek(position)
             notifyChange(POSITION_CHANGED)
             return result
         }
@@ -258,9 +255,9 @@ class MediaService : Service() {
     }
 
     fun position(): Long {
-        if (mPlayer!!.isInitialized && mPlayer!!.isTrackPrepared) {
+        if (mPlayer.isInitialized && mPlayer.isTrackPrepared) {
             try {
-                return mPlayer!!.position()
+                return mPlayer.position()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -270,8 +267,8 @@ class MediaService : Service() {
     }
 
     fun getSecondPosition(): Int {
-        return if (mPlayer!!.isInitialized) {
-            mPlayer!!.sencondaryPosition
+        return if (mPlayer.isInitialized) {
+            mPlayer.sencondaryPosition
         } else -1
     }
 
@@ -290,7 +287,7 @@ class MediaService : Service() {
 
     fun getPreviousPlayPosition(removeFromHistory: Boolean): Int {
         synchronized(this) {
-            if (mShuffleMode == SHUFFLE_NORMAL) {
+            if (mRepeatMode == REPEAT_SHUFFLER) {
                 val histsize = mHistory.size
                 if (histsize == 0) {
                     return -1
@@ -363,14 +360,14 @@ class MediaService : Service() {
         } else {
             setNextTrack(mNextPlayPos)
         }
-        if (mPlayer!!.isTrackPrepared) {
-            val duration = mPlayer!!.duration()
+        if (mPlayer.isTrackPrepared) {
+            val duration = mPlayer.duration()
             if (mRepeatMode != REPEAT_CURRENT && duration > 2000
-                    && mPlayer!!.position() >= duration - 2000) {
+                    && mPlayer.position() >= duration - 2000) {
                 nextPlay(true)
             }
         }
-        mPlayer!!.start()
+        mPlayer.start()
         mPlayerHandler!!.removeMessages(FADEDOWN)
         mPlayerHandler!!.sendEmptyMessage(FADEUP)
         setIsPlaying(true, true)
@@ -403,7 +400,7 @@ class MediaService : Service() {
     fun pause() {
         synchronized(this) {
             mPlayerHandler!!.removeMessages(FADEUP)
-            mPlayer!!.pause()
+            mPlayer.pause()
             setIsPlaying(false, true)
             notifyChange(META_CHANGED)
         }
@@ -414,8 +411,8 @@ class MediaService : Service() {
     }
 
     fun stop(goToIdle: Boolean) {
-        if (mPlayer!!.isInitialized) {
-            mPlayer!!.stop()
+        if (mPlayer.isInitialized) {
+            mPlayer.stop()
         }
         mFileToPlay = null
         closeCursor()
@@ -516,9 +513,6 @@ class MediaService : Service() {
     fun open(infos: HashMap<Long, MusicEntity>, list: LongArray, position: Int) {
         synchronized(this) {
             mPlaylistInfo = infos
-            if (mShuffleMode == SHUFFLE_AUTO) {
-                mShuffleMode = SHUFFLE_NORMAL
-            }
             val oldId = getAudioId()
             val listlength = list.size
             var newlist = true
@@ -665,40 +659,9 @@ class MediaService : Service() {
     }
 
     fun duration(): Long {
-        return if (mPlayer!!.isInitialized && mPlayer!!.isTrackPrepared) {
-            mPlayer!!.duration()
+        return if (mPlayer.isInitialized && mPlayer.isTrackPrepared) {
+            mPlayer.duration()
         } else -1
-    }
-
-    fun getShuffleMode(): Int {
-        return mShuffleMode
-    }
-
-    fun setShuffleMode(shufflemode: Int) {
-        synchronized(this) {
-            if (mShuffleMode == shufflemode && mPlaylist.size > 0) {
-                return
-            }
-
-            mShuffleMode = shufflemode
-            if (mShuffleMode == SHUFFLE_AUTO) {
-                if (makeAutoShuffleList()) {
-                    mPlaylist.clear()
-                    doAutoShuffleUpdate()
-                    mPlayPos = 0
-                    openCurrentAndNext()
-                    play()
-                    notifyChange(META_CHANGED)
-                    return
-                } else {
-                    mShuffleMode = SHUFFLE_NONE
-                }
-            } else {
-                setNextTrack()
-            }
-            saveQueue(false)
-            notifyChange(SHUFFLEMODE_CHANGED)
-        }
     }
 
     fun notifyChange(what: String) {
@@ -732,8 +695,7 @@ class MediaService : Service() {
             sendBroadcast(intent1)
             saveQueue(true)
             if (isPlaying) {
-                if (mNextPlayPos >= 0 && mNextPlayPos < mPlaylist.size
-                        && getShuffleMode() != SHUFFLE_NONE) {
+                if (mNextPlayPos >= 0 && mNextPlayPos < mPlaylist.size) {
                     setNextTrack(mNextPlayPos)
                 } else {
                     setNextTrack()
@@ -768,11 +730,10 @@ class MediaService : Service() {
 
         }
         editor.putInt("curpos", mPlayPos)
-        if (mPlayer!!.isInitialized) {
-            editor.putLong("seekpos", mPlayer!!.position())
+        if (mPlayer.isInitialized) {
+            editor.putLong("seekpos", mPlayer.position())
         }
         editor.putInt("repeatmode", mRepeatMode)
-        editor.putInt("shufflemode", mShuffleMode)
         editor.apply()
     }
 
@@ -786,71 +747,24 @@ class MediaService : Service() {
         if (mPlaylist.isEmpty()) {
             return -1
         }
-        if (!force && mRepeatMode == REPEAT_CURRENT) {
+        if (mRepeatMode == REPEAT_CURRENT) {
             return if (mPlayPos < 0) {
                 0
             } else mPlayPos
-        } else if (mShuffleMode == SHUFFLE_NORMAL) {
-            val numTracks = mPlaylist.size
-            val trackNumPlays = IntArray(numTracks)
-            for (i in 0 until numTracks) {
-                trackNumPlays[i] = 0
-            }
-
-
-            val numHistory = mHistory.size
-            for (i in 0 until numHistory) {
-                val idx = mHistory[i]
-                if (idx in 0 until numTracks) {
-                    trackNumPlays[idx]++
-                }
-            }
-
-            if (mPlayPos in 0..(numTracks - 1)) {
-                trackNumPlays[mPlayPos]++
-            }
-
-            var minNumPlays = Integer.MAX_VALUE
-            var numTracksWithMinNumPlays = 0
-            for (trackNumPlay in trackNumPlays) {
-                if (trackNumPlay < minNumPlays) {
-                    minNumPlays = trackNumPlay
-                    numTracksWithMinNumPlays = 1
-                } else if (trackNumPlay == minNumPlays) {
-                    numTracksWithMinNumPlays++
-                }
-            }
-
-            if (minNumPlays > 0 && numTracksWithMinNumPlays == numTracks
-                    && mRepeatMode != REPEAT_ALL && !force) {
-                return -1
-            }
-
-            var skip = mShuffler.nextInt(numTracksWithMinNumPlays)
-            for (i in trackNumPlays.indices) {
-                if (trackNumPlays[i] == minNumPlays) {
-                    if (skip == 0) {
-                        return i
-                    } else {
-                        skip--
-                    }
-                }
-            }
-            return -1
-        } else if (mShuffleMode == SHUFFLE_AUTO) {
+        } else if (mRepeatMode == REPEAT_SHUFFLER) {
             doAutoShuffleUpdate()
             return mPlayPos + 1
-        } else {
+        } else if (mRepeatMode == REPEAT_ALL) {
             if (mPlayPos >= mPlaylist.size - 1) {
-                if (mRepeatMode == REPEAT_NONE && !force) {
-                    return -1
-                } else if (mRepeatMode == REPEAT_ALL || force) {
+                if (mRepeatMode == REPEAT_ALL) {
                     return 0
                 }
                 return -1
             } else {
                 return mPlayPos + 1
             }
+        } else {
+            return -1
         }
     }
 
@@ -869,13 +783,13 @@ class MediaService : Service() {
             val id = mPlaylist[mNextPlayPos].mId
             if (mPlaylistInfo[id] != null) {
                 if (mPlaylistInfo[id]!!.islocal) {
-                    mPlayer!!.setNextDataSource(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.toString() + "/" + id)
+                    mPlayer.setNextDataSource(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.toString() + "/" + id)
                 } else {
-                    mPlayer!!.setNextDataSource(null)
+                    mPlayer.setNextDataSource(null)
                 }
             }
         } else {
-            mPlayer!!.setNextDataSource(null)
+            mPlayer.setNextDataSource(null)
         }
     }
 
@@ -932,8 +846,8 @@ class MediaService : Service() {
 
             }
             mFileToPlay = path
-            mPlayer!!.setDataSource(mFileToPlay!!)
-            if (mPlayer!!.isInitialized) {
+            mPlayer.setDataSource(mFileToPlay!!)
+            if (mPlayer.isInitialized) {
                 mOpenFailedCounter = 0
                 return true
             }
@@ -956,7 +870,7 @@ class MediaService : Service() {
     fun isTrackLocal(): Boolean {
         synchronized(this) {
             val info = mPlaylistInfo[getAudioId()] ?: return true
-            return info!!.islocal
+            return info.islocal
         }
     }
 
@@ -1006,7 +920,7 @@ class MediaService : Service() {
 
     fun getAudioSessionId(): Int {
         synchronized(this) {
-            return mPlayer!!.audioSessionId
+            return mPlayer.audioSessionId
         }
     }
 
@@ -1125,9 +1039,6 @@ class MediaService : Service() {
             openCurrentAndNext()
             play()
             notifyChange(META_CHANGED)
-            if (mShuffleMode == SHUFFLE_AUTO) {
-                doAutoShuffleUpdate()
-            }
         }
     }
 
@@ -1138,12 +1049,6 @@ class MediaService : Service() {
      */
     fun setAndRecordPlayPos(nextPos: Int) {
         synchronized(this) {
-            if (mShuffleMode != SHUFFLE_NONE) {
-                mHistory.add(mPlayPos)
-                if (mHistory.size > MAX_HISTORY_SIZE) {
-                    mHistory.removeAt(0)
-                }
-            }
             mPlayPos = nextPos
         }
     }
@@ -1225,7 +1130,7 @@ class MediaService : Service() {
         } else if (REPEAT_ACTION == action) {
             cycleRepeat()
         } else if (SHUFFLE_ACTION == action) {
-            cycleShuffle()
+            //待定
         } else if (TRY_GET_TRACKINFO == action) {
             getLrc(mPlaylist[mPlayPos].mId)
         }
@@ -1248,11 +1153,10 @@ class MediaService : Service() {
     }
 
     private fun updateNotification() {
-        val notifyMode: Int
-        if (isPlaying) {
-            notifyMode = NOTIFY_MODE_FOREGROUND
+        val notifyMode: Int = if (isPlaying) {
+            NOTIFY_MODE_FOREGROUND
         } else {
-            notifyMode = NOTIFY_MODE_NONE
+            NOTIFY_MODE_NONE
         }
         //
         //        if (mNotifyMode != notifyMode) {
@@ -1365,9 +1269,7 @@ class MediaService : Service() {
                     mPlayPos = -1
                     closeCursor()
                 } else {
-                    if (mShuffleMode != SHUFFLE_NONE) {
-                        mPlayPos = getNextPosition(true)
-                    } else if (mPlayPos >= mPlaylist.size) {
+                    if (mPlayPos >= mPlaylist.size) {
                         mPlayPos = 0
                     }
                     val wasPlaying = isPlaying
@@ -1494,26 +1396,13 @@ class MediaService : Service() {
     }
 
     private fun cycleRepeat() {
-        if (mRepeatMode == REPEAT_NONE) {
+        if (mRepeatMode == REPEAT_ALL) {
             setRepeatMode(REPEAT_CURRENT)
-            if (mShuffleMode != SHUFFLE_NONE) {
-                setShuffleMode(SHUFFLE_NONE)
-            }
         } else {
-            setRepeatMode(REPEAT_NONE)
+            setRepeatMode(REPEAT_ALL)
         }
     }
 
-    private fun cycleShuffle() {
-        if (mShuffleMode == SHUFFLE_NONE) {
-            setShuffleMode(SHUFFLE_NORMAL)
-            if (mRepeatMode == REPEAT_CURRENT) {
-                setRepeatMode(REPEAT_ALL)
-            }
-        } else if (mShuffleMode == SHUFFLE_NORMAL || mShuffleMode == SHUFFLE_AUTO) {
-            setShuffleMode(SHUFFLE_NONE)
-        }
-    }
 
     private fun getNotification(): Notification {
         val remoteViews: RemoteViews = RemoteViews(this.packageName, R.layout.remote_view)
@@ -1569,8 +1458,8 @@ class MediaService : Service() {
         cancelNotification()
         mPlayerHandler!!.removeCallbacksAndMessages(null)
         mHandlerThread.quit()
-        mPlayer!!.release()
-        mPlayer = null
+        mPlayer.release()
+//        mPlayer = null
         closeCursor()
         unregisterReceiver(mIntentReceiver)
 
@@ -1626,7 +1515,7 @@ class MediaService : Service() {
                 //                    nextPlay(true);
                 //                }
                 if (!stop) {
-                    mPlayer!!.setDataSource(url)
+                    mPlayer.setDataSource(url)
                 }
                 if (play && !stop) {
                     play()

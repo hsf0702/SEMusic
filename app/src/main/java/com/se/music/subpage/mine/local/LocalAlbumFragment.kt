@@ -16,7 +16,7 @@ import com.se.music.entity.AlbumEntity
 import com.se.music.provider.metadata.albumSelection
 import com.se.music.provider.metadata.info_album
 import com.se.music.provider.metadata.localAlbumUri
-import com.se.music.utils.IdUtils
+import com.se.music.utils.QUERY_LOCAL_ALBUM
 import com.se.music.utils.parseCursorToAlbumEntityList
 
 /**
@@ -45,7 +45,7 @@ class LocalAlbumFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor>
         mRecyclerView.layoutManager = LinearLayoutManager(activity)
         mRecyclerView.setHasFixedSize(true)
         mRecyclerView.adapter = adapter
-        loaderManager.initLoader(IdUtils.QUERY_LOCAL_ALBUM, null, this)
+        loaderManager.initLoader(QUERY_LOCAL_ALBUM, null, this)
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
@@ -58,7 +58,7 @@ class LocalAlbumFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor>
     }
 
     override fun onLoadFinished(loader: Loader<Cursor>, data: Cursor) {
-        parseCursorToAlbumEntityList(IdUtils.QUERY_LOCAL_ALBUM, data, list)
+        parseCursorToAlbumEntityList(QUERY_LOCAL_ALBUM, data, list)
         adapter.notifyDataSetChanged()
     }
 

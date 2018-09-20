@@ -68,8 +68,8 @@ class PlayingActivity : BaseActivity(), View.OnClickListener {
     override fun onResume() {
         super.onResume()
         songTitle.text = MusicPlayer.getTrackName()
-        setRepeatStatus()
-        setPlayingStatus()
+        updateRepeatStatus()
+        updatePlayingStatus()
     }
 
     private fun initView() {
@@ -108,19 +108,20 @@ class PlayingActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(v: View) {
         when (v.id) {
             R.id.repeat_mode -> {
-                MusicPlayer.setShuffleMode(0)
+                setRepeatStatus()
+                updateRepeatStatus()
             }
             R.id.pre_song -> {
             }
             R.id.center_control -> {
                 MusicPlayer.playOrPause()
-                setPlayingStatus()
+                updatePlayingStatus()
             }
             R.id.next_song -> MusicPlayer.nextPlay()
         }
     }
 
-    private fun setPlayingStatus() {
+    private fun updatePlayingStatus() {
         if (MusicPlayer.getIsPlaying()) {
             centerControl.setImageResource(R.drawable.default_player_btn_pause_selector)
         } else {
@@ -130,9 +131,17 @@ class PlayingActivity : BaseActivity(), View.OnClickListener {
 
     private fun setRepeatStatus() {
         when (MusicPlayer.getRepeatMode()) {
+            MediaService.REPEAT_ALL -> MusicPlayer.setRepeatMode(MediaService.REPEAT_CURRENT)
+            MediaService.REPEAT_CURRENT -> MusicPlayer.setRepeatMode(MediaService.REPEAT_SHUFFLER)
+            MediaService.REPEAT_SHUFFLER -> MusicPlayer.setRepeatMode(MediaService.REPEAT_ALL)
+        }
+    }
+
+    private fun updateRepeatStatus() {
+        when (MusicPlayer.getRepeatMode()) {
             MediaService.REPEAT_CURRENT -> repeatMode.setImageResource(R.drawable.player_btn_repeat_once)
             MediaService.REPEAT_ALL -> repeatMode.setImageResource(R.drawable.player_btn_repeat)
-            3 -> repeatMode.setImageResource(R.drawable.player_btn_random_normal)
+            MediaService.REPEAT_SHUFFLER -> repeatMode.setImageResource(R.drawable.player_btn_random_normal)
         }
     }
 

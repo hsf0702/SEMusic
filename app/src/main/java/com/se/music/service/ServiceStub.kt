@@ -109,14 +109,6 @@ class ServiceStub constructor(service: MediaService) : IMediaAidlInterface.Stub(
 
     }
 
-    override fun getShuffleMode(): Int {
-        return mService.get()?.getShuffleMode() ?: -1
-    }
-
-    override fun setShuffleMode(shufflemode: Int) {
-        mService.get()?.setShuffleMode(shufflemode)
-    }
-
     override fun getRepeatMode(): Int {
         return mService.get()?.getRepeatMode() ?: -1
     }

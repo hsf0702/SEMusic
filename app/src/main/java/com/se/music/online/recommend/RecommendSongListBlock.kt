@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.se.music.R
 import com.se.music.online.model.RecommendListModel
-import com.se.music.utils.CollectionUtils
 import com.se.music.widget.GridItemDecoration
 import com.se.music.widget.RecommendItemView
 
@@ -66,7 +65,7 @@ class RecommendSongListBlock : LinearLayout {
 
         override fun getItemCount(): Int {
             return when {
-                CollectionUtils.isEmpty(hotList) -> 0
+                hotList?.isEmpty() ?: true -> 0
                 hotList!!.size < 6 -> hotList!!.size
                 else -> ITEMCOUNT
             }

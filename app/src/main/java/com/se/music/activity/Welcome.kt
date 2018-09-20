@@ -5,13 +5,12 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
-import android.os.Bundle
 import android.provider.Settings
 import android.support.annotation.RequiresApi
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import com.se.music.R
-import com.se.music.utils.PermissionsChecker
+import com.se.music.utils.lacksPermissions
 
 
 /**
@@ -24,17 +23,11 @@ class Welcome : AppCompatActivity() {
     private val PERMISSION_REQUEST_CODE = 0x00
     private val PACKAGE_URL_SCHEME = "package:"
     private val permissions = Array(1) { Manifest.permission.READ_EXTERNAL_STORAGE }
-    private lateinit var mPermissionsChecker: PermissionsChecker
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        mPermissionsChecker = PermissionsChecker(this)
-    }
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onResume() {
         super.onResume()
-        if (mPermissionsChecker.lacksPermissions(permissions)) {
+        if (lacksPermissions(this, permissions)) {
             requestPermissions(permissions, PERMISSION_REQUEST_CODE) // 请求权限
         } else {
             allPermissionsGranted()

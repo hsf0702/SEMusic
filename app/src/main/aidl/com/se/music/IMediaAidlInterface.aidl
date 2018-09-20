@@ -8,9 +8,6 @@ interface IMediaAidlInterface {
      * Demonstrates some basic types that you can use as parameters
      * and return values in AIDL.
      */
-//    void basicTypes(int anInt, long aLong, boolean aBoolean, float aFloat,
-//            double aDouble, String aString);
-
     boolean isPlaying();
     void stop();
     void pause();
@@ -34,9 +31,7 @@ interface IMediaAidlInterface {
     int getQueuePosition();
     int removeTrack(long id);
     void enqueue(in long [] list,in Map infos, int action);
-    int getShuffleMode();
     int getRepeatMode();
-    void setShuffleMode(int shufflemode);
     void setRepeatMode(int repeatmode);
     long duration();
     long position();

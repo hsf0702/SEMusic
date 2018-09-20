@@ -12,7 +12,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.se.music.R
-import com.se.music.base.BaseActivity
 import com.se.music.base.BaseConfig
 import com.se.music.base.mvp.BaseView
 import com.se.music.base.mvp.MvpPresenter
@@ -109,7 +108,7 @@ class MineOperationView(presenter: MvpPresenter, viewId: Int, view: View) : Base
 
     private fun loveMusic() {
         val intent = Intent(getContext(), CollectedActivity::class.java)
-        (getActivity() as BaseActivity).startActivityByX(intent, true)
+        getActivity()?.startActivity(intent)
     }
 
     private fun runningRadio() {

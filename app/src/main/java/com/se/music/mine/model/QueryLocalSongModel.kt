@@ -10,7 +10,7 @@ import com.se.music.base.BaseActivity
 import com.se.music.base.mvp.BaseModel
 import com.se.music.base.mvp.MvpPresenter
 import com.se.music.provider.metadata.*
-import com.se.music.utils.SharePreferencesUtils
+import com.se.music.singleton.SharePreferencesUtils
 
 /**
  *Author: gaojin

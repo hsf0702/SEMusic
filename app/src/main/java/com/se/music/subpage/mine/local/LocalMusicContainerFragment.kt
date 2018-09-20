@@ -14,8 +14,8 @@ import android.view.ViewGroup
 import com.se.music.R
 import com.se.music.base.BasePageFragment
 import com.se.music.provider.metadata.*
-import com.se.music.utils.IdUtils
-import com.se.music.utils.SharePreferencesUtils
+import com.se.music.singleton.SharePreferencesUtils
+import com.se.music.utils.*
 
 /**
  * Author: gaojin
@@ -56,10 +56,10 @@ class LocalMusicContainerFragment : BasePageFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setTitle(context!!.getString(R.string.local_music_title))
-        loaderManager.initLoader(IdUtils.QUERY_LOCAL_SONG, null, buildLocalMusicCallBack())
-        loaderManager.initLoader(IdUtils.QUERY_LOCAL_SINGER, null, buildLocalSingerCallBack())
-        loaderManager.initLoader(IdUtils.QUERY_LOCAL_ALBUM, null, buildLocalAlbumCallBack())
-        loaderManager.initLoader(IdUtils.QUERY_FOLDER, null, buildFolderCallBack())
+        loaderManager.initLoader(QUERY_LOCAL_SONG, null, buildLocalMusicCallBack())
+        loaderManager.initLoader(QUERY_LOCAL_SINGER, null, buildLocalSingerCallBack())
+        loaderManager.initLoader(QUERY_LOCAL_ALBUM, null, buildLocalAlbumCallBack())
+        loaderManager.initLoader(QUERY_FOLDER, null, buildFolderCallBack())
         mAdapter = LocalFragmentAdapter(fm, context!!)
         mViewPager.adapter = mAdapter
         mViewPager.currentItem = position

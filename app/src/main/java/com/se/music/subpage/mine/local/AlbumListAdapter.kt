@@ -43,7 +43,7 @@ class AlbumListAdapter constructor(private val context: Context, private val lis
         holder.albumSongCount.text = "${albumEntity.numberOfSongs}首"
         if (list[position].imageId == null
                 || list[position].imageId!!.isEmpty()) {
-            loaderManager.initLoader(IdUtils.generateLoaderId(), null, buildAlbumCallBacks(holder, position))
+            loaderManager.initLoader(generateLoaderId(), null, buildAlbumCallBacks(holder, position))
         } else {
             holder.albumPic.loadUrl(getMegaImageUrl(albumEntity.imageId!!), R.drawable.default_album_avatar)
         }

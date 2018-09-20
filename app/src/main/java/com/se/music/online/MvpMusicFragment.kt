@@ -20,7 +20,9 @@ import com.se.music.online.newsong.OnLineNewSongModel
 import com.se.music.online.newsong.OnLineNewSongView
 import com.se.music.online.recommend.OnLineRecommendModel
 import com.se.music.online.recommend.OnLineRecommendView
-import com.se.music.utils.IdUtils
+import com.se.music.utils.GET_EXPRESS_SONG
+import com.se.music.utils.GET_MUSIC_HALL
+import com.se.music.utils.GET_RECOMMEND_LIST
 
 /**
  * Created by gaojin on 2018/2/4.
@@ -46,22 +48,22 @@ class MvpMusicFragment : Fragment(), MvpPage {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.add(OnLineBannerView(presenter, R.id.banner))
-        presenter.add(OnLineBannerModel(presenter, IdUtils.GET_MUSIC_HALL))
+        presenter.add(OnLineBannerModel(presenter, GET_MUSIC_HALL))
 
         presenter.add(OnLineClassifyView(presenter, R.id.classify_view))
 
         presenter.add(OnLineRecommendView(presenter, R.id.online_recommend))
-        presenter.add(OnLineRecommendModel(presenter, IdUtils.GET_RECOMMEND_LIST))
+        presenter.add(OnLineRecommendModel(presenter, GET_RECOMMEND_LIST))
 
         presenter.add(OnLineNewSongView(presenter, R.id.online_express))
-        presenter.add(OnLineNewSongModel(presenter, IdUtils.GET_EXPRESS_SONG))
+        presenter.add(OnLineNewSongModel(presenter, GET_EXPRESS_SONG))
         loadData()
     }
 
     private fun loadData() {
-        presenter.start(IdUtils.GET_MUSIC_HALL
-                , IdUtils.GET_RECOMMEND_LIST
-                , IdUtils.GET_EXPRESS_SONG)
+        presenter.start(GET_MUSIC_HALL
+                , GET_RECOMMEND_LIST
+                , GET_EXPRESS_SONG)
     }
 
     @Keep

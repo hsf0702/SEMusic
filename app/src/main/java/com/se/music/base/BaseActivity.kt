@@ -1,16 +1,16 @@
 package com.se.music.base
 
 import android.annotation.SuppressLint
-import android.content.*
-import android.os.IBinder
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
-import com.se.music.IMediaAidlInterface
 import com.se.music.R
 import com.se.music.base.listener.MusicStateListener
 import com.se.music.main.QuickControlsFragment
 import com.se.music.service.*
-import com.se.music.utils.MConstants
 import com.se.music.utils.setTransparentForWindow
 import java.lang.ref.WeakReference
 import java.util.*
@@ -21,18 +21,17 @@ import java.util.*
  * date：2017/11/6 下午7:57
  */
 @SuppressLint("Registered")
-open class BaseActivity : AppCompatActivity(), ServiceConnection {
+open class BaseActivity : AppCompatActivity() {
 
-    var mService: IMediaAidlInterface? = null
     private var mToken: MusicPlayer.ServiceToken? = null
     private var fragment: QuickControlsFragment? = null //底部播放控制栏
     private val mMusicListener = ArrayList<MusicStateListener>()
-    private var mPlaybackStatus: PlaybackStatus? = null //BroadCastReceiver 接受播放状态变化等
+    private lateinit var mPlaybackStatus: PlaybackStatus
 
     override fun setContentView(layoutResID: Int) {
         super.setContentView(layoutResID)
         //每次新建一个activity都会连接一次，然后把上下文和Sc保存在一个WeakHashMap中
-        mToken = MusicPlayer.bindToService(this, this)
+        mToken = MusicPlayer.bindToService(this)
         mPlaybackStatus = PlaybackStatus(this)
         val intentFilter = IntentFilter()
         intentFilter.addAction(PLAYSTATE_CHANGED)
@@ -44,10 +43,9 @@ open class BaseActivity : AppCompatActivity(), ServiceConnection {
         intentFilter.addAction(MUSIC_CHANGED)
         intentFilter.addAction(LRC_UPDATED)
         intentFilter.addAction(MUSIC_LODING)
-
-        intentFilter.addAction(MConstants.EMPTY_LIST)
-        intentFilter.addAction(MConstants.PLAYLIST_COUNT_CHANGED)
-        intentFilter.addAction(MConstants.MUSIC_COUNT_CHANGED)
+        intentFilter.addAction(EMPTY_LIST)
+        intentFilter.addAction(PLAYLIST_COUNT_CHANGED)
+        intentFilter.addAction(MUSIC_COUNT_CHANGED)
         registerReceiver(mPlaybackStatus, intentFilter)
 
         setTransparentForWindow(this)
@@ -153,31 +151,14 @@ open class BaseActivity : AppCompatActivity(), ServiceConnection {
 
     private fun unbindService() {
         if (mToken != null) {
-            MusicPlayer.unbindFromService(mToken)
+            MusicPlayer.unbindFromService(mToken!!)
             mToken = null
         }
     }
 
-    /**
-     * X轴方向滑动打开Activity
-     *
-     * @param intent
-     * @param isInFromRight
-     */
-    fun startActivityByX(intent: Intent, isInFromRight: Boolean) {
-        this.startActivity(intent)
-        if (isInFromRight) {
-            this.overridePendingTransition(R.anim.empty, R.anim.empty)
-        } else {
-            this.overridePendingTransition(R.anim.empty, R.anim.empty)
-        }
-    }
-
-
     class PlaybackStatus(activity: BaseActivity) : BroadcastReceiver() {
 
         private val mReference: WeakReference<BaseActivity> = WeakReference(activity)
-
 
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action
@@ -190,27 +171,16 @@ open class BaseActivity : AppCompatActivity(), ServiceConnection {
                     TRACK_PREPARED -> baseActivity.updateTime()
                     BUFFER_UP -> baseActivity.updateBuffer(intent.getIntExtra("progress", 0))
                     MUSIC_LODING -> baseActivity.loading(intent.getBooleanExtra("isloading", false))
-                    REFRESH -> {
-                    }
-                    MConstants.MUSIC_COUNT_CHANGED -> baseActivity.refreshUI()
-                    MConstants.PLAYLIST_COUNT_CHANGED -> baseActivity.refreshUI()
+                    REFRESH -> { }
+                    MUSIC_COUNT_CHANGED -> baseActivity.refreshUI()
+                    PLAYLIST_COUNT_CHANGED -> baseActivity.refreshUI()
                     QUEUE_CHANGED -> baseActivity.updateQueue()
                     TRACK_ERROR -> Toast.makeText(baseActivity, "错误了嘤嘤嘤", Toast.LENGTH_SHORT).show()
-                    MUSIC_CHANGED -> {
-                        baseActivity.updateTrack()
-                    }
+                    MUSIC_CHANGED -> baseActivity.updateTrack()
                     LRC_UPDATED -> baseActivity.updateLrc()
                 }
             }
         }
-    }
-
-    override fun onServiceDisconnected(name: ComponentName?) {
-        mService = null
-    }
-
-    override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-        mService = IMediaAidlInterface.Stub.asInterface(service)
     }
 
 }

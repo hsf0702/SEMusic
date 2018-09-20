@@ -898,13 +898,9 @@ class TitleZoomTabLayout : FrameLayout {
     private fun ensureScrollAnimator() {
         if (mScrollAnimator == null) {
             mScrollAnimator = ValueAnimator()
-            mScrollAnimator!!.setInterpolator(AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR)
-            mScrollAnimator!!.setDuration(ANIMATION_DURATION.toLong())
-            mScrollAnimator!!.addUpdateListener(object : ValueAnimator.AnimatorUpdateListener {
-                override fun onAnimationUpdate(animator: ValueAnimator) {
-                    scrollTo(animator.getAnimatedValue() as Int, 0)
-                }
-            })
+            mScrollAnimator!!.interpolator = AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR
+            mScrollAnimator!!.duration = ANIMATION_DURATION.toLong()
+            mScrollAnimator!!.addUpdateListener { animator -> scrollTo(animator.animatedValue as Int, 0) }
         }
     }
 
@@ -918,7 +914,7 @@ class TitleZoomTabLayout : FrameLayout {
         if (position < tabCount) {
             for (i in 0 until tabCount) {
                 val child = mTabStrip.getChildAt(i)
-                child.setSelected(i == position)
+                child.isSelected = i == position
             }
         }
     }
