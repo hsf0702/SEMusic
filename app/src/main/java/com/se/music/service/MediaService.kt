@@ -181,7 +181,7 @@ class MediaService : Service() {
 
         val filter = IntentFilter()
 //         filter.addAction(SERVICECMD);
-        filter.addAction(TOGGLEPAUSE_ACTION)
+        filter.addAction(TOGGLE_PAUSE_ACTION)
 //        filter.addAction(PAUSE_ACTION);
         filter.addAction(STOP_ACTION)
         filter.addAction(NEXT_ACTION)
@@ -189,7 +189,7 @@ class MediaService : Service() {
         filter.addAction(PREVIOUS_FORCE_ACTION)
         filter.addAction(REPEAT_ACTION)
         filter.addAction(SHUFFLE_ACTION)
-        filter.addAction(TRY_GET_TRACKINFO)
+        filter.addAction(TRY_GET_TRACK_INFO)
         filter.addAction(Intent.ACTION_SCREEN_OFF)
 //        filter.addAction(LOCK_SCREEN);
         filter.addAction(SEND_PROGRESS)
@@ -281,7 +281,7 @@ class MediaService : Service() {
             mRepeatMode = repeatmode
             setNextTrack()
             saveQueue(false)
-            notifyChange(REPEATMODE_CHANGED)
+            notifyChange(REPEAT_MODE_CHANGED)
         }
     }
 
@@ -389,7 +389,7 @@ class MediaService : Service() {
                 mLastPlayedTime = System.currentTimeMillis()
             }
             if (notify) {
-                notifyChange(PLAYSTATE_CHANGED)
+                notifyChange(PLAY_STATE_CHANGED)
             }
         }
     }
@@ -642,7 +642,7 @@ class MediaService : Service() {
                 scheduleDelayedShutdown()
                 if (isPlaying) {
                     isPlaying = false
-                    notifyChange(PLAYSTATE_CHANGED)
+                    notifyChange(PLAY_STATE_CHANGED)
                 }
             } else if (openNext) {
                 setNextTrack()
@@ -704,7 +704,7 @@ class MediaService : Service() {
         } else {
             saveQueue(false)
         }
-        if (what == PLAYSTATE_CHANGED) {
+        if (what == PLAY_STATE_CHANGED) {
             updateNotification()
         }
     }
@@ -1116,7 +1116,7 @@ class MediaService : Service() {
 
     private fun handleCommandIntent(intent: Intent) {
         val action = intent.action
-        if (TOGGLEPAUSE_ACTION == action) {
+        if (TOGGLE_PAUSE_ACTION == action) {
             if (isPlaying) {
                 pause()
             } else {
@@ -1131,7 +1131,7 @@ class MediaService : Service() {
             cycleRepeat()
         } else if (SHUFFLE_ACTION == action) {
             //待定
-        } else if (TRY_GET_TRACKINFO == action) {
+        } else if (TRY_GET_TRACK_INFO == action) {
             getLrc(mPlaylist[mPlayPos].mId)
         }
     }
@@ -1195,7 +1195,7 @@ class MediaService : Service() {
     }
 
     fun loading(l: Boolean) {
-        val intent = Intent(MUSIC_LODING)
+        val intent = Intent(MUSIC_LOADING)
         intent.putExtra("isloading", l)
         sendBroadcast(intent)
     }
@@ -1418,7 +1418,7 @@ class MediaService : Service() {
         remoteViews.setTextViewText(R.id.text, text)
 
         //此处action不能是一样的 如果一样的 接受的flag参数只是第一个设置的值
-        val pauseIntent = Intent(TOGGLEPAUSE_ACTION)
+        val pauseIntent = Intent(TOGGLE_PAUSE_ACTION)
         pauseIntent.putExtra("FLAG", PAUSE_FLAG)
         val pausePIntent = PendingIntent.getBroadcast(this, 0, pauseIntent, 0)
         remoteViews.setImageViewResource(R.id.img_play, if (isPlaying) R.drawable.icon_remote_pause else R.drawable.icon_remote_play)

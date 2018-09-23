@@ -34,7 +34,7 @@ open class BaseActivity : AppCompatActivity() {
         mToken = MusicPlayer.bindToService(this)
         mPlaybackStatus = PlaybackStatus(this)
         val intentFilter = IntentFilter()
-        intentFilter.addAction(PLAYSTATE_CHANGED)
+        intentFilter.addAction(PLAY_STATE_CHANGED)
         intentFilter.addAction(META_CHANGED)
         intentFilter.addAction(MUSIC_CHANGED)
         intentFilter.addAction(QUEUE_CHANGED)
@@ -42,7 +42,7 @@ open class BaseActivity : AppCompatActivity() {
         intentFilter.addAction(BUFFER_UP)
         intentFilter.addAction(MUSIC_CHANGED)
         intentFilter.addAction(LRC_UPDATED)
-        intentFilter.addAction(MUSIC_LODING)
+        intentFilter.addAction(MUSIC_LOADING)
         intentFilter.addAction(EMPTY_LIST)
         intentFilter.addAction(PLAYLIST_COUNT_CHANGED)
         intentFilter.addAction(MUSIC_COUNT_CHANGED)
@@ -166,11 +166,11 @@ open class BaseActivity : AppCompatActivity() {
             if (baseActivity != null) {
                 when (action) {
                     META_CHANGED -> baseActivity.baseUpdatePlayInfo()
-                    PLAYSTATE_CHANGED -> {
+                    PLAY_STATE_CHANGED -> {
                     }
                     TRACK_PREPARED -> baseActivity.updateTime()
                     BUFFER_UP -> baseActivity.updateBuffer(intent.getIntExtra("progress", 0))
-                    MUSIC_LODING -> baseActivity.loading(intent.getBooleanExtra("isloading", false))
+                    MUSIC_LOADING -> baseActivity.loading(intent.getBooleanExtra("isloading", false))
                     REFRESH -> { }
                     MUSIC_COUNT_CHANGED -> baseActivity.refreshUI()
                     PLAYLIST_COUNT_CHANGED -> baseActivity.refreshUI()

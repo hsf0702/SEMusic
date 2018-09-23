@@ -15,6 +15,7 @@ import java.util.*
  */
 
 class ServiceStub constructor(service: MediaService) : IMediaAidlInterface.Stub() {
+
     private val mService: WeakReference<MediaService> = WeakReference(service)
 
     override fun isPlaying(): Boolean {
@@ -35,6 +36,10 @@ class ServiceStub constructor(service: MediaService) : IMediaAidlInterface.Stub(
 
     override fun nextPlay() {
         mService.get()?.nextPlay(true)
+    }
+
+    override fun previous() {
+//        mService.get()?.previous()
     }
 
     override fun openFile(path: String) {

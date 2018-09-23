@@ -57,6 +57,7 @@ class MusicPlayer {
                     }
                 }
             } catch (ignored: Exception) {
+                ignored.printStackTrace()
             }
         }
 
@@ -64,24 +65,8 @@ class MusicPlayer {
             return mService?.isPlaying ?: false
         }
 
-        fun getQueueSize(): Int {
-            return mService?.queueSize ?: 0
-        }
-
-        fun getQueuePosition(): Int {
+        private fun getQueuePosition(): Int {
             return mService?.queuePosition ?: 0
-        }
-
-        fun setQueuePosition(position: Int) {
-            mService?.queuePosition = position
-        }
-
-        fun getAlbumPath(): String? {
-            return mService?.albumPath
-        }
-
-        fun getAlbumPathAll(): Array<String>? {
-            return mService?.albumPathtAll
         }
 
         /**
@@ -129,6 +114,13 @@ class MusicPlayer {
             mService?.nextPlay()
         }
 
+        /**
+         * 上一首音乐
+         */
+        fun previous() {
+            mService?.previous()
+        }
+
         fun position(): Long {
             return mService?.position() ?: 0
         }
@@ -151,16 +143,6 @@ class MusicPlayer {
 
         fun secondPosition(): Int {
             return mService?.secondPosition() ?: 0
-        }
-
-        fun previous(context: Context, force: Boolean) {
-            val previous = Intent(context, MediaService::class.java)
-            if (force) {
-                previous.action = PREVIOUS_FORCE_ACTION
-            } else {
-                previous.action = PREVIOUS_ACTION
-            }
-            context.startService(previous)
         }
 
         /**

@@ -9,6 +9,11 @@ import java.util.*
  */
 
 class Shuffler {
+
+    companion object {
+        val instance: Shuffler by lazy { Shuffler() }
+    }
+
     private val mHistoryOfNumbers = LinkedList<Int>()
     private val mPreviousNumbers = TreeSet<Int>()
     private val mRandom = Random()

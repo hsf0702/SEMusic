@@ -112,6 +112,7 @@ class PlayingActivity : BaseActivity(), View.OnClickListener {
                 updateRepeatStatus()
             }
             R.id.pre_song -> {
+                MusicPlayer.previous()
             }
             R.id.center_control -> {
                 MusicPlayer.playOrPause()
