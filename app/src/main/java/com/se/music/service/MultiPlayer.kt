@@ -1,5 +1,6 @@
 package com.se.music.service
 
+import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
@@ -16,42 +17,56 @@ import java.lang.ref.WeakReference
  */
 
 class MultiPlayer(service: MediaService) : MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener {
-    private val mService: WeakReference<MediaService> = WeakReference(service)
+
     var isTrackPrepared = false
-    var mIsTrackNet = false
     var mIsNextTrackPrepared = false
-    var mIsNextInitialized = false
-    var mIllegalState = false
-    var preparedNextListener: MediaPlayer.OnPreparedListener = MediaPlayer.OnPreparedListener { mIsNextTrackPrepared = true }
-    private var mCurrentMediaPlayer: MediaPlayer? = MediaPlayer()
-    private var mNextMediaPlayer: MediaPlayer? = null
-    private var mHandler: Handler? = null
     var isInitialized = false
+    var secondaryPosition = 0
+    var audioSessionId: Int
+        get() = mCurrentMediaPlayer.audioSessionId
+        set(sessionId) {
+            mCurrentMediaPlayer.audioSessionId = sessionId
+        }
+
+    //两个播放器
+    private var mCurrentMediaPlayer: MediaPlayer = MediaPlayer()
+    private var mNextMediaPlayer: MediaPlayer? = null
+
+    private val mService: WeakReference<MediaService> = WeakReference(service)
+    private var mIsTrackNet = false
+    private var mIsNextInitialized = false
+    private var mIllegalState = false
+    private var preparedNextListener: MediaPlayer.OnPreparedListener = MediaPlayer.OnPreparedListener { mIsNextTrackPrepared = true }
+    private var mHandler: Handler? = null
     private var mNextMediaPath: String? = null
     private var isFirstLoad = true
+    private val audioAttributes = AudioAttributes.Builder()
+            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+            .setFlags(AudioAttributes.CONTENT_TYPE_MUSIC)
+            .setUsage(AudioAttributes.USAGE_MEDIA)
+            .setLegacyStreamType(AudioManager.STREAM_MUSIC)
+            .build()
     private var preparedListener: MediaPlayer.OnPreparedListener = MediaPlayer.OnPreparedListener { mp ->
         if (isFirstLoad) {
-            val seekpos = mService.get()!!.mLastSeekPos
-            seek(seekpos)
+            val seekPos = mService.get()!!.mLastSeekPos
+            seek(seekPos)
             isFirstLoad = false
         }
         mService.get()!!.notifyChange(META_CHANGED)
         mp.setOnCompletionListener(this)
         isTrackPrepared = true
     }
-    var sencondaryPosition = 0
-    private var bufferingUpdateListener: MediaPlayer.OnBufferingUpdateListener = MediaPlayer.OnBufferingUpdateListener { mp, percent ->
-        if (sencondaryPosition != 100)
+    private var bufferingUpdateListener: MediaPlayer.OnBufferingUpdateListener = MediaPlayer.OnBufferingUpdateListener { _, percent ->
+        if (secondaryPosition != 100)
             mService.get()!!.sendUpdateBuffer(percent)
-        sencondaryPosition = percent
+        secondaryPosition = percent
     }
     private val handler = Handler()
     private var setNextMediaPlayerIfPrepared: Runnable = object : Runnable {
-        internal var count = 0
-
+        var count = 0
         override fun run() {
             if (mIsNextTrackPrepared && isInitialized) {
-                mCurrentMediaPlayer!!.setNextMediaPlayer(mNextMediaPlayer)
+                mCurrentMediaPlayer.setNextMediaPlayer(mNextMediaPlayer)
             } else if (count < 60) {
                 handler.postDelayed(this, 100)
             }
@@ -61,32 +76,25 @@ class MultiPlayer(service: MediaService) : MediaPlayer.OnErrorListener, MediaPla
     private var startMediaPlayerIfPrepared: Runnable = object : Runnable {
         override fun run() {
             if (isTrackPrepared) {
-                mCurrentMediaPlayer!!.start()
+                mCurrentMediaPlayer.start()
                 val duration = duration()
-                if (mService.get()!!.mRepeatMode != MediaService.REPEAT_CURRENT && duration > 2000
+                if (mService.get()?.mRepeatMode != MediaService.REPEAT_CURRENT && duration > 2000
                         && position() >= duration - 2000) {
-                    mService.get()!!.nextPlay(true)
-                    Log.e("play to go", "")
+                    mService.get()?.nextPlay()
                 }
-                mService.get()!!.loading(false)
+                mService.get()?.loading(false)
             } else {
                 handler.postDelayed(this, 700)
             }
         }
     }
 
-    var audioSessionId: Int
-        get() = mCurrentMediaPlayer!!.audioSessionId
-        set(sessionId) {
-            mCurrentMediaPlayer!!.audioSessionId = sessionId
-        }
-
     init {
-        mCurrentMediaPlayer!!.setWakeMode(mService.get(), PowerManager.PARTIAL_WAKE_LOCK)
+        mCurrentMediaPlayer.setWakeMode(mService.get(), PowerManager.PARTIAL_WAKE_LOCK)
     }
 
     fun setDataSource(path: String) {
-        isInitialized = setDataSourceImpl(mCurrentMediaPlayer!!, path)
+        isInitialized = setDataSourceImpl(mCurrentMediaPlayer, path)
         if (isInitialized) {
             setNextDataSource(null)
         }
@@ -96,7 +104,7 @@ class MultiPlayer(service: MediaService) : MediaPlayer.OnErrorListener, MediaPla
         mNextMediaPath = null
         mIsNextInitialized = false
         try {
-            mCurrentMediaPlayer!!.setNextMediaPlayer(null)
+            mCurrentMediaPlayer.setNextMediaPlayer(null)
         } catch (ignored: IllegalArgumentException) {
             Log.i(MediaService.TAG, "Next media player is current one, continuing")
         } catch (ignored: IllegalStateException) {
@@ -117,7 +125,7 @@ class MultiPlayer(service: MediaService) : MediaPlayer.OnErrorListener, MediaPla
 
         if (setNextDataSourceImpl(mNextMediaPlayer!!, path)) {
             mNextMediaPath = path
-            mCurrentMediaPlayer!!.setNextMediaPlayer(mNextMediaPlayer)
+            mCurrentMediaPlayer.setNextMediaPlayer(mNextMediaPlayer)
 
         } else {
             if (mNextMediaPlayer != null) {
@@ -132,7 +140,7 @@ class MultiPlayer(service: MediaService) : MediaPlayer.OnErrorListener, MediaPla
         isTrackPrepared = false
         try {
             player.reset()
-            player.setAudioStreamType(AudioManager.STREAM_MUSIC)
+            player.setAudioAttributes(audioAttributes)
             if (path.startsWith("content://")) {
                 player.setOnPreparedListener(null)
                 player.setDataSource(ApplicationSingleton.instance!!, Uri.parse(path))
@@ -151,19 +159,16 @@ class MultiPlayer(service: MediaService) : MediaPlayer.OnErrorListener, MediaPla
             }
 
         } catch (ignored: IOException) {
-
             return false
         } catch (ignored: IllegalArgumentException) {
-
             return false
         } catch (todo: IllegalStateException) {
             todo.printStackTrace()
             if (!mIllegalState) {
-                mCurrentMediaPlayer = null
                 mCurrentMediaPlayer = MediaPlayer()
-                mCurrentMediaPlayer!!.setWakeMode(mService.get(), PowerManager.PARTIAL_WAKE_LOCK)
-                mCurrentMediaPlayer!!.audioSessionId = audioSessionId
-                setDataSourceImpl(mCurrentMediaPlayer!!, path)
+                mCurrentMediaPlayer.setWakeMode(mService.get(), PowerManager.PARTIAL_WAKE_LOCK)
+                mCurrentMediaPlayer.audioSessionId = audioSessionId
+                setDataSourceImpl(mCurrentMediaPlayer, path)
                 mIllegalState = true
             } else {
                 mIllegalState = false
@@ -181,7 +186,7 @@ class MultiPlayer(service: MediaService) : MediaPlayer.OnErrorListener, MediaPla
         mIsNextTrackPrepared = false
         try {
             player.reset()
-            player.setAudioStreamType(AudioManager.STREAM_MUSIC)
+            player.setAudioAttributes(audioAttributes)
             if (path.startsWith("content://")) {
                 player.setOnPreparedListener(preparedNextListener)
                 player.setDataSource(ApplicationSingleton.instance!!, Uri.parse(path))
@@ -209,44 +214,44 @@ class MultiPlayer(service: MediaService) : MediaPlayer.OnErrorListener, MediaPla
 
     fun start() {
         if (!mIsTrackNet) {
-            mService.get()!!.sendUpdateBuffer(100)
-            sencondaryPosition = 100
-            mCurrentMediaPlayer!!.start()
+            mService.get()?.sendUpdateBuffer(100)
+            secondaryPosition = 100
+            mCurrentMediaPlayer.start()
         } else {
-            sencondaryPosition = 0
-            mService.get()!!.loading(true)
+            secondaryPosition = 0
+            mService.get()?.loading(true)
             handler.postDelayed(startMediaPlayerIfPrepared, 50)
         }
-        mService.get()!!.notifyChange(MUSIC_CHANGED)
+        mService.get()?.notifyChange(MUSIC_CHANGED)
     }
 
     fun stop() {
         handler.removeCallbacks(setNextMediaPlayerIfPrepared)
         handler.removeCallbacks(startMediaPlayerIfPrepared)
-        mCurrentMediaPlayer!!.reset()
+        mCurrentMediaPlayer.reset()
         isInitialized = false
         isTrackPrepared = false
     }
 
     fun release() {
-        mCurrentMediaPlayer!!.release()
+        mCurrentMediaPlayer.release()
     }
 
     fun pause() {
         handler.removeCallbacks(startMediaPlayerIfPrepared)
-        mCurrentMediaPlayer!!.pause()
+        mCurrentMediaPlayer.pause()
     }
 
     fun duration(): Long {
         return if (isTrackPrepared) {
-            mCurrentMediaPlayer!!.duration.toLong()
+            mCurrentMediaPlayer.duration.toLong()
         } else -1
     }
 
     fun position(): Long {
         if (isTrackPrepared) {
             try {
-                return mCurrentMediaPlayer!!.currentPosition.toLong()
+                return mCurrentMediaPlayer.currentPosition.toLong()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -257,18 +262,18 @@ class MultiPlayer(service: MediaService) : MediaPlayer.OnErrorListener, MediaPla
 
     fun secondPosition(): Long {
         return if (isTrackPrepared) {
-            sencondaryPosition.toLong()
+            secondaryPosition.toLong()
         } else -1
     }
 
     fun seek(whereto: Long): Long {
-        mCurrentMediaPlayer!!.seekTo(whereto.toInt())
+        mCurrentMediaPlayer.seekTo(whereto.toInt())
         return whereto
     }
 
     fun setVolume(vol: Float) {
         try {
-            mCurrentMediaPlayer!!.setVolume(vol, vol)
+            mCurrentMediaPlayer.setVolume(vol, vol)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -284,11 +289,11 @@ class MultiPlayer(service: MediaService) : MediaPlayer.OnErrorListener, MediaPla
                         service.getTrackName())
                 isInitialized = false
                 isTrackPrepared = false
-                mCurrentMediaPlayer!!.release()
+                mCurrentMediaPlayer.release()
                 mCurrentMediaPlayer = MediaPlayer()
-                mCurrentMediaPlayer!!.setWakeMode(service, PowerManager.PARTIAL_WAKE_LOCK)
-                val msg = mHandler!!.obtainMessage(MediaService.SERVER_DIED, errorInfo)
-                mHandler!!.sendMessageDelayed(msg, 2000)
+                mCurrentMediaPlayer.setWakeMode(service, PowerManager.PARTIAL_WAKE_LOCK)
+                val msg = mHandler?.obtainMessage(MediaService.SERVER_DIED, errorInfo)
+                mHandler?.sendMessageDelayed(msg, 2000)
                 return true
             }
             else -> {
@@ -301,15 +306,14 @@ class MultiPlayer(service: MediaService) : MediaPlayer.OnErrorListener, MediaPla
     override fun onCompletion(mp: MediaPlayer) {
         Log.w(MediaService.TAG, "completion")
         if (mp === mCurrentMediaPlayer && mNextMediaPlayer != null) {
-            mCurrentMediaPlayer!!.release()
-            mCurrentMediaPlayer = mNextMediaPlayer
+            mCurrentMediaPlayer.release()
+            mCurrentMediaPlayer = mNextMediaPlayer!!
             mNextMediaPath = null
             mNextMediaPlayer = null
-            mHandler!!.sendEmptyMessage(MediaService.TRACK_WENT_TO_NEXT)
+            mHandler?.sendEmptyMessage(MediaService.TRACK_WENT_TO_NEXT)
         } else {
-            //                mService.get().mWakeLock.acquire(30000);
-            mHandler!!.sendEmptyMessage(MediaService.TRACK_ENDED)
-            mHandler!!.sendEmptyMessage(MediaService.RELEASE_WAKELOCK)
+            mHandler?.sendEmptyMessage(MediaService.TRACK_ENDED)
+            mHandler?.sendEmptyMessage(MediaService.RELEASE_WAKELOCK)
         }
     }
 }

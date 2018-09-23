@@ -35,7 +35,7 @@ class ServiceStub constructor(service: MediaService) : IMediaAidlInterface.Stub(
     }
 
     override fun nextPlay() {
-        mService.get()?.nextPlay(true)
+        mService.get()?.nextPlay()
     }
 
     override fun previous() {

@@ -69,7 +69,6 @@ class MediaService : Service() {
         private const val NOTIFY_MODE_NONE = 0
         private const val NOTIFY_MODE_FOREGROUND = 1
         private const val IDLE_DELAY = 5 * 60 * 1000
-        private const val REWIND_INSTEAD_PREVIOUS_THRESHOLD: Long = 3000
     }
 
     //handler
@@ -181,7 +180,7 @@ class MediaService : Service() {
         mHandlerThread.start()
         mPlayerHandler = MusicPlayerHandler(this, mHandlerThread.looper)
         mPlayer = MultiPlayer(this)
-        mPlayer.setHandler(mPlayerHandler!!)
+        mPlayer.setHandler(mPlayerHandler)
         mPreferences = getSharedPreferences("Service", 0)
         mRecentStore = RecentStore.instance
 
@@ -224,7 +223,7 @@ class MediaService : Service() {
             }
 
             override fun onSkipToNext() {
-                nextPlay(true)
+                nextPlay()
             }
 
             override fun onSkipToPrevious() {
@@ -267,7 +266,7 @@ class MediaService : Service() {
 
     fun getSecondPosition(): Int {
         return if (mPlayer.isInitialized) {
-            mPlayer.sencondaryPosition
+            mPlayer.secondaryPosition
         } else -1
     }
 
@@ -307,7 +306,7 @@ class MediaService : Service() {
     }
 
     private fun openCurrent() {
-        openCurrentAndMaybeNext(false, false)
+        openCurrentAndMaybeNext(false)
     }
 
     fun previous() {
@@ -342,13 +341,6 @@ class MediaService : Service() {
      * @param createNewNextTrack 是否准备下一首歌
      */
     fun play(createNewNextTrack: Boolean) {
-        val status = mAudioManager!!.requestAudioFocus(mAudioFocusListener,
-                AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN)
-
-        if (status != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-            return
-        }
-
         val intent = Intent(AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION)
         intent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, getAudioSessionId())
         intent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, packageName)
@@ -363,7 +355,7 @@ class MediaService : Service() {
             val duration = mPlayer.duration()
             if (mRepeatMode != REPEAT_CURRENT && duration > 2000
                     && mPlayer.position() >= duration - 2000) {
-                nextPlay(true)
+                nextPlay()
             }
         }
         mPlayer.start()
@@ -534,7 +526,7 @@ class MediaService : Service() {
                 mShuffler.nextInt(mPlaylist.size)
             }
             mHistory.clear()
-            openCurrentAndNextPlay(true)
+            openCurrentAndMaybeNext(true)
             if (oldId != getAudioId()) {
                 notifyChange(META_CHANGED)
             }
@@ -574,19 +566,15 @@ class MediaService : Service() {
     }
 
     private fun openCurrentAndNext() {
-        openCurrentAndMaybeNext(false, true)
+        openCurrentAndMaybeNext(true)
     }
 
     /**
      * 播放当前歌曲并且准备下一首
      *
-     * @param play
+     * @param openNext
      */
-    private fun openCurrentAndNextPlay(play: Boolean) {
-        openCurrentAndMaybeNext(play, true)
-    }
-
-    private fun openCurrentAndMaybeNext(play: Boolean, openNext: Boolean) {
+    private fun openCurrentAndMaybeNext(openNext: Boolean) {
         synchronized(this) {
             closeCursor()
             stop(false)
@@ -613,7 +601,7 @@ class MediaService : Service() {
                     }
                     closeCursor()
                     if (mOpenFailedCounter++ < 10 && mPlaylist.size > 1) {
-                        val pos = getNextPosition(false)
+                        val pos = getNextPosition()
                         if (pos < 0) {
                             shutdown = true
                             break
@@ -735,7 +723,7 @@ class MediaService : Service() {
      * @param force
      * @return
      */
-    private fun getNextPosition(force: Boolean): Int {
+    private fun getNextPosition(): Int {
         if (mPlaylist.isEmpty()) {
             return -1
         }
@@ -761,7 +749,7 @@ class MediaService : Service() {
     }
 
     private fun setNextTrack() {
-        setNextTrack(getNextPosition(false))
+        setNextTrack(getNextPosition())
     }
 
     /**
@@ -1045,11 +1033,11 @@ class MediaService : Service() {
         }
     }
 
-    fun nextPlay(force: Boolean) {
+    fun nextPlay() {
         synchronized(this) {
             var pos = mNextPlayPos
             if (pos < 0) {
-                pos = getNextPosition(force)
+                pos = getNextPosition()
             }
             if (pos < 0) {
                 setIsPlaying(false, false)
@@ -1057,7 +1045,7 @@ class MediaService : Service() {
             }
             stop(false)
             setAndRecordPlayPos(pos)
-            openCurrentAndNextPlay(true)
+            openCurrentAndMaybeNext(true)
             play()
             notifyChange(MUSIC_CHANGED)
         }
@@ -1097,7 +1085,7 @@ class MediaService : Service() {
                 play()
             }
         } else if (NEXT_ACTION == action) {
-            nextPlay(true)
+            nextPlay()
         } else if (STOP_ACTION == action) {
             pause()
             releaseServiceUiAndStop()
@@ -1414,7 +1402,7 @@ class MediaService : Service() {
                         service.seek(0)
                         service.play()
                     } else {
-                        service.nextPlay(false)
+                        service.nextPlay()
                     }
                     LRC_DOWNLOADED -> service.notifyChange(LRC_UPDATED)
                     else -> {
