@@ -5,7 +5,6 @@ import android.app.*
 import android.content.*
 import android.database.Cursor
 import android.database.MatrixCursor
-import android.graphics.Bitmap
 import android.media.AudioManager
 import android.media.audiofx.AudioEffect
 import android.media.session.MediaSession
@@ -21,8 +20,8 @@ import com.se.music.activity.MainActivity
 import com.se.music.entity.MusicEntity
 import com.se.music.provider.database.provider.RecentStore
 import com.se.music.singleton.GsonFactory
-import com.se.music.singleton.SharePreferencesUtils
-import java.io.*
+import java.io.File
+import java.io.RandomAccessFile
 import java.lang.ref.WeakReference
 import java.util.*
 
@@ -36,61 +35,75 @@ class MediaService : Service() {
     companion object {
         const val TAG = "MediaService"
 
-        const val IDCOLIDX = 0
+        const val ID_INDEX = 0
         const val TRACK_ENDED = 1
         const val TRACK_WENT_TO_NEXT = 2
         const val RELEASE_WAKELOCK = 3
         const val SERVER_DIED = 4
-        const val FOCUSCHANGE = 5
-        const val FADEDOWN = 6
-        const val FADEUP = 7
+        const val FOCUS_CHANGE = 5
+        const val FADE_DOWN = 6
+        const val FADE_UP = 7
         const val LRC_DOWNLOADED = -10
 
+        /**
+         * 单曲循环
+         */
         const val REPEAT_CURRENT = 1
+
+        /**
+         * 顺序播放
+         */
         const val REPEAT_ALL = 2
+
+        /**
+         * 随机播放
+         */
         const val REPEAT_SHUFFLER = 3
 
         const val MAX_HISTORY_SIZE = 1000
+
+        const val LRC_PATH = "/semusic/lrc/"
+
+        private const val SHUTDOWN = "com.se.music.shutdown"
+        private const val TRACK_NAME = "trackname"
+        private const val NOTIFY_MODE_NONE = 0
+        private const val NOTIFY_MODE_FOREGROUND = 1
+        private const val IDLE_DELAY = 5 * 60 * 1000
+        private const val REWIND_INSTEAD_PREVIOUS_THRESHOLD: Long = 3000
     }
 
     //handler
-    private var mUrlHandler: Handler? = null
-    private var mLrcHandler: Handler? = null
-    private var mPlayerHandler: MusicPlayerHandler? = null
+    private lateinit var mUrlHandler: Handler
+    private lateinit var mLrcHandler: Handler
+    private lateinit var mPlayerHandler: MusicPlayerHandler
     private lateinit var mHandlerThread: HandlerThread
+    private lateinit var mPlayer: MultiPlayer
+    private lateinit var mSession: MediaSession
 
     //public field
     var isPlaying = false
     var mRepeatMode = REPEAT_ALL
-    val NEXT = 2
-    val LAST = 3
-    val LRC_PATH = "/semusic/lrc/"
+    var mLastSeekPos: Long = 0
 
-    private val SHUTDOWN = "com.se.music.shutdown"
-    private val TRACK_NAME = "trackname"
-    private val ALNUM_PIC = "album_pic"
-    private val NOTIFY_MODE_NONE = 0
-    private val NOTIFY_MODE_FOREGROUND = 1
-    private val NOTIFY_MODE_BACKGROUND = 2
-    private val IDLE_DELAY = 5 * 60 * 1000
-    private val REWIND_INSTEAD_PREVIOUS_THRESHOLD: Long = 3000
-    private val PROJECTION = arrayOf("audio._id AS _id", MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.MIME_TYPE, MediaStore.Audio.Media.ALBUM_ID, MediaStore.Audio.Media.ARTIST_ID, ALNUM_PIC)
-    private val PROJECTION_MATRIX = arrayOf("_id", MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.MIME_TYPE, MediaStore.Audio.Media.ALBUM_ID, MediaStore.Audio.Media.ARTIST_ID)
-    private val mShuffler = Shuffler()
-    //历史歌单
+    private val mShuffler = Shuffler.instance
+    /**
+     * 历史歌单
+     */
     private val mHistory = LinkedList<Int>()
-
     private val mBinder = ServiceStub(this)
     private val mCardId: Int = 0
     private val mNotificationId = 1000
-    //传进来的歌单
+    /**
+     * 传进来的歌单
+     */
     @SuppressLint("UseSparseArrays")
     private var mPlaylistInfo = HashMap<Long, MusicEntity>()
-    //播放列表
+    /**
+     * 当前播放列表
+     */
     private val mPlaylist = ArrayList<MusicTrack>(100)
     private var mAutoShuffleList: LongArray? = null
-    private val mAudioFocusListener = AudioManager.OnAudioFocusChangeListener { focusChange -> mPlayerHandler!!.obtainMessage(FOCUSCHANGE, focusChange, 0).sendToTarget() }
-    private lateinit var mPlayer: MultiPlayer
+    private val mAudioFocusListener = AudioManager.OnAudioFocusChangeListener { focusChange -> mPlayerHandler.obtainMessage(FOCUS_CHANGE, focusChange, 0).sendToTarget() }
     private var mFileToPlay: String? = null
     private var mCursor: Cursor? = null
     private var mServiceInUse = false
@@ -112,19 +125,12 @@ class MediaService : Service() {
      */
     private var mNextPlayPos = -1
     private var mOpenFailedCounter = 0
-    private val mMediaMountedCount = 0
     private val mServiceStartId = -1
     private var mLastPlayedTime: Long = 0
-    private val mNoBit: Bitmap? = null
     private var mNotification: Notification? = null
     private var mNotificationPostTime: Long = 0
-    var mLastSeekPos: Long = 0
-    private var mRequestUrl: RequestPlayUrl? = null
-    private var mRequestLrc: RequestLrc? = null
     private var mPreferences: SharedPreferences? = null
-    private val mQueueIsSaveable = true
     private var mPausedByTransientLossOfFocus = false
-    private var mSession: MediaSession? = null
     private var mRecentStore: RecentStore? = null
     private val mIntentReceiver = object : BroadcastReceiver() {
 
@@ -154,7 +160,7 @@ class MediaService : Service() {
         mServiceInUse = false
         if (isPlaying) {
             return true
-        } else if (mPlaylist.size > 0 || mPlayerHandler!!.hasMessages(TRACK_ENDED)) {
+        } else if (mPlaylist.size > 0 || mPlayerHandler.hasMessages(TRACK_ENDED)) {
             scheduleDelayedShutdown()
             return true
         }
@@ -180,9 +186,7 @@ class MediaService : Service() {
         mRecentStore = RecentStore.instance
 
         val filter = IntentFilter()
-//         filter.addAction(SERVICECMD);
         filter.addAction(TOGGLE_PAUSE_ACTION)
-//        filter.addAction(PAUSE_ACTION);
         filter.addAction(STOP_ACTION)
         filter.addAction(NEXT_ACTION)
         filter.addAction(PREVIOUS_ACTION)
@@ -191,9 +195,7 @@ class MediaService : Service() {
         filter.addAction(SHUFFLE_ACTION)
         filter.addAction(TRY_GET_TRACK_INFO)
         filter.addAction(Intent.ACTION_SCREEN_OFF)
-//        filter.addAction(LOCK_SCREEN);
         filter.addAction(SEND_PROGRESS)
-//        filter.addAction(SETQUEUE);
         registerReceiver(mIntentReceiver, filter)
 
         val shutdownIntent = Intent(this, MediaService::class.java)
@@ -207,7 +209,7 @@ class MediaService : Service() {
 
     private fun setUpMediaSession() {
         mSession = MediaSession(this, "pastmusic")
-        mSession!!.setCallback(object : MediaSession.Callback() {
+        mSession.setCallback(object : MediaSession.Callback() {
             override fun onPause() {
                 pause()
                 mPausedByTransientLossOfFocus = false
@@ -226,7 +228,7 @@ class MediaService : Service() {
             }
 
             override fun onSkipToPrevious() {
-                prev(false)
+                previous()
             }
 
             override fun onStop() {
@@ -236,22 +238,20 @@ class MediaService : Service() {
                 releaseServiceUiAndStop()
             }
         })
-        mSession!!.setFlags(MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS)
+        mSession.setFlags(MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS)
     }
 
     fun seek(position: Long): Long {
-        var position = position
+        var result: Long = -1
         if (mPlayer.isInitialized) {
             if (position < 0) {
-                position = 0
+                result = mPlayer.seek(0)
             } else if (position > mPlayer.duration()) {
-                position = mPlayer.duration()
+                result = mPlayer.seek(mPlayer.duration())
             }
-            val result = mPlayer.seek(position)
             notifyChange(POSITION_CHANGED)
-            return result
         }
-        return -1
+        return result
     }
 
     fun position(): Long {
@@ -261,7 +261,6 @@ class MediaService : Service() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-
         }
         return -1
     }
@@ -285,16 +284,16 @@ class MediaService : Service() {
         }
     }
 
-    fun getPreviousPlayPosition(removeFromHistory: Boolean): Int {
+    private fun getPreviousPlayPosition(removeFromHistory: Boolean): Int {
         synchronized(this) {
             if (mRepeatMode == REPEAT_SHUFFLER) {
-                val histsize = mHistory.size
-                if (histsize == 0) {
+                val historySize = mHistory.size
+                if (historySize == 0) {
                     return -1
                 }
-                val pos = mHistory[histsize - 1]
+                val pos = mHistory[historySize - 1]
                 if (removeFromHistory) {
-                    mHistory.removeAt(histsize - 1)
+                    mHistory.removeAt(historySize - 1)
                 }
                 return pos
             } else {
@@ -311,9 +310,9 @@ class MediaService : Service() {
         openCurrentAndMaybeNext(false, false)
     }
 
-    fun prev(forcePrevious: Boolean) {
+    fun previous() {
         synchronized(this) {
-            val goPrevious = getRepeatMode() != REPEAT_CURRENT && (position() < REWIND_INSTEAD_PREVIOUS_THRESHOLD || forcePrevious)
+            val goPrevious = getRepeatMode() != REPEAT_CURRENT
             if (goPrevious) {
                 val pos = getPreviousPlayPosition(true)
                 if (pos < 0) {
@@ -368,8 +367,8 @@ class MediaService : Service() {
             }
         }
         mPlayer.start()
-        mPlayerHandler!!.removeMessages(FADEDOWN)
-        mPlayerHandler!!.sendEmptyMessage(FADEUP)
+        mPlayerHandler.removeMessages(FADE_DOWN)
+        mPlayerHandler.sendEmptyMessage(FADE_UP)
         setIsPlaying(true, true)
         cancelShutdown()
         updateNotification()
@@ -399,7 +398,7 @@ class MediaService : Service() {
      */
     fun pause() {
         synchronized(this) {
-            mPlayerHandler!!.removeMessages(FADEUP)
+            mPlayerHandler.removeMessages(FADE_UP)
             mPlayer.pause()
             setIsPlaying(false, true)
             notifyChange(META_CHANGED)
@@ -410,7 +409,7 @@ class MediaService : Service() {
         stop(true)
     }
 
-    fun stop(goToIdle: Boolean) {
+    private fun stop(goToIdle: Boolean) {
         if (mPlayer.isInitialized) {
             mPlayer.stop()
         }
@@ -514,25 +513,25 @@ class MediaService : Service() {
         synchronized(this) {
             mPlaylistInfo = infos
             val oldId = getAudioId()
-            val listlength = list.size
-            var newlist = true
-            if (mPlaylist.size == listlength) {
-                newlist = false
-                for (i in 0 until listlength) {
+            val listLength = list.size
+            var newList = true
+            if (mPlaylist.size == listLength) {
+                newList = false
+                for (i in 0 until listLength) {
                     if (list[i] != mPlaylist[i].mId) {
-                        newlist = true
+                        newList = true
                         break
                     }
                 }
             }
-            if (newlist) {
+            if (newList) {
                 addToPlayList(list, -1)
                 notifyChange(QUEUE_CHANGED)
             }
-            if (position >= 0) {
-                mPlayPos = position
+            mPlayPos = if (position >= 0) {
+                position
             } else {
-                mPlayPos = mShuffler.nextInt(mPlaylist.size)
+                mShuffler.nextInt(mPlaylist.size)
             }
             mHistory.clear()
             openCurrentAndNextPlay(true)
@@ -549,24 +548,24 @@ class MediaService : Service() {
      * @param position
      */
     private fun addToPlayList(list: LongArray, position: Int) {
-        var position = position
-        val addlen = list.size
-        if (position < 0) {
+        var index = position
+        val addLen = list.size
+        if (index < 0) {
             mPlaylist.clear()
-            position = 0
+            index = 0
         }
 
-        mPlaylist.ensureCapacity(mPlaylist.size + addlen)
-        if (position > mPlaylist.size) {
-            position = mPlaylist.size
+        mPlaylist.ensureCapacity(mPlaylist.size + addLen)
+        if (index > mPlaylist.size) {
+            index = mPlaylist.size
         }
 
-        val arrayList = ArrayList<MusicTrack>(addlen)
+        val arrayList = ArrayList<MusicTrack>(addLen)
         for (i in list.indices) {
             arrayList.add(MusicTrack(list[i], i))
         }
 
-        mPlaylist.addAll(position, arrayList)
+        mPlaylist.addAll(index, arrayList)
 
         if (mPlaylist.size == 0) {
             closeCursor()
@@ -604,18 +603,12 @@ class MediaService : Service() {
                 return
             }
             if (!mPlaylistInfo[id]!!.islocal) {
-                if (mRequestUrl != null) {
-                    mRequestUrl!!.stop()
-                    mUrlHandler!!.removeCallbacks(mRequestUrl)
-                }
-                mRequestUrl = RequestPlayUrl(id, play)
-                mUrlHandler!!.postDelayed(mRequestUrl, 70)
-
+                //在线歌曲
             } else {
                 while (true) {
                     if (mCursor != null
                             && openFile(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.toString() + "/"
-                                    + mCursor!!.getLong(IDCOLIDX))) {
+                                    + mCursor!!.getLong(ID_INDEX))) {
                         break
                     }
                     closeCursor()
@@ -655,7 +648,6 @@ class MediaService : Service() {
         if (file.exists()) {
             file.delete()
         }
-        //        MusicPlaybackState.getInstance(this).clearQueue();
     }
 
     fun duration(): Long {
@@ -836,7 +828,7 @@ class MediaService : Service() {
                 try {
                     if (mCursor != null && shouldAddToPlaylist) {
                         mPlaylist.clear()
-                        mPlaylist.add(MusicTrack(mCursor!!.getLong(IDCOLIDX), -1))
+                        mPlaylist.add(MusicTrack(mCursor!!.getLong(ID_INDEX), -1))
                         notifyChange(QUEUE_CHANGED)
                         mPlayPos = 0
                         mHistory.clear()
@@ -886,7 +878,7 @@ class MediaService : Service() {
         synchronized(this) {
             return if (mCursor == null) {
                 null
-            } else mCursor!!.getString(mCursor!!.getColumnIndexOrThrow(ALNUM_PIC))
+            } else mCursor!!.getString(mCursor!!.getColumnIndexOrThrow(ALBUM_PIC))
         }
     }
 
@@ -1081,26 +1073,8 @@ class MediaService : Service() {
         }
         file = File(lrc + id)
         if (!file.exists()) {
-            if (mRequestLrc != null) {
-                mRequestLrc!!.stop()
-                mLrcHandler!!.removeCallbacks(mRequestLrc)
-            }
-            mRequestLrc = RequestLrc(mPlaylistInfo[id]!!)
-            mLrcHandler!!.postDelayed(mRequestLrc, 70)
+            //获取歌词
         }
-    }
-
-    @Synchronized
-    private fun writeToFile(file: File, lrc: String) {
-        try {
-            val outputStream = FileOutputStream(file)
-            outputStream.write(lrc.toByteArray())
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-
     }
 
     private fun cancelShutdown() {
@@ -1201,12 +1175,12 @@ class MediaService : Service() {
     }
 
     fun removeTrack(id: Long): Int {
-        var numremoved = 0
+        var numberMoved = 0
         synchronized(this) {
             var i = 0
             while (i < mPlaylist.size) {
                 if (mPlaylist[i].mId == id) {
-                    numremoved += removeTracksInternal(i, i)
+                    numberMoved += removeTracksInternal(i, i)
                     i--
                 }
                 i++
@@ -1216,10 +1190,10 @@ class MediaService : Service() {
         }
 
 
-        if (numremoved > 0) {
+        if (numberMoved > 0) {
             notifyChange(QUEUE_CHANGED)
         }
-        return numremoved
+        return numberMoved
     }
 
     private fun removeTracksInternal(first: Int, last: Int): Int {
@@ -1285,58 +1259,12 @@ class MediaService : Service() {
         }
     }
 
-    fun enqueue(list: LongArray, map: HashMap<Long, MusicEntity>, action: Int) {
-        synchronized(this) {
-            mPlaylistInfo.putAll(map)
-            if (action == NEXT && mPlayPos + 1 < mPlaylist.size) {
-                addToPlayList(list, mPlayPos + 1)
-                mNextPlayPos = mPlayPos + 1
-                notifyChange(QUEUE_CHANGED)
-            } else {
-                addToPlayList(list, Integer.MAX_VALUE)
-                notifyChange(QUEUE_CHANGED)
-            }
-            if (mPlayPos < 0) {
-                mPlayPos = 0
-                openCurrentAndNext()
-                play()
-                notifyChange(META_CHANGED)
-            }
-        }
-    }
-
     private fun cancelNotification() {
         stopForeground(true)
         mNotificationManager!!.cancel(hashCode())
         mNotificationManager!!.cancel(mNotificationId)
         mNotificationPostTime = 0
         mNotifyMode = NOTIFY_MODE_NONE
-    }
-
-    private fun makeAutoShuffleList(): Boolean {
-        var cursor: Cursor? = null
-        try {
-            cursor = contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                    arrayOf(MediaStore.Audio.Media._ID), MediaStore.Audio.Media.IS_MUSIC + "=1", null, null)
-            if (cursor == null || cursor.count == 0) {
-                return false
-            }
-            val len = cursor.count
-            val list = LongArray(len)
-            for (i in 0 until len) {
-                cursor.moveToNext()
-                list[i] = cursor.getLong(0)
-            }
-            mAutoShuffleList = list
-            return true
-        } catch (ignored: RuntimeException) {
-        } finally {
-            if (cursor != null) {
-                cursor.close()
-                cursor = null
-            }
-        }
-        return false
     }
 
     private fun doAutoShuffleUpdate() {
@@ -1347,14 +1275,14 @@ class MediaService : Service() {
         }
         val toAdd = 7 - (mPlaylist.size - if (mPlayPos < 0) -1 else mPlayPos)
         for (i in 0 until toAdd) {
-            var lookback = mHistory.size
-            var idx = -1
+            var lookBack = mHistory.size
+            var idx: Int
             while (true) {
                 idx = mShuffler.nextInt(mAutoShuffleList!!.size)
-                if (!wasRecentlyUsed(idx, lookback)) {
+                if (!wasRecentlyUsed(idx, lookBack)) {
                     break
                 }
-                lookback /= 2
+                lookBack /= 2
             }
             mHistory.add(idx)
             if (mHistory.size > MAX_HISTORY_SIZE) {
@@ -1368,12 +1296,12 @@ class MediaService : Service() {
         }
     }
 
-    fun removeTracks(first: Int, last: Int): Int {
-        val numremoved = removeTracksInternal(first, last)
-        if (numremoved > 0) {
+    private fun removeTracks(first: Int, last: Int): Int {
+        val numberMoved = removeTracksInternal(first, last)
+        if (numberMoved > 0) {
             notifyChange(QUEUE_CHANGED)
         }
-        return numremoved
+        return numberMoved
     }
 
     private fun wasRecentlyUsed(idx: Int, lookbacksize: Int): Boolean {
@@ -1405,7 +1333,7 @@ class MediaService : Service() {
 
 
     private fun getNotification(): Notification {
-        val remoteViews: RemoteViews = RemoteViews(this.packageName, R.layout.remote_view)
+        val remoteViews = RemoteViews(this.packageName, R.layout.remote_view)
         val PAUSE_FLAG = 0x1
         val NEXT_FLAG = 0x2
         val STOP_FLAG = 0x3
@@ -1456,10 +1384,9 @@ class MediaService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         cancelNotification()
-        mPlayerHandler!!.removeCallbacksAndMessages(null)
+        mPlayerHandler.removeCallbacksAndMessages(null)
         mHandlerThread.quit()
         mPlayer.release()
-//        mPlayer = null
         closeCursor()
         unregisterReceiver(mIntentReceiver)
 
@@ -1493,50 +1420,6 @@ class MediaService : Service() {
                     else -> {
                     }
                 }
-            }
-        }
-    }
-
-    inner class RequestPlayUrl(private val id: Long, private val play: Boolean) : Runnable {
-        private var stop: Boolean = false
-
-        fun stop() {
-            stop = true
-        }
-
-        override fun run() {
-            try {
-                val url = SharePreferencesUtils.instance.getPlayLink(id)
-                //                if (url == null) {
-                //                    url = "http://ws.stream.qqmusic.qq.com/" + id + ".m4a?fromtag=46";
-                //                    SharePreferencesUtils.getInstance(MediaService.this).setPlayLink(id, url);
-                //                }
-                //                if (url == null) {
-                //                    nextPlay(true);
-                //                }
-                if (!stop) {
-                    mPlayer.setDataSource(url)
-                }
-                if (play && !stop) {
-                    play()
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-
-        }
-    }
-
-    inner class RequestLrc(private val musicInfo: MusicEntity) : Runnable {
-        private var stop: Boolean = false
-
-        fun stop() {
-            stop = true
-        }
-
-        override fun run() {
-            if (!stop) {
-                val file = File(Environment.getExternalStorageDirectory().absolutePath + LRC_PATH + musicInfo.songId)
             }
         }
     }

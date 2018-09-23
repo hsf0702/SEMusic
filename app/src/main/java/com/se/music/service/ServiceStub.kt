@@ -39,7 +39,7 @@ class ServiceStub constructor(service: MediaService) : IMediaAidlInterface.Stub(
     }
 
     override fun previous() {
-//        mService.get()?.previous()
+        mService.get()?.previous()
     }
 
     override fun openFile(path: String) {
