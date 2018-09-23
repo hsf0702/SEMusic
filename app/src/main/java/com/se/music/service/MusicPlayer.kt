@@ -12,16 +12,13 @@ import java.util.*
 
 /**
  * Created by gaojin on 2018/3/8.
- * 界面和Service的桥   MusicPlayer维护着一个WeakHashMap  保存Context和ServiceConnection的键值对
  */
 class MusicPlayer {
 
     companion object {
         var mService: IMediaAidlInterface? = null
         /**
-         * 实现规范化Context到ServiceConnection的映射
-         * 一般用weak reference引用的对象是有价值被cache, 而且很容易被重新被构建, 且很消耗内存的对象.
-         * GC执行的时候就会回收weak reference
+         *context 和 ServiceConnection的映射，便于及时释放
          */
         private var mConnectionMap: WeakHashMap<Context, SeServiceConnection> = WeakHashMap()
 
