@@ -2,8 +2,8 @@ package com.se.music.online.banner
 
 import android.annotation.SuppressLint
 import android.support.annotation.Keep
-import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import com.se.music.R
 import com.se.music.base.BaseActivity
 import com.se.music.base.mvp.BaseView
@@ -20,13 +20,17 @@ import com.youth.banner.listener.OnBannerListener
  */
 class OnLineBannerView(presenter: MvpPresenter, viewId: Int) : BaseView(presenter, viewId), OnBannerListener {
 
-    @SuppressLint("InflateParams")
-    private var banner: Banner = LayoutInflater.from(getContext()!!).inflate(R.layout.view_banner, null) as Banner
+    private lateinit var banner: Banner
     private val images = ArrayList<String>()
     private var bannerList: List<HallModel.Data.Slider>? = null
 
     @SuppressLint("InflateParams")
     override fun createView(): View {
+        banner = Banner(getContext())
+        val height = getContext()?.resources?.getDimensionPixelOffset(R.dimen.online_banner_height)
+                ?: 0
+        val params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height)
+        banner.layoutParams = params
         return banner
     }
 

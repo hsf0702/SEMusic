@@ -11,7 +11,6 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.bumptech.glide.Glide
@@ -19,7 +18,7 @@ import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.se.music.R
 import com.se.music.base.BaseActivity
-import com.se.music.service.MediaService
+import com.se.music.block.PlayingBottomBlock
 import com.se.music.service.MusicPlayer
 import com.se.music.utils.blurBitmap
 
@@ -28,22 +27,13 @@ import com.se.music.utils.blurBitmap
  *Time: 2018/8/7 下午7:48
  */
 
-class PlayingActivity : BaseActivity(), View.OnClickListener {
+class PlayingActivity : BaseActivity() {
 
     private lateinit var activityBg: View
     private lateinit var toolbar: Toolbar
 
     private lateinit var songTitle: TextView
-
-    private lateinit var repeatMode: ImageView
-    private lateinit var preSong: ImageView
-    private lateinit var centerControl: ImageView
-    private lateinit var nextSong: ImageView
-    private lateinit var songList: ImageView
-    private lateinit var favorite: ImageView
-    private lateinit var download: ImageView
-    private lateinit var share: ImageView
-    private lateinit var comment: ImageView
+    private lateinit var playingBottomBlock: PlayingBottomBlock
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,37 +55,16 @@ class PlayingActivity : BaseActivity(), View.OnClickListener {
                 })
     }
 
-    override fun onResume() {
-        super.onResume()
-        songTitle.text = MusicPlayer.getTrackName()
-        updateRepeatStatus()
-        updatePlayingStatus()
-    }
-
     private fun initView() {
         activityBg = findViewById(R.id.player_activity_bg)
         songTitle = findViewById(R.id.playing_song_title)
+        playingBottomBlock = findViewById(R.id.playing_bottom_block)
+    }
 
-        repeatMode = findViewById(R.id.repeat_mode)
-        preSong = findViewById(R.id.pre_song)
-        centerControl = findViewById(R.id.center_control)
-        nextSong = findViewById(R.id.next_song)
-        songList = findViewById(R.id.song_list)
-
-        favorite = findViewById(R.id.playing_favorite)
-        download = findViewById(R.id.playing_download)
-        share = findViewById(R.id.playing_share)
-        comment = findViewById(R.id.playing_comment)
-
-        repeatMode.setOnClickListener(this)
-        preSong.setOnClickListener(this)
-        centerControl.setOnClickListener(this)
-        nextSong.setOnClickListener(this)
-        songList.setOnClickListener(this)
-        favorite.setOnClickListener(this)
-        download.setOnClickListener(this)
-        share.setOnClickListener(this)
-        comment.setOnClickListener(this)
+    override fun onResume() {
+        super.onResume()
+        songTitle.text = MusicPlayer.getTrackName()
+        playingBottomBlock.updateBlock()
     }
 
     private fun toolbarInit() {
@@ -105,50 +74,10 @@ class PlayingActivity : BaseActivity(), View.OnClickListener {
         supportActionBar!!.setDisplayShowTitleEnabled(false)
     }
 
-    override fun onClick(v: View) {
-        when (v.id) {
-            R.id.repeat_mode -> {
-                setRepeatStatus()
-                updateRepeatStatus()
-            }
-            R.id.pre_song -> {
-                MusicPlayer.previous()
-            }
-            R.id.center_control -> {
-                MusicPlayer.playOrPause()
-                updatePlayingStatus()
-            }
-            R.id.next_song -> MusicPlayer.nextPlay()
-        }
-    }
-
-    private fun updatePlayingStatus() {
-        if (MusicPlayer.getIsPlaying()) {
-            centerControl.setImageResource(R.drawable.default_player_btn_pause_selector)
-        } else {
-            centerControl.setImageResource(R.drawable.default_player_btn_play_selector)
-        }
-    }
-
-    private fun setRepeatStatus() {
-        when (MusicPlayer.getRepeatMode()) {
-            MediaService.REPEAT_ALL -> MusicPlayer.setRepeatMode(MediaService.REPEAT_CURRENT)
-            MediaService.REPEAT_CURRENT -> MusicPlayer.setRepeatMode(MediaService.REPEAT_SHUFFLER)
-            MediaService.REPEAT_SHUFFLER -> MusicPlayer.setRepeatMode(MediaService.REPEAT_ALL)
-        }
-    }
-
-    private fun updateRepeatStatus() {
-        when (MusicPlayer.getRepeatMode()) {
-            MediaService.REPEAT_CURRENT -> repeatMode.setImageResource(R.drawable.player_btn_repeat_once)
-            MediaService.REPEAT_ALL -> repeatMode.setImageResource(R.drawable.player_btn_repeat)
-            MediaService.REPEAT_SHUFFLER -> repeatMode.setImageResource(R.drawable.player_btn_random_normal)
-        }
-    }
-
-    override fun updateTrack() {
-        super.updateTrack()
+    override fun musicChanged() {
+        super.musicChanged()
         songTitle.text = MusicPlayer.getTrackName()
+        playingBottomBlock.musicChanged()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

@@ -44,7 +44,7 @@ class SingerListAdapter constructor(private val context: Context, private val li
                 || artistEntity.imageId!!.isEmpty()) {
             loaderManager.initLoader(generateLoaderId(), null, buildArtistCallBacks(holder, position))
         } else {
-            holder.singerAvatar.loadUrl(getMediumImageUrl(artistEntity.imageId!!), R.drawable.default_singer_avatar)
+            holder.singerAvatar.loadUrl(artistEntity.imageId!!.getMediumImageUrl(), R.drawable.default_singer_avatar)
         }
     }
 
@@ -56,8 +56,8 @@ class SingerListAdapter constructor(private val context: Context, private val li
 
             override fun onSuccess(loader: Loader<*>, data: Artist) {
                 if (data.image != null && data.image!!.isNotEmpty()) {
-                    val imageId = getImageId(data.image!![0].imageUrl!!)
-                    holder.singerAvatar.loadUrl(getMediumImageUrl(imageId), R.drawable.default_singer_avatar)
+                    val imageId = data.image!![0].imageUrl!!.getImageId()
+                    holder.singerAvatar.loadUrl(imageId.getMediumImageUrl(), R.drawable.default_singer_avatar)
                     list[position].imageId = imageId
                     //添加图片缓存
                     ImageStore.instance.addImage(list[position].artistKey, imageId)

@@ -7,6 +7,6 @@ import com.google.gson.Gson
  */
 class GsonFactory {
     companion object {
-        val instance: Gson by lazy { Gson() }
+        val instance: Gson by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) { Gson() }
     }
 }

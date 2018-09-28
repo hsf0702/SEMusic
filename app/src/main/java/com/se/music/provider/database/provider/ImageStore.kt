@@ -11,18 +11,17 @@ import com.se.music.provider.MusicDBHelper
  * 图片缓存管理
  */
 class ImageStore {
-    private val MAX_ITEMS_IN_DB = 100
-
-    val IMAGE_KEY = "key"
-    val IMAGE_VALUE = "image_value"
-    private val IMAGE_TABLE_CREATE = "create table " + MusicDBHelper.IMAGE_TABLE +
-            " (" + IMAGE_KEY + " varchar(128), " +
-            IMAGE_VALUE + " varchar(50)," +
-            "PRIMARY KEY (" + IMAGE_KEY + ")" +
-            ");"
-
     companion object {
-        val instance: ImageStore by lazy { ImageStore() }
+        private const val MAX_ITEMS_IN_DB = 100
+
+        const val IMAGE_KEY = "key"
+        const val IMAGE_VALUE = "image_value"
+        private const val IMAGE_TABLE_CREATE = "create table " + MusicDBHelper.IMAGE_TABLE +
+                " (" + IMAGE_KEY + " varchar(128), " +
+                IMAGE_VALUE + " varchar(50)," +
+                "PRIMARY KEY (" + IMAGE_KEY + ")" +
+                ");"
+        val instance: ImageStore by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) { ImageStore() }
     }
 
     fun onCreate(db: SQLiteDatabase) {

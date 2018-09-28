@@ -185,29 +185,6 @@ class CircleImageView : AppCompatImageView {
         setCircleBackgroundColor(context.resources.getColor(circleBackgroundRes))
     }
 
-    /**
-     * Set a color to be drawn behind the circle-shaped drawable. Note that
-     * this has no effect if the drawable is opaque or no drawable is set.
-     *
-     * @param fillColor The color to be drawn behind the drawable
-     */
-    @Deprecated("Use {@link #setCircleBackgroundColor(int)} instead.")
-    fun setFillColor(@ColorInt fillColor: Int) {
-        setCircleBackgroundColor(fillColor)
-    }
-
-    /**
-     * Set a color to be drawn behind the circle-shaped drawable. Note that
-     * this has no effect if the drawable is opaque or no drawable is set.
-     *
-     * @param fillColorRes The color resource to be resolved to a color and
-     * drawn behind the drawable
-     */
-    @Deprecated("Use {@link #setCircleBackgroundColorResource(int)} instead.")
-    fun setFillColorResource(@ColorRes fillColorRes: Int) {
-        setCircleBackgroundColorResource(fillColorRes)
-    }
-
     fun getBorderWidth(): Int {
         return mBorderWidth
     }
@@ -282,9 +259,7 @@ class CircleImageView : AppCompatImageView {
     }
 
     private fun applyColorFilter() {
-        if (mBitmapPaint != null) {
-            mBitmapPaint.colorFilter = mColorFilter
-        }
+        mBitmapPaint.colorFilter = mColorFilter
     }
 
     private fun getBitmapFromDrawable(drawable: Drawable?): Bitmap? {
@@ -317,10 +292,10 @@ class CircleImageView : AppCompatImageView {
     }
 
     private fun initializeBitmap() {
-        if (mDisableCircularTransformation) {
-            mBitmap = null
+        mBitmap = if (mDisableCircularTransformation) {
+            null
         } else {
-            mBitmap = getBitmapFromDrawable(drawable)
+            getBitmapFromDrawable(drawable)
         }
         setup()
     }

@@ -12,7 +12,7 @@ import android.view.View
  */
 class AlbumViewPager : ViewPager {
 
-    var downPoint = PointF()
+    private var downPoint = PointF()
     var onSingleTouchListener: OnSingleTouchListener? = null
 
     constructor(context: Context) : this(context, null)

@@ -45,7 +45,7 @@ class AlbumListAdapter constructor(private val context: Context, private val lis
                 || list[position].imageId!!.isEmpty()) {
             loaderManager.initLoader(generateLoaderId(), null, buildAlbumCallBacks(holder, position))
         } else {
-            holder.albumPic.loadUrl(getMegaImageUrl(albumEntity.imageId!!), R.drawable.default_album_avatar)
+            holder.albumPic.loadUrl(albumEntity.imageId!!.getMegaImageUrl(), R.drawable.default_album_avatar)
         }
     }
 
@@ -57,8 +57,8 @@ class AlbumListAdapter constructor(private val context: Context, private val lis
 
             override fun onSuccess(loader: Loader<*>, data: Album) {
                 if (data.image != null && data.image!!.isNotEmpty()) {
-                    val imageId = getImageId(data.image!![0].imageUrl!!)
-                    holder.albumPic.loadUrl(getMegaImageUrl(imageId), R.drawable.default_album_avatar)
+                    val imageId = data.image!![0].imageUrl!!.getImageId()
+                    holder.albumPic.loadUrl(imageId.getMegaImageUrl(), R.drawable.default_album_avatar)
                     list[position].imageId = imageId
                     //添加图片缓存
                     ImageStore.instance.addImage(list[position].albumKey, imageId)

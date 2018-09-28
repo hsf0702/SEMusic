@@ -6,13 +6,13 @@ import android.view.KeyEvent
 import android.widget.Toast
 import com.se.music.R
 import com.se.music.base.BaseActivity
+import com.se.music.base.TOAST_SHOW_DURATION
 import com.se.music.main.MainFragment
 
 
 class MainActivity : BaseActivity() {
 
     private var boo: Long = 0
-    private val TOAST_SHOW_DURATION = 2000L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

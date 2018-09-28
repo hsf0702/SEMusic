@@ -7,6 +7,7 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import android.os.RemoteException
 import com.se.music.IMediaAidlInterface
+import com.se.music.base.Null
 import com.se.music.entity.MusicEntity
 import java.util.*
 
@@ -58,7 +59,7 @@ class MusicPlayer {
             }
         }
 
-        fun getIsPlaying(): Boolean {
+        fun isPlaying(): Boolean {
             return mService?.isPlaying ?: false
         }
 
@@ -69,12 +70,12 @@ class MusicPlayer {
         /**
          * 播放所有音乐
          *
-         * @param infos        ID到音乐实体的映射
+         * @param info        ID到音乐实体的映射
          * @param list         音乐ID的集合
          * @param position     当前播放的音乐的位置
          */
         @Synchronized
-        fun playAll(infos: HashMap<Long, MusicEntity>, list: LongArray, position: Int) {
+        fun playAll(info: HashMap<Long, MusicEntity>, list: LongArray, position: Int) {
             if (list.isEmpty() || mService == null) {
                 return
             }
@@ -94,9 +95,9 @@ class MusicPlayer {
                     }
                 }
                 if (position < 0) {
-                    mService!!.open(infos, list, 0)
+                    mService!!.open(info, list, 0)
                 } else {
-                    mService!!.open(infos, list, position)
+                    mService!!.open(info, list, position)
                 }
                 mService!!.play()
             } catch (ignored: RemoteException) {
@@ -118,14 +119,23 @@ class MusicPlayer {
             mService?.previous()
         }
 
+        /**
+         * 音乐已播放时间 (ms)
+         */
         fun position(): Long {
             return mService?.position() ?: 0
         }
 
+        /**
+         * 音乐总时长 (ms)
+         */
         fun duration(): Long {
             return mService?.duration() ?: 0
         }
 
+        /**
+         * 指定音乐播放位置
+         */
         fun seek(position: Long) {
             mService?.seek(position)
         }
@@ -159,8 +169,8 @@ class MusicPlayer {
          *
          * @return
          */
-        fun getTrackName(): String? {
-            return mService?.trackName
+        fun getTrackName(): String {
+            return mService?.trackName ?: Null
         }
 
         /**
@@ -168,12 +178,12 @@ class MusicPlayer {
          *
          * @return
          */
-        fun getArtistName(): String? {
-            return mService?.artistName
+        fun getArtistName(): String {
+            return mService?.artistName ?: Null
         }
 
-        fun getAlbumPic(): String? {
-            return mService?.albumPic
+        fun getAlbumPic(): String {
+            return mService?.albumPic ?: Null
         }
 
         /**
@@ -190,7 +200,7 @@ class MusicPlayer {
          *
          * @return
          */
-        fun getQueue(): LongArray? {
+        private fun getQueue(): LongArray? {
             return mService?.queue
         }
 

@@ -28,13 +28,13 @@ import java.util.*
 /**
  *Author: gaojin
  *Time: 2018/5/13 下午11:17
+ * 后台播放服务
  */
 
 class MediaService : Service() {
 
     companion object {
         const val TAG = "MediaService"
-
         const val ID_INDEX = 0
         const val TRACK_ENDED = 1
         const val TRACK_WENT_TO_NEXT = 2
@@ -101,7 +101,6 @@ class MediaService : Service() {
      * 当前播放列表
      */
     private val mPlaylist = ArrayList<MusicTrack>(100)
-    private var mAutoShuffleList: LongArray? = null
     private val mAudioFocusListener = AudioManager.OnAudioFocusChangeListener { focusChange -> mPlayerHandler.obtainMessage(FOCUS_CHANGE, focusChange, 0).sendToTarget() }
     private var mFileToPlay: String? = null
     private var mCursor: Cursor? = null
@@ -184,6 +183,7 @@ class MediaService : Service() {
         mPreferences = getSharedPreferences("Service", 0)
         mRecentStore = RecentStore.instance
 
+        //接收广播
         val filter = IntentFilter()
         filter.addAction(TOGGLE_PAUSE_ACTION)
         filter.addAction(STOP_ACTION)
@@ -243,10 +243,10 @@ class MediaService : Service() {
     fun seek(position: Long): Long {
         var result: Long = -1
         if (mPlayer.isInitialized) {
-            if (position < 0) {
-                result = mPlayer.seek(0)
-            } else if (position > mPlayer.duration()) {
-                result = mPlayer.seek(mPlayer.duration())
+            result = when {
+                position < 0 -> mPlayer.seek(0)
+                position > mPlayer.duration() -> mPlayer.seek(mPlayer.duration())
+                else -> mPlayer.seek(position)
             }
             notifyChange(POSITION_CHANGED)
         }
@@ -274,9 +274,9 @@ class MediaService : Service() {
         return mRepeatMode
     }
 
-    fun setRepeatMode(repeatmode: Int) {
+    fun setRepeatMode(repeatMode: Int) {
         synchronized(this) {
-            mRepeatMode = repeatmode
+            mRepeatMode = repeatMode
             setNextTrack()
             saveQueue(false)
             notifyChange(REPEAT_MODE_CHANGED)
@@ -690,10 +690,8 @@ class MediaService : Service() {
     }
 
     private fun saveQueue(full: Boolean) {
-
         val editor = mPreferences!!.edit()
         if (full) {
-            //            mPlaybackStateStore.saveState(mPlaylist, mShuffleMode != SHUFFLE_NONE ? mHistory : null);
             if (mPlaylistInfo.size > 0) {
                 val temp = GsonFactory.instance.toJson(mPlaylistInfo)
                 try {
@@ -704,7 +702,6 @@ class MediaService : Service() {
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
-
             }
             editor.putInt("cardid", mCardId)
 
@@ -719,8 +716,6 @@ class MediaService : Service() {
 
     /**
      * 获取下一首音乐的位置
-     *
-     * @param force
      * @return
      */
     private fun getNextPosition(): Int {
@@ -732,7 +727,7 @@ class MediaService : Service() {
                 0
             } else mPlayPos
         } else if (mRepeatMode == REPEAT_SHUFFLER) {
-            doAutoShuffleUpdate()
+            shuffleMode()
             return mPlayPos + 1
         } else if (mRepeatMode == REPEAT_ALL) {
             if (mPlayPos >= mPlaylist.size - 1) {
@@ -746,6 +741,13 @@ class MediaService : Service() {
         } else {
             return -1
         }
+    }
+
+    /**
+     * 随机播放
+     */
+    private fun shuffleMode() {
+        //随机播放未完成
     }
 
     private fun setNextTrack() {
@@ -1095,11 +1097,13 @@ class MediaService : Service() {
             //待定
         } else if (TRY_GET_TRACK_INFO == action) {
             getLrc(mPlaylist[mPlayPos].mId)
+        } else if (SEND_PROGRESS == action) {
+            //待定
         }
     }
 
     private fun releaseServiceUiAndStop() {
-        if (isPlaying || mPlayerHandler!!.hasMessages(TRACK_ENDED)) {
+        if (isPlaying || mPlayerHandler.hasMessages(TRACK_ENDED)) {
             return
         }
         cancelNotification()
@@ -1185,47 +1189,47 @@ class MediaService : Service() {
     }
 
     private fun removeTracksInternal(first: Int, last: Int): Int {
-        var first = first
-        var last = last
+        var inFirst = first
+        var inLast = last
         synchronized(this) {
             when {
-                last < first -> return 0
-                first < 0 -> first = 0
-                last >= mPlaylist.size -> last = mPlaylist.size - 1
+                inLast < inFirst -> return 0
+                inFirst < 0 -> inFirst = 0
+                inLast >= mPlaylist.size -> inLast = mPlaylist.size - 1
             }
 
-            var gotonext = false
-            if (mPlayPos in first..last) {
-                mPlayPos = first
-                gotonext = true
-            } else if (mPlayPos > last) {
-                mPlayPos -= last - first + 1
+            var goToNext = false
+            if (mPlayPos in inFirst..inLast) {
+                mPlayPos = inFirst
+                goToNext = true
+            } else if (mPlayPos > inLast) {
+                mPlayPos -= inLast - inFirst + 1
             }
-            val numToRemove = last - first + 1
+            val numToRemove = inLast - inFirst + 1
 
-            if (first == 0 && last == mPlaylist.size - 1) {
+            if (inFirst == 0 && inLast == mPlaylist.size - 1) {
                 mPlayPos = -1
                 mNextPlayPos = -1
                 mPlaylist.clear()
                 mHistory.clear()
             } else {
                 for (i in 0 until numToRemove) {
-                    mPlaylistInfo.remove(mPlaylist[first].mId)
-                    mPlaylist.removeAt(first)
+                    mPlaylistInfo.remove(mPlaylist[inFirst].mId)
+                    mPlaylist.removeAt(inFirst)
 
                 }
 
                 val positionIterator = mHistory.listIterator()
                 while (positionIterator.hasNext()) {
                     val pos = positionIterator.next()
-                    if (pos in first..last) {
+                    if (pos in inFirst..inLast) {
                         positionIterator.remove()
-                    } else if (pos > last) {
+                    } else if (pos > inLast) {
                         positionIterator.set(pos - numToRemove)
                     }
                 }
             }
-            if (gotonext) {
+            if (goToNext) {
                 if (mPlaylist.size == 0) {
                     stop(true)
                     mPlayPos = -1
@@ -1243,7 +1247,7 @@ class MediaService : Service() {
                 }
                 notifyChange(META_CHANGED)
             }
-            return last - first + 1
+            return inLast - inFirst + 1
         }
     }
 
@@ -1253,62 +1257,6 @@ class MediaService : Service() {
         mNotificationManager!!.cancel(mNotificationId)
         mNotificationPostTime = 0
         mNotifyMode = NOTIFY_MODE_NONE
-    }
-
-    private fun doAutoShuffleUpdate() {
-        var notify = false
-        if (mPlayPos > 10) {
-            removeTracks(0, mPlayPos - 9)
-            notify = true
-        }
-        val toAdd = 7 - (mPlaylist.size - if (mPlayPos < 0) -1 else mPlayPos)
-        for (i in 0 until toAdd) {
-            var lookBack = mHistory.size
-            var idx: Int
-            while (true) {
-                idx = mShuffler.nextInt(mAutoShuffleList!!.size)
-                if (!wasRecentlyUsed(idx, lookBack)) {
-                    break
-                }
-                lookBack /= 2
-            }
-            mHistory.add(idx)
-            if (mHistory.size > MAX_HISTORY_SIZE) {
-                mHistory.removeAt(0)
-            }
-            mPlaylist.add(MusicTrack(mAutoShuffleList!![idx], -1))
-            notify = true
-        }
-        if (notify) {
-            notifyChange(QUEUE_CHANGED)
-        }
-    }
-
-    private fun removeTracks(first: Int, last: Int): Int {
-        val numberMoved = removeTracksInternal(first, last)
-        if (numberMoved > 0) {
-            notifyChange(QUEUE_CHANGED)
-        }
-        return numberMoved
-    }
-
-    private fun wasRecentlyUsed(idx: Int, lookbacksize: Int): Boolean {
-        var lookbacksize = lookbacksize
-        if (lookbacksize == 0) {
-            return false
-        }
-        val histsize = mHistory.size
-        if (histsize < lookbacksize) {
-            lookbacksize = histsize
-        }
-        val maxidx = histsize - 1
-        for (i in 0 until lookbacksize) {
-            val entry = mHistory[maxidx - i].toLong()
-            if (entry == idx.toLong()) {
-                return true
-            }
-        }
-        return false
     }
 
     private fun cycleRepeat() {
@@ -1322,9 +1270,9 @@ class MediaService : Service() {
 
     private fun getNotification(): Notification {
         val remoteViews = RemoteViews(this.packageName, R.layout.remote_view)
-        val PAUSE_FLAG = 0x1
-        val NEXT_FLAG = 0x2
-        val STOP_FLAG = 0x3
+        val pauseFlag = 0x1
+        val nextFlag = 0x2
+        val stopFlag = 0x3
         val albumName = getAlbumName()
         val artistName = getArtistName()
         val isPlaying = isPlaying
@@ -1335,18 +1283,18 @@ class MediaService : Service() {
 
         //此处action不能是一样的 如果一样的 接受的flag参数只是第一个设置的值
         val pauseIntent = Intent(TOGGLE_PAUSE_ACTION)
-        pauseIntent.putExtra("FLAG", PAUSE_FLAG)
+        pauseIntent.putExtra("FLAG", pauseFlag)
         val pausePIntent = PendingIntent.getBroadcast(this, 0, pauseIntent, 0)
         remoteViews.setImageViewResource(R.id.img_play, if (isPlaying) R.drawable.icon_remote_pause else R.drawable.icon_remote_play)
         remoteViews.setOnClickPendingIntent(R.id.img_play, pausePIntent)
 
         val nextIntent = Intent(NEXT_ACTION)
-        nextIntent.putExtra("FLAG", NEXT_FLAG)
+        nextIntent.putExtra("FLAG", nextFlag)
         val nextPIntent = PendingIntent.getBroadcast(this, 0, nextIntent, 0)
         remoteViews.setOnClickPendingIntent(R.id.img_next_play, nextPIntent)
 
         val preIntent = Intent(STOP_ACTION)
-        preIntent.putExtra("FLAG", STOP_FLAG)
+        preIntent.putExtra("FLAG", stopFlag)
         val prePIntent = PendingIntent.getBroadcast(this, 0, preIntent, 0)
         remoteViews.setOnClickPendingIntent(R.id.img_cancel, prePIntent)
 

@@ -13,14 +13,14 @@ import com.se.music.utils.SONG_A_Z
 class SharePreferencesUtils {
 
     companion object {
-        val ARTIST_SORT_ORDER = "artist_sort_order"
-        val SONG_SORT_ORDER = "song_sort_order"
-        val ALBUM_SORT_ORDER = "album_sort_order"
-        val DOWNMUSIC_BIT = "DOWNMUSIC_BIT"
+        const val ARTIST_SORT_ORDER = "artist_sort_order"
+        const val SONG_SORT_ORDER = "song_sort_order"
+        const val ALBUM_SORT_ORDER = "album_sort_order"
+        const val DOWNMUSIC_BIT = "DOWNMUSIC_BIT"
 
         private const val SHARE_PREFERENCE_NAME = "past_music_share_preference"
 
-        val instance: SharePreferencesUtils by lazy { SharePreferencesUtils() }
+        val instance: SharePreferencesUtils by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) { SharePreferencesUtils() }
     }
 
     private val mPreferences: SharedPreferences = ApplicationSingleton.instance!!.getSharedPreferences(SHARE_PREFERENCE_NAME, Context.MODE_PRIVATE)

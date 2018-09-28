@@ -8,6 +8,6 @@ import android.os.Handler
  */
 class HandlerSingleton : Handler() {
     companion object {
-        val instance: HandlerSingleton by lazy { HandlerSingleton() }
+        val instance: HandlerSingleton by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) { HandlerSingleton() }
     }
 }

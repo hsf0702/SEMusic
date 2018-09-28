@@ -30,7 +30,6 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun setContentView(layoutResID: Int) {
         super.setContentView(layoutResID)
-        //每次新建一个activity都会连接一次，然后把上下文和Sc保存在一个WeakHashMap中
         mToken = MusicPlayer.bindToService(this)
         mPlaybackStatus = PlaybackStatus(this)
         val intentFilter = IntentFilter()
@@ -59,13 +58,13 @@ open class BaseActivity : AppCompatActivity() {
         if (show) {
             if (fragment == null) {
                 fragment = QuickControlsFragment.newInstance()
-                ft.add(R.id.bottom_container, fragment).commitAllowingStateLoss()
+                ft.add(R.id.bottom_container, fragment).commit()
             } else {
-                ft.show(fragment).commitAllowingStateLoss()
+                ft.show(fragment).commit()
             }
         } else {
             if (fragment != null)
-                ft.hide(fragment).commitAllowingStateLoss()
+                ft.hide(fragment).commit()
         }
     }
 
@@ -93,7 +92,7 @@ open class BaseActivity : AppCompatActivity() {
     /**
      * 歌曲切换
      */
-    open fun updateTrack() {
+    open fun musicChanged() {
 
     }
 
@@ -171,12 +170,13 @@ open class BaseActivity : AppCompatActivity() {
                     TRACK_PREPARED -> baseActivity.updateTime()
                     BUFFER_UP -> baseActivity.updateBuffer(intent.getIntExtra("progress", 0))
                     MUSIC_LOADING -> baseActivity.loading(intent.getBooleanExtra("isloading", false))
-                    REFRESH -> { }
+                    REFRESH -> {
+                    }
                     MUSIC_COUNT_CHANGED -> baseActivity.refreshUI()
                     PLAYLIST_COUNT_CHANGED -> baseActivity.refreshUI()
                     QUEUE_CHANGED -> baseActivity.updateQueue()
                     TRACK_ERROR -> Toast.makeText(baseActivity, "错误了嘤嘤嘤", Toast.LENGTH_SHORT).show()
-                    MUSIC_CHANGED -> baseActivity.updateTrack()
+                    MUSIC_CHANGED -> baseActivity.musicChanged()
                     LRC_UPDATED -> baseActivity.updateLrc()
                 }
             }

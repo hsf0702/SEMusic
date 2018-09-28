@@ -3,6 +3,8 @@ package com.se.music.provider
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.se.music.base.DATABASE_NAME
+import com.se.music.base.DATABASE_VERSION
 import com.se.music.provider.database.entity.MusicInfoCache
 import com.se.music.provider.database.provider.ImageStore
 import com.se.music.provider.database.provider.RecentStore

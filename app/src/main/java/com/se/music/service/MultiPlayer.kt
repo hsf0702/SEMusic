@@ -14,12 +14,16 @@ import java.lang.ref.WeakReference
 /**
  *Author: gaojin
  *Time: 2018/9/16 下午7:34
+ *播放器实现
  */
 
 class MultiPlayer(service: MediaService) : MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener {
 
     var isTrackPrepared = false
     var mIsNextTrackPrepared = false
+    /**
+     * 播放器是否初始化
+     */
     var isInitialized = false
     var secondaryPosition = 0
     var audioSessionId: Int

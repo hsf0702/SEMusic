@@ -1,5 +1,7 @@
 package com.se.music.retrofit
 
+import com.se.music.entity.Album
+import com.se.music.entity.Artist
 import com.se.music.online.model.ExpressInfoModel
 import com.se.music.online.model.HallModel
 import com.se.music.online.model.RecommendListModel
@@ -7,8 +9,6 @@ import com.se.music.online.model.SingerModel
 import com.se.music.online.params.CommonPostParams
 import com.se.music.online.params.ExpressPostParams
 import com.se.music.singleton.GsonFactory
-import com.se.music.entity.Album
-import com.se.music.entity.Artist
 import retrofit2.Call
 import retrofit2.Retrofit
 
@@ -19,12 +19,12 @@ import retrofit2.Retrofit
 class MusicRetrofit private constructor() {
 
     companion object {
+        const val API_BASE_C_URL = "http://c.y.qq.com/"
+        const val API_BASE_U_URL = "http://u.y.qq.com/"
+        const val API_LAST_FM_URL = "http://ws.audioscrobbler.com/"
+
         val instance: MusicRetrofit by lazy { MusicRetrofit() }
     }
-
-    val API_BASE_C_URL = "http://c.y.qq.com/"
-    val API_BASE_U_URL = "http://u.y.qq.com/"
-    val API_LAST_FM_URL = "http://ws.audioscrobbler.com/"
 
     private val baseCRetrofit: Retrofit = QQRetrofitFactory.getInstance(API_BASE_C_URL)
     private val baseURetrofit: Retrofit = QQRetrofitFactory.getInstance(API_BASE_U_URL)

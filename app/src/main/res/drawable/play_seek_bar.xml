@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list
-  xmlns:android="http://schemas.android.com/apk/res/android">
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@android:id/background">
-        <nine-patch android:src="@drawable/play_plybar_bg" />
+        <shape>
+            <solid android:color="#bfbfbf" />
+        </shape>
     </item>
     <item android:id="@android:id/secondaryProgress">
-        <scale android:scaleWidth="100%">
-            <nine-patch android:src="@drawable/play_plybar_ready" />
-        </scale>
+        <clip>
+            <shape>
+                <solid android:color="@color/medium_sea_green" />
+            </shape>
+        </clip>
     </item>
     <item android:id="@android:id/progress">
-        <scale android:scaleWidth="100%">
-            <nine-patch android:src="@drawable/play_plybar_red" />
-        </scale>
+        <clip>
+            <shape>
+                <solid android:color="@color/medium_sea_green" />
+            </shape>
+        </clip>
     </item>
 </layer-list>

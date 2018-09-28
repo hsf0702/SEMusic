@@ -12,7 +12,6 @@ import android.widget.LinearLayout
 import com.se.music.R
 import com.se.music.base.picBaseUrl_150
 import com.se.music.online.model.ExpressInfoModel
-import com.se.music.utils.inflate
 import com.se.music.widget.GridItemDecoration
 import com.se.music.widget.RecommendItemView
 
@@ -56,7 +55,7 @@ class NewSongExpressBlock : LinearLayout {
     }
 
     class ExpressGridAdapter(private var context: Context, data: ExpressInfoModel) : RecyclerView.Adapter<RecommendViewHolder>() {
-        private val ITEMCOUNT = 3
+        private val itemCount = 3
         private var mData: ExpressInfoModel = data
         override fun onBindViewHolder(holderRecommend: RecommendViewHolder, position: Int) {
             when (position) {
@@ -113,7 +112,7 @@ class NewSongExpressBlock : LinearLayout {
         }
 
         override fun getItemCount(): Int {
-            return ITEMCOUNT
+            return itemCount
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecommendViewHolder {
