@@ -42,17 +42,17 @@ class PlayingActivity : BaseActivity() {
         toolbarInit()
         initView()
 
-        Glide.with(this)
-                .asBitmap()
-                .load("https://y.gtimg.cn/music/photo_new/T002R300x300M0000003YzXZ0ssGal.jpg")
-                .into(object : SimpleTarget<Bitmap>() {
-                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                        val blurBitmap = blurBitmap(this@PlayingActivity, resource, 120)
-                        if (blurBitmap != null) {
-                            activityBg.background = getAlphaDrawable(blurBitmap)
-                        }
-                    }
-                })
+//        Glide.with(this)
+//                .asBitmap()
+//                .load("https://y.gtimg.cn/music/photo_new/T002R300x300M0000003YzXZ0ssGal.jpg")
+//                .into(object : SimpleTarget<Bitmap>() {
+//                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+//                        val blurBitmap = blurBitmap(this@PlayingActivity, resource, 120)
+//                        if (blurBitmap != null) {
+//                            activityBg.background = getAlphaDrawable(blurBitmap)
+//                        }
+//                    }
+//                })
     }
 
     private fun initView() {

@@ -1,40 +1,23 @@
 # SEMusic
-仿QQ音乐 APP
+仿QQ音乐
 
-Java & Kotlin
+## 你可能对这个项目感兴趣的点
 
-# 数据库表结构
-- SongListTable
-- 歌单表
-- [SongListContentProvider](https://github.com/neugaojin/SEMusic/blob/master/app/src/main/java/com/se/music/provider/SongListContentProvider.kt)
+### Android
+- 单Activity 多Fragment的APP结构
+- MVP的架构模式
+- Android音乐播放
+- Android Service的使用
+- Hook GsonConverter数据解析的流程
+- Fragment的切换动画
+- Android Loader的使用
+  - 自定义ContentProvider配合Loader读取本地数据库
+  - Retrofit配合Loader的使用，省去网络请求对生命周期的判断
+- 进程间通信
+  - AIDL的使用
+  - 广播的使用
 
-| _id    | _name  | _count     | _creator | _create_time | _pic       | _info    |
-| ------ | ------ | ---------- | -------- | ------------ | ---------- | -------- |
-| id主键 | 歌单名 | 歌曲的数量 | 创建者   | 创建时间     | 歌单封面图 | 歌单信息 |
-
-# 接口信息
-
-注：接口全部抓取自 Web版的[QQ音乐](https://y.qq.com/)  (仅学习交流使用)
-
-| 名称     | URL                                      | Query |
-| ------ | ---------------------------------------- | ----- |
-| 轮播图+电台 | https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg |       |
-| 排行榜    | https://c.y.qq.com/v8/fcg-bin/fcg_myqq_toplist.fcg |       |
-| 搜索热词   | https://c.y.qq.com/splcloud/fcgi-bin/gethotkey.fcg |       |
-| 歌手列表   | https://c.y.qq.com/v8/fcg-bin/v8.fcg?channel=singer&page=list&key=all_all_all&pagesize=100&pagenum=1&format=jsonp |       |
-
-https://u.y.qq.com/cgi-bin/musicu.fcg?data={"comm":{"ct":24},"recomPlaylist":{"method":"get_hot_recommend","param":{"async":1,"cmd":2},"module":"playlist.HotRecommendServer"}}
-
-"category":{"method":"get_hot_category","param":{"qq":""},"module":"music.web_category_svr"},"
-
-"new_song":{"module":"QQMusic.MusichallServer","method":"GetNewSong","param":{"type":0}},"
-
-"playlist":{"method":"get_playlist_by_category","param":{"id":8,"curPage":1,"size":40,"order":5,"titleid":8},"module":"playlist.PlayListPlazaServer"},"
-
-"new_album":{"module":"QQMusic.MusichallServer","method":"GetNewAlbum","param":{"type":0,"category":"-1","genre":0,"year":1,"company":-1,"sort":1,"start":0,"end":39}},"
-
-"toplist":{"module":"music.web_toplist_svr","method":"get_toplist_index","param":{}},"
-
-"recomPlaylist":{"method":"get_hot_recommend","param":{"async":1,"cmd":2},"module":"playlist.HotRecommendServer"},"
-
-"focus":{"module":"QQMusic.MusichallServer","method":"GetFocus","param":{}}
+### Kotlin
+- Kotlin反射的使用
+- Kotlin对Null的处理（个人理解）
+- kotlin拓展函数
