@@ -12,11 +12,10 @@ import android.widget.TextView
 import com.se.music.R
 import com.se.music.activity.PlayingActivity
 import com.se.music.base.BaseFragment
-import com.se.music.base.Null
-import com.se.music.entity.AlbumEntity
 import com.se.music.service.MusicPlayer
+import com.se.music.utils.getLargeImageUrl
 import com.se.music.utils.isContentEmpty
-import com.se.music.utils.loadAlbumPic
+import com.se.music.utils.loadUrl
 
 
 /**
@@ -94,14 +93,8 @@ class QuickControlsFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun updateFragment() {
-        val albumEntity = AlbumEntity(MusicPlayer.getCurrentAlbumId()
-                , MusicPlayer.getAlbumName()
-                , 0
-                , MusicPlayer.getArtistName()
-                , Null)
-        albumEntity.imageUrl = MusicPlayer.getAlbumPic()
 
-        album.loadAlbumPic(context!!, albumEntity, loaderManager, R.drawable.player_albumcover_default)
+        album.loadUrl(MusicPlayer.getAlbumPic().getLargeImageUrl(), R.drawable.player_albumcover_default)
 
         if (MusicPlayer.getTrackName().isContentEmpty() && MusicPlayer.getArtistName().isContentEmpty()) {
             playBarSongName.visibility = View.GONE

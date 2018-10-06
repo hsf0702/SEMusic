@@ -21,6 +21,7 @@ import com.se.music.base.BaseActivity
 import com.se.music.block.PlayingBottomBlock
 import com.se.music.service.MusicPlayer
 import com.se.music.utils.blurBitmap
+import com.se.music.utils.getMegaImageUrl
 
 /**
  *Author: gaojin
@@ -41,18 +42,6 @@ class PlayingActivity : BaseActivity() {
         showQuickControl(false)
         toolbarInit()
         initView()
-
-//        Glide.with(this)
-//                .asBitmap()
-//                .load("https://y.gtimg.cn/music/photo_new/T002R300x300M0000003YzXZ0ssGal.jpg")
-//                .into(object : SimpleTarget<Bitmap>() {
-//                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-//                        val blurBitmap = blurBitmap(this@PlayingActivity, resource, 120)
-//                        if (blurBitmap != null) {
-//                            activityBg.background = getAlphaDrawable(blurBitmap)
-//                        }
-//                    }
-//                })
     }
 
     private fun initView() {
@@ -65,6 +54,7 @@ class PlayingActivity : BaseActivity() {
         super.onResume()
         songTitle.text = MusicPlayer.getTrackName()
         playingBottomBlock.updateBlock()
+        setBg()
     }
 
     private fun toolbarInit() {
@@ -78,6 +68,7 @@ class PlayingActivity : BaseActivity() {
         super.musicChanged()
         songTitle.text = MusicPlayer.getTrackName()
         playingBottomBlock.musicChanged()
+        setBg()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -97,6 +88,29 @@ class PlayingActivity : BaseActivity() {
     override fun finish() {
         super.finish()
         overridePendingTransition(R.anim.push_up_in, R.anim.push_down_out)
+    }
+
+    private fun setBg() {
+        if (MusicPlayer.getAlbumPic().isEmpty()) {
+            activityBg.background = getDrawable(R.drawable.player_background_real)
+        } else {
+            Glide.with(this)
+                    .asBitmap()
+                    .load(MusicPlayer.getAlbumPic().getMegaImageUrl())
+                    .into(object : SimpleTarget<Bitmap>() {
+                        override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                            val blurBitmap = blurBitmap(this@PlayingActivity, resource, 120)
+                            if (blurBitmap != null) {
+                                activityBg.background = getAlphaDrawable(blurBitmap)
+                            }
+                        }
+
+                        override fun onLoadFailed(errorDrawable: Drawable?) {
+                            super.onLoadFailed(errorDrawable)
+                            activityBg.background = getDrawable(R.drawable.player_background_real)
+                        }
+                    })
+        }
     }
 
     private fun getAlphaDrawable(bg: Bitmap): Drawable {

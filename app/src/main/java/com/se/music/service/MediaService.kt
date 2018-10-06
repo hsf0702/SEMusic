@@ -1,7 +1,10 @@
 package com.se.music.service
 
 import android.annotation.SuppressLint
-import android.app.*
+import android.app.Notification
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.Service
 import android.content.*
 import android.media.AudioManager
 import android.media.audiofx.AudioEffect
@@ -110,9 +113,7 @@ class MediaService : Service() {
      */
     private var mAudioManager: AudioManager? = null
     private var mNotificationManager: NotificationManager? = null
-    private var mAlarmManager: AlarmManager? = null
     private var mShutdownIntent: PendingIntent? = null
-    private var mShutdownScheduled = false
     /**
      * 当前播放音乐的下标
      */
@@ -147,17 +148,15 @@ class MediaService : Service() {
     })
 
     override fun onBind(intent: Intent?): IBinder {
-        cancelShutdown()
         mServiceInUse = true
         return mBinder
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
         mServiceInUse = false
-        if (isPlaying) {
-            return true
-        } else if (mPlaylist.size > 0 || mPlayerHandler.hasMessages(TRACK_ENDED)) {
-            scheduleDelayedShutdown()
+        if (isPlaying
+                || mPlaylist.size > 0
+                || mPlayerHandler.hasMessages(TRACK_ENDED)) {
             return true
         }
         stopSelf(mServiceStartId)
@@ -165,7 +164,6 @@ class MediaService : Service() {
     }
 
     override fun onRebind(intent: Intent?) {
-        cancelShutdown()
         mServiceInUse = true
     }
 
@@ -200,7 +198,6 @@ class MediaService : Service() {
 
         mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         mAudioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        mAlarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         mShutdownIntent = PendingIntent.getService(this, 0, shutdownIntent, 0)
     }
 
@@ -326,7 +323,6 @@ class MediaService : Service() {
         mPlayerHandler.removeMessages(FADE_DOWN)
         mPlayerHandler.sendEmptyMessage(FADE_UP)
         setIsPlaying(true, true)
-        cancelShutdown()
         updateNotification()
         notifyChange(META_CHANGED)
     }
@@ -459,13 +455,14 @@ class MediaService : Service() {
     private fun openCurrentAndMaybeNext(openNext: Boolean) {
         synchronized(this) {
             stop(false)
-            var shutdown = false
-
-            if (mPlaylist.size == 0 || mPlayListInfo.size == 0 && mPlayPos >= mPlaylist.size) {
+            if (mPlaylist.size == 0
+                    || mPlayListInfo.size == 0
+                    && mPlayPos >= mPlaylist.size) {
                 clearPlayInfo()
                 return
             }
-            val id = mPlaylist[mPlayPos].mId
+
+            val id = getAudioId()
             getLrc(id)
             if (mPlayListInfo[id] == null) {
                 return
@@ -482,28 +479,19 @@ class MediaService : Service() {
                     if (mOpenFailedCounter++ < 10 && mPlaylist.size > 1) {
                         val pos = getNextPosition()
                         if (pos < 0) {
-                            shutdown = true
                             break
                         }
-                        mPlayPos = pos
                         stop(false)
                         mPlayPos = pos
                     } else {
                         mOpenFailedCounter = 0
                         Log.w(TAG, "Failed to open file for playback")
-                        shutdown = true
                         break
                     }
                 }
             }
 
-            if (shutdown) {
-                scheduleDelayedShutdown()
-                if (isPlaying) {
-                    isPlaying = false
-                    notifyChange(PLAY_STATE_CHANGED)
-                }
-            } else if (openNext) {
+            if (openNext) {
                 setNextTrack()
             }
         }
@@ -704,7 +692,13 @@ class MediaService : Service() {
 
     fun getAlbumPic(): String? {
         synchronized(this) {
-            return ImageStore.instance.query(currentMusicEntity?.albumKey)
+            return ImageStore.instance.query(currentMusicEntity?.albumName)
+        }
+    }
+
+    fun getAlbumId(): Long {
+        synchronized(this) {
+            return 0
         }
     }
 
@@ -864,13 +858,6 @@ class MediaService : Service() {
         }
     }
 
-    private fun cancelShutdown() {
-        if (mShutdownScheduled) {
-            mAlarmManager!!.cancel(mShutdownIntent)
-            mShutdownScheduled = false
-        }
-    }
-
     private fun recentlyPlayed(): Boolean {
         return isPlaying || System.currentTimeMillis() - mLastPlayedTime < IDLE_DELAY
     }
@@ -908,11 +895,6 @@ class MediaService : Service() {
         if (!mServiceInUse) {
             stopSelf(mServiceStartId)
         }
-    }
-
-    private fun scheduleDelayedShutdown() {
-        mAlarmManager!!.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + IDLE_DELAY, mShutdownIntent)
-        mShutdownScheduled = true
     }
 
     private fun updateNotification() {

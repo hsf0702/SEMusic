@@ -37,9 +37,13 @@ class ImageStore {
      */
     @Synchronized
     fun addImage(key: String, imageValue: String) {
+        if (key.isEmpty() || imageValue.isEmpty()) {
+            return
+        }
         val database = MusicDBHelper.instance.writableDatabase
         database.beginTransaction()
         try {
+
             val value = ContentValues(2)
             value.put(IMAGE_KEY, key)
             value.put(IMAGE_VALUE, imageValue)

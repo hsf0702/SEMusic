@@ -13,7 +13,7 @@ fun String.getMediumImageUrl(): String {
     return String.format(LAST_FM_IMAGE_MEDIUM, this)
 }
 
-fun String.getLargeImageUrl(imageId: String): String {
+fun String.getLargeImageUrl(): String {
     return String.format(LAST_FM_IMAGE_LARGE, this)
 }
 

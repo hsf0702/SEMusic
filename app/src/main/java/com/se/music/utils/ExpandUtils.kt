@@ -1,14 +1,11 @@
 package com.se.music.utils
 
-import android.content.Context
 import android.support.annotation.DrawableRes
-import android.support.v4.app.LoaderManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.se.music.GlideApp
-import com.se.music.entity.AlbumEntity
 
 /**
  *Author: gaojin
@@ -30,14 +27,4 @@ fun ImageView.loadUrl(url: String?, @DrawableRes drawableRes: Int) {
             .load(url)
             .placeholder(drawableRes)
             .into(this)
-}
-
-fun ImageView.loadAlbumPic(context: Context, albumEntity: AlbumEntity, loaderManager: LoaderManager, @DrawableRes drawableRes: Int) {
-    if (albumEntity.imageUrl.isEmpty()
-            && !albumEntity.albumArtist.isEmpty()
-            && albumEntity.albumName.isEmpty()) {
-        loaderManager.initLoader(generateLoaderId(), null, buildAlbumCallBacks(context, this, albumEntity))
-    } else {
-        this.loadUrl(albumEntity.imageUrl.getMegaImageUrl(), drawableRes)
-    }
 }

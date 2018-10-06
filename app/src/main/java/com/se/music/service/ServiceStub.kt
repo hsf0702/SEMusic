@@ -72,8 +72,7 @@ class ServiceStub constructor(service: MediaService) : IMediaAidlInterface.Stub(
     }
 
     override fun getAlbumId(): Long {
-//        return mService.get()?.getAlbumId() ?: 0
-        return 0
+        return mService.get()?.getAlbumId() ?: 0
     }
 
     override fun getAlbumPathtAll(): Array<String?> {
