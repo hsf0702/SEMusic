@@ -12,7 +12,7 @@ val localMusicUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI!!
 val infoMusic = arrayOf(MediaStore.Audio.Media._ID          //音乐ID
         , MediaStore.Audio.Media.TITLE      //音乐的标题
         , MediaStore.Audio.Media.DATA       //日期
-        , MediaStore.Audio.Media.ALBUM_ID   //专辑ID
+        , MediaStore.Audio.Media.ALBUM_KEY   //专辑ID
         , MediaStore.Audio.Media.ALBUM      //专辑
         , MediaStore.Audio.Media.ARTIST     //艺术家
         , MediaStore.Audio.Media.ARTIST_ID  //艺术家ID
@@ -30,7 +30,7 @@ val songSelection = StringBuilder(" 1=1 and title != ''")
 const val LM_ID_INDEX = 0
 const val LM_TITLE_INDEX = 1
 const val LM_DATA_INDEX = 2
-const val LM_ALBUM_ID_INDEX = 3
+const val LM_ALBUM_KEY_INDEX = 3
 const val LM_ALBUM_INDEX = 4
 const val LM_ARTIST_INDEX = 5
 const val LM_ARTIST_ID_INDEX = 6

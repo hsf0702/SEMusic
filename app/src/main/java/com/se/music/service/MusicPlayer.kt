@@ -86,20 +86,20 @@ class MusicPlayer {
                     val playlist = getQueue()
                     if (Arrays.equals(list, playlist)) {
                         if (currentQueuePosition == position && currentId == list[position]) {
-                            mService!!.play()
+                            mService?.play()
                             return
                         } else {
-                            mService!!.queuePosition = position
+                            mService?.queuePosition = position
                             return
                         }
                     }
                 }
                 if (position < 0) {
-                    mService!!.open(info, list, 0)
+                    mService?.open(info, list, 0)
                 } else {
-                    mService!!.open(info, list, position)
+                    mService?.open(info, list, position)
                 }
-                mService!!.play()
+                mService?.play()
             } catch (ignored: RemoteException) {
                 ignored.printStackTrace()
             }
@@ -184,6 +184,10 @@ class MusicPlayer {
 
         fun getAlbumPic(): String {
             return mService?.albumPic ?: Null
+        }
+
+        fun getAlbumName(): String {
+            return mService?.albumName ?: Null
         }
 
         /**

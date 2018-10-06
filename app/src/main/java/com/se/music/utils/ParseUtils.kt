@@ -1,6 +1,7 @@
 package com.se.music.utils
 
 import android.database.Cursor
+import com.se.music.base.Null
 import com.se.music.entity.AlbumEntity
 import com.se.music.entity.ArtistEntity
 import com.se.music.entity.MusicEntity
@@ -43,9 +44,8 @@ fun parseCursorToMusicEntityList(id: Int, cursor: Cursor, list: ArrayList<MusicE
             val musicEntity = MusicEntity(cursor.getLong(LM_ID_INDEX)
                     , cursor.getString(LM_TITLE_INDEX)
                     , cursor.getString(LM_ARTIST_INDEX)
-                    , cursor.getLong(LM_ALBUM_ID_INDEX)
                     , null
-                    , null
+                    , cursor.getString(LM_ALBUM_KEY_INDEX)
                     , cursor.getLong(LM_DURATION_INDEX)
                     , cursor.getString(LM_ALBUM_INDEX)
                     , cursor.getLong(LM_ARTIST_ID_INDEX)
@@ -83,12 +83,12 @@ fun parseCursorToArtistEntityList(id: Int, cursor: Cursor, list: ArrayList<Artis
 fun parseCursorToAlbumEntityList(id: Int, cursor: Cursor, list: ArrayList<AlbumEntity>) {
     if (id == QUERY_LOCAL_ALBUM) {
         while (cursor.moveToNext()) {
-            val albumEntity = AlbumEntity(cursor.getInt(LA_ID)
+            val albumEntity = AlbumEntity(cursor.getInt(LA_ID).toLong()
                     , cursor.getString(LA_ALBUM)
                     , cursor.getInt(LA_SONG_NUMBER)
                     , cursor.getString(LA_ARTIST)
                     , cursor.getString(LA_ALBUM_KEY))
-            albumEntity.imageId = ImageStore.instance.query(cursor.getString(LA_ALBUM_KEY))
+            albumEntity.imageUrl = ImageStore.instance.query(cursor.getString(LA_ALBUM_KEY)) ?: Null
             list.add(albumEntity)
         }
     }

@@ -3,12 +3,9 @@ package com.se.music.service
 import android.annotation.SuppressLint
 import android.app.*
 import android.content.*
-import android.database.Cursor
-import android.database.MatrixCursor
 import android.media.AudioManager
 import android.media.audiofx.AudioEffect
 import android.media.session.MediaSession
-import android.net.Uri
 import android.os.*
 import android.provider.MediaStore
 import android.support.v4.app.NotificationCompat
@@ -17,7 +14,9 @@ import android.util.Log
 import android.widget.RemoteViews
 import com.se.music.R
 import com.se.music.activity.MainActivity
+import com.se.music.base.Null
 import com.se.music.entity.MusicEntity
+import com.se.music.provider.database.provider.ImageStore
 import com.se.music.provider.database.provider.RecentStore
 import com.se.music.singleton.GsonFactory
 import java.io.File
@@ -96,14 +95,14 @@ class MediaService : Service() {
      * 传进来的歌单
      */
     @SuppressLint("UseSparseArrays")
-    private var mPlaylistInfo = HashMap<Long, MusicEntity>()
+    private var mPlayListInfo = HashMap<Long, MusicEntity>()
+    private var currentMusicEntity: MusicEntity? = null
     /**
      * 当前播放列表
      */
     private val mPlaylist = ArrayList<MusicTrack>(100)
     private val mAudioFocusListener = AudioManager.OnAudioFocusChangeListener { focusChange -> mPlayerHandler.obtainMessage(FOCUS_CHANGE, focusChange, 0).sendToTarget() }
     private var mFileToPlay: String? = null
-    private var mCursor: Cursor? = null
     private var mServiceInUse = false
     private var mNotifyMode = NOTIFY_MODE_NONE
     /**
@@ -128,7 +127,6 @@ class MediaService : Service() {
     private var mNotification: Notification? = null
     private var mNotificationPostTime: Long = 0
     private var mPreferences: SharedPreferences? = null
-    private var mPausedByTransientLossOfFocus = false
     private var mRecentStore: RecentStore? = null
     private val mIntentReceiver = object : BroadcastReceiver() {
 
@@ -204,40 +202,6 @@ class MediaService : Service() {
         mAudioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         mAlarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         mShutdownIntent = PendingIntent.getService(this, 0, shutdownIntent, 0)
-    }
-
-    private fun setUpMediaSession() {
-        mSession = MediaSession(this, "pastmusic")
-        mSession.setCallback(object : MediaSession.Callback() {
-            override fun onPause() {
-                pause()
-                mPausedByTransientLossOfFocus = false
-            }
-
-            override fun onPlay() {
-                play()
-            }
-
-            override fun onSeekTo(pos: Long) {
-                seek(pos)
-            }
-
-            override fun onSkipToNext() {
-                nextPlay()
-            }
-
-            override fun onSkipToPrevious() {
-                previous()
-            }
-
-            override fun onStop() {
-                pause()
-                mPausedByTransientLossOfFocus = false
-                seek(0)
-                releaseServiceUiAndStop()
-            }
-        })
-        mSession.setFlags(MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS)
     }
 
     fun seek(position: Long): Long {
@@ -406,105 +370,23 @@ class MediaService : Service() {
             mPlayer.stop()
         }
         mFileToPlay = null
-        closeCursor()
         if (goToIdle) {
             setIsPlaying(false, false)
         }
     }
 
     /**
-     * 根据URI查找本地音乐文件的相应的column的值
-     *
-     * @param context
-     * @param uri
-     * @param column
-     * @return
+     * 入口函数
+     * @param info 音乐列表
+     * @param list 音乐ID集合
+     * @param position 要播放音乐的位置
      */
-    private fun getValueForDownloadedFile(context: Context, uri: Uri, column: String): String? {
-
-        var cursor: Cursor? = null
-        val projection = arrayOf(column)
-        try {
-            cursor = context.contentResolver.query(uri, projection, null, null, null)
-            if (cursor != null && cursor.moveToFirst()) {
-                return cursor.getString(0)
-            }
-        } finally {
-            if (cursor != null) {
-                cursor.close()
-            }
-        }
-        return null
-    }
-
-    /**
-     * 打开游标并指向第一个
-     *
-     * @param uri
-     * @param projection
-     * @param selection
-     * @param selectionArgs
-     * @return
-     */
-    private fun openCursorAndGoToFirst(uri: Uri, projection: Array<String>,
-                                       selection: String?, selectionArgs: Array<String>?): Cursor? {
-        val c = contentResolver.query(uri, projection, selection, selectionArgs, null)
-                ?: return null
-        if (!c.moveToFirst()) {
-            c.close()
-            return null
-        }
-        return c
-    }
-
-    @Synchronized
-    private fun closeCursor() {
-        if (mCursor != null) {
-            mCursor!!.close()
-            mCursor = null
-        }
-    }
-
-    /**
-     * 根据Uri更新游标
-     *
-     * @param uri
-     */
-    private fun updateCursor(uri: Uri) {
+    fun open(info: HashMap<Long, MusicEntity>, list: LongArray, position: Int) {
         synchronized(this) {
-            closeCursor()
-            mCursor = openCursorAndGoToFirst(uri, PROJECTION, null, null)
-        }
-    }
-
-    /**
-     * 根据ID更新游标
-     *
-     * @param trackId
-     */
-    private fun updateCursor(trackId: Long) {
-        val info = mPlaylistInfo[trackId]
-        if (mPlaylistInfo[trackId] != null) {
-            val cursor = MatrixCursor(PROJECTION)
-            cursor.addRow(arrayOf(info!!.songId, info.artist, info.albumName, info.musicName, info.data, info.albumData, info.albumId, info.artistId, info.albumPic))
-            cursor.moveToFirst()
-            mCursor = cursor
-            cursor.close()
-        }
-    }
-
-    private fun updateCursor(selection: String, selectionArgs: Array<String>) {
-        synchronized(this) {
-            closeCursor()
-            mCursor = openCursorAndGoToFirst(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                    PROJECTION, selection, selectionArgs)
-        }
-    }
-
-    fun open(infos: HashMap<Long, MusicEntity>, list: LongArray, position: Int) {
-        synchronized(this) {
-            mPlaylistInfo = infos
             val oldId = getAudioId()
+            mPlayListInfo = info
+
+            //判断是不是传入新的音乐列表
             val listLength = list.size
             var newList = true
             if (mPlaylist.size == listLength) {
@@ -520,6 +402,7 @@ class MediaService : Service() {
                 addToPlayList(list, -1)
                 notifyChange(QUEUE_CHANGED)
             }
+
             mPlayPos = if (position >= 0) {
                 position
             } else {
@@ -527,6 +410,7 @@ class MediaService : Service() {
             }
             mHistory.clear()
             openCurrentAndMaybeNext(true)
+
             if (oldId != getAudioId()) {
                 notifyChange(META_CHANGED)
             }
@@ -537,7 +421,7 @@ class MediaService : Service() {
      * 音乐加入播放列表
      *
      * @param list
-     * @param position
+     * @param position 传-1则清空列表
      */
     private fun addToPlayList(list: LongArray, position: Int) {
         var index = position
@@ -558,9 +442,7 @@ class MediaService : Service() {
         }
 
         mPlaylist.addAll(index, arrayList)
-
         if (mPlaylist.size == 0) {
-            closeCursor()
             notifyChange(META_CHANGED)
         }
     }
@@ -576,30 +458,27 @@ class MediaService : Service() {
      */
     private fun openCurrentAndMaybeNext(openNext: Boolean) {
         synchronized(this) {
-            closeCursor()
             stop(false)
             var shutdown = false
 
-            if (mPlaylist.size == 0 || mPlaylistInfo.size == 0 && mPlayPos >= mPlaylist.size) {
-                clearPlayInfos()
+            if (mPlaylist.size == 0 || mPlayListInfo.size == 0 && mPlayPos >= mPlaylist.size) {
+                clearPlayInfo()
                 return
             }
             val id = mPlaylist[mPlayPos].mId
-            updateCursor(id)
             getLrc(id)
-            if (mPlaylistInfo[id] == null) {
+            if (mPlayListInfo[id] == null) {
                 return
             }
-            if (!mPlaylistInfo[id]!!.islocal) {
+            if (!mPlayListInfo[id]!!.islocal) {
                 //在线歌曲
             } else {
                 while (true) {
-                    if (mCursor != null
-                            && openFile(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.toString() + "/"
-                                    + mCursor!!.getLong(ID_INDEX))) {
+                    if (openFile(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.toString() + "/"
+                                    + getMusicEntity()?.audioId)) {
                         break
                     }
-                    closeCursor()
+
                     if (mOpenFailedCounter++ < 10 && mPlaylist.size > 1) {
                         val pos = getNextPosition()
                         if (pos < 0) {
@@ -609,7 +488,6 @@ class MediaService : Service() {
                         mPlayPos = pos
                         stop(false)
                         mPlayPos = pos
-                        updateCursor(mPlaylist[mPlayPos].mId)
                     } else {
                         mOpenFailedCounter = 0
                         Log.w(TAG, "Failed to open file for playback")
@@ -631,7 +509,15 @@ class MediaService : Service() {
         }
     }
 
-    private fun clearPlayInfos() {
+    private fun getMusicEntity(): MusicEntity? {
+        var entity: MusicEntity? = null
+        if (mPlayPos in 0..(mPlaylist.size - 1)) {
+            entity = mPlayListInfo[getAudioId()]
+        }
+        return entity
+    }
+
+    private fun clearPlayInfo() {
         val file = File(cacheDir.absolutePath + "playlist")
         if (file.exists()) {
             file.delete()
@@ -669,6 +555,7 @@ class MediaService : Service() {
         sendStickyBroadcast(musicIntent)
         if (what == META_CHANGED) {
             mRecentStore!!.addSongId(getAudioId())
+            currentMusicEntity = getMusicEntity()
         } else if (what == QUEUE_CHANGED) {
             val intent1 = Intent("com.past.music.emptyplaylist")
             intent.putExtra("showorhide", "show")
@@ -692,8 +579,8 @@ class MediaService : Service() {
     private fun saveQueue(full: Boolean) {
         val editor = mPreferences!!.edit()
         if (full) {
-            if (mPlaylistInfo.size > 0) {
-                val temp = GsonFactory.instance.toJson(mPlaylistInfo)
+            if (mPlayListInfo.size > 0) {
+                val temp = GsonFactory.instance.toJson(mPlayListInfo)
                 try {
                     val file = File(cacheDir.absolutePath + "playlist")
                     val ra = RandomAccessFile(file, "rws")
@@ -763,8 +650,8 @@ class MediaService : Service() {
         mNextPlayPos = position
         if (mNextPlayPos >= 0 && mNextPlayPos < mPlaylist.size) {
             val id = mPlaylist[mNextPlayPos].mId
-            if (mPlaylistInfo[id] != null) {
-                if (mPlaylistInfo[id]!!.islocal) {
+            if (mPlayListInfo[id] != null) {
+                if (mPlayListInfo[id]?.islocal == true) {
                     mPlayer.setNextDataSource(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.toString() + "/" + id)
                 } else {
                     mPlayer.setNextDataSource(null)
@@ -779,53 +666,6 @@ class MediaService : Service() {
         synchronized(this) {
             if (path == null) {
                 return false
-            }
-            if (mCursor == null) {
-                val uri = Uri.parse(path)
-                var shouldAddToPlaylist = true
-                var id: Long = -1
-                try {
-                    id = java.lang.Long.valueOf(uri.lastPathSegment)
-                } catch (ignored: NumberFormatException) {
-                }
-
-                if (!(id == (-1).toLong() || !path.startsWith(
-                                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.toString()))) {
-                    updateCursor(uri)
-                } else {
-                    if (id != (-1).toLong() && path.startsWith(
-                                    MediaStore.Files.getContentUri("external").toString())) {
-                        updateCursor(id)
-                    } else if (path.startsWith("content://downloads/")) {
-                        val mpUri = getValueForDownloadedFile(this, uri, "mediaprovider_uri")
-                        if (!TextUtils.isEmpty(mpUri)) {
-                            return if (openFile(mpUri)) {
-                                notifyChange(META_CHANGED)
-                                true
-                            } else {
-                                false
-                            }
-                        } else {
-                            //                        updateCursorForDownloadedFile(this, localMusicUri);
-                            shouldAddToPlaylist = false
-                        }
-                    } else {
-                        val where = MediaStore.Audio.Media.DATA + "=?"
-                        val selectionArgs = arrayOf(path)
-                        updateCursor(where, selectionArgs)
-                    }
-                }
-                try {
-                    if (mCursor != null && shouldAddToPlaylist) {
-                        mPlaylist.clear()
-                        mPlaylist.add(MusicTrack(mCursor!!.getLong(ID_INDEX), -1))
-                        notifyChange(QUEUE_CHANGED)
-                        mPlayPos = 0
-                        mHistory.clear()
-                    }
-                } catch (ignored: UnsupportedOperationException) {
-                }
-
             }
             mFileToPlay = path
             mPlayer.setDataSource(mFileToPlay!!)
@@ -851,40 +691,32 @@ class MediaService : Service() {
 
     fun isTrackLocal(): Boolean {
         synchronized(this) {
-            val info = mPlaylistInfo[getAudioId()] ?: return true
+            val info = mPlayListInfo[getAudioId()] ?: return true
             return info.islocal
         }
     }
 
     fun getTrackName(): String? {
         synchronized(this) {
-            return if (mCursor == null) {
-                null
-            } else mCursor!!.getString(mCursor!!.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.TITLE))
+            return currentMusicEntity?.musicName
         }
     }
 
     fun getAlbumPic(): String? {
         synchronized(this) {
-            return if (mCursor == null) {
-                null
-            } else mCursor!!.getString(mCursor!!.getColumnIndexOrThrow(ALBUM_PIC))
+            return ImageStore.instance.query(currentMusicEntity?.albumKey)
         }
     }
 
     fun getAlbumName(): String? {
         synchronized(this) {
-            return if (mCursor == null) {
-                null
-            } else mCursor!!.getString(mCursor!!.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ALBUM))
+            return currentMusicEntity?.albumName
         }
     }
 
     fun getArtistName(): String? {
         synchronized(this) {
-            return if (mCursor == null) {
-                null
-            } else mCursor!!.getString(mCursor!!.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ARTIST))
+            return currentMusicEntity?.artist
         }
     }
 
@@ -896,7 +728,7 @@ class MediaService : Service() {
 
     fun getPlaylistInfo(): HashMap<Long, MusicEntity> {
         synchronized(this) {
-            return mPlaylistInfo
+            return mPlayListInfo
         }
     }
 
@@ -906,22 +738,14 @@ class MediaService : Service() {
         }
     }
 
-    fun getAlbumId(): Long {
-        synchronized(this) {
-            return if (mCursor == null) {
-                -1
-            } else mCursor!!.getLong(mCursor!!.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ALBUM_ID))
-        }
-    }
-
     fun getAlbumPathAll(): Array<String?> {
         synchronized(this) {
             try {
-                val len = mPlaylistInfo.size
+                val len = mPlayListInfo.size
                 val albums = arrayOfNulls<String>(len)
                 val queue = getQueue()
                 for (i in 0 until len) {
-                    albums[i] = mPlaylistInfo[queue[i]]!!.albumData
+                    albums[i] = mPlayListInfo[queue[i]]!!.albumData
                 }
                 return albums
             } catch (e: Exception) {
@@ -929,32 +753,6 @@ class MediaService : Service() {
             }
 
             return arrayOf()
-        }
-    }
-
-    fun getAlbumPicAll(): Array<String?> {
-        synchronized(this) {
-            try {
-                val len = mPlaylistInfo.size
-                val albums = arrayOfNulls<String>(len)
-                val queue = getQueue()
-                for (i in 0 until len) {
-                    albums[i] = mPlaylistInfo[queue[i]]!!.albumPic
-                }
-                return albums
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-
-            return arrayOf()
-        }
-    }
-
-    fun getArtistId(): Long {
-        synchronized(this) {
-            return if (mCursor == null) {
-                -1
-            } else mCursor!!.getLong(mCursor!!.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ARTIST_ID))
         }
     }
 
@@ -963,22 +761,21 @@ class MediaService : Service() {
         return track?.mId ?: -1
     }
 
-    fun getCurrentTrack(): MusicTrack? {
+    private fun getCurrentTrack(): MusicTrack? {
         return getTrack(mPlayPos)
     }
 
-    @Synchronized
-    fun getTrack(index: Int): MusicTrack? {
-        return if (index >= 0 && index < mPlaylist.size) {
-            mPlaylist[index]
-        } else null
+    private fun getTrack(index: Int): MusicTrack? {
+        synchronized(this) {
+            return if (index >= 0 && index < mPlaylist.size) {
+                mPlaylist[index]
+            } else null
+        }
     }
 
     fun getAlbumPath(): String? {
         synchronized(this) {
-            return if (mCursor == null) {
-                null
-            } else mCursor!!.getString(mCursor!!.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.MIME_TYPE))
+            return Null
         }
     }
 
@@ -1054,7 +851,7 @@ class MediaService : Service() {
     }
 
     private fun getLrc(id: Long) {
-        val info = mPlaylistInfo[id]
+        val info = mPlayListInfo[id]
         val lrc = Environment.getExternalStorageDirectory().absolutePath + LRC_PATH
         var file = File(lrc)
         if (!file.exists()) {
@@ -1124,24 +921,6 @@ class MediaService : Service() {
         } else {
             NOTIFY_MODE_NONE
         }
-        //
-        //        if (mNotifyMode != notifyMode) {
-        //            if (mNotifyMode == NOTIFY_MODE_FOREGROUND) {
-        //                stopForeground(notifyMode == NOTIFY_MODE_NONE || notifyMode == NOTIFY_MODE_BACKGROUND);
-        //            } else if (notifyMode == NOTIFY_MODE_NONE) {
-        //                mNotificationManager.cancel(mNotificationId);
-        //                mNotificationPostTime = 0;
-        //            }
-        //        }
-        //        if (notifyMode == NOTIFY_MODE_FOREGROUND) {
-        //            MyLog.i(TAG, "NOTIFY_MODE_FOREGROUND");
-        ////            startForeground(mNotificationId, getNotification());
-        //            mNotificationManager.notify(mNotificationId, getNotification());
-        //        } else if (notifyMode == NOTIFY_MODE_BACKGROUND) {
-        //            MyLog.i(TAG, "NOTIFY_MODE_BACKGROUND");
-        //            mNotificationManager.notify(mNotificationId, getNotification());
-        //        }
-
         if (notifyMode == mNotifyMode) {
             mNotificationManager!!.notify(mNotificationId, getNotification())
         } else {
@@ -1177,8 +956,7 @@ class MediaService : Service() {
                 }
                 i++
             }
-
-            mPlaylistInfo.remove(id)
+            mPlayListInfo.remove(id)
         }
 
 
@@ -1214,7 +992,7 @@ class MediaService : Service() {
                 mHistory.clear()
             } else {
                 for (i in 0 until numToRemove) {
-                    mPlaylistInfo.remove(mPlaylist[inFirst].mId)
+                    mPlayListInfo.remove(mPlaylist[inFirst].mId)
                     mPlaylist.removeAt(inFirst)
 
                 }
@@ -1233,7 +1011,6 @@ class MediaService : Service() {
                 if (mPlaylist.size == 0) {
                     stop(true)
                     mPlayPos = -1
-                    closeCursor()
                 } else {
                     if (mPlayPos >= mPlaylist.size) {
                         mPlayPos = 0
@@ -1323,7 +1100,6 @@ class MediaService : Service() {
         mPlayerHandler.removeCallbacksAndMessages(null)
         mHandlerThread.quit()
         mPlayer.release()
-        closeCursor()
         unregisterReceiver(mIntentReceiver)
 
     }
@@ -1337,11 +1113,6 @@ class MediaService : Service() {
                     TRACK_WENT_TO_NEXT -> {
                         service.setAndRecordPlayPos(service.mNextPlayPos)
                         service.setNextTrack()
-                        if (service.mCursor != null) {
-                            service.mCursor!!.close()
-                            service.mCursor = null
-                        }
-                        service.updateCursor(service.mPlaylist[service.mPlayPos].mId)
                         service.notifyChange(META_CHANGED)
                         service.notifyChange(MUSIC_CHANGED)
                         service.updateNotification()

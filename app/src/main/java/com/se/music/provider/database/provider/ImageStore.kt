@@ -74,7 +74,7 @@ class ImageStore {
      * 查询图片缓存
      */
     @Synchronized
-    fun query(key: String): String? {
+    fun query(key: String?): String? {
         val database = MusicDBHelper.instance.writableDatabase
         database.beginTransaction()
         var imageValue: String? = null

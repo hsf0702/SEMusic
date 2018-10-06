@@ -57,16 +57,15 @@ class MusicListAdapter constructor(private val context: Context, private val mLi
          */
         override fun run() {
             val list = LongArray(mList.size)
-            val infos = hashMapOf<Long, MusicEntity>()
+            val infoMap = hashMapOf<Long, MusicEntity>()
             for (i in mList.indices) {
                 val info = mList[i]
-                list[i] = info.songId
+                list[i] = info.audioId
                 info.islocal = true
-//                info.albumData = getAlbumArtUri(info.albumId.toLong()).toString()
-                infos[list[i]] = mList[i]
+                infoMap[list[i]] = mList[i]
             }
             if (position > -1)
-                MusicPlayer.playAll(infos, list, position)
+                MusicPlayer.playAll(infoMap, list, position)
         }
     }
 

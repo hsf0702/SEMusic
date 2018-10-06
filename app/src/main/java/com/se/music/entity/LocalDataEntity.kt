@@ -1,6 +1,7 @@
 package com.se.music.entity
 
 import android.os.Parcelable
+import com.se.music.base.Null
 import kotlinx.android.parcel.Parcelize
 
 /**
@@ -12,12 +13,12 @@ import kotlinx.android.parcel.Parcelize
 /**
  * 专辑bean
  */
-data class AlbumEntity(var albumId: Int = -1
+data class AlbumEntity(var albumId: Long = -1
                        , var albumName: String
                        , var numberOfSongs: Int
                        , var albumArtist: String
                        , var albumKey: String) {
-    var imageId: String? = null
+    var imageUrl: String = Null
 }
 
 /**
@@ -40,12 +41,11 @@ data class FolderEntity(var folderName: String
 }
 
 @Parcelize
-data class MusicEntity(var songId: Long = -1
+data class MusicEntity(var audioId: Long = -1
                        , var musicName: String
                        , var artist: String
-                       , var albumId: Long = -1
                        , var albumData: String?
-                       , var albumPic: String?
+                       , var albumKey: String
                        , var duration: Long
                        , var albumName: String?
                        , var artistId: Long
@@ -54,12 +54,9 @@ data class MusicEntity(var songId: Long = -1
                        , var folder: String?
                        , var lrc: String?
                        , var sort: String?
-        /**
-         * 0表示没有收藏 1表示收藏
-         */
+        //0表示没有收藏 1表示收藏
                        , var favorite: Int = 0
-                       , var islocal: Boolean) : Parcelable {
-}
+                       , var islocal: Boolean) : Parcelable
 
 data class SongListEntity(var id: String
                           , var name: String

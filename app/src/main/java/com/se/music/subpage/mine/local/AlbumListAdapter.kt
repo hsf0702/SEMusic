@@ -2,22 +2,16 @@ package com.se.music.subpage.mine.local
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Bundle
 import android.support.v4.app.LoaderManager
-import android.support.v4.content.Loader
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.se.music.R
-import com.se.music.entity.Album
 import com.se.music.entity.AlbumEntity
-import com.se.music.provider.database.provider.ImageStore
-import com.se.music.retrofit.MusicRetrofit
-import com.se.music.retrofit.callback.CallLoaderCallbacks
-import com.se.music.utils.*
-import retrofit2.Call
+import com.se.music.utils.inflate
+import com.se.music.utils.loadAlbumPic
 import java.util.*
 
 
@@ -41,35 +35,7 @@ class AlbumListAdapter constructor(private val context: Context, private val lis
         val albumEntity = list[position]
         holder.albumName.text = albumEntity.albumName
         holder.albumSongCount.text = "${albumEntity.numberOfSongs}首"
-        if (list[position].imageId == null
-                || list[position].imageId!!.isEmpty()) {
-            loaderManager.initLoader(generateLoaderId(), null, buildAlbumCallBacks(holder, position))
-        } else {
-            holder.albumPic.loadUrl(albumEntity.imageId!!.getMegaImageUrl(), R.drawable.default_album_avatar)
-        }
-    }
-
-    private fun buildAlbumCallBacks(holder: AlbumViewHolder, position: Int): CallLoaderCallbacks<Album> {
-        return object : CallLoaderCallbacks<Album>(context) {
-            override fun onCreateCall(id: Int, args: Bundle?): Call<Album> {
-                return MusicRetrofit.instance.getAlbumInfo(list[position].albumArtist, list[position].albumName)
-            }
-
-            override fun onSuccess(loader: Loader<*>, data: Album) {
-                if (data.image != null && data.image!!.isNotEmpty()) {
-                    val imageId = data.image!![0].imageUrl!!.getImageId()
-                    holder.albumPic.loadUrl(imageId.getMegaImageUrl(), R.drawable.default_album_avatar)
-                    list[position].imageId = imageId
-                    //添加图片缓存
-                    ImageStore.instance.addImage(list[position].albumKey, imageId)
-                } else {
-                    holder.albumPic.setImageResource(R.drawable.default_album_avatar)
-                }
-            }
-
-            override fun onFailure(loader: Loader<*>, throwable: Throwable) {
-            }
-        }
+        holder.albumPic.loadAlbumPic(context, albumEntity, loaderManager, R.drawable.default_album_avatar)
     }
 }
 

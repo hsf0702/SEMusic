@@ -2,6 +2,7 @@ package com.se.music.service
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.se.music.base.Null
 
 /**
  * Created by gaojin on 2018/3/8.

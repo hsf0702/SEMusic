@@ -3,6 +3,7 @@ package com.se.music.service
 import android.os.Parcel
 import android.os.RemoteException
 import com.se.music.IMediaAidlInterface
+import com.se.music.base.Null
 import com.se.music.entity.MusicEntity
 import java.io.File
 import java.io.PrintWriter
@@ -59,19 +60,20 @@ class ServiceStub constructor(service: MediaService) : IMediaAidlInterface.Stub(
     }
 
     override fun getAlbumName(): String? {
-        return null
+        return mService.get()?.getAlbumName()
     }
 
     override fun getAlbumPath(): String? {
         return mService.get()?.getAlbumPath()
     }
 
-    override fun getAlbumPic(): String? {
-        return mService.get()?.getAlbumPic()
+    override fun getAlbumPic(): String {
+        return mService.get()?.getAlbumPic() ?: Null
     }
 
     override fun getAlbumId(): Long {
-        return mService.get()?.getAlbumId() ?: 0
+//        return mService.get()?.getAlbumId() ?: 0
+        return 0
     }
 
     override fun getAlbumPathtAll(): Array<String?> {
