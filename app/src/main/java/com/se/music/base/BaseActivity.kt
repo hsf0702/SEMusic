@@ -85,29 +85,24 @@ open class BaseActivity : AppCompatActivity() {
     /**
      * 更新播放队列
      */
-    open fun updateQueue() {
-
-    }
+    open fun updateQueue() {}
 
     /**
      * 歌曲切换
      */
     open fun musicChanged() {
-
+        for (listener in mMusicListener) {
+            listener.musciChanged()
+        }
     }
 
-    open fun updateLrc() {
+    open fun updateLrc() {}
 
-    }
-
-    fun setMusicStateListenerListener(status: MusicStateListener?) {
+    fun setMusicStateListenerListener(status: MusicStateListener) {
         if (status === this) {
             throw UnsupportedOperationException("Override the method, don't add a listener")
         }
-
-        if (status != null) {
-            mMusicListener.add(status)
-        }
+        mMusicListener.add(status)
     }
 
     fun removeMusicStateListenerListener(status: MusicStateListener?) {

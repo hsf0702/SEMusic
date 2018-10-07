@@ -1,4 +1,4 @@
-package com.se.music.block
+package com.se.music.subpage.playing
 
 /**
  *Author: gaojin

@@ -1,4 +1,4 @@
-package com.se.music.block
+package com.se.music.subpage.playing
 
 import android.content.Context
 import android.support.v7.widget.AppCompatSeekBar
@@ -113,6 +113,7 @@ class PlayingBottomBlock : LinearLayout, View.OnClickListener, SeekBar.OnSeekBar
      */
     override fun musicChanged() {
         setSeekBar()
+        updatePlayingStatus()
     }
 
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {

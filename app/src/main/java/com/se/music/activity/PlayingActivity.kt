@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
@@ -18,8 +19,9 @@ import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.se.music.R
 import com.se.music.base.BaseActivity
-import com.se.music.block.PlayingBottomBlock
 import com.se.music.service.MusicPlayer
+import com.se.music.subpage.playing.PlayerPagerAdapter
+import com.se.music.subpage.playing.PlayingBottomBlock
 import com.se.music.utils.blurBitmap
 import com.se.music.utils.getMegaImageUrl
 
@@ -34,6 +36,7 @@ class PlayingActivity : BaseActivity() {
     private lateinit var toolbar: Toolbar
 
     private lateinit var songTitle: TextView
+    private lateinit var viewPager: ViewPager
     private lateinit var playingBottomBlock: PlayingBottomBlock
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,6 +50,9 @@ class PlayingActivity : BaseActivity() {
     private fun initView() {
         activityBg = findViewById(R.id.player_activity_bg)
         songTitle = findViewById(R.id.playing_song_title)
+        viewPager = findViewById(R.id.content_view_pager)
+        viewPager.adapter = PlayerPagerAdapter(supportFragmentManager)
+        viewPager.currentItem = PlayerPagerAdapter.ALBUM_INFO
         playingBottomBlock = findViewById(R.id.playing_bottom_block)
     }
 
@@ -99,7 +105,7 @@ class PlayingActivity : BaseActivity() {
                     .load(MusicPlayer.getAlbumPic().getMegaImageUrl())
                     .into(object : SimpleTarget<Bitmap>() {
                         override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                            val blurBitmap = blurBitmap(this@PlayingActivity, resource, 120)
+                            val blurBitmap = blurBitmap(resource, 100)
                             if (blurBitmap != null) {
                                 activityBg.background = getAlphaDrawable(blurBitmap)
                             }
