@@ -51,7 +51,7 @@ class MusicDBHelper(context: Context, name: String?, factory: SQLiteDatabase.Cur
             "PRIMARY KEY (" + MusicInfoCache.ID + ")" +
             ");"
 
-    constructor() : this(ApplicationSingleton.instance!!.applicationContext, DATABASE_NAME, null, DATABASE_VERSION)
+    constructor() : this(ApplicationSingleton.instance.applicationContext, DATABASE_NAME, null, DATABASE_VERSION)
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(SONGLIST_TABLE_CREATE)

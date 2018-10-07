@@ -11,7 +11,7 @@ class ApplicationSingleton {
     companion object {
         @SuppressLint("StaticFieldLeak")
         @Volatile
-        var instance: Application? = null
+        lateinit var instance: Application
 
         fun bindInstance(application: Application) {
             instance = application

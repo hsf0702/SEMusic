@@ -5,6 +5,7 @@ package com.se.music.base
  *Time: 2018/9/28 下午5:32
  */
 
+const val APP_NAME = "SE_MUSIC"
 const val TOAST_SHOW_DURATION = 2000L
 
 //数据库

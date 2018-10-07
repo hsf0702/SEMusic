@@ -32,7 +32,7 @@ class ServiceStub constructor(service: MediaService) : IMediaAidlInterface.Stub(
     }
 
     override fun play() {
-        mService.get()?.play(true)
+        mService.get()?.play()
     }
 
     override fun nextPlay() {

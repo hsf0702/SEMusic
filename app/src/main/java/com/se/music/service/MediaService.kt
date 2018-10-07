@@ -6,9 +6,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.*
-import android.media.AudioManager
-import android.media.audiofx.AudioEffect
-import android.media.session.MediaSession
 import android.os.*
 import android.provider.MediaStore
 import android.support.v4.app.NotificationCompat
@@ -17,6 +14,7 @@ import android.util.Log
 import android.widget.RemoteViews
 import com.se.music.R
 import com.se.music.activity.MainActivity
+import com.se.music.base.APP_NAME
 import com.se.music.base.Null
 import com.se.music.entity.MusicEntity
 import com.se.music.provider.database.provider.ImageStore
@@ -37,12 +35,10 @@ class MediaService : Service() {
 
     companion object {
         const val TAG = "MediaService"
-        const val ID_INDEX = 0
         const val TRACK_ENDED = 1
         const val TRACK_WENT_TO_NEXT = 2
         const val RELEASE_WAKELOCK = 3
         const val SERVER_DIED = 4
-        const val FOCUS_CHANGE = 5
         const val FADE_DOWN = 6
         const val FADE_UP = 7
         const val LRC_DOWNLOADED = -10
@@ -66,12 +62,16 @@ class MediaService : Service() {
 
         const val LRC_PATH = "/semusic/lrc/"
 
-        private const val SHUTDOWN = "com.se.music.shutdown"
         private const val TRACK_NAME = "trackname"
         private const val NOTIFY_MODE_NONE = 0
         private const val NOTIFY_MODE_FOREGROUND = 1
         private const val IDLE_DELAY = 5 * 60 * 1000
     }
+
+    //public field
+    var isPlaying = false
+    var mRepeatMode = REPEAT_ALL
+    var mLastSeekPos: Long = 0
 
     //handler
     private lateinit var mUrlHandler: Handler
@@ -79,12 +79,8 @@ class MediaService : Service() {
     private lateinit var mPlayerHandler: MusicPlayerHandler
     private lateinit var mHandlerThread: HandlerThread
     private lateinit var mPlayer: MultiPlayer
-    private lateinit var mSession: MediaSession
+    private lateinit var mNotificationManager: NotificationManager
 
-    //public field
-    var isPlaying = false
-    var mRepeatMode = REPEAT_ALL
-    var mLastSeekPos: Long = 0
 
     private val mShuffler = Shuffler.instance
     /**
@@ -104,16 +100,9 @@ class MediaService : Service() {
      * 当前播放列表
      */
     private val mPlaylist = ArrayList<MusicTrack>(100)
-    private val mAudioFocusListener = AudioManager.OnAudioFocusChangeListener { focusChange -> mPlayerHandler.obtainMessage(FOCUS_CHANGE, focusChange, 0).sendToTarget() }
-    private var mFileToPlay: String? = null
+    private var mFileToPlay: String = Null
     private var mServiceInUse = false
     private var mNotifyMode = NOTIFY_MODE_NONE
-    /**
-     * 提供访问控制音量和钤声模式的操作
-     */
-    private var mAudioManager: AudioManager? = null
-    private var mNotificationManager: NotificationManager? = null
-    private var mShutdownIntent: PendingIntent? = null
     /**
      * 当前播放音乐的下标
      */
@@ -125,16 +114,18 @@ class MediaService : Service() {
     private var mOpenFailedCounter = 0
     private val mServiceStartId = -1
     private var mLastPlayedTime: Long = 0
-    private var mNotification: Notification? = null
     private var mNotificationPostTime: Long = 0
     private var mPreferences: SharedPreferences? = null
     private var mRecentStore: RecentStore? = null
-    private val mIntentReceiver = object : BroadcastReceiver() {
+
+    //接受广播
+    private val intentReceiver = object : BroadcastReceiver() {
 
         override fun onReceive(context: Context, intent: Intent) {
             handleCommandIntent(intent)
         }
     }
+
     private val mLrcThread = Thread(Runnable {
         Looper.prepare()
         mLrcHandler = Handler()
@@ -174,8 +165,7 @@ class MediaService : Service() {
         mHandlerThread = HandlerThread("MusicPlayerHandler", android.os.Process.THREAD_PRIORITY_BACKGROUND)
         mHandlerThread.start()
         mPlayerHandler = MusicPlayerHandler(this, mHandlerThread.looper)
-        mPlayer = MultiPlayer(this)
-        mPlayer.setHandler(mPlayerHandler)
+        mPlayer = MultiPlayer(this, mPlayerHandler)
         mPreferences = getSharedPreferences("Service", 0)
         mRecentStore = RecentStore.instance
 
@@ -191,14 +181,9 @@ class MediaService : Service() {
         filter.addAction(TRY_GET_TRACK_INFO)
         filter.addAction(Intent.ACTION_SCREEN_OFF)
         filter.addAction(SEND_PROGRESS)
-        registerReceiver(mIntentReceiver, filter)
-
-        val shutdownIntent = Intent(this, MediaService::class.java)
-        shutdownIntent.action = SHUTDOWN
+        registerReceiver(intentReceiver, filter)
 
         mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        mAudioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        mShutdownIntent = PendingIntent.getService(this, 0, shutdownIntent, 0)
     }
 
     fun seek(position: Long): Long {
@@ -215,7 +200,7 @@ class MediaService : Service() {
     }
 
     fun position(): Long {
-        if (mPlayer.isInitialized && mPlayer.isTrackPrepared) {
+        if (mPlayer.isInitialized && mPlayer.isPlayerPrepared) {
             try {
                 return mPlayer.position()
             } catch (e: Exception) {
@@ -293,26 +278,22 @@ class MediaService : Service() {
     }
 
     fun play() {
+        //默认设置下一首歌的位置
         play(true)
     }
 
     /**
      * 播放歌曲
      *
-     * @param createNewNextTrack 是否准备下一首歌
+     * @param createNewNextTrack
      */
-    fun play(createNewNextTrack: Boolean) {
-        val intent = Intent(AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION)
-        intent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, getAudioSessionId())
-        intent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, packageName)
-        sendBroadcast(intent)
-
+    private fun play(createNewNextTrack: Boolean) {
         if (createNewNextTrack) {
             setNextTrack()
         } else {
             setNextTrack(mNextPlayPos)
         }
-        if (mPlayer.isTrackPrepared) {
+        if (mPlayer.isPlayerPrepared) {
             val duration = mPlayer.duration()
             if (mRepeatMode != REPEAT_CURRENT && duration > 2000
                     && mPlayer.position() >= duration - 2000) {
@@ -328,7 +309,7 @@ class MediaService : Service() {
     }
 
     /**
-     * 设置isPlaying标志位 并更新notification
+     * 设置isPlaying标志位 并更新播放状态
      *
      * @param value
      * @param notify
@@ -365,7 +346,7 @@ class MediaService : Service() {
         if (mPlayer.isInitialized) {
             mPlayer.stop()
         }
-        mFileToPlay = null
+        mFileToPlay = Null
         if (goToIdle) {
             setIsPlaying(false, false)
         }
@@ -467,15 +448,19 @@ class MediaService : Service() {
             if (mPlayListInfo[id] == null) {
                 return
             }
+
+            //set current source
             if (!mPlayListInfo[id]!!.islocal) {
                 //在线歌曲
             } else {
                 while (true) {
-                    if (openFile(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.toString() + "/"
+                    val entity = getMusicEntity()
+                    if (entity != null
+                            && entity.audioId != 0.toLong()
+                            && openFile(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.toString() + "/"
                                     + getMusicEntity()?.audioId)) {
                         break
                     }
-
                     if (mOpenFailedCounter++ < 10 && mPlaylist.size > 1) {
                         val pos = getNextPosition()
                         if (pos < 0) {
@@ -513,7 +498,7 @@ class MediaService : Service() {
     }
 
     fun duration(): Long {
-        return if (mPlayer.isInitialized && mPlayer.isTrackPrepared) {
+        return if (mPlayer.isInitialized && mPlayer.isPlayerPrepared) {
             mPlayer.duration()
         } else -1
     }
@@ -650,13 +635,10 @@ class MediaService : Service() {
         }
     }
 
-    fun openFile(path: String?): Boolean {
+    fun openFile(path: String): Boolean {
         synchronized(this) {
-            if (path == null) {
-                return false
-            }
             mFileToPlay = path
-            mPlayer.setDataSource(mFileToPlay!!)
+            mPlayer.setDataSource(mFileToPlay)
             if (mPlayer.isInitialized) {
                 mOpenFailedCounter = 0
                 return true
@@ -723,12 +705,6 @@ class MediaService : Service() {
     fun getPlaylistInfo(): HashMap<Long, MusicEntity> {
         synchronized(this) {
             return mPlayListInfo
-        }
-    }
-
-    fun getAudioSessionId(): Int {
-        synchronized(this) {
-            return mPlayer.audioSessionId
         }
     }
 
@@ -807,7 +783,6 @@ class MediaService : Service() {
      */
     fun setQueuePosition(index: Int) {
         synchronized(this) {
-            stop(false)
             mPlayPos = index
             openCurrentAndNext()
             play()
@@ -862,6 +837,9 @@ class MediaService : Service() {
         return isPlaying || System.currentTimeMillis() - mLastPlayedTime < IDLE_DELAY
     }
 
+    /**
+     * 处理广播接受到的消息
+     */
     private fun handleCommandIntent(intent: Intent) {
         val action = intent.action
         if (TOGGLE_PAUSE_ACTION == action) {
@@ -891,7 +869,6 @@ class MediaService : Service() {
             return
         }
         cancelNotification()
-        mAudioManager!!.abandonAudioFocus(mAudioFocusListener)
         if (!mServiceInUse) {
             stopSelf(mServiceStartId)
         }
@@ -904,12 +881,12 @@ class MediaService : Service() {
             NOTIFY_MODE_NONE
         }
         if (notifyMode == mNotifyMode) {
-            mNotificationManager!!.notify(mNotificationId, getNotification())
+            mNotificationManager.notify(mNotificationId, getNotification())
         } else {
             if (notifyMode == NOTIFY_MODE_FOREGROUND) {
                 startForeground(mNotificationId, getNotification())
             } else {
-                mNotificationManager!!.notify(mNotificationId, getNotification())
+                mNotificationManager.notify(mNotificationId, getNotification())
             }
         }
         mNotifyMode = notifyMode
@@ -940,7 +917,6 @@ class MediaService : Service() {
             }
             mPlayListInfo.remove(id)
         }
-
 
         if (numberMoved > 0) {
             notifyChange(QUEUE_CHANGED)
@@ -976,9 +952,7 @@ class MediaService : Service() {
                 for (i in 0 until numToRemove) {
                     mPlayListInfo.remove(mPlaylist[inFirst].mId)
                     mPlaylist.removeAt(inFirst)
-
                 }
-
                 val positionIterator = mHistory.listIterator()
                 while (positionIterator.hasNext()) {
                     val pos = positionIterator.next()
@@ -1012,8 +986,8 @@ class MediaService : Service() {
 
     private fun cancelNotification() {
         stopForeground(true)
-        mNotificationManager!!.cancel(hashCode())
-        mNotificationManager!!.cancel(mNotificationId)
+        mNotificationManager.cancel(hashCode())
+        mNotificationManager.cancel(mNotificationId)
         mNotificationPostTime = 0
         mNotifyMode = NOTIFY_MODE_NONE
     }
@@ -1025,7 +999,6 @@ class MediaService : Service() {
             setRepeatMode(REPEAT_ALL)
         }
     }
-
 
     private fun getNotification(): Notification {
         val remoteViews = RemoteViews(this.packageName, R.layout.remote_view)
@@ -1063,15 +1036,16 @@ class MediaService : Service() {
         if (mNotificationPostTime == 0L) {
             mNotificationPostTime = System.currentTimeMillis()
         }
+        var mNotification: Notification? = null
         if (mNotification == null) {
-            val builder = NotificationCompat.Builder(this)
+            val builder = NotificationCompat.Builder(this, APP_NAME)
                     .setContent(remoteViews)
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setContentIntent(mainIntent)
                     .setWhen(mNotificationPostTime)
             mNotification = builder.build()
         } else {
-            mNotification!!.contentView = remoteViews
+            mNotification.contentView = remoteViews
         }
         return mNotification!!
     }
@@ -1082,7 +1056,7 @@ class MediaService : Service() {
         mPlayerHandler.removeCallbacksAndMessages(null)
         mHandlerThread.quit()
         mPlayer.release()
-        unregisterReceiver(mIntentReceiver)
+        unregisterReceiver(intentReceiver)
 
     }
 
@@ -1106,8 +1080,6 @@ class MediaService : Service() {
                         service.nextPlay()
                     }
                     LRC_DOWNLOADED -> service.notifyChange(LRC_UPDATED)
-                    else -> {
-                    }
                 }
             }
         }

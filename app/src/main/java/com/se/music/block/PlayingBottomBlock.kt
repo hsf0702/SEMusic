@@ -37,13 +37,14 @@ class PlayingBottomBlock : LinearLayout, View.OnClickListener, SeekBar.OnSeekBar
 
     private val handler = HandlerSingleton.instance
 
+    private var duration: Long = 0
+
     private val updateSeekBarRunnable = object : Runnable {
         override fun run() {
-            val position = MusicPlayer.position()
-            val duration = MusicPlayer.duration()
             if (duration in 1..627080715) {
+                val position = MusicPlayer.position()
                 seekBar.progress = (1000 * position / duration).toInt()
-                seekTimePlayed.text = MusicPlayer.position().ms2Minute()
+                seekTimePlayed.text = position.ms2Minute()
             }
             if (MusicPlayer.isPlaying()) {
                 seekBar.postDelayed(this, 200)
@@ -171,7 +172,8 @@ class PlayingBottomBlock : LinearLayout, View.OnClickListener, SeekBar.OnSeekBar
     }
 
     private fun setSeekBar() {
-        seekTotalTime.text = MusicPlayer.duration().ms2Minute()
+        duration = MusicPlayer.duration()
+        seekTotalTime.text = duration.ms2Minute()
         seekTimePlayed.text = MusicPlayer.position().ms2Minute()
         seekBar.progress = (1000 * MusicPlayer.position() / MusicPlayer.duration()).toInt()
     }

@@ -43,7 +43,6 @@ class ImageStore {
         val database = MusicDBHelper.instance.writableDatabase
         database.beginTransaction()
         try {
-
             val value = ContentValues(2)
             value.put(IMAGE_KEY, key)
             value.put(IMAGE_VALUE, imageValue)

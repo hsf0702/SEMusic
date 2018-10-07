@@ -23,7 +23,7 @@ class SharePreferencesUtils {
         val instance: SharePreferencesUtils by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) { SharePreferencesUtils() }
     }
 
-    private val mPreferences: SharedPreferences = ApplicationSingleton.instance!!.getSharedPreferences(SHARE_PREFERENCE_NAME, Context.MODE_PRIVATE)
+    private val mPreferences: SharedPreferences = ApplicationSingleton.instance.getSharedPreferences(SHARE_PREFERENCE_NAME, Context.MODE_PRIVATE)
 
 
     fun getArtistSortOrder(): String {

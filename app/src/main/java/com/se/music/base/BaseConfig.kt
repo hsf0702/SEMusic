@@ -7,7 +7,6 @@ import android.content.Context
  * Time: 2018/5/7 下午7:26
  */
 class BaseConfig {
-
     companion object {
         private var displayInited: Boolean = false
         var width: Int = 0

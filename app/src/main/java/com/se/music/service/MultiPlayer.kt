@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Handler
 import android.os.PowerManager
 import android.util.Log
+import com.se.music.base.Null
 import com.se.music.singleton.ApplicationSingleton
 import java.io.IOException
 import java.lang.ref.WeakReference
@@ -17,59 +18,88 @@ import java.lang.ref.WeakReference
  *播放器实现
  */
 
-class MultiPlayer(service: MediaService) : MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener {
+class MultiPlayer(service: MediaService, private val mHandler: Handler) {
 
-    var isTrackPrepared = false
-    var mIsNextTrackPrepared = false
+    private val mService: WeakReference<MediaService> = WeakReference(service)
+    private val handler = Handler()
+
+    var isPlayerPrepared = false
+    var isNextPlayerPrepared = false
     /**
      * 播放器是否初始化
      */
     var isInitialized = false
     var secondaryPosition = 0
-    var audioSessionId: Int
-        get() = mCurrentMediaPlayer.audioSessionId
-        set(sessionId) {
-            mCurrentMediaPlayer.audioSessionId = sessionId
-        }
-
     //两个播放器
-    private var mCurrentMediaPlayer: MediaPlayer = MediaPlayer()
+    private var mCurrentMediaPlayer = MediaPlayer()
     private var mNextMediaPlayer: MediaPlayer? = null
-
-    private val mService: WeakReference<MediaService> = WeakReference(service)
     private var mIsTrackNet = false
     private var mIsNextInitialized = false
     private var mIllegalState = false
-    private var preparedNextListener: MediaPlayer.OnPreparedListener = MediaPlayer.OnPreparedListener { mIsNextTrackPrepared = true }
-    private var mHandler: Handler? = null
-    private var mNextMediaPath: String? = null
+    private var preparedNextListener = MediaPlayer.OnPreparedListener { isNextPlayerPrepared = true }
+    private var mNextMediaPath = Null
     private var isFirstLoad = true
+
     private val audioAttributes = AudioAttributes.Builder()
             .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
             .setFlags(AudioAttributes.CONTENT_TYPE_MUSIC)
             .setUsage(AudioAttributes.USAGE_MEDIA)
             .setLegacyStreamType(AudioManager.STREAM_MUSIC)
             .build()
-    private var preparedListener: MediaPlayer.OnPreparedListener = MediaPlayer.OnPreparedListener { mp ->
+
+    private val preparedListener = MediaPlayer.OnPreparedListener { mp ->
         if (isFirstLoad) {
             val seekPos = mService.get()!!.mLastSeekPos
             seek(seekPos)
             isFirstLoad = false
         }
-        mService.get()!!.notifyChange(META_CHANGED)
-        mp.setOnCompletionListener(this)
-        isTrackPrepared = true
+        mp.setOnCompletionListener(completionListener)
+        mService.get()?.notifyChange(META_CHANGED)
+        isPlayerPrepared = true
     }
-    private var bufferingUpdateListener: MediaPlayer.OnBufferingUpdateListener = MediaPlayer.OnBufferingUpdateListener { _, percent ->
+
+    private val bufferingUpdateListener = MediaPlayer.OnBufferingUpdateListener { _, percent ->
         if (secondaryPosition != 100)
-            mService.get()!!.sendUpdateBuffer(percent)
+            mService.get()?.sendUpdateBuffer(percent)
         secondaryPosition = percent
     }
-    private val handler = Handler()
-    private var setNextMediaPlayerIfPrepared: Runnable = object : Runnable {
+
+    private val errorListener = MediaPlayer.OnErrorListener { _, what, extra ->
+        Log.w(MediaService.TAG, "Music Server Error what: $what extra: $extra")
+        when (what) {
+            MediaPlayer.MEDIA_ERROR_SERVER_DIED -> {
+                isInitialized = false
+                isPlayerPrepared = false
+                mCurrentMediaPlayer.release()
+                mCurrentMediaPlayer = MediaPlayer()
+                mCurrentMediaPlayer.setWakeMode(service, PowerManager.PARTIAL_WAKE_LOCK)
+
+                val errorInfo = TrackErrorInfo(mService.get()?.getAudioId()
+                        ?: 0, mService.get()?.getTrackName())
+                val msg = mHandler.obtainMessage(MediaService.SERVER_DIED, errorInfo)
+                mHandler.sendMessageDelayed(msg, 2000)
+                return@OnErrorListener true
+            }
+        }
+        return@OnErrorListener false
+    }
+
+    private val completionListener = MediaPlayer.OnCompletionListener { mp ->
+        Log.w(MediaService.TAG, "completion")
+        if (mp === mCurrentMediaPlayer) {
+            mCurrentMediaPlayer.release()
+            mCurrentMediaPlayer = mNextMediaPlayer!!
+            mHandler.sendEmptyMessage(MediaService.TRACK_WENT_TO_NEXT)
+        } else {
+            mHandler.sendEmptyMessage(MediaService.TRACK_ENDED)
+            mHandler.sendEmptyMessage(MediaService.RELEASE_WAKELOCK)
+        }
+    }
+
+    private val setNextMediaPlayerIfPrepared = object : Runnable {
         var count = 0
         override fun run() {
-            if (mIsNextTrackPrepared && isInitialized) {
+            if (isNextPlayerPrepared && isInitialized) {
                 mCurrentMediaPlayer.setNextMediaPlayer(mNextMediaPlayer)
             } else if (count < 60) {
                 handler.postDelayed(this, 100)
@@ -77,9 +107,9 @@ class MultiPlayer(service: MediaService) : MediaPlayer.OnErrorListener, MediaPla
             count++
         }
     }
-    private var startMediaPlayerIfPrepared: Runnable = object : Runnable {
+    private val startMediaPlayerIfPrepared = object : Runnable {
         override fun run() {
-            if (isTrackPrepared) {
+            if (isPlayerPrepared) {
                 mCurrentMediaPlayer.start()
                 val duration = duration()
                 if (mService.get()?.mRepeatMode != MediaService.REPEAT_CURRENT && duration > 2000
@@ -104,8 +134,49 @@ class MultiPlayer(service: MediaService) : MediaPlayer.OnErrorListener, MediaPla
         }
     }
 
+    private fun setDataSourceImpl(player: MediaPlayer, path: String): Boolean {
+        mIsTrackNet = false
+        isPlayerPrepared = false
+        try {
+            player.reset()
+            player.setAudioAttributes(audioAttributes)
+            if (path.startsWith("content://")) {
+                player.setOnPreparedListener(null)
+                player.setDataSource(ApplicationSingleton.instance, Uri.parse(path))
+                player.prepare()
+                player.setOnCompletionListener(completionListener)
+                isPlayerPrepared = true
+            } else {
+                player.setDataSource(path)
+                player.setOnPreparedListener(preparedListener)
+                player.prepareAsync()
+                mIsTrackNet = true
+            }
+            if (mIllegalState) {
+                mIllegalState = false
+            }
+        } catch (ignored: IOException) {
+            return false
+        } catch (ignored: IllegalArgumentException) {
+            return false
+        } catch (todo: IllegalStateException) {
+            todo.printStackTrace()
+            if (!mIllegalState) {
+                mCurrentMediaPlayer = MediaPlayer()
+                mCurrentMediaPlayer.setWakeMode(mService.get(), PowerManager.PARTIAL_WAKE_LOCK)
+                setDataSourceImpl(mCurrentMediaPlayer, path)
+                mIllegalState = true
+            } else {
+                mIllegalState = false
+                return false
+            }
+        }
+        player.setOnErrorListener(errorListener)
+        player.setOnBufferingUpdateListener(bufferingUpdateListener)
+        return true
+    }
+
     fun setNextDataSource(path: String?) {
-        mNextMediaPath = null
         mIsNextInitialized = false
         try {
             mCurrentMediaPlayer.setNextMediaPlayer(null)
@@ -125,81 +196,29 @@ class MultiPlayer(service: MediaService) : MediaPlayer.OnErrorListener, MediaPla
         }
         mNextMediaPlayer = MediaPlayer()
         mNextMediaPlayer!!.setWakeMode(mService.get(), PowerManager.PARTIAL_WAKE_LOCK)
-        mNextMediaPlayer!!.audioSessionId = audioSessionId
 
         if (setNextDataSourceImpl(mNextMediaPlayer!!, path)) {
             mNextMediaPath = path
             mCurrentMediaPlayer.setNextMediaPlayer(mNextMediaPlayer)
-
         } else {
-            if (mNextMediaPlayer != null) {
-                mNextMediaPlayer!!.release()
-                mNextMediaPlayer = null
-            }
+            mNextMediaPlayer!!.release()
         }
-    }
-
-    private fun setDataSourceImpl(player: MediaPlayer, path: String): Boolean {
-        mIsTrackNet = false
-        isTrackPrepared = false
-        try {
-            player.reset()
-            player.setAudioAttributes(audioAttributes)
-            if (path.startsWith("content://")) {
-                player.setOnPreparedListener(null)
-                player.setDataSource(ApplicationSingleton.instance!!, Uri.parse(path))
-                player.prepare()
-                isTrackPrepared = true
-                player.setOnCompletionListener(this)
-
-            } else {
-                player.setDataSource(path)
-                player.setOnPreparedListener(preparedListener)
-                player.prepareAsync()
-                mIsTrackNet = true
-            }
-            if (mIllegalState) {
-                mIllegalState = false
-            }
-
-        } catch (ignored: IOException) {
-            return false
-        } catch (ignored: IllegalArgumentException) {
-            return false
-        } catch (todo: IllegalStateException) {
-            todo.printStackTrace()
-            if (!mIllegalState) {
-                mCurrentMediaPlayer = MediaPlayer()
-                mCurrentMediaPlayer.setWakeMode(mService.get(), PowerManager.PARTIAL_WAKE_LOCK)
-                mCurrentMediaPlayer.audioSessionId = audioSessionId
-                setDataSourceImpl(mCurrentMediaPlayer, path)
-                mIllegalState = true
-            } else {
-                mIllegalState = false
-                return false
-            }
-        }
-
-        player.setOnErrorListener(this)
-        player.setOnBufferingUpdateListener(bufferingUpdateListener)
-        return true
     }
 
     private fun setNextDataSourceImpl(player: MediaPlayer, path: String): Boolean {
-
-        mIsNextTrackPrepared = false
+        isNextPlayerPrepared = false
         try {
             player.reset()
             player.setAudioAttributes(audioAttributes)
             if (path.startsWith("content://")) {
                 player.setOnPreparedListener(preparedNextListener)
-                player.setDataSource(ApplicationSingleton.instance!!, Uri.parse(path))
+                player.setDataSource(ApplicationSingleton.instance, Uri.parse(path))
                 player.prepare()
             } else {
                 player.setDataSource(path)
                 player.setOnPreparedListener(preparedNextListener)
                 player.prepare()
-                mIsNextTrackPrepared = false
+                isNextPlayerPrepared = false
             }
         } catch (ignored: IOException) {
             return false
@@ -207,13 +226,9 @@ class MultiPlayer(service: MediaService) : MediaPlayer.OnErrorListener, MediaPla
             return false
         }
 
-        player.setOnCompletionListener(this)
-        player.setOnErrorListener(this)
+        player.setOnCompletionListener(completionListener)
+        player.setOnErrorListener(errorListener)
         return true
-    }
-
-    fun setHandler(handler: Handler) {
-        mHandler = handler
     }
 
     fun start() {
@@ -234,7 +249,7 @@ class MultiPlayer(service: MediaService) : MediaPlayer.OnErrorListener, MediaPla
         handler.removeCallbacks(startMediaPlayerIfPrepared)
         mCurrentMediaPlayer.reset()
         isInitialized = false
-        isTrackPrepared = false
+        isPlayerPrepared = false
     }
 
     fun release() {
@@ -247,77 +262,24 @@ class MultiPlayer(service: MediaService) : MediaPlayer.OnErrorListener, MediaPla
     }
 
     fun duration(): Long {
-        return if (isTrackPrepared) {
+        return if (isPlayerPrepared) {
             mCurrentMediaPlayer.duration.toLong()
         } else -1
     }
 
     fun position(): Long {
-        if (isTrackPrepared) {
+        if (isPlayerPrepared) {
             try {
                 return mCurrentMediaPlayer.currentPosition.toLong()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-
         }
         return -1
-    }
-
-    fun secondPosition(): Long {
-        return if (isTrackPrepared) {
-            secondaryPosition.toLong()
-        } else -1
     }
 
     fun seek(whereto: Long): Long {
         mCurrentMediaPlayer.seekTo(whereto.toInt())
         return whereto
-    }
-
-    fun setVolume(vol: Float) {
-        try {
-            mCurrentMediaPlayer.setVolume(vol, vol)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-    }
-
-    override fun onError(mp: MediaPlayer, what: Int, extra: Int): Boolean {
-        Log.w(MediaService.TAG, "Music Server Error what: $what extra: $extra")
-        when (what) {
-            MediaPlayer.MEDIA_ERROR_SERVER_DIED -> {
-                val service = mService.get()
-                val errorInfo = TrackErrorInfo(service!!.getAudioId(),
-                        service.getTrackName())
-                isInitialized = false
-                isTrackPrepared = false
-                mCurrentMediaPlayer.release()
-                mCurrentMediaPlayer = MediaPlayer()
-                mCurrentMediaPlayer.setWakeMode(service, PowerManager.PARTIAL_WAKE_LOCK)
-                val msg = mHandler?.obtainMessage(MediaService.SERVER_DIED, errorInfo)
-                mHandler?.sendMessageDelayed(msg, 2000)
-                return true
-            }
-            else -> {
-            }
-        }
-        return false
-    }
-
-
-    override fun onCompletion(mp: MediaPlayer) {
-        Log.w(MediaService.TAG, "completion")
-        if (mp === mCurrentMediaPlayer && mNextMediaPlayer != null) {
-            mCurrentMediaPlayer.release()
-            mCurrentMediaPlayer = mNextMediaPlayer!!
-            mNextMediaPath = null
-            mNextMediaPlayer = null
-            mHandler?.sendEmptyMessage(MediaService.TRACK_WENT_TO_NEXT)
-        } else {
-            mHandler?.sendEmptyMessage(MediaService.TRACK_ENDED)
-            mHandler?.sendEmptyMessage(MediaService.RELEASE_WAKELOCK)
-        }
     }
 }
