@@ -43,7 +43,9 @@ class PlayingBottomBlock : LinearLayout, View.OnClickListener, SeekBar.OnSeekBar
         override fun run() {
             if (duration in 1..627080715) {
                 val position = MusicPlayer.position()
-                seekBar.progress = (1000 * position / duration).toInt()
+                if (duration != 0.toLong()) {
+                    seekBar.progress = (1000 * position / duration).toInt()
+                }
                 seekTimePlayed.text = position.ms2Minute()
             }
             if (MusicPlayer.isPlaying()) {
@@ -175,7 +177,9 @@ class PlayingBottomBlock : LinearLayout, View.OnClickListener, SeekBar.OnSeekBar
         duration = MusicPlayer.duration()
         seekTotalTime.text = duration.ms2Minute()
         seekTimePlayed.text = MusicPlayer.position().ms2Minute()
-        seekBar.progress = (1000 * MusicPlayer.position() / MusicPlayer.duration()).toInt()
+        if (duration != 0.toLong()) {
+            seekBar.progress = (1000 * MusicPlayer.position() / duration).toInt()
+        }
     }
 
     override fun onDetachedFromWindow() {

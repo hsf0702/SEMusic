@@ -33,7 +33,7 @@ class MultiPlayer(service: MediaService, private val mHandler: Handler) {
     //两个播放器
     private var mCurrentMediaPlayer = MediaPlayer()
     private var mNextMediaPlayer: MediaPlayer? = null
-    private var mIsTrackNet = false
+    private var isPlayerNet = false
     private var mIsNextInitialized = false
     private var mIllegalState = false
     private var preparedNextListener = MediaPlayer.OnPreparedListener { isNextPlayerPrepared = true }
@@ -54,7 +54,6 @@ class MultiPlayer(service: MediaService, private val mHandler: Handler) {
             isFirstLoad = false
         }
         mp.setOnCompletionListener(completionListener)
-        mService.get()?.notifyChange(META_CHANGED)
         isPlayerPrepared = true
     }
 
@@ -85,10 +84,11 @@ class MultiPlayer(service: MediaService, private val mHandler: Handler) {
     }
 
     private val completionListener = MediaPlayer.OnCompletionListener { mp ->
-        Log.w(MediaService.TAG, "completion")
-        if (mp === mCurrentMediaPlayer) {
+        if (mp === mCurrentMediaPlayer && mNextMediaPlayer != null) {
             mCurrentMediaPlayer.release()
             mCurrentMediaPlayer = mNextMediaPlayer!!
+            mNextMediaPlayer = null
+            mNextMediaPath = Null
             mHandler.sendEmptyMessage(MediaService.TRACK_WENT_TO_NEXT)
         } else {
             mHandler.sendEmptyMessage(MediaService.TRACK_ENDED)
@@ -96,17 +96,6 @@ class MultiPlayer(service: MediaService, private val mHandler: Handler) {
         }
     }
 
-    private val setNextMediaPlayerIfPrepared = object : Runnable {
-        var count = 0
-        override fun run() {
-            if (isNextPlayerPrepared && isInitialized) {
-                mCurrentMediaPlayer.setNextMediaPlayer(mNextMediaPlayer)
-            } else if (count < 60) {
-                handler.postDelayed(this, 100)
-            }
-            count++
-        }
-    }
     private val startMediaPlayerIfPrepared = object : Runnable {
         override fun run() {
             if (isPlayerPrepared) {
@@ -135,7 +124,7 @@ class MultiPlayer(service: MediaService, private val mHandler: Handler) {
     }
 
     private fun setDataSourceImpl(player: MediaPlayer, path: String): Boolean {
-        mIsTrackNet = false
+        isPlayerNet = false
         isPlayerPrepared = false
         try {
             player.reset()
@@ -150,7 +139,7 @@ class MultiPlayer(service: MediaService, private val mHandler: Handler) {
                 player.setDataSource(path)
                 player.setOnPreparedListener(preparedListener)
                 player.prepareAsync()
-                mIsTrackNet = true
+                isPlayerNet = true
             }
             if (mIllegalState) {
                 mIllegalState = false
@@ -191,7 +180,7 @@ class MultiPlayer(service: MediaService, private val mHandler: Handler) {
             mNextMediaPlayer!!.release()
             mNextMediaPlayer = null
         }
-        if (path == null) {
+        if (path == null || path.isEmpty()) {
             return
         }
         mNextMediaPlayer = MediaPlayer()
@@ -232,20 +221,20 @@ class MultiPlayer(service: MediaService, private val mHandler: Handler) {
     }
 
     fun start() {
-        if (!mIsTrackNet) {
-            mService.get()?.sendUpdateBuffer(100)
-            secondaryPosition = 100
-            mCurrentMediaPlayer.start()
-        } else {
+        if (isPlayerNet) {
+            //播放网络音乐
             secondaryPosition = 0
             mService.get()?.loading(true)
             handler.postDelayed(startMediaPlayerIfPrepared, 50)
+        } else {
+            //播放本地音乐
+            mService.get()?.sendUpdateBuffer(100)
+            secondaryPosition = 100
+            mCurrentMediaPlayer.start()
         }
-        mService.get()?.notifyChange(MUSIC_CHANGED)
     }
 
     fun stop() {
-        handler.removeCallbacks(setNextMediaPlayerIfPrepared)
         handler.removeCallbacks(startMediaPlayerIfPrepared)
         mCurrentMediaPlayer.reset()
         isInitialized = false

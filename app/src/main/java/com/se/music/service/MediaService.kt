@@ -36,13 +36,15 @@ class MediaService : Service() {
     companion object {
         const val TAG = "MediaService"
         const val TRACK_ENDED = 1
+        /**
+         * 自动切换下一首
+         */
         const val TRACK_WENT_TO_NEXT = 2
         const val RELEASE_WAKELOCK = 3
         const val SERVER_DIED = 4
         const val FADE_DOWN = 6
         const val FADE_UP = 7
         const val LRC_DOWNLOADED = -10
-
         /**
          * 单曲循环
          */
@@ -87,22 +89,23 @@ class MediaService : Service() {
      * 历史歌单
      */
     private val mHistory = LinkedList<Int>()
-    private val mBinder = ServiceStub(this)
-    private val mCardId: Int = 0
-    private val mNotificationId = 1000
     /**
      * 传进来的歌单
      */
     @SuppressLint("UseSparseArrays")
     private var mPlayListInfo = HashMap<Long, MusicEntity>()
-    private var currentMusicEntity: MusicEntity? = null
     /**
      * 当前播放列表
      */
     private val mPlaylist = ArrayList<MusicTrack>(100)
+    /**
+     * 当前播放的音乐的实体
+     */
+    private var currentMusicEntity: MusicEntity? = null
+    /**
+     * 当前要播放音乐的地址
+     */
     private var mFileToPlay: String = Null
-    private var mServiceInUse = false
-    private var mNotifyMode = NOTIFY_MODE_NONE
     /**
      * 当前播放音乐的下标
      */
@@ -111,18 +114,51 @@ class MediaService : Service() {
      * 下一首歌的下标
      */
     private var mNextPlayPos = -1
+
     private var mOpenFailedCounter = 0
-    private val mServiceStartId = -1
     private var mLastPlayedTime: Long = 0
-    private var mNotificationPostTime: Long = 0
     private var mPreferences: SharedPreferences? = null
     private var mRecentStore: RecentStore? = null
+    private var mNotificationPostTime: Long = 0
+    private var mNotifyMode = NOTIFY_MODE_NONE
+    private val mNotificationId = 1000
+    private val mCardId: Int = 0
+    private val mServiceStartId = -1
+    private var mServiceInUse = false
 
-    //接受广播
+    /**
+     * 接收广播通知栏的
+     */
     private val intentReceiver = object : BroadcastReceiver() {
-
         override fun onReceive(context: Context, intent: Intent) {
             handleCommandIntent(intent)
+        }
+    }
+
+    /**
+     * 处理广播接受到的消息
+     */
+    private fun handleCommandIntent(intent: Intent) {
+        val action = intent.action
+        if (TOGGLE_PAUSE_ACTION == action) {
+            if (isPlaying) {
+                pause()
+            } else {
+                play()
+            }
+        } else if (NEXT_ACTION == action) {
+            nextPlay()
+        } else if (STOP_ACTION == action) {
+            pause()
+            releaseServiceUiAndStop()
+        } else if (REPEAT_ACTION == action) {
+            cycleRepeat()
+        } else if (SHUFFLE_ACTION == action) {
+            //待定
+        } else if (TRY_GET_TRACK_INFO == action) {
+            getLrc(mPlaylist[mPlayPos].mId)
+        } else if (SEND_PROGRESS == action) {
+            //待定
         }
     }
 
@@ -138,25 +174,8 @@ class MediaService : Service() {
         Looper.loop()
     })
 
-    override fun onBind(intent: Intent?): IBinder {
-        mServiceInUse = true
-        return mBinder
-    }
-
-    override fun onUnbind(intent: Intent?): Boolean {
-        mServiceInUse = false
-        if (isPlaying
-                || mPlaylist.size > 0
-                || mPlayerHandler.hasMessages(TRACK_ENDED)) {
-            return true
-        }
-        stopSelf(mServiceStartId)
-        return true
-    }
-
-    override fun onRebind(intent: Intent?) {
-        mServiceInUse = true
-    }
+    //============= Service 生命周期 Start===========//
+    private val mBinder = ServiceStub(this)
 
     override fun onCreate() {
         super.onCreate()
@@ -186,479 +205,37 @@ class MediaService : Service() {
         mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     }
 
-    fun seek(position: Long): Long {
-        var result: Long = -1
-        if (mPlayer.isInitialized) {
-            result = when {
-                position < 0 -> mPlayer.seek(0)
-                position > mPlayer.duration() -> mPlayer.seek(mPlayer.duration())
-                else -> mPlayer.seek(position)
-            }
-            notifyChange(POSITION_CHANGED)
-        }
-        return result
+    override fun onBind(intent: Intent?): IBinder {
+        mServiceInUse = true
+        return mBinder
     }
 
-    fun position(): Long {
-        if (mPlayer.isInitialized && mPlayer.isPlayerPrepared) {
-            try {
-                return mPlayer.position()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+    override fun onUnbind(intent: Intent?): Boolean {
+        mServiceInUse = false
+        if (isPlaying
+                || mPlaylist.size > 0
+                || mPlayerHandler.hasMessages(TRACK_ENDED)) {
+            return true
         }
-        return -1
+        stopSelf(mServiceStartId)
+        return true
     }
 
-    fun getSecondPosition(): Int {
-        return if (mPlayer.isInitialized) {
-            mPlayer.secondaryPosition
-        } else -1
+    override fun onRebind(intent: Intent?) {
+        mServiceInUse = true
     }
 
-    fun getRepeatMode(): Int {
-        return mRepeatMode
+    override fun onDestroy() {
+        cancelNotification()
+        mPlayerHandler.removeCallbacksAndMessages(null)
+        mHandlerThread.quit()
+        mPlayer.release()
+        unregisterReceiver(intentReceiver)
     }
+    //============= Service 生命周期 End ===========//
 
-    fun setRepeatMode(repeatMode: Int) {
-        synchronized(this) {
-            mRepeatMode = repeatMode
-            setNextTrack()
-            saveQueue(false)
-            notifyChange(REPEAT_MODE_CHANGED)
-        }
-    }
 
-    private fun getPreviousPlayPosition(removeFromHistory: Boolean): Int {
-        synchronized(this) {
-            if (mRepeatMode == REPEAT_SHUFFLER) {
-                val historySize = mHistory.size
-                if (historySize == 0) {
-                    return -1
-                }
-                val pos = mHistory[historySize - 1]
-                if (removeFromHistory) {
-                    mHistory.removeAt(historySize - 1)
-                }
-                return pos
-            } else {
-                return if (mPlayPos > 0) {
-                    mPlayPos - 1
-                } else {
-                    mPlaylist.size - 1
-                }
-            }
-        }
-    }
-
-    private fun openCurrent() {
-        openCurrentAndMaybeNext(false)
-    }
-
-    fun previous() {
-        synchronized(this) {
-            val goPrevious = getRepeatMode() != REPEAT_CURRENT
-            if (goPrevious) {
-                val pos = getPreviousPlayPosition(true)
-                if (pos < 0) {
-                    return
-                }
-                mNextPlayPos = mPlayPos
-                mPlayPos = pos
-                stop(false)
-                openCurrent()
-                play(false)
-                notifyChange(META_CHANGED)
-                notifyChange(MUSIC_CHANGED)
-            } else {
-                seek(0)
-                play(false)
-            }
-        }
-    }
-
-    fun play() {
-        //默认设置下一首歌的位置
-        play(true)
-    }
-
-    /**
-     * 播放歌曲
-     *
-     * @param createNewNextTrack
-     */
-    private fun play(createNewNextTrack: Boolean) {
-        if (createNewNextTrack) {
-            setNextTrack()
-        } else {
-            setNextTrack(mNextPlayPos)
-        }
-        if (mPlayer.isPlayerPrepared) {
-            val duration = mPlayer.duration()
-            if (mRepeatMode != REPEAT_CURRENT && duration > 2000
-                    && mPlayer.position() >= duration - 2000) {
-                nextPlay()
-            }
-        }
-        mPlayer.start()
-        mPlayerHandler.removeMessages(FADE_DOWN)
-        mPlayerHandler.sendEmptyMessage(FADE_UP)
-        setIsPlaying(true, true)
-        updateNotification()
-        notifyChange(META_CHANGED)
-    }
-
-    /**
-     * 设置isPlaying标志位 并更新播放状态
-     *
-     * @param value
-     * @param notify
-     */
-    private fun setIsPlaying(value: Boolean, notify: Boolean) {
-        if (isPlaying != value) {
-            isPlaying = value
-            if (!isPlaying) {
-                mLastPlayedTime = System.currentTimeMillis()
-            }
-            if (notify) {
-                notifyChange(PLAY_STATE_CHANGED)
-            }
-        }
-    }
-
-    /**
-     * 歌曲暂停
-     */
-    fun pause() {
-        synchronized(this) {
-            mPlayerHandler.removeMessages(FADE_UP)
-            mPlayer.pause()
-            setIsPlaying(false, true)
-            notifyChange(META_CHANGED)
-        }
-    }
-
-    fun stop() {
-        stop(true)
-    }
-
-    private fun stop(goToIdle: Boolean) {
-        if (mPlayer.isInitialized) {
-            mPlayer.stop()
-        }
-        mFileToPlay = Null
-        if (goToIdle) {
-            setIsPlaying(false, false)
-        }
-    }
-
-    /**
-     * 入口函数
-     * @param info 音乐列表
-     * @param list 音乐ID集合
-     * @param position 要播放音乐的位置
-     */
-    fun open(info: HashMap<Long, MusicEntity>, list: LongArray, position: Int) {
-        synchronized(this) {
-            val oldId = getAudioId()
-            mPlayListInfo = info
-
-            //判断是不是传入新的音乐列表
-            val listLength = list.size
-            var newList = true
-            if (mPlaylist.size == listLength) {
-                newList = false
-                for (i in 0 until listLength) {
-                    if (list[i] != mPlaylist[i].mId) {
-                        newList = true
-                        break
-                    }
-                }
-            }
-            if (newList) {
-                addToPlayList(list, -1)
-                notifyChange(QUEUE_CHANGED)
-            }
-
-            mPlayPos = if (position >= 0) {
-                position
-            } else {
-                mShuffler.nextInt(mPlaylist.size)
-            }
-            mHistory.clear()
-            openCurrentAndMaybeNext(true)
-
-            if (oldId != getAudioId()) {
-                notifyChange(META_CHANGED)
-            }
-        }
-    }
-
-    /**
-     * 音乐加入播放列表
-     *
-     * @param list
-     * @param position 传-1则清空列表
-     */
-    private fun addToPlayList(list: LongArray, position: Int) {
-        var index = position
-        val addLen = list.size
-        if (index < 0) {
-            mPlaylist.clear()
-            index = 0
-        }
-
-        mPlaylist.ensureCapacity(mPlaylist.size + addLen)
-        if (index > mPlaylist.size) {
-            index = mPlaylist.size
-        }
-
-        val arrayList = ArrayList<MusicTrack>(addLen)
-        for (i in list.indices) {
-            arrayList.add(MusicTrack(list[i], i))
-        }
-
-        mPlaylist.addAll(index, arrayList)
-        if (mPlaylist.size == 0) {
-            notifyChange(META_CHANGED)
-        }
-    }
-
-    private fun openCurrentAndNext() {
-        openCurrentAndMaybeNext(true)
-    }
-
-    /**
-     * 播放当前歌曲并且准备下一首
-     *
-     * @param openNext
-     */
-    private fun openCurrentAndMaybeNext(openNext: Boolean) {
-        synchronized(this) {
-            stop(false)
-            if (mPlaylist.size == 0
-                    || mPlayListInfo.size == 0
-                    && mPlayPos >= mPlaylist.size) {
-                clearPlayInfo()
-                return
-            }
-
-            val id = getAudioId()
-            getLrc(id)
-            if (mPlayListInfo[id] == null) {
-                return
-            }
-
-            //set current source
-            if (!mPlayListInfo[id]!!.islocal) {
-                //在线歌曲
-            } else {
-                while (true) {
-                    val entity = getMusicEntity()
-                    if (entity != null
-                            && entity.audioId != 0.toLong()
-                            && openFile(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.toString() + "/"
-                                    + getMusicEntity()?.audioId)) {
-                        break
-                    }
-                    if (mOpenFailedCounter++ < 10 && mPlaylist.size > 1) {
-                        val pos = getNextPosition()
-                        if (pos < 0) {
-                            break
-                        }
-                        stop(false)
-                        mPlayPos = pos
-                    } else {
-                        mOpenFailedCounter = 0
-                        Log.w(TAG, "Failed to open file for playback")
-                        break
-                    }
-                }
-            }
-
-            if (openNext) {
-                setNextTrack()
-            }
-        }
-    }
-
-    private fun getMusicEntity(): MusicEntity? {
-        var entity: MusicEntity? = null
-        if (mPlayPos in 0..(mPlaylist.size - 1)) {
-            entity = mPlayListInfo[getAudioId()]
-        }
-        return entity
-    }
-
-    private fun clearPlayInfo() {
-        val file = File(cacheDir.absolutePath + "playlist")
-        if (file.exists()) {
-            file.delete()
-        }
-    }
-
-    fun duration(): Long {
-        return if (mPlayer.isInitialized && mPlayer.isPlayerPrepared) {
-            mPlayer.duration()
-        } else -1
-    }
-
-    fun notifyChange(what: String) {
-        if (SEND_PROGRESS == what) {
-            val intent = Intent(what)
-            intent.putExtra("position", position())
-            intent.putExtra("duration", duration())
-            sendStickyBroadcast(intent)
-            return
-        }
-        if (what == POSITION_CHANGED) {
-            return
-        }
-        val intent = Intent(what)
-        intent.putExtra("id", getAudioId())
-        intent.putExtra("artist", getArtistName())
-        intent.putExtra("album", getAlbumName())
-        intent.putExtra("track", getTrackName())
-        intent.putExtra("playing", isPlaying)
-        intent.putExtra("albumuri", getAlbumPath())
-        intent.putExtra("islocal", isTrackLocal())
-        sendStickyBroadcast(intent)
-        val musicIntent = Intent(intent)
-        musicIntent.action = what.replace(TIMBER_PACKAGE_NAME, MUSIC_PACKAGE_NAME)
-        sendStickyBroadcast(musicIntent)
-        if (what == META_CHANGED) {
-            mRecentStore!!.addSongId(getAudioId())
-            currentMusicEntity = getMusicEntity()
-        } else if (what == QUEUE_CHANGED) {
-            val intent1 = Intent("com.past.music.emptyplaylist")
-            intent.putExtra("showorhide", "show")
-            sendBroadcast(intent1)
-            saveQueue(true)
-            if (isPlaying) {
-                if (mNextPlayPos >= 0 && mNextPlayPos < mPlaylist.size) {
-                    setNextTrack(mNextPlayPos)
-                } else {
-                    setNextTrack()
-                }
-            }
-        } else {
-            saveQueue(false)
-        }
-        if (what == PLAY_STATE_CHANGED) {
-            updateNotification()
-        }
-    }
-
-    private fun saveQueue(full: Boolean) {
-        val editor = mPreferences!!.edit()
-        if (full) {
-            if (mPlayListInfo.size > 0) {
-                val temp = GsonFactory.instance.toJson(mPlayListInfo)
-                try {
-                    val file = File(cacheDir.absolutePath + "playlist")
-                    val ra = RandomAccessFile(file, "rws")
-                    ra.write(temp.toByteArray())
-                    ra.close()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-            editor.putInt("cardid", mCardId)
-
-        }
-        editor.putInt("curpos", mPlayPos)
-        if (mPlayer.isInitialized) {
-            editor.putLong("seekpos", mPlayer.position())
-        }
-        editor.putInt("repeatmode", mRepeatMode)
-        editor.apply()
-    }
-
-    /**
-     * 获取下一首音乐的位置
-     * @return
-     */
-    private fun getNextPosition(): Int {
-        if (mPlaylist.isEmpty()) {
-            return -1
-        }
-        if (mRepeatMode == REPEAT_CURRENT) {
-            return if (mPlayPos < 0) {
-                0
-            } else mPlayPos
-        } else if (mRepeatMode == REPEAT_SHUFFLER) {
-            shuffleMode()
-            return mPlayPos + 1
-        } else if (mRepeatMode == REPEAT_ALL) {
-            if (mPlayPos >= mPlaylist.size - 1) {
-                if (mRepeatMode == REPEAT_ALL) {
-                    return 0
-                }
-                return -1
-            } else {
-                return mPlayPos + 1
-            }
-        } else {
-            return -1
-        }
-    }
-
-    /**
-     * 随机播放
-     */
-    private fun shuffleMode() {
-        //随机播放未完成
-    }
-
-    private fun setNextTrack() {
-        setNextTrack(getNextPosition())
-    }
-
-    /**
-     * 设置下一首将要播放的音乐的信息
-     *
-     * @param position
-     */
-    private fun setNextTrack(position: Int) {
-        mNextPlayPos = position
-        if (mNextPlayPos >= 0 && mNextPlayPos < mPlaylist.size) {
-            val id = mPlaylist[mNextPlayPos].mId
-            if (mPlayListInfo[id] != null) {
-                if (mPlayListInfo[id]?.islocal == true) {
-                    mPlayer.setNextDataSource(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.toString() + "/" + id)
-                } else {
-                    mPlayer.setNextDataSource(null)
-                }
-            }
-        } else {
-            mPlayer.setNextDataSource(null)
-        }
-    }
-
-    fun openFile(path: String): Boolean {
-        synchronized(this) {
-            mFileToPlay = path
-            mPlayer.setDataSource(mFileToPlay)
-            if (mPlayer.isInitialized) {
-                mOpenFailedCounter = 0
-                return true
-            }
-            var trackName = getTrackName()
-            if (TextUtils.isEmpty(trackName)) {
-                trackName = path
-            }
-            sendErrorMessage(trackName!!)
-            stop(true)
-            return false
-        }
-    }
-
-    private fun sendErrorMessage(trackName: String) {
-        val intent = Intent(TRACK_ERROR)
-        intent.putExtra(TRACK_NAME, trackName)
-        sendBroadcast(intent)
-    }
-
+    //============= public方法 Start ===========//
     fun isTrackLocal(): Boolean {
         synchronized(this) {
             val info = mPlayListInfo[getAudioId()] ?: return true
@@ -784,7 +361,7 @@ class MediaService : Service() {
     fun setQueuePosition(index: Int) {
         synchronized(this) {
             mPlayPos = index
-            openCurrentAndNext()
+            openCurrent()
             play()
             notifyChange(META_CHANGED)
         }
@@ -795,7 +372,7 @@ class MediaService : Service() {
      *
      * @param nextPos
      */
-    fun setAndRecordPlayPos(nextPos: Int) {
+    fun setCurrentPlayPos(nextPos: Int) {
         synchronized(this) {
             mPlayPos = nextPos
         }
@@ -812,84 +389,142 @@ class MediaService : Service() {
                 return
             }
             stop(false)
-            setAndRecordPlayPos(pos)
-            openCurrentAndMaybeNext(true)
+            setCurrentPlayPos(pos)
+            openCurrent()
             play()
             notifyChange(MUSIC_CHANGED)
         }
     }
 
-    private fun getLrc(id: Long) {
-        val info = mPlayListInfo[id]
-        val lrc = Environment.getExternalStorageDirectory().absolutePath + LRC_PATH
-        var file = File(lrc)
-        if (!file.exists()) {
-            //不存在就建立此目录
-            val r = file.mkdirs()
+    fun seek(position: Long): Long {
+        var result: Long = -1
+        if (mPlayer.isInitialized) {
+            result = when {
+                position < 0 -> mPlayer.seek(0)
+                position > mPlayer.duration() -> mPlayer.seek(mPlayer.duration())
+                else -> mPlayer.seek(position)
+            }
+            notifyChange(POSITION_CHANGED)
         }
-        file = File(lrc + id)
-        if (!file.exists()) {
-            //获取歌词
+        return result
+    }
+
+    fun position(): Long {
+        if (mPlayer.isInitialized && mPlayer.isPlayerPrepared) {
+            try {
+                return mPlayer.position()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        return -1
+    }
+
+    fun duration(): Long {
+        return if (mPlayer.isInitialized && mPlayer.isPlayerPrepared) {
+            mPlayer.duration()
+        } else -1
+    }
+
+    fun getSecondPosition(): Int {
+        return if (mPlayer.isInitialized) {
+            mPlayer.secondaryPosition
+        } else -1
+    }
+
+    fun getRepeatMode(): Int {
+        return mRepeatMode
+    }
+
+    fun setRepeatMode(repeatMode: Int) {
+        synchronized(this) {
+            mRepeatMode = repeatMode
+            setNextTrack()
+            saveQueue(false)
+            notifyChange(REPEAT_MODE_CHANGED)
         }
     }
 
-    private fun recentlyPlayed(): Boolean {
-        return isPlaying || System.currentTimeMillis() - mLastPlayedTime < IDLE_DELAY
+    fun previous() {
+        synchronized(this) {
+            val goPrevious = getRepeatMode() != REPEAT_CURRENT
+            if (goPrevious) {
+                val pos = getPreviousPlayPosition(true)
+                if (pos < 0) {
+                    return
+                }
+                mNextPlayPos = mPlayPos
+                mPlayPos = pos
+                stop(false)
+                openCurrent()
+                play(false)
+                notifyChange(META_CHANGED)
+                notifyChange(MUSIC_CHANGED)
+            } else {
+                seek(0)
+                play(false)
+            }
+        }
+    }
+
+    fun play() {
+        //默认设置下一首歌的位置
+        play(true)
+    }
+
+    fun pause() {
+        synchronized(this) {
+            mPlayerHandler.removeMessages(FADE_UP)
+            mPlayer.pause()
+            setIsPlaying(false, true)
+            notifyChange(META_CHANGED)
+        }
+    }
+
+    fun stop() {
+        stop(true)
     }
 
     /**
-     * 处理广播接受到的消息
+     * 入口函数
+     * @param info 音乐列表
+     * @param list 音乐ID集合
+     * @param position 要播放音乐的位置
      */
-    private fun handleCommandIntent(intent: Intent) {
-        val action = intent.action
-        if (TOGGLE_PAUSE_ACTION == action) {
-            if (isPlaying) {
-                pause()
-            } else {
-                play()
+    fun open(info: HashMap<Long, MusicEntity>, list: LongArray, position: Int) {
+        synchronized(this) {
+            val oldId = getAudioId()
+            mPlayListInfo = info
+
+            //判断是不是传入新的音乐列表
+            val listLength = list.size
+            var newList = true
+            if (mPlaylist.size == listLength) {
+                newList = false
+                for (i in 0 until listLength) {
+                    if (list[i] != mPlaylist[i].mId) {
+                        newList = true
+                        break
+                    }
+                }
             }
-        } else if (NEXT_ACTION == action) {
-            nextPlay()
-        } else if (STOP_ACTION == action) {
-            pause()
-            releaseServiceUiAndStop()
-        } else if (REPEAT_ACTION == action) {
-            cycleRepeat()
-        } else if (SHUFFLE_ACTION == action) {
-            //待定
-        } else if (TRY_GET_TRACK_INFO == action) {
-            getLrc(mPlaylist[mPlayPos].mId)
-        } else if (SEND_PROGRESS == action) {
-            //待定
-        }
-    }
+            if (newList) {
+                addToPlayList(list, -1)
+                notifyChange(QUEUE_CHANGED)
+            }
 
-    private fun releaseServiceUiAndStop() {
-        if (isPlaying || mPlayerHandler.hasMessages(TRACK_ENDED)) {
-            return
-        }
-        cancelNotification()
-        if (!mServiceInUse) {
-            stopSelf(mServiceStartId)
-        }
-    }
-
-    private fun updateNotification() {
-        val notifyMode: Int = if (isPlaying) {
-            NOTIFY_MODE_FOREGROUND
-        } else {
-            NOTIFY_MODE_NONE
-        }
-        if (notifyMode == mNotifyMode) {
-            mNotificationManager.notify(mNotificationId, getNotification())
-        } else {
-            if (notifyMode == NOTIFY_MODE_FOREGROUND) {
-                startForeground(mNotificationId, getNotification())
+            mPlayPos = if (position >= 0) {
+                position
             } else {
-                mNotificationManager.notify(mNotificationId, getNotification())
+                mShuffler.nextInt(mPlaylist.size)
+            }
+            mHistory.clear()
+            openCurrent()
+
+            if (oldId != getAudioId()) {
+                notifyChange(META_CHANGED)
             }
         }
-        mNotifyMode = notifyMode
     }
 
     fun sendUpdateBuffer(progress: Int) {
@@ -922,6 +557,373 @@ class MediaService : Service() {
             notifyChange(QUEUE_CHANGED)
         }
         return numberMoved
+    }
+    //============= public方法 End ===========//
+
+    private fun getPreviousPlayPosition(removeFromHistory: Boolean): Int {
+        synchronized(this) {
+            if (mRepeatMode == REPEAT_SHUFFLER) {
+                val historySize = mHistory.size
+                if (historySize == 0) {
+                    return -1
+                }
+                val pos = mHistory[historySize - 1]
+                if (removeFromHistory) {
+                    mHistory.removeAt(historySize - 1)
+                }
+                return pos
+            } else {
+                return if (mPlayPos > 0) {
+                    mPlayPos - 1
+                } else {
+                    mPlaylist.size - 1
+                }
+            }
+        }
+    }
+
+    /**
+     * 播放歌曲
+     *
+     * @param createNewNextTrack
+     */
+    private fun play(createNewNextTrack: Boolean) {
+        if (createNewNextTrack) {
+            setNextTrack()
+        } else {
+            //上一首
+            setNextTrack(mNextPlayPos)
+        }
+        mPlayer.start()
+        mPlayerHandler.removeMessages(FADE_DOWN)
+        mPlayerHandler.sendEmptyMessage(FADE_UP)
+        setIsPlaying(true, true)
+        updateNotification()
+        notifyChange(META_CHANGED)
+    }
+
+    /**
+     * 设置isPlaying
+     *
+     * @param value
+     * @param notify
+     */
+    private fun setIsPlaying(value: Boolean, notify: Boolean) {
+        if (isPlaying != value) {
+            isPlaying = value
+            if (!isPlaying) {
+                mLastPlayedTime = System.currentTimeMillis()
+            }
+            if (notify) {
+                notifyChange(PLAY_STATE_CHANGED)
+            }
+        }
+    }
+
+    private fun stop(updateState: Boolean) {
+        if (mPlayer.isInitialized) {
+            mPlayer.stop()
+        }
+        mFileToPlay = Null
+        if (updateState) {
+            setIsPlaying(false, false)
+        }
+    }
+
+    /**
+     * 音乐加入播放列表
+     *
+     * @param list
+     * @param position 传-1则清空列表
+     */
+    private fun addToPlayList(list: LongArray, position: Int) {
+        var index = position
+        val addLen = list.size
+        if (index < 0) {
+            mPlaylist.clear()
+            index = 0
+        }
+
+        mPlaylist.ensureCapacity(mPlaylist.size + addLen)
+        if (index > mPlaylist.size) {
+            index = mPlaylist.size
+        }
+
+        val arrayList = ArrayList<MusicTrack>(addLen)
+        for (i in list.indices) {
+            arrayList.add(MusicTrack(list[i], i))
+        }
+
+        mPlaylist.addAll(index, arrayList)
+        if (mPlaylist.size == 0) {
+            notifyChange(META_CHANGED)
+        }
+    }
+
+    /**
+     * 准备当前歌曲
+     */
+    private fun openCurrent() {
+        synchronized(this) {
+            stop(false)
+            if (mPlaylist.size == 0
+                    || mPlayListInfo.size == 0
+                    && mPlayPos >= mPlaylist.size) {
+                clearPlayInfo()
+                return
+            }
+
+            val id = getAudioId()
+            getLrc(id)
+            if (mPlayListInfo[id] == null) {
+                return
+            }
+
+            //set current source
+            if (!mPlayListInfo[id]!!.islocal) {
+                //在线歌曲
+            } else {
+                while (true) {
+                    val entity = getMusicEntity()
+                    if (entity != null
+                            && entity.audioId != 0.toLong()
+                            && openFile(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.toString() + "/"
+                                    + getMusicEntity()?.audioId)) {
+                        break
+                    }
+                    if (mOpenFailedCounter++ < 10 && mPlaylist.size > 1) {
+                        val pos = getNextPosition()
+                        if (pos < 0) {
+                            break
+                        }
+                        stop(false)
+                        mPlayPos = pos
+                    } else {
+                        mOpenFailedCounter = 0
+                        Log.w(TAG, "Failed to open file for playback")
+                        break
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getMusicEntity(): MusicEntity? {
+        var entity: MusicEntity? = null
+        if (mPlayPos in 0..(mPlaylist.size - 1)) {
+            entity = mPlayListInfo[getAudioId()]
+        }
+        return entity
+    }
+
+    private fun clearPlayInfo() {
+        val file = File(cacheDir.absolutePath + "playlist")
+        if (file.exists()) {
+            file.delete()
+        }
+    }
+
+    fun notifyChange(what: String) {
+        if (SEND_PROGRESS == what) {
+            val intent = Intent(what)
+            intent.putExtra("position", position())
+            intent.putExtra("duration", duration())
+            sendStickyBroadcast(intent)
+            return
+        }
+        if (what == POSITION_CHANGED) {
+            return
+        }
+        val intent = Intent(what)
+        intent.putExtra("id", getAudioId())
+        intent.putExtra("artist", getArtistName())
+        intent.putExtra("album", getAlbumName())
+        intent.putExtra("track", getTrackName())
+        intent.putExtra("playing", isPlaying)
+        intent.putExtra("albumuri", getAlbumPath())
+        intent.putExtra("islocal", isTrackLocal())
+        sendStickyBroadcast(intent)
+        val musicIntent = Intent(intent)
+        musicIntent.action = what.replace(TIMBER_PACKAGE_NAME, MUSIC_PACKAGE_NAME)
+        sendStickyBroadcast(musicIntent)
+        if (what == META_CHANGED) {
+            mRecentStore!!.addSongId(getAudioId())
+            currentMusicEntity = getMusicEntity()
+        } else if (what == QUEUE_CHANGED) {
+            val intent1 = Intent("com.past.music.emptyplaylist")
+            intent.putExtra("showorhide", "show")
+            sendBroadcast(intent1)
+            saveQueue(true)
+            if (isPlaying) {
+                if (mNextPlayPos >= 0 && mNextPlayPos < mPlaylist.size) {
+                    setNextTrack(mNextPlayPos)
+                } else {
+                    setNextTrack()
+                }
+            }
+        } else {
+            saveQueue(false)
+        }
+        if (what == PLAY_STATE_CHANGED) {
+            updateNotification()
+        }
+    }
+
+    private fun saveQueue(full: Boolean) {
+        val editor = mPreferences!!.edit()
+        if (full) {
+            if (mPlayListInfo.size > 0) {
+                val temp = GsonFactory.instance.toJson(mPlayListInfo)
+                try {
+                    val file = File(cacheDir.absolutePath + "playlist")
+                    val ra = RandomAccessFile(file, "rws")
+                    ra.write(temp.toByteArray())
+                    ra.close()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+            editor.putInt("cardid", mCardId)
+
+        }
+        editor.putInt("curpos", mPlayPos)
+        if (mPlayer.isInitialized) {
+            editor.putLong("seekpos", mPlayer.position())
+        }
+        editor.putInt("repeatmode", mRepeatMode)
+        editor.apply()
+    }
+
+    /**
+     * 获取下一首音乐的位置
+     * @return
+     */
+    private fun getNextPosition(): Int {
+        if (mPlaylist.isEmpty()) {
+            return -1
+        }
+        if (mRepeatMode == REPEAT_CURRENT) {
+            return if (mPlayPos < 0) {
+                0
+            } else mPlayPos
+        } else if (mRepeatMode == REPEAT_SHUFFLER) {
+            shuffleMode()
+            return mPlayPos + 1
+        } else if (mRepeatMode == REPEAT_ALL) {
+            if (mPlayPos >= mPlaylist.size - 1) {
+                if (mRepeatMode == REPEAT_ALL) {
+                    return 0
+                }
+                return -1
+            } else {
+                return mPlayPos + 1
+            }
+        } else {
+            return -1
+        }
+    }
+
+    /**
+     * 随机播放
+     */
+    private fun shuffleMode() {
+        //随机播放未完成
+    }
+
+    private fun setNextTrack() {
+        setNextTrack(getNextPosition())
+    }
+
+    /**
+     * 设置下一首将要播放的音乐的信息
+     *
+     * @param position
+     */
+    private fun setNextTrack(position: Int) {
+        mNextPlayPos = position
+
+        if (mNextPlayPos >= 0 && mNextPlayPos < mPlaylist.size) {
+            val id = mPlaylist[mNextPlayPos].mId
+            if (mPlayListInfo[id] != null) {
+                if (mPlayListInfo[id]!!.islocal) {
+                    mPlayer.setNextDataSource(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.toString() + "/" + id)
+                } else {
+                    mPlayer.setNextDataSource(null)
+                }
+            }
+        } else {
+            mPlayer.setNextDataSource(null)
+        }
+    }
+
+    fun openFile(path: String): Boolean {
+        synchronized(this) {
+            mFileToPlay = path
+            mPlayer.setDataSource(mFileToPlay)
+            if (mPlayer.isInitialized) {
+                mOpenFailedCounter = 0
+                return true
+            }
+            var trackName = getTrackName()
+            if (TextUtils.isEmpty(trackName)) {
+                trackName = path
+            }
+            sendErrorMessage(trackName!!)
+            stop(true)
+            return false
+        }
+    }
+
+    private fun sendErrorMessage(trackName: String) {
+        val intent = Intent(TRACK_ERROR)
+        intent.putExtra(TRACK_NAME, trackName)
+        sendBroadcast(intent)
+    }
+
+    private fun getLrc(id: Long) {
+        val info = mPlayListInfo[id]
+        val lrc = Environment.getExternalStorageDirectory().absolutePath + LRC_PATH
+        var file = File(lrc)
+        if (!file.exists()) {
+            //不存在就建立此目录
+            val r = file.mkdirs()
+        }
+        file = File(lrc + id)
+        if (!file.exists()) {
+            //获取歌词
+        }
+    }
+
+    private fun recentlyPlayed(): Boolean {
+        return isPlaying || System.currentTimeMillis() - mLastPlayedTime < IDLE_DELAY
+    }
+
+    private fun releaseServiceUiAndStop() {
+        if (isPlaying || mPlayerHandler.hasMessages(TRACK_ENDED)) {
+            return
+        }
+        cancelNotification()
+        if (!mServiceInUse) {
+            stopSelf(mServiceStartId)
+        }
+    }
+
+    private fun updateNotification() {
+        val notifyMode: Int = if (isPlaying) {
+            NOTIFY_MODE_FOREGROUND
+        } else {
+            NOTIFY_MODE_NONE
+        }
+        if (notifyMode == mNotifyMode) {
+            mNotificationManager.notify(mNotificationId, getNotification())
+        } else {
+            if (notifyMode == NOTIFY_MODE_FOREGROUND) {
+                startForeground(mNotificationId, getNotification())
+            } else {
+                mNotificationManager.notify(mNotificationId, getNotification())
+            }
+        }
+        mNotifyMode = notifyMode
     }
 
     private fun removeTracksInternal(first: Int, last: Int): Int {
@@ -973,7 +975,7 @@ class MediaService : Service() {
                     }
                     val wasPlaying = isPlaying
                     stop(false)
-                    openCurrentAndNext()
+                    openCurrent()
                     if (wasPlaying) {
                         play()
                     }
@@ -1050,37 +1052,25 @@ class MediaService : Service() {
         return mNotification!!
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        cancelNotification()
-        mPlayerHandler.removeCallbacksAndMessages(null)
-        mHandlerThread.quit()
-        mPlayer.release()
-        unregisterReceiver(intentReceiver)
-
-    }
-
     private class MusicPlayerHandler constructor(service: MediaService, looper: Looper) : Handler(looper) {
         private val mService: WeakReference<MediaService> = WeakReference(service)
         override fun handleMessage(msg: Message) {
             val service = mService.get() ?: return
-            synchronized(service) {
-                when (msg.what) {
-                    TRACK_WENT_TO_NEXT -> {
-                        service.setAndRecordPlayPos(service.mNextPlayPos)
-                        service.setNextTrack()
-                        service.notifyChange(META_CHANGED)
-                        service.notifyChange(MUSIC_CHANGED)
-                        service.updateNotification()
-                    }
-                    TRACK_ENDED -> if (service.mRepeatMode == REPEAT_CURRENT) {
-                        service.seek(0)
-                        service.play()
-                    } else {
-                        service.nextPlay()
-                    }
-                    LRC_DOWNLOADED -> service.notifyChange(LRC_UPDATED)
+            when (msg.what) {
+                TRACK_WENT_TO_NEXT -> {
+                    service.setCurrentPlayPos(service.mNextPlayPos)
+                    service.setNextTrack()
+                    service.notifyChange(META_CHANGED)
+                    service.notifyChange(MUSIC_CHANGED)
+                    service.updateNotification()
                 }
+                TRACK_ENDED -> if (service.mRepeatMode == REPEAT_CURRENT) {
+                    service.seek(0)
+                    service.play()
+                } else {
+                    service.nextPlay()
+                }
+                LRC_DOWNLOADED -> service.notifyChange(LRC_UPDATED)
             }
         }
     }
