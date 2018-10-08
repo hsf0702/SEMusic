@@ -47,7 +47,7 @@ class LocalMusicContainerFragment : BasePageFragment() {
     }
 
     override fun createContentView(inflater: LayoutInflater, container: ViewGroup?): View {
-        val content = LayoutInflater.from(context).inflate(R.layout.fragment_local_music_kotlin, container, false)
+        val content = LayoutInflater.from(context).inflate(R.layout.fragment_local_music, container, false)
         mTabLayout = content.findViewById(R.id.local_tab_layout)
         mViewPager = content.findViewById(R.id.local_view_pager)
         return content

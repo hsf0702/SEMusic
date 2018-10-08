@@ -39,24 +39,27 @@ class MineOperationView(presenter: MvpPresenter, viewId: Int, view: View) : Base
     override fun createView(): View {
         rootView = LayoutInflater.from(getContext()).inflate(R.layout.mine_func_layout, null) as GridLayout
         addViewToGridLayout(rootView)
+
+        val dataList = listOf(DataHolder(getContext()!!.resources.getString(R.string.mine_local_music)
+                , R.drawable.ic_my_music_local_song, R.id.local_music)
+                , DataHolder(getContext()!!.resources.getString(R.string.mine_down_music)
+                , R.drawable.ic_my_music_download_song, R.id.download_music)
+                , DataHolder(getContext()!!.resources.getString(R.string.mine_recent_music)
+                , R.drawable.ic_my_music_recent_playlist, R.id.recent_music)
+                , DataHolder(getContext()!!.resources.getString(R.string.mine_love_music)
+                , R.drawable.ic_my_music_my_favorite, R.id.love_music)
+                , DataHolder(getContext()!!.resources.getString(R.string.mine_buy_music)
+                , R.drawable.ic_my_music_paid_songs, R.id.buy_music)
+                , DataHolder(getContext()!!.resources.getString(R.string.mine_running_radio)
+                , R.drawable.ic_my_music_running_radio, R.id.running_radio))
+        initView(dataList)
         return rootView
     }
 
     @Keep
     fun onDataChanged(cursor: Cursor) {
-        val dataList = listOf(DataHolder(getContext()!!.resources.getString(R.string.mine_local_music)
-                , cursor.count.toString(), R.drawable.ic_my_music_local_song, R.id.local_music)
-                , DataHolder(getContext()!!.resources.getString(R.string.mine_down_music)
-                , "2", R.drawable.ic_my_music_download_song, R.id.download_music)
-                , DataHolder(getContext()!!.resources.getString(R.string.mine_recent_music)
-                , "3", R.drawable.ic_my_music_recent_playlist, R.id.recent_music)
-                , DataHolder(getContext()!!.resources.getString(R.string.mine_love_music)
-                , "4", R.drawable.ic_my_music_my_favorite, R.id.love_music)
-                , DataHolder(getContext()!!.resources.getString(R.string.mine_buy_music)
-                , "5", R.drawable.ic_my_music_paid_songs, R.id.buy_music)
-                , DataHolder(getContext()!!.resources.getString(R.string.mine_running_radio)
-                , null, R.drawable.ic_my_music_running_radio, R.id.running_radio))
-        bindDataToView(dataList)
+        val infoList = listOf(cursor.count.toString(), "2", "3", "4", "5")
+        bindDataToView(infoList)
     }
 
     private fun addViewToGridLayout(container: ViewGroup) {
@@ -69,17 +72,24 @@ class MineOperationView(presenter: MvpPresenter, viewId: Int, view: View) : Base
         }
     }
 
-    private fun bindDataToView(list: List<DataHolder>) {
+    private fun initView(list: List<DataHolder>) {
         list.forEachIndexed { index, dataHolder ->
             val itemView = rootView.getChildAt(index)
             val imageView: ImageView = itemView.findViewById(R.id.img_item)
             val itemName: TextView = itemView.findViewById(R.id.tv_item_name)
-            val itemCount: TextView = itemView.findViewById(R.id.tv_item_count)
             itemView.id = dataHolder.id
             itemView.setOnClickListener(this)
             itemName.text = dataHolder.itemName
             imageView.setImageDrawable(getActivity()!!.getDrawable(dataHolder.drawablePic))
-            itemCount.text = dataHolder.itemInfo
+        }
+    }
+
+    private fun bindDataToView(list: List<String>) {
+        list.forEachIndexed { index, info ->
+            val itemView = rootView.getChildAt(index)
+            val itemCount: TextView = itemView.findViewById(R.id.tv_item_count)
+            itemCount.text = info
+
         }
     }
 
@@ -120,7 +130,6 @@ class MineOperationView(presenter: MvpPresenter, viewId: Int, view: View) : Base
     }
 
     class DataHolder(var itemName: String
-                     , var itemInfo: String?
                      , var drawablePic: Int
                      , var id: Int)
 }

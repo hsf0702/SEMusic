@@ -75,6 +75,11 @@ class AlbumInfoFragment : BaseFragment() {
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+        circleAnim.end()
+    }
+
     override fun updatePlayInfo() {
         setAnimation()
     }

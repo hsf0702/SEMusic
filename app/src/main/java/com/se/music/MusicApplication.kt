@@ -1,10 +1,12 @@
 package com.se.music
 
-import android.app.Application
+import android.app.ActivityManager
 import android.content.Context
 import com.se.multidex.MultiDexApplication
 import com.se.music.base.BaseConfig
+import com.se.music.base.Null
 import com.se.music.singleton.ApplicationSingleton
+
 
 /**
  * Author: gaojin
@@ -20,6 +22,21 @@ class MusicApplication : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
-        BaseConfig.init(this)
+        val processName = getProcessName(this, android.os.Process.myPid())
+        if (processName == packageName) {
+            BaseConfig.init(this)
+        }
     }
+
+    private fun getProcessName(cxt: Context, pid: Int): String {
+        val am = cxt.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val runningApps = am.runningAppProcesses ?: return Null
+        for (procInfo in runningApps) {
+            if (procInfo.pid == pid) {
+                return procInfo.processName
+            }
+        }
+        return Null
+    }
+
 }
