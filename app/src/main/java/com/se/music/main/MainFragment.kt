@@ -12,6 +12,13 @@ import com.se.music.base.BaseFragment
 
 class MainFragment : BaseFragment(), ViewPager.OnPageChangeListener, View.OnClickListener {
 
+    companion object {
+        const val TAG = "MainFragment"
+        fun newInstance(): MainFragment {
+            return MainFragment()
+        }
+    }
+
     private lateinit var mineView: TextView
     private lateinit var musicRoomView: TextView
     private lateinit var findView: TextView
@@ -62,33 +69,33 @@ class MainFragment : BaseFragment(), ViewPager.OnPageChangeListener, View.OnClic
     private fun setTitleStyle(position: Int) {
         when (position) {
             0 -> {
-                mineView.textSize = 19.toFloat()
+                mineView.textSize = 19f
                 mineView.setTextColor(ContextCompat.getColor(context!!, R.color.white))
 
-                musicRoomView.textSize = 18.toFloat()
+                musicRoomView.textSize = 18f
                 musicRoomView.setTextColor(ContextCompat.getColor(context!!, R.color.light_gray))
 
-                findView.textSize = 18.toFloat()
+                findView.textSize = 18f
                 findView.setTextColor(ContextCompat.getColor(context!!, R.color.light_gray))
             }
             1 -> {
-                musicRoomView.textSize = 19.toFloat()
+                musicRoomView.textSize = 19f
                 musicRoomView.setTextColor(ContextCompat.getColor(context!!, R.color.white))
 
-                mineView.textSize = 18.toFloat()
+                mineView.textSize = 18f
                 mineView.setTextColor(ContextCompat.getColor(context!!, R.color.light_gray))
 
-                findView.textSize = 18.toFloat()
+                findView.textSize = 18f
                 findView.setTextColor(ContextCompat.getColor(context!!, R.color.light_gray))
             }
             2 -> {
-                findView.textSize = 19.toFloat()
+                findView.textSize = 19f
                 findView.setTextColor(ContextCompat.getColor(context!!, R.color.white))
 
-                mineView.textSize = 18.toFloat()
+                mineView.textSize = 18f
                 mineView.setTextColor(ContextCompat.getColor(context!!, R.color.light_gray))
 
-                musicRoomView.textSize = 18.toFloat()
+                musicRoomView.textSize = 18f
                 musicRoomView.setTextColor(ContextCompat.getColor(context!!, R.color.light_gray))
             }
         }
@@ -102,15 +109,5 @@ class MainFragment : BaseFragment(), ViewPager.OnPageChangeListener, View.OnClic
 
     override fun onPageSelected(position: Int) {
         setTitleStyle(position)
-    }
-
-    companion object {
-        const val TAG = "MainFragment"
-        fun newInstance(): MainFragment {
-            val fragment = MainFragment()
-            val args = Bundle()
-            fragment.arguments = args
-            return fragment
-        }
     }
 }

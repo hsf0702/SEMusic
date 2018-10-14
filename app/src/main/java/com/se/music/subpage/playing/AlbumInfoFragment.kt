@@ -9,6 +9,8 @@ import android.view.animation.LinearInterpolator
 import android.widget.TextView
 import com.se.music.R
 import com.se.music.base.BaseFragment
+import com.se.music.base.mvp.BasePresenter
+import com.se.music.base.mvp.MvpPresenter
 import com.se.music.service.MusicPlayer
 import com.se.music.utils.getMegaImageUrl
 import com.se.music.utils.loadUrl
@@ -21,6 +23,7 @@ import com.se.music.widget.CircleImageView
 
 class AlbumInfoFragment : BaseFragment() {
     companion object {
+        const val TAG = "AlbumInfoFragment"
         fun newInstance(): AlbumInfoFragment {
             return AlbumInfoFragment()
         }
@@ -31,14 +34,16 @@ class AlbumInfoFragment : BaseFragment() {
     private lateinit var circleAnim: ObjectAnimator
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_playing_album_info, container, false)
+        val view = inflater.inflate(R.layout.fragment_playing_album_info, container, false)
+        view.tag = TAG
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         albumView = view.findViewById(R.id.album_pic)
         artistName = view.findViewById(R.id.artist_name)
 
-        circleAnim = ObjectAnimator.ofFloat(albumView, "rotation", 0.toFloat(), 360.toFloat())
+        circleAnim = ObjectAnimator.ofFloat(albumView, "rotation", 0f, 360f)
         circleAnim.interpolator = LinearInterpolator()
         circleAnim.repeatCount = -1
         circleAnim.duration = 30000
@@ -50,6 +55,11 @@ class AlbumInfoFragment : BaseFragment() {
         } else {
             albumView.loadUrl(MusicPlayer.getAlbumPic().getMegaImageUrl(), R.drawable.player_albumcover_default)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setAnimation()
     }
 
     override fun musciChanged() {

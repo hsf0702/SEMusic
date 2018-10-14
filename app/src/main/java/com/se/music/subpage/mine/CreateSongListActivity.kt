@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.EditText
 import com.se.music.R
-import com.se.music.common.ToolBarActivity
+import com.se.music.base.ToolBarActivity
 import com.se.music.provider.metadata.*
 import com.se.music.utils.generateLoaderId
 import java.util.*

@@ -82,7 +82,8 @@ class ImageStore {
         database.beginTransaction()
         var imageValue: String? = null
         try {
-            val sql = "SELECT $IMAGE_VALUE FROM ${MusicDBHelper.IMAGE_TABLE} WHERE key='$key'"
+            val value = key?.replace("'", "")
+            val sql = "SELECT $IMAGE_VALUE FROM ${MusicDBHelper.IMAGE_TABLE} WHERE key='$value'"
             val cursor = database.rawQuery(sql, null)
             if (cursor.moveToFirst()) {
                 imageValue = cursor.getString(0)

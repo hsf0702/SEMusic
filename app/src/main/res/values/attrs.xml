@@ -13,4 +13,13 @@
         <attr name="civ_border_overlay" format="boolean" />
     </declare-styleable>
 
+    <declare-styleable name="MultiButtonLayout">
+        <attr name="button_radius" format="dimension" />
+        <attr name="button_solid" format="color" />
+        <attr name="button_selected_color" format="color" />
+        <attr name="button_count" format="integer" />
+        <attr name="buttonMarginLeft" format="dimension" />
+        <attr name="buttonMarginRight" format="dimension" />
+    </declare-styleable>
+
 </resources>

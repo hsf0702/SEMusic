@@ -9,12 +9,13 @@ import java.util.regex.Pattern
 /**
  * Created by gaojin on 2017/12/31.
  */
-class AspectRatioViewHelper(view: View, attrs: AttributeSet?) {
+class AspectRatioViewHelper(private var view: View, attrs: AttributeSet?) {
 
-    private val RATIO_STRING_PATTERN = Pattern.compile("(\\d+):(\\d+)(W|H)?")
+    companion object {
+        private val RATIO_STRING_PATTERN = Pattern.compile("(\\d+):(\\d+)(W|H)?")
+    }
 
-    private var view: View = view
-    private var ratio: Float = 0.toFloat()
+    private var ratio: Float = 0f
     private var widthFixed: Boolean = false
     private val outDimension = IntArray(2)
 

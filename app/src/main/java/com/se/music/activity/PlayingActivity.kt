@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -24,19 +25,22 @@ import com.se.music.subpage.playing.PlayerPagerAdapter
 import com.se.music.subpage.playing.PlayingBottomBlock
 import com.se.music.utils.blurBitmap
 import com.se.music.utils.getMegaImageUrl
+import com.se.music.widget.MultiButtonLayout
+import com.se.music.widget.PlayingAlbumPageTransformer
 
 /**
  *Author: gaojin
  *Time: 2018/8/7 下午7:48
  */
 
-class PlayingActivity : BaseActivity() {
+class PlayingActivity : BaseActivity(), ViewPager.OnPageChangeListener {
 
     private lateinit var activityBg: View
     private lateinit var toolbar: Toolbar
 
     private lateinit var songTitle: TextView
     private lateinit var viewPager: ViewPager
+    private lateinit var multiButtonLayout: MultiButtonLayout
     private lateinit var playingBottomBlock: PlayingBottomBlock
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,9 +55,14 @@ class PlayingActivity : BaseActivity() {
         activityBg = findViewById(R.id.player_activity_bg)
         songTitle = findViewById(R.id.playing_song_title)
         viewPager = findViewById(R.id.content_view_pager)
-        viewPager.adapter = PlayerPagerAdapter(supportFragmentManager)
-        viewPager.currentItem = PlayerPagerAdapter.ALBUM_INFO
+        multiButtonLayout = findViewById(R.id.playing_select_radio)
         playingBottomBlock = findViewById(R.id.playing_bottom_block)
+
+        viewPager.adapter = PlayerPagerAdapter(supportFragmentManager)
+        viewPager.setPageTransformer(false, PlayingAlbumPageTransformer())
+        viewPager.addOnPageChangeListener(this)
+        viewPager.currentItem = PlayerPagerAdapter.ALBUM_INFO
+        viewPager.offscreenPageLimit = 2
     }
 
     override fun onResume() {
@@ -89,6 +98,17 @@ class PlayingActivity : BaseActivity() {
             android.R.id.home -> finish()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onPageScrollStateChanged(state: Int) {
+    }
+
+    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+    }
+
+    override fun onPageSelected(position: Int) {
+        multiButtonLayout.setSelectedChild(position)
+        Log.e("gj", position.toString())
     }
 
     override fun finish() {

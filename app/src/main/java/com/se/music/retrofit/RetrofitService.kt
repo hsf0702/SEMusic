@@ -1,11 +1,12 @@
 package com.se.music.retrofit
 
+import com.se.music.entity.Album
+import com.se.music.entity.Artist
 import com.se.music.online.model.ExpressInfoModel
 import com.se.music.online.model.HallModel
 import com.se.music.online.model.RecommendListModel
 import com.se.music.online.model.SingerModel
-import com.se.music.entity.Album
-import com.se.music.entity.Artist
+import com.se.music.subpage.entity.OtherVersionInfo
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -35,4 +36,9 @@ interface RetrofitService {
     fun getAlbumInfo(@Query("method") method: String
                      , @Query("artist") artist: String
                      , @Query("album") album: String): Call<Album>
+
+    @GET("2.0/")
+    fun getRelatedSongInfo(@Query("method") method: String
+                           , @Query("track") track: String
+                           , @Query("limit") limit: Int): Call<OtherVersionInfo>
 }

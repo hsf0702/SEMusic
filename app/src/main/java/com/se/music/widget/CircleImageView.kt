@@ -28,12 +28,11 @@ class CircleImageView : AppCompatImageView {
         private val SCALE_TYPE = ImageView.ScaleType.CENTER_CROP
 
         private val BITMAP_CONFIG = Bitmap.Config.ARGB_8888
-        private val COLORDRAWABLE_DIMENSION = 2
-
-        private val DEFAULT_BORDER_WIDTH = 0
-        private val DEFAULT_BORDER_COLOR = Color.BLACK
-        private val DEFAULT_CIRCLE_BACKGROUND_COLOR = Color.TRANSPARENT
-        private val DEFAULT_BORDER_OVERLAY = false
+        private const val COLORDRAWABLE_DIMENSION = 2
+        private const val DEFAULT_BORDER_WIDTH = 0
+        private const val DEFAULT_BORDER_COLOR = Color.BLACK
+        private const val DEFAULT_CIRCLE_BACKGROUND_COLOR = Color.TRANSPARENT
+        private const val DEFAULT_BORDER_OVERLAY = false
     }
 
     private val mDrawableRect = RectF()
@@ -53,8 +52,8 @@ class CircleImageView : AppCompatImageView {
     private var mBitmapWidth: Int = 0
     private var mBitmapHeight: Int = 0
 
-    private var mDrawableRadius: Float = 0.toFloat()
-    private var mBorderRadius: Float = 0.toFloat()
+    private var mDrawableRadius: Float = 0f
+    private var mBorderRadius: Float = 0f
 
     private var mColorFilter: ColorFilter? = null
 
@@ -70,12 +69,10 @@ class CircleImageView : AppCompatImageView {
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         val a = context.obtainStyledAttributes(attrs, R.styleable.CircleImageView, defStyleAttr, 0)
-
         mBorderWidth = a.getDimensionPixelSize(R.styleable.CircleImageView_civ_border_width, DEFAULT_BORDER_WIDTH)
         mBorderColor = a.getColor(R.styleable.CircleImageView_civ_border_color, DEFAULT_BORDER_COLOR)
         mBorderOverlay = a.getBoolean(R.styleable.CircleImageView_civ_border_overlay, DEFAULT_BORDER_OVERLAY)
         a.recycle()
-
         init()
     }
 
@@ -261,22 +258,20 @@ class CircleImageView : AppCompatImageView {
             return drawable.bitmap
         }
 
-        try {
-            val bitmap: Bitmap
-
-            if (drawable is ColorDrawable) {
-                bitmap = Bitmap.createBitmap(COLORDRAWABLE_DIMENSION, COLORDRAWABLE_DIMENSION, BITMAP_CONFIG)
+        return try {
+            val bitmap: Bitmap = if (drawable is ColorDrawable) {
+                Bitmap.createBitmap(COLORDRAWABLE_DIMENSION, COLORDRAWABLE_DIMENSION, BITMAP_CONFIG)
             } else {
-                bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, BITMAP_CONFIG)
+                Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, BITMAP_CONFIG)
             }
 
             val canvas = Canvas(bitmap)
             drawable.setBounds(0, 0, canvas.width, canvas.height)
             drawable.draw(canvas)
-            return bitmap
+            bitmap
         } catch (e: Exception) {
             e.printStackTrace()
-            return null
+            null
         }
 
     }

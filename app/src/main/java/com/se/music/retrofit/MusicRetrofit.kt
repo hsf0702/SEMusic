@@ -9,6 +9,7 @@ import com.se.music.online.model.SingerModel
 import com.se.music.online.params.CommonPostParams
 import com.se.music.online.params.ExpressPostParams
 import com.se.music.singleton.GsonFactory
+import com.se.music.subpage.entity.OtherVersionInfo
 import retrofit2.Call
 import retrofit2.Retrofit
 
@@ -76,5 +77,10 @@ class MusicRetrofit private constructor() {
     fun getAlbumInfo(artist: String, album: String): Call<Album> {
         return baseLastFmRetrofit.create(RetrofitService::class.java)
                 .getAlbumInfo("album.getinfo", artist, album)
+    }
+
+    fun getRelatedSongInfo(song: String): Call<OtherVersionInfo> {
+        return baseLastFmRetrofit.create(RetrofitService::class.java)
+                .getRelatedSongInfo("track.search", song, 3)
     }
 }

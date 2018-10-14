@@ -18,4 +18,11 @@
     <dimen name="bottom_fragment_album_size">41dp</dimen>
     <dimen name="main_tool_bar_title_padding">10dp</dimen>
     <dimen name="main_tool_bar_title_text_size">18sp</dimen>
+
+    <dimen name="content_image_head">50dp</dimen>
+    <dimen name="content_item_bottom_margin">3dp</dimen>
+
+
+    <dimen name="playing_song_info_item_margin">10dp</dimen>
+    <dimen name="playing_song_info_item_text_size">14sp</dimen>
 </resources>

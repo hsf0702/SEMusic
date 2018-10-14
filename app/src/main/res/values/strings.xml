@@ -52,6 +52,17 @@
 
     <string name="recent_music_title">最近播放</string>
     <string name="se_play_all">播放全部</string>
-
+    <string name="playing_song_origin">来源:</string>
+    <string name="playing_song_artist">演唱者:</string>
+    <string name="playing_song_album">专辑:</string>
+    <string name="playing_song_publish_time">发行时间:</string>
+    <string name="playing_song_style">歌曲流派:</string>
+    <string name="playing_song_info_detail">查看详情</string>
+    <string name="playing_song_info">张艺谋钦点“亚洲天王”王力宏，为其执导的史诗级魔幻电影《长城》的片尾曲献声，邀请“摇滚歌者”谭维维一同参与合唱，
+        并首度与善于着墨中国风歌词的方文山合作，透过方文山的笔下将原本场面雄阔的边塞诗《出塞》发挥得更淋漓尽致，以独特的中国风搭配上史诗历史奇幻的剧情，
+        男女合唱营造出气势磅礡的片尾曲《缘分一道桥》！</string>
+    <string name="related_other_version">其他版本</string>
+    <string name="related_song_list">相关歌单</string>
+    <string name="related_song">相关单曲</string>
 
 </resources>

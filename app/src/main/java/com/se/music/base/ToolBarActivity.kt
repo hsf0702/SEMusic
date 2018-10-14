@@ -1,4 +1,4 @@
-package com.se.music.common
+package com.se.music.base
 
 import android.os.Bundle
 import android.support.annotation.ColorRes

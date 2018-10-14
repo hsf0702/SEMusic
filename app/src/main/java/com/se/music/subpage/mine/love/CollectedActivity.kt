@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.se.music.R
-import com.se.music.common.ToolBarActivity
+import com.se.music.base.ToolBarActivity
 
 /**
  * Created by gaojin on 2017/11/26.

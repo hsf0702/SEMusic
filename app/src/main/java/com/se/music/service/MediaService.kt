@@ -686,7 +686,7 @@ class MediaService : Service() {
                 while (true) {
                     val entity = getMusicEntity()
                     if (entity != null
-                            && entity.audioId != 0.toLong()
+                            && entity.audioId != 0L
                             && openFile(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.toString() + "/"
                                     + getMusicEntity()?.audioId)) {
                         break

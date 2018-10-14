@@ -1,4 +1,4 @@
-package com.se.music.common
+package com.se.music.subpage
 
 import android.os.Bundle
 import android.view.LayoutInflater

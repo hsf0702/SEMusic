@@ -84,9 +84,11 @@ class MultiPlayer(service: MediaService, private val mHandler: Handler) {
     }
 
     private val completionListener = MediaPlayer.OnCompletionListener { mp ->
+        isPlayerPrepared = false
         if (mp === mCurrentMediaPlayer && mNextMediaPlayer != null) {
             mCurrentMediaPlayer.release()
             mCurrentMediaPlayer = mNextMediaPlayer!!
+            isPlayerPrepared = true
             mNextMediaPlayer = null
             mNextMediaPath = Null
             mHandler.sendEmptyMessage(MediaService.TRACK_WENT_TO_NEXT)
