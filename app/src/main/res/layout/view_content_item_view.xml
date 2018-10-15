@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:textSize="14sp"
+            android:textSize="15sp"
             tools:text="一路向北" />
 
         <TextView
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:textColor="@color/gray"
-            android:textSize="12sp"
+            android:textSize="13sp"
             tools:text="一路向北" />
     </LinearLayout>
 
