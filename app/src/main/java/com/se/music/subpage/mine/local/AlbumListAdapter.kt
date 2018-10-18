@@ -57,13 +57,13 @@ class AlbumListAdapter constructor(private val context: Context, private val lis
             }
 
             override fun onSuccess(loader: Loader<*>, data: Album) {
-                if (data.image != null && data.image!!.isNotEmpty()) {
-                    val imageId = data.image!![0].imageUrl!!.getImageId()
+
+                imageView.setImageResource(R.drawable.default_album_avatar)
+                data.image?.run {
+                    val imageId = get(0).imgUrl.getImageId()
                     imageView.loadUrl(imageId.getMegaImageUrl(), R.drawable.default_album_avatar)
                     //添加图片缓存
                     ImageStore.instance.addImage(albumEntity.albumName, imageId)
-                } else {
-                    imageView.setImageResource(R.drawable.default_album_avatar)
                 }
             }
 

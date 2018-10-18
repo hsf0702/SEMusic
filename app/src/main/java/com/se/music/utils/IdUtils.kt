@@ -22,6 +22,7 @@ val GET_RECOMMEND_LIST = generateLoaderId()
 val GET_SINGER_LIST = generateLoaderId()
 val GET_EXPRESS_SONG = generateLoaderId()
 val GET_RELATED_SONG = generateLoaderId()
+val GET_SIMILAR_SONG = generateLoaderId()
 
 //query
 val QUERY_SONG_LIST = generateLoaderId()

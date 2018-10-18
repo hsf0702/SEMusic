@@ -1,6 +1,8 @@
 package com.se.music.subpage.entity
 
 import com.google.gson.JsonElement
+import com.se.music.base.Null
+import com.se.music.entity.ImageBean
 import com.se.music.retrofit.base.ConvertData
 import com.se.music.singleton.GsonFactory
 
@@ -11,12 +13,12 @@ import com.se.music.singleton.GsonFactory
 
 class OtherVersionInfo : ConvertData<OtherVersionInfo?> {
 
-    var track: List<TrackBean>? = null
+    var track: List<OtherVersionTrackBean>? = null
 
-    class TrackBean {
-        var name: String? = null
-        var artist: String? = null
-        var url: String? = null
+    class OtherVersionTrackBean {
+        var name: String = Null
+        var artist: String = Null
+        var url: String = Null
         var streamable: String? = null
         var listeners: String? = null
         var mbid: String? = null

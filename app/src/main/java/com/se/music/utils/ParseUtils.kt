@@ -71,7 +71,7 @@ fun parseCursorToArtistEntityList(id: Int, cursor: Cursor, list: ArrayList<Artis
                     , cursor.getInt(LS_ID_NUMBER_OF_TRACKS)
                     , cursor.getInt(LS_ID_INDEX)
                     , cursor.getString(LS_ARTIST_KEY))
-            artistEntity.imageId = ImageStore.instance.query(cursor.getString(LS_ARTIST_KEY))
+            artistEntity.imageId = ImageStore.instance.query(cursor.getString(LS_ARTIST_KEY)) ?: Null
             list.add(artistEntity)
         }
     }

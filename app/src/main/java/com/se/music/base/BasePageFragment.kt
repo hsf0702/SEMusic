@@ -38,7 +38,7 @@ abstract class BasePageFragment : BaseFragment() {
         return linearLayout
     }
 
-    fun setTitle(title: String?) {
+    fun setTitle(title: String) {
         mTitle.text = title
     }
 
@@ -50,8 +50,8 @@ abstract class BasePageFragment : BaseFragment() {
         statusBar.visibility = View.GONE
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item!!.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             android.R.id.home -> {
                 fm.popBackStack()
             }

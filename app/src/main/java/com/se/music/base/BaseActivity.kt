@@ -23,7 +23,7 @@ import java.util.*
 @SuppressLint("Registered")
 open class BaseActivity : AppCompatActivity() {
 
-    private var mToken: MusicPlayer.ServiceToken? = null
+    private var mToken: ServiceToken? = null
     private var fragment: QuickControlsFragment? = null //底部播放控制栏
     private val mMusicListener = ArrayList<MusicStateListener>()
     private lateinit var mPlaybackStatus: PlaybackStatus

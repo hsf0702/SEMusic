@@ -1,6 +1,7 @@
-package com.se.music.subpage.entity
+package com.se.music.entity
 
 import com.google.gson.annotations.SerializedName
+import com.se.music.base.Null
 
 /**
  *Author: gaojin
@@ -9,5 +10,6 @@ import com.google.gson.annotations.SerializedName
 
 class ImageBean {
     @SerializedName("#text")
-    var imgUrl: String? = null
+    var imgUrl: String = Null
+    var size: String = Null
 }

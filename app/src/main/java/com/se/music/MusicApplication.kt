@@ -24,8 +24,12 @@ class MusicApplication : MultiDexApplication() {
         super.onCreate()
         val processName = getProcessName(this, android.os.Process.myPid())
         if (processName == packageName) {
-            BaseConfig.init(this)
+            onCreateInit()
         }
+    }
+
+    private fun onCreateInit() {
+        BaseConfig.init(this)
     }
 
     private fun getProcessName(cxt: Context, pid: Int): String {
@@ -38,5 +42,4 @@ class MusicApplication : MultiDexApplication() {
         }
         return Null
     }
-
 }

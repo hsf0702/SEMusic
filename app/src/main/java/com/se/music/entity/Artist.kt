@@ -65,10 +65,4 @@ class Artist : ConvertData<Artist?> {
             }
         }
     }
-
-    class ImageBean {
-        @SerializedName("#text")
-        var imageUrl: String? = null // FIXME check this code
-        var size: String? = null
-    }
 }

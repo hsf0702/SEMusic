@@ -28,7 +28,7 @@ data class ArtistEntity(var artistName: String
                         , var numberOfTracks: Int
                         , var artistId: Int
                         , var artistKey: String) {
-    var imageId: String? = null
+    var imageId: String = Null
 }
 
 /**

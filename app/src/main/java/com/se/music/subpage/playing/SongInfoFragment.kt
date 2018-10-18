@@ -12,7 +12,9 @@ import com.se.music.retrofit.MusicRetrofit
 import com.se.music.retrofit.callback.CallLoaderCallbacks
 import com.se.music.service.MusicPlayer
 import com.se.music.subpage.entity.OtherVersionInfo
+import com.se.music.subpage.entity.SimilarSongInfo
 import com.se.music.utils.GET_RELATED_SONG
+import com.se.music.utils.GET_SIMILAR_SONG
 import retrofit2.Call
 
 /**
@@ -69,6 +71,7 @@ class SongInfoFragment : BaseFragment() {
 
         if (!MusicPlayer.getTrackName().isEmpty()) {
             loaderManager.restartLoader(GET_RELATED_SONG, null, buildRelatedSongCallback(MusicPlayer.getTrackName()))
+            loaderManager.restartLoader(GET_SIMILAR_SONG, null, buildSimilarSongCallback(MusicPlayer.getTrackName(), MusicPlayer.getArtistName()))
         }
     }
 
@@ -80,6 +83,21 @@ class SongInfoFragment : BaseFragment() {
 
             override fun onSuccess(loader: Loader<*>, data: OtherVersionInfo) {
                 playingSongRelated.addOtherVersionInfo(data)
+            }
+
+            override fun onFailure(loader: Loader<*>, throwable: Throwable) {
+            }
+        }
+    }
+
+    private fun buildSimilarSongCallback(trackName: String, artistName: String): CallLoaderCallbacks<SimilarSongInfo> {
+        return object : CallLoaderCallbacks<SimilarSongInfo>(context!!) {
+            override fun onCreateCall(id: Int, args: Bundle?): Call<SimilarSongInfo> {
+                return MusicRetrofit.instance.getSimilarSongInfo(trackName, artistName)
+            }
+
+            override fun onSuccess(loader: Loader<*>, data: SimilarSongInfo) {
+                playingSongRelated.addSimilarInfo(data)
             }
 
             override fun onFailure(loader: Loader<*>, throwable: Throwable) {

@@ -24,9 +24,14 @@ class MusicPlayer {
         private var mConnectionMap: WeakHashMap<Context, SeServiceConnection> = WeakHashMap()
 
         fun bindToService(context: Context): ServiceToken? {
+
             context.startService(Intent(context, MediaService::class.java))
+
             val serviceConnection = SeServiceConnection()
-            if (context.bindService(Intent().setClass(context, MediaService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)) {
+
+            val intent = Intent().setClass(context, MediaService::class.java)
+
+            if (context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)) {
                 mConnectionMap[context] = serviceConnection
                 return ServiceToken(context)
             }
@@ -36,8 +41,19 @@ class MusicPlayer {
         fun unbindFromService(token: ServiceToken) {
             val context = token.context
             val serviceConnection = mConnectionMap.remove(context) ?: return
+
             context.unbindService(serviceConnection)
             if (mConnectionMap.isEmpty()) {
+                mService = null
+            }
+        }
+
+        class SeServiceConnection : ServiceConnection {
+            override fun onServiceConnected(name: ComponentName, service: IBinder) {
+                mService = IMediaAidlInterface.Stub.asInterface(service)
+            }
+
+            override fun onServiceDisconnected(name: ComponentName) {
                 mService = null
             }
         }
@@ -216,20 +232,4 @@ class MusicPlayer {
             return mService?.audioId ?: 0
         }
     }
-
-    class SeServiceConnection : ServiceConnection {
-
-        override fun onServiceConnected(name: ComponentName, service: IBinder) {
-            mService = IMediaAidlInterface.Stub.asInterface(service)
-        }
-
-        override fun onServiceDisconnected(name: ComponentName) {
-            mService = null
-        }
-    }
-
-    /**
-     * ServiceToken
-     */
-    class ServiceToken(var context: Context)
 }

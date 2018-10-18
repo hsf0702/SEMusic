@@ -36,10 +36,4 @@ class Album : ConvertData<Album?> {
     class TagsBean {
         var tag: List<*>? = null
     }
-
-    class ImageBean {
-        @SerializedName("#text")
-        var imageUrl: String? = null
-        var size: String? = null
-    }
 }

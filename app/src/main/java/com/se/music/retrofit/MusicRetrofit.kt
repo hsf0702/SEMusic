@@ -10,6 +10,7 @@ import com.se.music.online.params.CommonPostParams
 import com.se.music.online.params.ExpressPostParams
 import com.se.music.singleton.GsonFactory
 import com.se.music.subpage.entity.OtherVersionInfo
+import com.se.music.subpage.entity.SimilarSongInfo
 import retrofit2.Call
 import retrofit2.Retrofit
 
@@ -82,5 +83,10 @@ class MusicRetrofit private constructor() {
     fun getRelatedSongInfo(song: String): Call<OtherVersionInfo> {
         return baseLastFmRetrofit.create(RetrofitService::class.java)
                 .getRelatedSongInfo("track.search", song, 3)
+    }
+
+    fun getSimilarSongInfo(song: String, artist: String): Call<SimilarSongInfo> {
+        return baseLastFmRetrofit.create(RetrofitService::class.java)
+                .getSimilarSongInfo("track.getSimilar", song, artist, 3)
     }
 }

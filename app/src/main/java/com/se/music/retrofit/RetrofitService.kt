@@ -7,6 +7,7 @@ import com.se.music.online.model.HallModel
 import com.se.music.online.model.RecommendListModel
 import com.se.music.online.model.SingerModel
 import com.se.music.subpage.entity.OtherVersionInfo
+import com.se.music.subpage.entity.SimilarSongInfo
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -41,4 +42,10 @@ interface RetrofitService {
     fun getRelatedSongInfo(@Query("method") method: String
                            , @Query("track") track: String
                            , @Query("limit") limit: Int): Call<OtherVersionInfo>
+
+    @GET("2.0/")
+    fun getSimilarSongInfo(@Query("method") method: String
+                           , @Query("track") track: String
+                           , @Query("artist") artist: String
+                           , @Query("limit") limit: Int): Call<SimilarSongInfo>
 }

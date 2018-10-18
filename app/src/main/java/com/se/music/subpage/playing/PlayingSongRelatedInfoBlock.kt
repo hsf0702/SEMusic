@@ -5,8 +5,8 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
 import com.se.music.R
-import com.se.music.base.Null
 import com.se.music.subpage.entity.OtherVersionInfo
+import com.se.music.subpage.entity.SimilarSongInfo
 import com.se.music.utils.getImageId
 import com.se.music.utils.getLargeImageUrl
 import com.se.music.utils.loadUrl
@@ -43,13 +43,27 @@ class PlayingSongRelatedInfoBlock : LinearLayout {
         firstContainer.removeAllViews()
         otherVersionInfo.track?.forEach { bean ->
             val itemView = generateItemView()
-            itemView.title.text = bean.name ?: Null
-            itemView.subTitle.text = bean.artist ?: Null
-            if (bean.image != null && bean.image!!.isNotEmpty()) {
-                val mid = bean.image!![0].imgUrl?.getImageId()
-                itemView.headImg.loadUrl(mid?.getLargeImageUrl())
+            itemView.title.text = bean.name
+            itemView.subTitle.text = bean.artist
+            bean.image?.run {
+                val mid = get(0).imgUrl.getImageId()
+                itemView.headImg.loadUrl(mid.getLargeImageUrl())
             }
             firstContainer.addView(itemView)
+        }
+    }
+
+    fun addSimilarInfo(similarSongInfo: SimilarSongInfo) {
+        secondContainer.removeAllViews()
+        similarSongInfo.track?.forEach { bean ->
+            val itemView = generateItemView()
+            itemView.title.text = bean.name
+            itemView.subTitle.text = bean.artist?.name
+            bean.image?.run {
+                val mid = get(0).imgUrl.getImageId()
+                itemView.headImg.loadUrl(mid.getLargeImageUrl())
+            }
+            secondContainer.addView(itemView)
         }
     }
 

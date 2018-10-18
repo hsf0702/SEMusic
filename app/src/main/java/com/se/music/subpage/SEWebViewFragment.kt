@@ -61,10 +61,8 @@ class SEWebViewFragment : BasePageFragment() {
             }
         }
         mWebView!!.webChromeClient = object : WebChromeClient() {
-            override fun onReceivedTitle(view: WebView, title: String?) {
-                if (title != null && !title.isEmpty()) {
-                    setTitle(title)
-                }
+            override fun onReceivedTitle(view: WebView, title: String) {
+                setTitle(title)
             }
         }
     }

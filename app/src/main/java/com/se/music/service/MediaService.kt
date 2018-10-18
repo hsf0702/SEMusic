@@ -86,7 +86,7 @@ class MediaService : Service() {
 
     private val mShuffler = Shuffler.instance
     /**
-     * 历史歌单
+     * 历史歌单 记录播放过的音乐的位置
      */
     private val mHistory = LinkedList<Int>()
     /**
@@ -121,9 +121,9 @@ class MediaService : Service() {
     private var mRecentStore: RecentStore? = null
     private var mNotificationPostTime: Long = 0
     private var mNotifyMode = NOTIFY_MODE_NONE
+    private var mServiceStartId = -1
     private val mNotificationId = 1000
     private val mCardId: Int = 0
-    private val mServiceStartId = -1
     private var mServiceInUse = false
 
     /**
@@ -159,6 +159,10 @@ class MediaService : Service() {
             getLrc(mPlaylist[mPlayPos].mId)
         } else if (SEND_PROGRESS == action) {
             //待定
+        } else if (STOP_ACTION == action) {
+            pause()
+            seek(0)
+            releaseServiceUiAndStop()
         }
     }
 
@@ -203,6 +207,14 @@ class MediaService : Service() {
         registerReceiver(intentReceiver, filter)
 
         mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        mServiceStartId = startId
+        if (intent != null) {
+            val action = intent.action
+        }
+        return START_STICKY
     }
 
     override fun onBind(intent: Intent?): IBinder {
@@ -374,6 +386,10 @@ class MediaService : Service() {
      */
     fun setCurrentPlayPos(nextPos: Int) {
         synchronized(this) {
+            mHistory.add(mPlayPos)
+            if (mHistory.size > MAX_HISTORY_SIZE) {
+                mHistory.remove()
+            }
             mPlayPos = nextPos
         }
     }
@@ -802,32 +818,70 @@ class MediaService : Service() {
         if (mPlaylist.isEmpty()) {
             return -1
         }
-        if (mRepeatMode == REPEAT_CURRENT) {
-            return if (mPlayPos < 0) {
+        return when (mRepeatMode) {
+            REPEAT_CURRENT -> if (mPlayPos < 0) {
                 0
             } else mPlayPos
-        } else if (mRepeatMode == REPEAT_SHUFFLER) {
-            shuffleMode()
-            return mPlayPos + 1
-        } else if (mRepeatMode == REPEAT_ALL) {
-            if (mPlayPos >= mPlaylist.size - 1) {
-                if (mRepeatMode == REPEAT_ALL) {
-                    return 0
-                }
-                return -1
-            } else {
-                return mPlayPos + 1
+            REPEAT_SHUFFLER -> {
+                shuffleMode()
             }
-        } else {
-            return -1
+            REPEAT_ALL -> if (mPlayPos >= mPlaylist.size - 1) {
+                if (mRepeatMode == REPEAT_ALL) 0 else -1
+            } else {
+                mPlayPos + 1
+            }
+            else -> -1
         }
     }
 
     /**
      * 随机播放
      */
-    private fun shuffleMode() {
+    private fun shuffleMode(): Int {
         //随机播放未完成
+        val songNumber = mPlaylist.size
+
+        //每个位置的数字代表播放过的次数
+        //初始值为0 代表此位置的未播放过
+        val songNumPlays = IntArray(songNumber)
+
+        mHistory.forEach {
+            if (it in 0..(songNumber - 1)) {
+                songNumPlays[it] += 1
+            }
+        }
+
+        if (mPlayPos in 0..(songNumber - 1)) {
+            songNumPlays[mPlayPos] += 1
+        }
+
+        //播放过最少的次数 一般是未播放
+        var minNumPlays = Integer.MAX_VALUE
+
+        //播放过最少的次数的音乐的数量
+        var numSongsWithMinNumPlays = 0
+
+        songNumPlays.forEach {
+            if (it < minNumPlays) {
+                minNumPlays = it
+                numSongsWithMinNumPlays = 1
+            } else if (it == minNumPlays) {
+                numSongsWithMinNumPlays++
+            }
+        }
+
+        var skip = mShuffler.nextInt(numSongsWithMinNumPlays)
+        songNumPlays.forEachIndexed { index, value ->
+            if (value == minNumPlays) {
+                //是最少播放次数的
+                if (skip == 0) {
+                    return index
+                } else {
+                    skip--
+                }
+            }
+        }
+        return -1
     }
 
     private fun setNextTrack() {
