@@ -47,8 +47,8 @@
             android:screenOrientation="portrait" />
 
         <activity android:name="com.se.music.activity.PlayingActivity" />
-        <activity android:name="com.se.music.subpage.mine.love.CollectedActivity" />
-        <activity android:name="com.se.music.subpage.mine.CreateSongListActivity" />
+        <activity android:name="com.se.music.activity.CollectedActivity" />
+        <activity android:name="com.se.music.activity.CreateSongListActivity" />
 
         <service
             android:name="com.se.music.service.MediaService"

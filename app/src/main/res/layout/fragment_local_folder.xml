@@ -7,7 +7,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="不想做这个页面了"
+        android:text="空空如也(￣▽￣)~*"
         android:textColor="@color/medium_sea_green"
         android:textSize="20sp" />
 

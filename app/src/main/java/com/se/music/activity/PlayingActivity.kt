@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -21,8 +20,8 @@ import com.bumptech.glide.request.transition.Transition
 import com.se.music.R
 import com.se.music.base.BaseActivity
 import com.se.music.service.MusicPlayer
-import com.se.music.subpage.playing.PlayerPagerAdapter
-import com.se.music.subpage.playing.PlayingBottomBlock
+import com.se.music.adapter.PlayerPagerAdapter
+import com.se.music.view.PlayingBottomView
 import com.se.music.utils.blurBitmap
 import com.se.music.utils.getMegaImageUrl
 import com.se.music.widget.MultiButtonLayout
@@ -41,7 +40,7 @@ class PlayingActivity : BaseActivity(), ViewPager.OnPageChangeListener {
     private lateinit var songTitle: TextView
     private lateinit var viewPager: ViewPager
     private lateinit var multiButtonLayout: MultiButtonLayout
-    private lateinit var playingBottomBlock: PlayingBottomBlock
+    private lateinit var playingBottomView: PlayingBottomView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +55,7 @@ class PlayingActivity : BaseActivity(), ViewPager.OnPageChangeListener {
         songTitle = findViewById(R.id.playing_song_title)
         viewPager = findViewById(R.id.content_view_pager)
         multiButtonLayout = findViewById(R.id.playing_select_radio)
-        playingBottomBlock = findViewById(R.id.playing_bottom_block)
+        playingBottomView = findViewById(R.id.playing_bottom_block)
 
         viewPager.adapter = PlayerPagerAdapter(supportFragmentManager)
         viewPager.setPageTransformer(false, PlayingAlbumPageTransformer())
@@ -68,22 +67,22 @@ class PlayingActivity : BaseActivity(), ViewPager.OnPageChangeListener {
     override fun onResume() {
         super.onResume()
         songTitle.text = MusicPlayer.getTrackName()
-        playingBottomBlock.updateBlock()
-        setBg()
+        playingBottomView.updateBlock()
+        setBackground()
     }
 
     private fun toolbarInit() {
         toolbar = findViewById(R.id.playing_toolbar)
         setSupportActionBar(toolbar)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
     }
 
     override fun musicChanged() {
         super.musicChanged()
         songTitle.text = MusicPlayer.getTrackName()
-        playingBottomBlock.musicChanged()
-        setBg()
+        playingBottomView.musicChanged()
+        setBackground()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -108,7 +107,6 @@ class PlayingActivity : BaseActivity(), ViewPager.OnPageChangeListener {
 
     override fun onPageSelected(position: Int) {
         multiButtonLayout.setSelectedChild(position)
-        Log.e("gj", position.toString())
     }
 
     override fun finish() {
@@ -116,7 +114,7 @@ class PlayingActivity : BaseActivity(), ViewPager.OnPageChangeListener {
         overridePendingTransition(R.anim.push_up_in, R.anim.push_down_out)
     }
 
-    private fun setBg() {
+    private fun setBackground() {
         if (MusicPlayer.getAlbumPic().isEmpty()) {
             activityBg.background = getDrawable(R.drawable.player_background_real)
         } else {

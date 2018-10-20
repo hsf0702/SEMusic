@@ -8,7 +8,7 @@ import com.se.music.R
 import com.se.music.base.BaseActivity
 import com.se.music.base.mvp.BaseView
 import com.se.music.base.mvp.MvpPresenter
-import com.se.music.subpage.SEWebViewFragment
+import com.se.music.fragment.SEWebViewFragment
 import com.se.music.online.model.HallModel
 import com.se.music.utils.GlideImageLoader
 import com.youth.banner.Banner

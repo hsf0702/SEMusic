@@ -6,8 +6,8 @@ import com.se.music.online.model.ExpressInfoModel
 import com.se.music.online.model.HallModel
 import com.se.music.online.model.RecommendListModel
 import com.se.music.online.model.SingerModel
-import com.se.music.subpage.entity.OtherVersionInfo
-import com.se.music.subpage.entity.SimilarSongInfo
+import com.se.music.entity.OtherVersionInfo
+import com.se.music.entity.SimilarSongInfo
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query

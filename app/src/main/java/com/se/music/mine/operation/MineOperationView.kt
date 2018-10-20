@@ -15,11 +15,11 @@ import com.se.music.R
 import com.se.music.base.BaseConfig
 import com.se.music.base.mvp.BaseView
 import com.se.music.base.mvp.MvpPresenter
-import com.se.music.main.MainFragment
-import com.se.music.subpage.mine.DownLoadFragment
-import com.se.music.subpage.mine.RecentMusicFragment
-import com.se.music.subpage.mine.local.LocalMusicContainerFragment
-import com.se.music.subpage.mine.love.CollectedActivity
+import com.se.music.fragment.MainFragment
+import com.se.music.fragment.DownLoadFragment
+import com.se.music.fragment.RecentMusicFragment
+import com.se.music.fragment.LocalMusicContainerFragment
+import com.se.music.activity.CollectedActivity
 import com.se.music.utils.startFragment
 
 /**
@@ -29,7 +29,10 @@ import com.se.music.utils.startFragment
 class MineOperationView(presenter: MvpPresenter, viewId: Int, view: View) : BaseView(presenter, viewId), View.OnClickListener {
 
     private lateinit var rootView: GridLayout
-    private val preFragmentTag = MainFragment.TAG
+
+    companion object {
+        const val preFragmentTag = MainFragment.TAG
+    }
 
     init {
         initView(view)

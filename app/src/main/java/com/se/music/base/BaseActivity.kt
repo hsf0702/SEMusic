@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import com.se.music.R
 import com.se.music.base.listener.MusicStateListener
-import com.se.music.main.QuickControlsFragment
+import com.se.music.fragment.QuickControlsFragment
 import com.se.music.service.*
 import com.se.music.utils.setTransparentForWindow
 import java.lang.ref.WeakReference

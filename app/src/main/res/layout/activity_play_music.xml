@@ -52,7 +52,7 @@
         app:button_selected_color="@color/white"
         app:button_solid="@color/gray" />
 
-    <com.se.music.subpage.playing.PlayingBottomBlock
+    <com.se.music.view.PlayingBottomView
         android:id="@+id/playing_bottom_block"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

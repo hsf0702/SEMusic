@@ -9,8 +9,8 @@ import com.se.music.online.model.SingerModel
 import com.se.music.online.params.CommonPostParams
 import com.se.music.online.params.ExpressPostParams
 import com.se.music.singleton.GsonFactory
-import com.se.music.subpage.entity.OtherVersionInfo
-import com.se.music.subpage.entity.SimilarSongInfo
+import com.se.music.entity.OtherVersionInfo
+import com.se.music.entity.SimilarSongInfo
 import retrofit2.Call
 import retrofit2.Retrofit
 

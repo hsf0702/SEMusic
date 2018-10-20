@@ -13,7 +13,7 @@ import com.se.music.base.mvp.BaseView
 import com.se.music.base.mvp.MvpPresenter
 import com.se.music.mine.event.CollectEvent
 import com.se.music.mine.event.CreateEvent
-import com.se.music.subpage.mine.CreateSongListActivity
+import com.se.music.activity.CreateSongListActivity
 
 /**
  * Author: gaojin

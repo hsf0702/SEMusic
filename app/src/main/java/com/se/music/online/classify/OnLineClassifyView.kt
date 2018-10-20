@@ -5,8 +5,8 @@ import android.view.View
 import com.se.music.R
 import com.se.music.base.mvp.BaseView
 import com.se.music.base.mvp.MvpPresenter
-import com.se.music.main.MainFragment
-import com.se.music.subpage.online.singer.OnLineSingerFragment
+import com.se.music.fragment.MainFragment
+import com.se.music.fragment.OnLineSingerFragment
 import com.se.music.utils.startFragment
 
 /**

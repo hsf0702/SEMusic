@@ -7,7 +7,7 @@ import android.widget.Toast
 import com.se.music.R
 import com.se.music.base.BaseActivity
 import com.se.music.base.TOAST_SHOW_DURATION
-import com.se.music.main.MainFragment
+import com.se.music.fragment.MainFragment
 
 
 class MainActivity : BaseActivity() {

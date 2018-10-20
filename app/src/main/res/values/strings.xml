@@ -65,4 +65,6 @@
     <string name="related_song_list">相关歌单</string>
     <string name="related_song">相关单曲</string>
 
+    <string name="lrc_label">暂无歌词</string>
+
 </resources>

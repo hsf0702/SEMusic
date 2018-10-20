@@ -2,7 +2,7 @@ package com.se.music.widget
 
 import android.support.v4.view.ViewPager
 import android.view.View
-import com.se.music.subpage.playing.AlbumInfoFragment
+import com.se.music.fragment.AlbumInfoFragment
 
 /**
  *Author: gaojin
