@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.se.music.R
 import com.se.music.base.BaseFragment
 
@@ -13,6 +14,9 @@ import com.se.music.base.BaseFragment
  */
 
 class LocalFolderFragment : BaseFragment() {
+
+    lateinit var textView: TextView
+
     companion object {
         fun newInstance(): LocalFolderFragment {
             return LocalFolderFragment()
@@ -20,6 +24,12 @@ class LocalFolderFragment : BaseFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.fragment_local_folder, container, false)
+        val root = inflater.inflate(R.layout.fragment_local_folder, container, false)
+        textView = root.findViewById(R.id.text_view)
+        return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
     }
 }

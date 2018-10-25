@@ -11,7 +11,8 @@ import android.widget.TextView
 import com.se.music.R
 import com.se.music.service.MediaService
 import com.se.music.service.MusicPlayer
-import com.se.music.singleton.HandlerSingleton
+import com.se.music.utils.manager.GlobalPlayTimeManager
+import com.se.music.utils.manager.PlayTimeListener
 import com.se.music.utils.ms2Minute
 
 /**
@@ -19,7 +20,8 @@ import com.se.music.utils.ms2Minute
  *Time: 2018/9/27 下午5:37
  * 播放音乐底部操作区域
  */
-class PlayingBottomView : LinearLayout, View.OnClickListener, SeekBar.OnSeekBarChangeListener, ViewBlockAction {
+class PlayingBottomView : LinearLayout, View.OnClickListener
+        , SeekBar.OnSeekBarChangeListener, ViewBlockAction, PlayTimeListener {
 
     private lateinit var repeatMode: ImageView
     private lateinit var preSong: ImageView
@@ -37,26 +39,7 @@ class PlayingBottomView : LinearLayout, View.OnClickListener, SeekBar.OnSeekBarC
 
     private lateinit var string: String
 
-    private val handler = HandlerSingleton.instance
-
     private var duration: Long = 0
-
-    private val updateSeekBarRunnable = object : Runnable {
-        override fun run() {
-            if (duration in 1..627080715) {
-                val position = MusicPlayer.position()
-                if (duration != 0.toLong()) {
-                    seekBar.progress = (1000 * position / duration).toInt()
-                }
-                seekTimePlayed.text = position.ms2Minute()
-            }
-            if (MusicPlayer.isPlaying()) {
-                seekBar.postDelayed(this, 200)
-            } else {
-                seekBar.removeCallbacks(this)
-            }
-        }
-    }
 
     constructor(context: Context) : this(context, null)
 
@@ -99,6 +82,8 @@ class PlayingBottomView : LinearLayout, View.OnClickListener, SeekBar.OnSeekBarC
         download.setOnClickListener(this)
         share.setOnClickListener(this)
         comment.setOnClickListener(this)
+
+        GlobalPlayTimeManager.registerListener(this)
     }
 
     /**
@@ -133,6 +118,11 @@ class PlayingBottomView : LinearLayout, View.OnClickListener, SeekBar.OnSeekBarC
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
     }
 
+    override fun playedTime(position: Long, duration: Long) {
+        seekBar.progress = (1000 * position / duration).toInt()
+        seekTimePlayed.text = position.ms2Minute()
+    }
+
     override fun onClick(v: View) {
         when (v.id) {
             R.id.repeat_mode -> {
@@ -154,10 +144,8 @@ class PlayingBottomView : LinearLayout, View.OnClickListener, SeekBar.OnSeekBarC
     private fun updatePlayingStatus() {
         if (MusicPlayer.isPlaying()) {
             centerControl.setImageResource(R.drawable.default_player_btn_pause_selector)
-            handler.post(updateSeekBarRunnable)
         } else {
             centerControl.setImageResource(R.drawable.default_player_btn_play_selector)
-            handler.removeCallbacks(updateSeekBarRunnable)
         }
     }
 
@@ -188,7 +176,7 @@ class PlayingBottomView : LinearLayout, View.OnClickListener, SeekBar.OnSeekBarC
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        seekBar.removeCallbacks(updateSeekBarRunnable)
+        GlobalPlayTimeManager.unregisterListener(this)
     }
 
 }

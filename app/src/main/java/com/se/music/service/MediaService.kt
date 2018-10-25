@@ -10,18 +10,22 @@ import android.os.*
 import android.provider.MediaStore
 import android.support.v4.app.NotificationCompat
 import android.text.TextUtils
-import android.util.Log
 import android.widget.RemoteViews
 import com.se.music.R
 import com.se.music.activity.MainActivity
 import com.se.music.base.APP_NAME
 import com.se.music.base.Null
+import com.se.music.entity.LrcInfo
 import com.se.music.entity.MusicEntity
 import com.se.music.provider.database.provider.ImageStore
 import com.se.music.provider.database.provider.RecentStore
+import com.se.music.retrofit.MusicRetrofit
 import com.se.music.singleton.GsonFactory
-import java.io.File
-import java.io.RandomAccessFile
+import com.se.music.singleton.OkHttpSingleton
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.io.*
 import java.lang.ref.WeakReference
 import java.util.*
 
@@ -78,6 +82,7 @@ class MediaService : Service() {
     //handler
     private lateinit var mUrlHandler: Handler
     private lateinit var mLrcHandler: Handler
+    private var mRequestLrc: RequestLrc? = null
     private lateinit var mPlayerHandler: MusicPlayerHandler
     private lateinit var mHandlerThread: HandlerThread
     private lateinit var mPlayer: MultiPlayer
@@ -716,7 +721,6 @@ class MediaService : Service() {
                         mPlayPos = pos
                     } else {
                         mOpenFailedCounter = 0
-                        Log.w(TAG, "Failed to open file for playback")
                         break
                     }
                 }
@@ -940,13 +944,64 @@ class MediaService : Service() {
         var file = File(lrc)
         if (!file.exists()) {
             //不存在就建立此目录
-            val r = file.mkdirs()
+            file.mkdirs()
         }
         file = File(lrc + id)
         if (!file.exists()) {
             //获取歌词
+            MusicRetrofit.instance
+                    .getLrcInfo(info!!.musicName)
+                    .enqueue(object : Callback<LrcInfo> {
+                        override fun onResponse(call: Call<LrcInfo>, response: Response<LrcInfo>) {
+                            val responseLrc = response.body()
+                            val lrcUrl: String
+                            if (responseLrc != null) {
+                                lrcUrl = responseLrc.lrcys_list?.get(0)?.lrclink ?: Null
+                                if (mRequestLrc != null) {
+                                    mLrcHandler.removeCallbacks(mRequestLrc)
+                                }
+                                mRequestLrc = RequestLrc(lrcUrl, getMusicEntity())
+                                mLrcHandler.postDelayed(mRequestLrc, 70)
+                            }
+                        }
+
+                        override fun onFailure(call: Call<LrcInfo>, t: Throwable) {
+                        }
+                    })
+        } else {
+            mPlayerHandler.sendEmptyMessage(LRC_DOWNLOADED)
         }
     }
+
+
+    inner class RequestLrc(val url: String, private val musicEntity: MusicEntity?) : Runnable {
+        override fun run() {
+            if (url.isNotEmpty() && musicEntity != null) {
+                val file = File(Environment.getExternalStorageDirectory().absolutePath + LRC_PATH + musicEntity.audioId)
+                val lrcInfo = OkHttpSingleton.instance.getResponseString(url)
+                if (lrcInfo.isNotEmpty()) {
+                    if (!file.exists()) {
+                        file.createNewFile()
+                    }
+                    writeToFile(file, lrcInfo)
+                    mPlayerHandler.sendEmptyMessage(LRC_DOWNLOADED)
+                }
+            }
+        }
+    }
+
+    @Synchronized
+    private fun writeToFile(file: File, lrc: String) {
+        try {
+            val outputStream = FileOutputStream(file)
+            outputStream.write(lrc.toByteArray())
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
 
     private fun recentlyPlayed(): Boolean {
         return isPlaying || System.currentTimeMillis() - mLastPlayedTime < IDLE_DELAY
@@ -1116,6 +1171,7 @@ class MediaService : Service() {
                     service.setNextTrack()
                     service.notifyChange(META_CHANGED)
                     service.notifyChange(MUSIC_CHANGED)
+                    service.notifyChange(LRC_UPDATED)
                     service.updateNotification()
                 }
                 TRACK_ENDED -> if (service.mRepeatMode == REPEAT_CURRENT) {

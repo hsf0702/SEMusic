@@ -50,7 +50,6 @@ dependencies {
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     api "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     api 'com.youth.banner:banner:1.4.10'
-    api 'com.github.promeg:tinypinyin:1.0.0'
     //Glide
     //noinspection GradleDependency
     kapt 'com.github.bumptech.glide:compiler:4.6.1'

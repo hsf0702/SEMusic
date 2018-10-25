@@ -168,6 +168,10 @@ class MusicPlayer {
             return mService?.secondPosition() ?: 0
         }
 
+        fun getAudioId(): Long {
+            return mService?.audioId ?: 0
+        }
+
         /**
          * 获取循环状态
          */

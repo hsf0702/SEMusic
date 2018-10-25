@@ -18,9 +18,13 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         showQuickControl(true)
-        supportFragmentManager.beginTransaction()
-                .add(R.id.se_main_content, MainFragment.newInstance(), MainFragment.TAG)
-                .commitAllowingStateLoss()
+
+        //防止Fragment重叠
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                    .add(R.id.se_main_content, MainFragment.newInstance(), MainFragment.TAG)
+                    .commit()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -32,7 +36,6 @@ class MainActivity : BaseActivity() {
         super.onStart()
         boo = 0
     }
-
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {

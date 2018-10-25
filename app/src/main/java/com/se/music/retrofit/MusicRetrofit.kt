@@ -1,7 +1,6 @@
 package com.se.music.retrofit
 
-import com.se.music.entity.Album
-import com.se.music.entity.Artist
+import com.se.music.entity.*
 import com.se.music.online.model.ExpressInfoModel
 import com.se.music.online.model.HallModel
 import com.se.music.online.model.RecommendListModel
@@ -9,8 +8,6 @@ import com.se.music.online.model.SingerModel
 import com.se.music.online.params.CommonPostParams
 import com.se.music.online.params.ExpressPostParams
 import com.se.music.singleton.GsonFactory
-import com.se.music.entity.OtherVersionInfo
-import com.se.music.entity.SimilarSongInfo
 import retrofit2.Call
 import retrofit2.Retrofit
 
@@ -24,16 +21,23 @@ class MusicRetrofit private constructor() {
         const val API_BASE_C_URL = "http://c.y.qq.com/"
         const val API_BASE_U_URL = "http://u.y.qq.com/"
         const val API_LAST_FM_URL = "http://ws.audioscrobbler.com/"
+        const val API_TING_BAIDU = "http://tingapi.ting.baidu.com/"
 
         val instance: MusicRetrofit by lazy { MusicRetrofit() }
     }
 
+    //QQ音乐
     private val baseCRetrofit: Retrofit = QQRetrofitFactory.getInstance(API_BASE_C_URL)
     private val baseURetrofit: Retrofit = QQRetrofitFactory.getInstance(API_BASE_U_URL)
+
+    //lastFm
     private val baseLastFmRetrofit: Retrofit = LastFmRetrofitFactory.getInstance(API_LAST_FM_URL)
 
+    //百度音乐
+    private val tingRetrofit: Retrofit = TingRetrofitFactory.getInstance(API_TING_BAIDU)
+
     fun getMusicHall(): Call<HallModel> {
-        return baseCRetrofit.create(RetrofitService::class.java).getMusicHallService()
+        return baseCRetrofit.create(RetrofitService.QQ::class.java).getMusicHallService()
     }
 
     fun getRecommendList(): Call<RecommendListModel> {
@@ -42,13 +46,13 @@ class MusicRetrofit private constructor() {
         params.recomPlaylist.module = "playlist.HotRecommendServer"
         params.recomPlaylist.param.async = 1
         params.recomPlaylist.param.cmd = 2
-        return baseURetrofit.create(RetrofitService::class.java)
+        return baseURetrofit.create(RetrofitService.QQ::class.java)
                 .getRecommendList(GsonFactory.instance.toJson(params))
     }
 
     fun getSinger(pagesize: Int, pagenum: Int): Call<SingerModel> {
         val map = hashMapOf("channel" to "singer", "key" to "all_all_all", "page" to "list", "format" to "jsonp")
-        return baseCRetrofit.create(RetrofitService::class.java).getSinger(map, pagesize, pagenum)
+        return baseCRetrofit.create(RetrofitService.QQ::class.java).getSinger(map, pagesize, pagenum)
     }
 
     fun getNewSongInfo(): Call<ExpressInfoModel> {
@@ -66,27 +70,32 @@ class MusicRetrofit private constructor() {
         expressPostParams.new_song.param.start = 0
         expressPostParams.new_song.param.end = 1
 
-        return baseURetrofit.create(RetrofitService::class.java)
+        return baseURetrofit.create(RetrofitService.QQ::class.java)
                 .getNewSongInfo(GsonFactory.instance.toJson(expressPostParams))
     }
 
     fun getSingAvatar(artist: String): Call<Artist> {
-        return baseLastFmRetrofit.create(RetrofitService::class.java)
+        return baseLastFmRetrofit.create(RetrofitService.LastFm::class.java)
                 .getSingerAvatar("artist.getinfo", artist)
     }
 
     fun getAlbumInfo(artist: String, album: String): Call<Album> {
-        return baseLastFmRetrofit.create(RetrofitService::class.java)
+        return baseLastFmRetrofit.create(RetrofitService.LastFm::class.java)
                 .getAlbumInfo("album.getinfo", artist, album)
     }
 
     fun getRelatedSongInfo(song: String): Call<OtherVersionInfo> {
-        return baseLastFmRetrofit.create(RetrofitService::class.java)
+        return baseLastFmRetrofit.create(RetrofitService.LastFm::class.java)
                 .getRelatedSongInfo("track.search", song, 3)
     }
 
     fun getSimilarSongInfo(song: String, artist: String): Call<SimilarSongInfo> {
-        return baseLastFmRetrofit.create(RetrofitService::class.java)
+        return baseLastFmRetrofit.create(RetrofitService.LastFm::class.java)
                 .getSimilarSongInfo("track.getSimilar", song, artist, 3)
+    }
+
+    fun getLrcInfo(song: String): Call<LrcInfo> {
+        return tingRetrofit.create(RetrofitService.Ting::class.java).getLrcInfo("baidu.ting.search.lrcys"
+                , song)
     }
 }

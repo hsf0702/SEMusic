@@ -5,7 +5,7 @@ import android.text.StaticLayout
 import android.text.TextPaint
 import android.text.TextUtils
 import android.text.format.DateUtils
-import java.io.*
+import java.io.File
 import java.util.*
 import java.util.regex.Pattern
 
@@ -51,18 +51,11 @@ fun parseLrc(lrcFile: File?): List<LrcEntry>? {
     }
 
     val entryList = ArrayList<LrcEntry>()
-    try {
-        val br = BufferedReader(InputStreamReader(FileInputStream(lrcFile), "utf-8"))
-        val line = br.readLine()
-        while (line != null) {
-            val list = parseLine(line)
-            if (list != null && !list.isEmpty()) {
-                entryList.addAll(list)
-            }
+    lrcFile.forEachLine { line ->
+        val list = parseLine(line)
+        if (list != null && !list.isEmpty()) {
+            entryList.addAll(list)
         }
-        br.close()
-    } catch (e: IOException) {
-        e.printStackTrace()
     }
     entryList.sort()
     return entryList
@@ -92,8 +85,8 @@ private fun parseLine(line: String): List<LrcEntry>? {
         return null
     }
 
-    lineTemp = lineTemp.trim { it <= ' ' }
-    val lineMatcher = Pattern.compile("((\\[\\d\\d:\\d\\d\\.\\d{2,3}])+)(.+)").matcher(lineTemp)
+    lineTemp = lineTemp.trim()
+    val lineMatcher = Pattern.compile("((\\[\\d\\d:\\d\\d\\.\\d{2,3}\\])+)(.+)").matcher(lineTemp)
     if (!lineMatcher.matches()) {
         return null
     }
@@ -102,7 +95,7 @@ private fun parseLine(line: String): List<LrcEntry>? {
     val text = lineMatcher.group(3)
     val entryList = ArrayList<LrcEntry>()
 
-    val timeMatcher = Pattern.compile("\\[(\\d\\d):(\\d\\d)\\.(\\d){2,3}]").matcher(times)
+    val timeMatcher = Pattern.compile("\\[(\\d\\d):(\\d\\d)\\.(\\d){2,3}\\]").matcher(times)
     while (timeMatcher.find()) {
         val min = java.lang.Long.parseLong(timeMatcher.group(1))
         val sec = java.lang.Long.parseLong(timeMatcher.group(2))

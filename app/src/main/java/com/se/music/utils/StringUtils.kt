@@ -4,6 +4,7 @@ import com.se.music.base.LAST_FM_IMAGE_LARGE
 import com.se.music.base.LAST_FM_IMAGE_MEDIUM
 import com.se.music.base.LAST_FM_IMAGE_MEGA
 
+
 /**
  *Author: gaojin
  *Time: 2018/7/8 下午3:13

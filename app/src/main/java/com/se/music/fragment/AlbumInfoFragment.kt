@@ -22,6 +22,7 @@ import com.se.music.widget.CircleImageView
 class AlbumInfoFragment : BaseFragment() {
     companion object {
         const val TAG = "AlbumInfoFragment"
+        const val ANIMATION_DURATION = 30000L
         fun newInstance(): AlbumInfoFragment {
             return AlbumInfoFragment()
         }
@@ -44,7 +45,7 @@ class AlbumInfoFragment : BaseFragment() {
         circleAnim = ObjectAnimator.ofFloat(albumView, "rotation", 0f, 360f)
         circleAnim.interpolator = LinearInterpolator()
         circleAnim.repeatCount = -1
-        circleAnim.duration = 30000
+        circleAnim.duration = ANIMATION_DURATION
         circleAnim.start()
 
         artistName.text = MusicPlayer.getArtistName()

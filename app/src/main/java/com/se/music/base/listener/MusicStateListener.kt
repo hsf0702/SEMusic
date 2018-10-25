@@ -19,4 +19,6 @@ interface MusicStateListener {
     fun reloadAdapter()
 
     fun musciChanged()
+
+    fun updateLrc()
 }

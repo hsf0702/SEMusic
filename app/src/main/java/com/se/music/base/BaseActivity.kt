@@ -11,6 +11,7 @@ import com.se.music.R
 import com.se.music.base.listener.MusicStateListener
 import com.se.music.fragment.QuickControlsFragment
 import com.se.music.service.*
+import com.se.music.utils.manager.GlobalPlayTimeManager
 import com.se.music.utils.setTransparentForWindow
 import java.lang.ref.WeakReference
 import java.util.*
@@ -96,7 +97,14 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
 
-    open fun updateLrc() {}
+    /**
+     * 更新歌词
+     */
+    open fun updateLrc() {
+        for (listener in mMusicListener) {
+            listener.updateLrc()
+        }
+    }
 
     fun setMusicStateListenerListener(status: MusicStateListener) {
         if (status === this) {
@@ -160,8 +168,7 @@ open class BaseActivity : AppCompatActivity() {
             if (baseActivity != null) {
                 when (action) {
                     META_CHANGED -> baseActivity.baseUpdatePlayInfo()
-                    PLAY_STATE_CHANGED -> {
-                    }
+                    PLAY_STATE_CHANGED -> GlobalPlayTimeManager.trigger()
                     TRACK_PREPARED -> baseActivity.updateTime()
                     BUFFER_UP -> baseActivity.updateBuffer(intent.getIntExtra("progress", 0))
                     MUSIC_LOADING -> baseActivity.loading(intent.getBooleanExtra("isloading", false))
