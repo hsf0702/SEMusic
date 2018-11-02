@@ -31,24 +31,16 @@ class MusicListAdapter constructor(private val context: Context, private val mLi
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return if (viewType == mHeadLayout) {
-            CommonItemViewHolder(parent.inflate(R.layout.common_item))
-        } else {
-            ListItemViewHolder(parent.inflate(R.layout.fragment_music_song_item))
-        }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder = when (viewType) {
+        mHeadLayout -> CommonItemViewHolder(parent.inflate(R.layout.common_item))
+        else -> ListItemViewHolder(parent.inflate(R.layout.fragment_music_song_item))
     }
 
-    override fun getItemCount(): Int {
-        return mList.size + 1
-    }
+    override fun getItemCount() = mList.size + 1
 
-    override fun getItemViewType(position: Int): Int {
-        return if (position == 0) {
-            mHeadLayout
-        } else {
-            mContentLayout
-        }
+    override fun getItemViewType(position: Int) = when (position) {
+        0 -> mHeadLayout
+        else -> mContentLayout
     }
 
     internal inner class PlayMusic(var position: Int) : Runnable {
@@ -89,10 +81,10 @@ class MusicListAdapter constructor(private val context: Context, private val mLi
 
     inner class ListItemViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
 
-        var mMusicName: TextView = view.findViewById(R.id.music_name)
-        var mMusicInfo: TextView = view.findViewById(R.id.music_info)
-        var mAlbumInfo: TextView = view.findViewById(R.id.album_info)
-        var mListButton: ImageView = view.findViewById(R.id.viewpager_list_button)
+        private var mMusicName: TextView = view.findViewById(R.id.music_name)
+        private var mMusicInfo: TextView = view.findViewById(R.id.music_info)
+        private var mAlbumInfo: TextView = view.findViewById(R.id.album_info)
+        private var mListButton: ImageView = view.findViewById(R.id.viewpager_list_button)
 
         init {
             mListButton.setOnClickListener(this)

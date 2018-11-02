@@ -40,12 +40,14 @@ class MultiPlayer(service: MediaService, private val mHandler: Handler) {
     private var mNextMediaPath = Null
     private var isFirstLoad = true
 
-    private val audioAttributes = AudioAttributes.Builder()
-            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-            .setFlags(AudioAttributes.CONTENT_TYPE_MUSIC)
-            .setUsage(AudioAttributes.USAGE_MEDIA)
-            .setLegacyStreamType(AudioManager.STREAM_MUSIC)
-            .build()
+    private val audioAttributes = AudioAttributes.Builder().apply {
+        setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+        setFlags(AudioAttributes.CONTENT_TYPE_MUSIC)
+        setUsage(AudioAttributes.USAGE_MEDIA)
+        setLegacyStreamType(AudioManager.STREAM_MUSIC)
+
+    }.build()
+
 
     private val preparedListener = MediaPlayer.OnPreparedListener { mp ->
         if (isFirstLoad) {

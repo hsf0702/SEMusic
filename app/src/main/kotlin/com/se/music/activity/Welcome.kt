@@ -20,9 +20,11 @@ import com.se.music.utils.lacksPermissions
 
 class Welcome : AppCompatActivity() {
 
-    private val PERMISSION_REQUEST_CODE = 0x00
-    private val PACKAGE_URL_SCHEME = "package:"
-    private val permissions = Array(1) { Manifest.permission.READ_EXTERNAL_STORAGE }
+    companion object {
+        const val PERMISSION_REQUEST_CODE = 0x00
+        const val PACKAGE_URL_SCHEME = "package:"
+        val permissions = Array(1) { Manifest.permission.READ_EXTERNAL_STORAGE }
+    }
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onResume() {
@@ -51,13 +53,13 @@ class Welcome : AppCompatActivity() {
 
     // 显示缺失权限提示
     private fun showMissingPermissionDialog() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle(R.string.help)
-        builder.setMessage(R.string.string_help_text)
-        // 拒绝, 退出应用
-        builder.setNegativeButton(R.string.quit) { _, _ -> finish() }
-        builder.setPositiveButton(R.string.settings) { _, _ -> startAppSettings() }
-        builder.show()
+        AlertDialog.Builder(this).run {
+            setTitle(R.string.help)
+            setMessage(R.string.string_help_text)
+            setNegativeButton(R.string.quit) { _, _ -> finish() }
+            setPositiveButton(R.string.settings) { _, _ -> startAppSettings() }
+            show()
+        }
     }
 
     // 含有全部的权限

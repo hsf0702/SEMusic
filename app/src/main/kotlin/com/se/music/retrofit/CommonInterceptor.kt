@@ -12,17 +12,20 @@ import okhttp3.Response
 class LastFmCommonInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val oldRequest = chain.request()
-        val oldUrlBuilder = oldRequest.url()
-                .newBuilder()
-                .scheme(oldRequest.url().scheme())
-                .host(oldRequest.url().host())
-                .addQueryParameter("format", "json")
-                .addQueryParameter("api_key", LAST_FM_API_KEY)
 
-        val newRequest = oldRequest.newBuilder()
-                .method(oldRequest.method(), oldRequest.body())
-                .url(oldUrlBuilder.build())
-                .build()
+        val oldUrlBuilder = oldRequest.url().newBuilder().apply {
+            scheme(oldRequest.url().scheme())
+            host(oldRequest.url().host())
+            addQueryParameter("format", "json")
+            addQueryParameter("api_key", LAST_FM_API_KEY)
+        }
+
+        val newRequest = oldRequest.newBuilder().run {
+            method(oldRequest.method(), oldRequest.body())
+            url(oldUrlBuilder.build())
+            build()
+        }
+
         return chain.proceed(newRequest)
     }
 }
@@ -30,17 +33,18 @@ class LastFmCommonInterceptor : Interceptor {
 class TingCommonInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val oldRequest = chain.request()
-        val oldUrlBuilder = oldRequest.url()
-                .newBuilder()
-                .scheme(oldRequest.url().scheme())
-                .host(oldRequest.url().host())
-                .addQueryParameter("format", "json")
+        val oldUrlBuilder = oldRequest.url().newBuilder().apply {
+            scheme(oldRequest.url().scheme())
+            host(oldRequest.url().host())
+            addQueryParameter("format", "json")
+        }
 
-        val newRequest = oldRequest.newBuilder()
-                .method(oldRequest.method(), oldRequest.body())
-                .removeHeader("User-Agent").addHeader("User-Agent", getUserAgent())
-                .url(oldUrlBuilder.build())
-                .build()
+        val newRequest = oldRequest.newBuilder().run {
+            method(oldRequest.method(), oldRequest.body())
+            removeHeader("User-Agent").addHeader("User-Agent", getUserAgent())
+            url(oldUrlBuilder.build())
+            build()
+        }
         return chain.proceed(newRequest)
     }
 

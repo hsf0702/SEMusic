@@ -1,6 +1,5 @@
 package com.se.music.adapter
 
-import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import com.se.music.fragment.AlbumInfoFragment
@@ -19,15 +18,11 @@ class PlayerPagerAdapter(fm: FragmentManager?) : FragmentPagerAdapter(fm) {
         const val ALBUM_INFO = 1
     }
 
-    override fun getItem(position: Int): Fragment {
-        return when (position) {
-            SONG_INFO -> SongInfoFragment.newInstance()
-            ALBUM_INFO -> AlbumInfoFragment.newInstance()
-            else -> LrcInfoFragment.newInstance()
-        }
+    override fun getItem(position: Int) = when (position) {
+        SONG_INFO -> SongInfoFragment.newInstance()
+        ALBUM_INFO -> AlbumInfoFragment.newInstance()
+        else -> LrcInfoFragment.newInstance()
     }
 
-    override fun getCount(): Int {
-        return 3
-    }
+    override fun getCount() = 3
 }

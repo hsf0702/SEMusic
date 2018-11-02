@@ -54,11 +54,12 @@ class QuickControlsFragment : BaseFragment(), View.OnClickListener {
         album.pivotX = albumCenterPoint
         album.pivotY = albumCenterPoint
 
-        circleAnim = ObjectAnimator.ofFloat(album, "rotation", 0f, 360f)
-        circleAnim.interpolator = LinearInterpolator()
-        circleAnim.repeatCount = -1
-        circleAnim.duration = 12000
-        circleAnim.start()
+        circleAnim = ObjectAnimator.ofFloat(album, "rotation", 0f, 360f).apply {
+            interpolator = LinearInterpolator()
+            repeatCount = -1
+            duration = 12000
+            start()
+        }
 
         root.setOnClickListener(this)
         root.elevation = 100f

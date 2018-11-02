@@ -19,12 +19,13 @@ class LastFmRetrofitFactory {
                 .build()!!
 
         fun getInstance(baseUrl: String): Retrofit {
-            return Retrofit.Builder()
-                    .baseUrl(baseUrl)
-                    .addConverterFactory(SeGsonConverterFactory.create()
-                            .addConvertIntercepter(ConverterDataInterceptor())) //设置数据解析器
-                    .client(okHttpClient)
-                    .build()
+            return Retrofit.Builder().run {
+                baseUrl(baseUrl)
+                addConverterFactory(SeGsonConverterFactory.create()
+                        .addConvertIntercepter(ConverterDataInterceptor())) //设置数据解析器
+                client(okHttpClient)
+                build()
+            }
         }
     }
 }
@@ -36,11 +37,12 @@ class TingRetrofitFactory {
                 .build()!!
 
         fun getInstance(baseUrl: String): Retrofit {
-            return Retrofit.Builder()
-                    .baseUrl(baseUrl)
-                    .addConverterFactory(GsonConverterFactory.create()) //设置数据解析器
-                    .client(okHttpClient)
-                    .build()
+            return Retrofit.Builder().run {
+                baseUrl(baseUrl)
+                addConverterFactory(GsonConverterFactory.create()) //设置数据解析器
+                client(okHttpClient)
+                build()
+            }
         }
     }
 }
@@ -48,10 +50,12 @@ class TingRetrofitFactory {
 class QQRetrofitFactory {
     companion object {
         fun getInstance(baseUrl: String): Retrofit {
-            return Retrofit.Builder()
-                    .baseUrl(baseUrl)
-                    .addConverterFactory(GsonConverterFactory.create()) //设置数据解析器
-                    .build()!!
+            return Retrofit.Builder().run {
+                baseUrl(baseUrl)
+                addConverterFactory(GsonConverterFactory.create()) //设置数据解析器
+                build()!!
+            }
+
         }
     }
 }

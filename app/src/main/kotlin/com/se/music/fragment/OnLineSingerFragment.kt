@@ -25,8 +25,8 @@ import retrofit2.Call
 class OnLineSingerFragment : BasePageFragment() {
 
     private lateinit var recycleView: RecyclerView
+    private lateinit var singerAdapter: SingerAdapter
     private var singerList: MutableList<SingerModel.Data.Singer> = ArrayList()
-    private var singerAdapter: SingerAdapter? = null
 
     companion object {
         fun newInstance(): OnLineSingerFragment {
@@ -59,7 +59,7 @@ class OnLineSingerFragment : BasePageFragment() {
                 if (data.data?.list?.isEmpty() == false) {
                     singerList.addAll(data.data?.list!!)
                 }
-                singerAdapter!!.notifyDataSetChanged()
+                singerAdapter.notifyDataSetChanged()
             }
 
             override fun onFailure(loader: Loader<*>, throwable: Throwable) {

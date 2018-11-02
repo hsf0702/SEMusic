@@ -43,9 +43,12 @@ class LocalAlbumFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         adapter = AlbumListAdapter(context!!, list, loaderManager)
-        mRecyclerView.layoutManager = LinearLayoutManager(activity)
-        mRecyclerView.setHasFixedSize(true)
-        mRecyclerView.adapter = adapter
+        mRecyclerView.run {
+            layoutManager = LinearLayoutManager(activity)
+            setHasFixedSize(true)
+            adapter = adapter
+        }
+
         loaderManager.initLoader(QUERY_LOCAL_ALBUM, null, this)
     }
 

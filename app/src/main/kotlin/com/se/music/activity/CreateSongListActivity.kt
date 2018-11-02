@@ -56,10 +56,12 @@ class CreateSongListActivity : ToolBarActivity() {
         val listName = nameInput.text.toString()
         val listInfo = infoInput.text.toString()
         val values = ContentValues()
-        values.put(SL_ID, UUID.randomUUID().toString())
-        values.put(SL_NAME, listName)
-        values.put(SL_CREATE_TIME, System.currentTimeMillis())
-        values.put(SL_INFO, listInfo)
+        values.run {
+            put(SL_ID, UUID.randomUUID().toString())
+            put(SL_NAME, listName)
+            put(SL_CREATE_TIME, System.currentTimeMillis())
+            put(SL_INFO, listInfo)
+        }
         contentResolver.insert(SL_CONTENT_URI, values)
         setResult(resultCode)
         finish()

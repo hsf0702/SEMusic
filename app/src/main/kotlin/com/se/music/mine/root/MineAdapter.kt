@@ -43,13 +43,7 @@ class MineAdapter constructor(private val context: Context, private val list: Ar
         }
     }
 
-    override fun getItemCount(): Int {
-        return if (list.isEmpty()) {
-            1
-        } else {
-            list.size + 1
-        }
-    }
+    override fun getItemCount() = list.size + 1
 
     override fun getItemViewType(position: Int): Int {
         return if (position == 0) {

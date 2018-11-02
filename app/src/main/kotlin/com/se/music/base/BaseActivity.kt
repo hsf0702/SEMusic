@@ -33,21 +33,21 @@ open class BaseActivity : AppCompatActivity() {
         super.setContentView(layoutResID)
         mToken = MusicPlayer.bindToService(this)
         mPlaybackStatus = PlaybackStatus(this)
-        val intentFilter = IntentFilter()
-        intentFilter.addAction(PLAY_STATE_CHANGED)
-        intentFilter.addAction(META_CHANGED)
-        intentFilter.addAction(MUSIC_CHANGED)
-        intentFilter.addAction(QUEUE_CHANGED)
-        intentFilter.addAction(TRACK_PREPARED)
-        intentFilter.addAction(BUFFER_UP)
-        intentFilter.addAction(MUSIC_CHANGED)
-        intentFilter.addAction(LRC_UPDATED)
-        intentFilter.addAction(MUSIC_LOADING)
-        intentFilter.addAction(EMPTY_LIST)
-        intentFilter.addAction(PLAYLIST_COUNT_CHANGED)
-        intentFilter.addAction(MUSIC_COUNT_CHANGED)
+        val intentFilter = IntentFilter().apply {
+            addAction(PLAY_STATE_CHANGED)
+            addAction(META_CHANGED)
+            addAction(MUSIC_CHANGED)
+            addAction(QUEUE_CHANGED)
+            addAction(TRACK_PREPARED)
+            addAction(BUFFER_UP)
+            addAction(MUSIC_CHANGED)
+            addAction(LRC_UPDATED)
+            addAction(MUSIC_LOADING)
+            addAction(EMPTY_LIST)
+            addAction(PLAYLIST_COUNT_CHANGED)
+            addAction(MUSIC_COUNT_CHANGED)
+        }
         registerReceiver(mPlaybackStatus, intentFilter)
-
         setTransparentForWindow(this)
     }
 
@@ -172,7 +172,8 @@ open class BaseActivity : AppCompatActivity() {
                     TRACK_PREPARED -> baseActivity.updateTime()
                     BUFFER_UP -> baseActivity.updateBuffer(intent.getIntExtra("progress", 0))
                     MUSIC_LOADING -> baseActivity.loading(intent.getBooleanExtra("isloading", false))
-                    REFRESH -> { }
+                    REFRESH -> {
+                    }
                     MUSIC_COUNT_CHANGED -> baseActivity.refreshUI()
                     PLAYLIST_COUNT_CHANGED -> baseActivity.refreshUI()
                     QUEUE_CHANGED -> baseActivity.updateQueue()

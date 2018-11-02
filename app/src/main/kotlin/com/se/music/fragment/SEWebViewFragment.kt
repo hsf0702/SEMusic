@@ -17,7 +17,7 @@ import com.se.music.base.BasePageFragment
 
 class SEWebViewFragment : BasePageFragment() {
 
-    private var mWebView: WebView? = null
+    private lateinit var mWebView: WebView
     private var mWebUrl: String? = null
 
     companion object {
@@ -33,7 +33,7 @@ class SEWebViewFragment : BasePageFragment() {
 
     override fun createContentView(inflater: LayoutInflater, container: ViewGroup?): View {
         mWebView = inflater.inflate(R.layout.activity_web_view, container, false) as WebView
-        return mWebView!!
+        return mWebView
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,23 +46,26 @@ class SEWebViewFragment : BasePageFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val setting = mWebView!!.settings
+        val setting = mWebView.settings
         //是否支持和JS交互
         setting.javaScriptEnabled = true
         //是否支持缩放
         setting.setSupportZoom(false)
         //是否显示缩放工具
         setting.builtInZoomControls = false
-        mWebView!!.loadUrl(mWebUrl)
-        mWebView!!.webViewClient = object : WebViewClient() {
-            override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                view.loadUrl(url)
-                return true
+
+        mWebView.run {
+            loadUrl(mWebUrl)
+            webViewClient = object : WebViewClient() {
+                override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+                    view.loadUrl(url)
+                    return true
+                }
             }
-        }
-        mWebView!!.webChromeClient = object : WebChromeClient() {
-            override fun onReceivedTitle(view: WebView, title: String) {
-                setTitle(title)
+            webChromeClient = object : WebChromeClient() {
+                override fun onReceivedTitle(view: WebView, title: String) {
+                    setTitle(title)
+                }
             }
         }
     }

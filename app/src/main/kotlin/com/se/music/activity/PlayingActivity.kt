@@ -18,12 +18,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.se.music.R
+import com.se.music.adapter.PlayerPagerAdapter
 import com.se.music.base.BaseActivity
 import com.se.music.service.MusicPlayer
-import com.se.music.adapter.PlayerPagerAdapter
-import com.se.music.view.PlayingBottomView
 import com.se.music.utils.blurBitmap
 import com.se.music.utils.getMegaImageUrl
+import com.se.music.view.PlayingBottomView
 import com.se.music.widget.MultiButtonLayout
 import com.se.music.widget.PlayingAlbumPageTransformer
 
@@ -57,11 +57,13 @@ class PlayingActivity : BaseActivity(), ViewPager.OnPageChangeListener {
         multiButtonLayout = findViewById(R.id.playing_select_radio)
         playingBottomView = findViewById(R.id.playing_bottom_block)
 
-        viewPager.adapter = PlayerPagerAdapter(supportFragmentManager)
-        viewPager.setPageTransformer(false, PlayingAlbumPageTransformer())
-        viewPager.addOnPageChangeListener(this)
-        viewPager.currentItem = PlayerPagerAdapter.ALBUM_INFO
-        viewPager.offscreenPageLimit = 2
+        viewPager.run {
+            adapter = PlayerPagerAdapter(supportFragmentManager)
+            setPageTransformer(false, PlayingAlbumPageTransformer())
+            addOnPageChangeListener(this@PlayingActivity)
+            currentItem = PlayerPagerAdapter.ALBUM_INFO
+            offscreenPageLimit = 2
+        }
     }
 
     override fun onResume() {

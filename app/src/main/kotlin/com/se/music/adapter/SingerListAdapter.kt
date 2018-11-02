@@ -26,14 +26,12 @@ import java.util.*
  *Time: 2018/7/5 下午9:23
  */
 
-class SingerListAdapter constructor(private val context: Context, private val list: ArrayList<ArtistEntity>, private val loaderManager: LoaderManager) : RecyclerView.Adapter<SingerViewHolder>() {
+class SingerListAdapter constructor(private val context: Context, private val list: ArrayList<ArtistEntity>, private val loaderManager: LoaderManager) : RecyclerView.Adapter<SingerListAdapter.SingerViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SingerViewHolder {
         return SingerViewHolder(parent.inflate(R.layout.mine_local_singer_item))
     }
 
-    override fun getItemCount(): Int {
-        return list.size
-    }
+    override fun getItemCount() = list.size
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: SingerViewHolder, position: Int) {
@@ -69,10 +67,10 @@ class SingerListAdapter constructor(private val context: Context, private val li
             }
         }
     }
-}
 
-class SingerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    val singerAvatar: ImageView = view.findViewById(R.id.local_singer_avatar)
-    val singerName: TextView = view.findViewById(R.id.local_singer_name)
-    val singerSongCount: TextView = view.findViewById(R.id.local_singer_number_of_tracks)
+    class SingerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val singerAvatar: ImageView = view.findViewById(R.id.local_singer_avatar)
+        val singerName: TextView = view.findViewById(R.id.local_singer_name)
+        val singerSongCount: TextView = view.findViewById(R.id.local_singer_number_of_tracks)
+    }
 }

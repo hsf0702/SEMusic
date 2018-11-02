@@ -42,11 +42,12 @@ class AlbumInfoFragment : BaseFragment() {
         albumView = view.findViewById(R.id.album_pic)
         artistName = view.findViewById(R.id.artist_name)
 
-        circleAnim = ObjectAnimator.ofFloat(albumView, "rotation", 0f, 360f)
-        circleAnim.interpolator = LinearInterpolator()
-        circleAnim.repeatCount = -1
-        circleAnim.duration = ANIMATION_DURATION
-        circleAnim.start()
+        circleAnim = ObjectAnimator.ofFloat(albumView, "rotation", 0f, 360f).apply {
+            interpolator = LinearInterpolator()
+            repeatCount = -1
+            duration = ANIMATION_DURATION
+            start()
+        }
 
         artistName.text = MusicPlayer.getArtistName()
         if (MusicPlayer.getAlbumPic().isEmpty()) {

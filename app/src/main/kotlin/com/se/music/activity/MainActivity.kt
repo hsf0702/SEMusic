@@ -21,9 +21,11 @@ class MainActivity : BaseActivity() {
 
         //防止Fragment重叠
         if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                    .add(R.id.se_main_content, MainFragment.newInstance(), MainFragment.TAG)
-                    .commit()
+            supportFragmentManager.beginTransaction().run {
+                add(R.id.se_main_content, MainFragment.newInstance(), MainFragment.TAG)
+                commit()
+            }
+
         }
     }
 

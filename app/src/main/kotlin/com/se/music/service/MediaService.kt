@@ -198,17 +198,18 @@ class MediaService : Service() {
         mRecentStore = RecentStore.instance
 
         //接收广播
-        val filter = IntentFilter()
-        filter.addAction(TOGGLE_PAUSE_ACTION)
-        filter.addAction(STOP_ACTION)
-        filter.addAction(NEXT_ACTION)
-        filter.addAction(PREVIOUS_ACTION)
-        filter.addAction(PREVIOUS_FORCE_ACTION)
-        filter.addAction(REPEAT_ACTION)
-        filter.addAction(SHUFFLE_ACTION)
-        filter.addAction(TRY_GET_TRACK_INFO)
-        filter.addAction(Intent.ACTION_SCREEN_OFF)
-        filter.addAction(SEND_PROGRESS)
+        val filter = IntentFilter().apply {
+            addAction(TOGGLE_PAUSE_ACTION)
+            addAction(STOP_ACTION)
+            addAction(NEXT_ACTION)
+            addAction(PREVIOUS_ACTION)
+            addAction(PREVIOUS_FORCE_ACTION)
+            addAction(REPEAT_ACTION)
+            addAction(SHUFFLE_ACTION)
+            addAction(TRY_GET_TRACK_INFO)
+            addAction(Intent.ACTION_SCREEN_OFF)
+            addAction(SEND_PROGRESS)
+        }
         registerReceiver(intentReceiver, filter)
 
         mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -1165,22 +1166,24 @@ class MediaService : Service() {
         private val mService: WeakReference<MediaService> = WeakReference(service)
         override fun handleMessage(msg: Message) {
             val service = mService.get() ?: return
-            when (msg.what) {
-                TRACK_WENT_TO_NEXT -> {
-                    service.setCurrentPlayPos(service.mNextPlayPos)
-                    service.setNextTrack()
-                    service.notifyChange(META_CHANGED)
-                    service.notifyChange(MUSIC_CHANGED)
-                    service.notifyChange(LRC_UPDATED)
-                    service.updateNotification()
+            service.run {
+                when (msg.what) {
+                    TRACK_WENT_TO_NEXT -> {
+                        setCurrentPlayPos(service.mNextPlayPos)
+                        setNextTrack()
+                        notifyChange(META_CHANGED)
+                        notifyChange(MUSIC_CHANGED)
+                        notifyChange(LRC_UPDATED)
+                        updateNotification()
+                    }
+                    TRACK_ENDED -> if (mRepeatMode == REPEAT_CURRENT) {
+                        seek(0)
+                        play()
+                    } else {
+                        nextPlay()
+                    }
+                    LRC_DOWNLOADED -> notifyChange(LRC_UPDATED)
                 }
-                TRACK_ENDED -> if (service.mRepeatMode == REPEAT_CURRENT) {
-                    service.seek(0)
-                    service.play()
-                } else {
-                    service.nextPlay()
-                }
-                LRC_DOWNLOADED -> service.notifyChange(LRC_UPDATED)
             }
         }
     }

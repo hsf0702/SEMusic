@@ -42,17 +42,21 @@ class OnLineBannerView(presenter: MvpPresenter, viewId: Int) : BaseView(presente
     }
 
     private fun initBanner() {
-        banner.setImageLoader(GlideImageLoader())
-        banner.setImages(images)
-        banner.setOnBannerListener(this)
-        //banner设置方法全部调用完毕时最后调用
-        banner.start()
+        banner.run {
+            setImageLoader(GlideImageLoader())
+            setImages(images)
+            setOnBannerListener(this@OnLineBannerView)
+            start()
+        }
     }
 
     override fun OnBannerClick(position: Int) {
-        val ft = (getActivity() as BaseActivity).supportFragmentManager.beginTransaction()
-        ft.addToBackStack(null)
-        ft.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_left_out, R.anim.slide_left_in, R.anim.slide_right_out)
-        ft.add(R.id.se_main_content, SEWebViewFragment.newInstance(bannerList?.get(position)?.linkUrl)).commit()
+        (getActivity() as BaseActivity).supportFragmentManager
+                .beginTransaction().run {
+                    addToBackStack(null)
+                    setCustomAnimations(R.anim.slide_right_in, R.anim.slide_left_out, R.anim.slide_left_in, R.anim.slide_right_out)
+                    add(R.id.se_main_content, SEWebViewFragment.newInstance(bannerList?.get(position)?.linkUrl))
+                    commit()
+                }
     }
 }

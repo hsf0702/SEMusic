@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.se.music.R
+import com.se.music.adapter.MainFragmentAdapter
 import com.se.music.base.BaseFragment
 
 class MainFragment : BaseFragment(), ViewPager.OnPageChangeListener, View.OnClickListener {
