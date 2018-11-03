@@ -52,7 +52,7 @@ class LrcInfoFragment : BaseFragment(), PlayTimeListener {
     }
 
     override fun updateLrc() {
-        val file = File(Environment.getExternalStorageDirectory().absolutePath + MediaService.LRC_PATH + MusicPlayer.getAudioId())
+        val file = File(Environment.getExternalStorageDirectory().absolutePath + MediaService.LRC_PATH + MusicPlayer.getAudioId() + ".lrc")
         if (file.exists()) {
             lrcView.loadLrc(file)
         }

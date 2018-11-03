@@ -25,7 +25,8 @@ import com.se.music.singleton.OkHttpSingleton
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.*
+import java.io.File
+import java.io.RandomAccessFile
 import java.lang.ref.WeakReference
 import java.util.*
 
@@ -269,7 +270,7 @@ class MediaService : Service() {
 
     fun getAlbumPic(): String? {
         synchronized(this) {
-            return ImageStore.instance.query(currentMusicEntity?.albumName)
+            return ImageStore.instance.query(currentMusicEntity?.albumId.toString())
         }
     }
 
@@ -947,7 +948,7 @@ class MediaService : Service() {
             //不存在就建立此目录
             file.mkdirs()
         }
-        file = File(lrc + id)
+        file = File("$lrc$id.lrc")
         if (!file.exists()) {
             //获取歌词
             MusicRetrofit.instance
@@ -978,31 +979,23 @@ class MediaService : Service() {
     inner class RequestLrc(val url: String, private val musicEntity: MusicEntity?) : Runnable {
         override fun run() {
             if (url.isNotEmpty() && musicEntity != null) {
-                val file = File(Environment.getExternalStorageDirectory().absolutePath + LRC_PATH + musicEntity.audioId)
+                val file = File(Environment.getExternalStorageDirectory().absolutePath + LRC_PATH + musicEntity.audioId + ".lrc")
+                val storageFile = File(Environment.getExternalStorageDirectory().absolutePath + LRC_PATH)
                 val lrcInfo = OkHttpSingleton.instance.getResponseString(url)
                 if (lrcInfo.isNotEmpty()) {
+                    //部分机型创建目录成功之后才能创建文件
+                    if (!storageFile.exists()) {
+                        storageFile.mkdirs()
+                    }
                     if (!file.exists()) {
                         file.createNewFile()
                     }
-                    writeToFile(file, lrcInfo)
+                    file.writeText(lrcInfo)
                     mPlayerHandler.sendEmptyMessage(LRC_DOWNLOADED)
                 }
             }
         }
     }
-
-    @Synchronized
-    private fun writeToFile(file: File, lrc: String) {
-        try {
-            val outputStream = FileOutputStream(file)
-            outputStream.write(lrc.toByteArray())
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
-
 
     private fun recentlyPlayed(): Boolean {
         return isPlaying || System.currentTimeMillis() - mLastPlayedTime < IDLE_DELAY

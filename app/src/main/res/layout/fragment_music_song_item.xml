@@ -6,10 +6,13 @@
 
     <TextView
         android:id="@+id/music_name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
+        android:layout_toStartOf="@+id/viewpager_list_button"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:textColor="@color/black"
         android:textSize="16sp"
         tools:text="爱情悬崖" />
@@ -18,9 +21,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/music_name"
-        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="5dp"
-        android:layout_toLeftOf="@+id/viewpager_list_button"
+        android:layout_toStartOf="@+id/viewpager_list_button"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -34,7 +37,10 @@
             android:id="@+id/music_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:ellipsize="end"
+            android:maxEms="20"
+            android:maxLines="1"
             android:textColor="@color/gray"
             android:textSize="12sp"
             tools:text="周杰伦" />
@@ -42,14 +48,17 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:background="@drawable/se_music_circle_point" />
 
         <TextView
             android:id="@+id/album_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:ellipsize="end"
+            android:maxEms="20"
+            android:maxLines="1"
             android:textColor="@color/gray"
             android:textSize="12sp"
             tools:text="叶惠美" />
@@ -59,7 +68,7 @@
         android:id="@+id/viewpager_list_button"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:focusable="false"
         android:padding="15dp"
@@ -69,7 +78,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
         android:background="@color/split_color" />
 
 </RelativeLayout>

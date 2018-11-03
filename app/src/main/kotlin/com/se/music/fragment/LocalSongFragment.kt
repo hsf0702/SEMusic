@@ -44,7 +44,6 @@ class LocalSongFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor> 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         adapter = MusicListAdapter(context!!, musicList)
-
         mRecyclerView.layoutManager = LinearLayoutManager(activity)
         mRecyclerView.setHasFixedSize(true)
         mRecyclerView.adapter = adapter

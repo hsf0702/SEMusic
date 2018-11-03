@@ -27,7 +27,7 @@ import com.se.music.utils.parseCursorToAlbumEntityList
 
 class LocalAlbumFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor> {
     private lateinit var mRecyclerView: RecyclerView
-    private lateinit var adapter: AlbumListAdapter
+    private lateinit var albumListAdapter: AlbumListAdapter
     private val list = ArrayList<AlbumEntity>()
 
     companion object {
@@ -42,11 +42,11 @@ class LocalAlbumFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor>
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        adapter = AlbumListAdapter(context!!, list, loaderManager)
+        albumListAdapter = AlbumListAdapter(context!!, list, loaderManager)
         mRecyclerView.run {
             layoutManager = LinearLayoutManager(activity)
             setHasFixedSize(true)
-            adapter = adapter
+            adapter = albumListAdapter
         }
 
         loaderManager.initLoader(QUERY_LOCAL_ALBUM, null, this)
@@ -63,7 +63,7 @@ class LocalAlbumFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor>
 
     override fun onLoadFinished(loader: Loader<Cursor>, data: Cursor) {
         parseCursorToAlbumEntityList(QUERY_LOCAL_ALBUM, data, list)
-        adapter.notifyDataSetChanged()
+        albumListAdapter.notifyDataSetChanged()
     }
 
     override fun onLoaderReset(loader: Loader<Cursor>) {
