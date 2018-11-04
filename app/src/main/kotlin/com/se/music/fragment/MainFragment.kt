@@ -1,12 +1,12 @@
 package com.se.music.fragment
 
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v4.view.ViewPager
+import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.viewpager.widget.ViewPager
 import com.se.music.R
 import com.se.music.adapter.MainFragmentAdapter
 import com.se.music.base.BaseFragment

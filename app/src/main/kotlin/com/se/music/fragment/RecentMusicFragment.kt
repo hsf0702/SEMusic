@@ -2,13 +2,13 @@ package com.se.music.fragment
 
 import android.os.AsyncTask
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.se.music.R
 import com.se.music.base.BasePageFragment
 import com.se.music.provider.database.provider.RecentStore
@@ -34,7 +34,6 @@ class RecentMusicFragment : BasePageFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         recentStore = RecentStore.instance
-//        val recentsongs = SongLoader.getSongsForCursor(TopTracksLoader.getCursor(context!!))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container:

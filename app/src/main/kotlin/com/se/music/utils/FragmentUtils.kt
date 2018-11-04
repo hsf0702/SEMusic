@@ -1,6 +1,6 @@
 package com.se.music.utils
 
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import com.se.music.R
 import com.se.music.base.BaseActivity
 import com.se.music.base.mvp.MvpPage
@@ -17,7 +17,7 @@ fun startFragment(current: Fragment, target: Fragment, tag: String) {
                 , R.anim.slide_left_out
                 , R.anim.slide_left_in
                 , R.anim.slide_right_out)
-        hide((current.context as BaseActivity).supportFragmentManager.findFragmentByTag(tag))
+        (current.context as BaseActivity).supportFragmentManager.findFragmentByTag(tag)?.let { hide(it) }
         addToBackStack(null)
         add(R.id.se_main_content, target)
         commit()

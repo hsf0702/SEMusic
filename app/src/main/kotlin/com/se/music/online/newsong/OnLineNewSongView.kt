@@ -1,7 +1,7 @@
 package com.se.music.online.newsong
 
-import android.support.annotation.Keep
 import android.view.View
+import androidx.annotation.Keep
 import com.se.music.base.mvp.BaseView
 import com.se.music.base.mvp.MvpPresenter
 import com.se.music.online.model.ExpressInfoModel

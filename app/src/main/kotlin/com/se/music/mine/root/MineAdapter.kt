@@ -2,13 +2,13 @@ package com.se.music.mine.root
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.recyclerview.widget.RecyclerView
 import com.se.music.R
 import com.se.music.entity.SongListEntity
 import com.se.music.utils.inflate

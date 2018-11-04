@@ -1,7 +1,7 @@
 package com.se.music.widget
 
-import android.support.v4.view.ViewPager
 import android.view.View
+import androidx.viewpager.widget.ViewPager
 import com.se.music.fragment.AlbumInfoFragment
 
 /**

@@ -1,9 +1,9 @@
 package com.se.music.online.recommend
 
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
-import android.support.v4.content.Loader
 import android.util.Log
+import androidx.fragment.app.FragmentActivity
+import androidx.loader.content.Loader
 import com.se.music.base.mvp.BaseModel
 import com.se.music.base.mvp.MvpPresenter
 import com.se.music.online.model.RecommendListModel

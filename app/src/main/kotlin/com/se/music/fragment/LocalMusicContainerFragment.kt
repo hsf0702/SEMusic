@@ -3,14 +3,14 @@ package com.se.music.fragment
 
 import android.database.Cursor
 import android.os.Bundle
-import android.support.design.widget.TabLayout
-import android.support.v4.app.LoaderManager
-import android.support.v4.content.CursorLoader
-import android.support.v4.content.Loader
-import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.loader.app.LoaderManager
+import androidx.loader.content.CursorLoader
+import androidx.loader.content.Loader
+import androidx.viewpager.widget.ViewPager
+import com.google.android.material.tabs.TabLayout
 import com.se.music.R
 import com.se.music.adapter.LocalFragmentAdapter
 import com.se.music.base.BasePageFragment

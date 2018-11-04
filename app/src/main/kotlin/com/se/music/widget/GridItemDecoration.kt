@@ -4,10 +4,10 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
+import androidx.recyclerview.widget.RecyclerView
 
 /**
  * Created by gaojin on 2018/2/26.
@@ -65,7 +65,7 @@ class GridItemDecoration(context: Context, orientation: Int, spanCount: Int) : R
         mDivider = drawable
     }
 
-    override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State?) {
+    override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         if (parent.layoutManager == null || mDivider == null) {
             return
         }
@@ -129,7 +129,7 @@ class GridItemDecoration(context: Context, orientation: Int, spanCount: Int) : R
         val childCount = parent.childCount
         for (i in 0 until childCount) {
             val child = parent.getChildAt(i)
-            parent.layoutManager.getDecoratedBoundsWithMargins(child, mBounds)
+            parent.layoutManager?.getDecoratedBoundsWithMargins(child, mBounds)
             val right = mBounds.right + Math.round(child.translationX)
             val left = right - mDivider!!.intrinsicWidth
             mDivider!!.setBounds(left, top, right, bottom)
@@ -138,8 +138,7 @@ class GridItemDecoration(context: Context, orientation: Int, spanCount: Int) : R
         canvas.restore()
     }
 
-    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView,
-                                state: RecyclerView.State?) {
+    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         if (mDivider == null) {
             outRect.set(0, 0, 0, 0)
             return

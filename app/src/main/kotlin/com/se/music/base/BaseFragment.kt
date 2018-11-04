@@ -1,6 +1,6 @@
 package com.se.music.base
 
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import com.se.music.base.listener.MusicStateListener
 
 /**

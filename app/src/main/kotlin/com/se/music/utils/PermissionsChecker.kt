@@ -2,7 +2,7 @@ package com.se.music.utils
 
 import android.content.Context
 import android.content.pm.PackageManager
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 
 /**
  * Creator：gaojin

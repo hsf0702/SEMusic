@@ -1,17 +1,16 @@
 package com.se.music.base
 
 import android.os.Bundle
-import android.support.annotation.ColorRes
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.ColorRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.se.music.R
-import com.se.music.utils.setTransparentForWindow
 
 /**
  * Creator：gaojin

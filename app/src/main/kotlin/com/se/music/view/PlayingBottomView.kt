@@ -1,13 +1,13 @@
 package com.se.music.view
 
 import android.content.Context
-import android.support.v7.widget.AppCompatSeekBar
 import android.util.AttributeSet
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatSeekBar
 import com.se.music.R
 import com.se.music.service.MediaService
 import com.se.music.service.MusicPlayer

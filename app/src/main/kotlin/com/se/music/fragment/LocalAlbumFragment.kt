@@ -2,14 +2,14 @@ package com.se.music.fragment
 
 import android.database.Cursor
 import android.os.Bundle
-import android.support.v4.app.LoaderManager
-import android.support.v4.content.CursorLoader
-import android.support.v4.content.Loader
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.loader.app.LoaderManager
+import androidx.loader.content.CursorLoader
+import androidx.loader.content.Loader
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.se.music.R
 import com.se.music.adapter.AlbumListAdapter
 import com.se.music.base.BaseFragment
@@ -49,7 +49,7 @@ class LocalAlbumFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor>
             adapter = albumListAdapter
         }
 
-        loaderManager.initLoader(QUERY_LOCAL_ALBUM, null, this)
+        LoaderManager.getInstance(this).initLoader(QUERY_LOCAL_ALBUM, null, this)
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {

@@ -1,7 +1,7 @@
 package com.se.music.adapter
 
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 import com.se.music.fragment.LocalFolderFragment
 import com.se.music.mine.MvpMineFragment
 import com.se.music.online.MvpMusicFragment

@@ -8,13 +8,13 @@
     android:background="@drawable/player_background_real"
     android:orientation="vertical">
 
-    <android.support.v4.widget.Space
+    <Space
         android:id="@+id/fake_status_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/statusbar_view_height"
         android:background="@color/transparent" />
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/playing_toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/tool_bar_height"
@@ -29,7 +29,7 @@
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="18sp" />
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <com.se.music.widget.PlayingViewPager
         android:id="@+id/content_view_pager"

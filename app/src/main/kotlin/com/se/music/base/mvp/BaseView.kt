@@ -2,9 +2,9 @@ package com.se.music.base.mvp
 
 import android.app.Activity
 import android.content.Context
-import android.support.annotation.IdRes
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.IdRes
 import java.lang.reflect.InvocationTargetException
 import kotlin.reflect.KFunction
 import kotlin.reflect.full.declaredMemberFunctions

@@ -1,13 +1,13 @@
 package com.se.music.widget
 
 import android.content.Context
-import android.support.v7.widget.AppCompatImageView
 import android.util.AttributeSet
+import android.widget.ImageView
 
 /**
  * Created by gaojin on 2017/12/31.
  */
-class AutoHeightImageView : AppCompatImageView {
+class AutoHeightImageView : ImageView {
 
     private val ratioHelper: AspectRatioViewHelper
 

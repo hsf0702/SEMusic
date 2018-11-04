@@ -2,8 +2,8 @@ package com.se.music.base.mvp
 
 import android.app.Activity
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.util.SparseArray
+import androidx.fragment.app.Fragment
 import java.lang.reflect.InvocationTargetException
 import kotlin.reflect.KFunction
 import kotlin.reflect.KType

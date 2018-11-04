@@ -1,9 +1,9 @@
 package com.se.music.online.banner
 
 import android.annotation.SuppressLint
-import android.support.annotation.Keep
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.Keep
 import com.se.music.R
 import com.se.music.base.BaseActivity
 import com.se.music.base.mvp.BaseView

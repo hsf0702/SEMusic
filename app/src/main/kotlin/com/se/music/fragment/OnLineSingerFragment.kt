@@ -1,14 +1,14 @@
 package com.se.music.fragment
 
 import android.os.Bundle
-import android.support.v4.content.Loader
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.loader.content.Loader
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.se.music.R
 import com.se.music.base.BasePageFragment
 import com.se.music.base.picBaseUrl_300

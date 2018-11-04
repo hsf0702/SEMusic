@@ -2,7 +2,7 @@ package com.se.music.retrofit.callback
 
 import android.content.Context
 import android.os.AsyncTask
-import android.support.v4.content.Loader
+import androidx.loader.content.Loader
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.HttpException

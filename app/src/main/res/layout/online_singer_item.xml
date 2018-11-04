@@ -35,7 +35,6 @@
 
 
         <ImageView
-            android:id="@+id/icon_enter"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:layout_gravity="right|center_vertical"

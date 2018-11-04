@@ -1,11 +1,11 @@
 package com.se.music.fragment
 
 import android.os.Bundle
-import android.support.v4.content.Loader
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.loader.content.Loader
 import com.se.music.R
 import com.se.music.base.BaseFragment
 import com.se.music.retrofit.MusicRetrofit

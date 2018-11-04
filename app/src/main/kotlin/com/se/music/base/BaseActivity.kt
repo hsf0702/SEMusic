@@ -5,8 +5,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.se.music.R
 import com.se.music.base.listener.MusicStateListener
 import com.se.music.fragment.QuickControlsFragment
@@ -59,13 +59,13 @@ open class BaseActivity : AppCompatActivity() {
         if (show) {
             if (fragment == null) {
                 fragment = QuickControlsFragment.newInstance()
-                ft.add(R.id.bottom_container, fragment).commit()
+                ft.add(R.id.bottom_container, fragment!!).commit()
             } else {
-                ft.show(fragment).commit()
+                ft.show(fragment!!).commit()
             }
         } else {
             if (fragment != null)
-                ft.hide(fragment).commit()
+                ft.hide(fragment!!).commit()
         }
     }
 

@@ -4,12 +4,12 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "com.se.music"
         minSdkVersion 21
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -48,17 +48,11 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation project(':se-multidex')
     //support library
-    implementation('com.android.support:support-v4:27.1.1') {
-        force = true
-    }
-    implementation('com.android.support:appcompat-v7:27.1.1') {
-        force = true
-    }
-    implementation('com.android.support:design:27.1.1') {
-        force = true
-    }
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'com.google.android.material:material:1.1.0-alpha01'
+    implementation 'androidx.core:core-ktx:1.0.0'
     //noinspection GradleDependency
     implementation 'com.github.bumptech.glide:glide:4.5.0'
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
@@ -66,11 +60,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     implementation 'com.youth.banner:banner:1.4.10'
-    //Glide
-    //noinspection GradleDependency
-    kapt 'com.github.bumptech.glide:compiler:4.6.1'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
     //noinspection GradleDependency
     implementation 'com.squareup.picasso:picasso:2.71828'
 }

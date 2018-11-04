@@ -23,7 +23,7 @@
             android:textColor="@color/light_gray"
             android:textSize="12sp" />
 
-        <android.support.v7.widget.AppCompatSeekBar
+        <androidx.appcompat.widget.AppCompatSeekBar
             android:id="@+id/player_seek_bar"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="0dp"

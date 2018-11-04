@@ -8,9 +8,9 @@ import android.app.Service
 import android.content.*
 import android.os.*
 import android.provider.MediaStore
-import android.support.v4.app.NotificationCompat
 import android.text.TextUtils
 import android.widget.RemoteViews
+import androidx.core.app.NotificationCompat
 import com.se.music.R
 import com.se.music.activity.MainActivity
 import com.se.music.base.APP_NAME
@@ -270,7 +270,7 @@ class MediaService : Service() {
 
     fun getAlbumPic(): String? {
         synchronized(this) {
-            return ImageStore.instance.query(currentMusicEntity?.albumId.toString())
+            return ImageStore.instance.query(currentMusicEntity?.albumKey)
         }
     }
 

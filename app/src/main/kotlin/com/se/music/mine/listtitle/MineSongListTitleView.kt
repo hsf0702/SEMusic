@@ -3,17 +3,17 @@ package com.se.music.mine.listtitle
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.database.Cursor
-import android.support.annotation.Keep
-import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
+import androidx.annotation.Keep
+import androidx.core.content.ContextCompat
 import com.se.music.R
+import com.se.music.activity.CreateSongListActivity
 import com.se.music.base.mvp.BaseView
 import com.se.music.base.mvp.MvpPresenter
 import com.se.music.mine.event.CollectEvent
 import com.se.music.mine.event.CreateEvent
-import com.se.music.activity.CreateSongListActivity
 
 /**
  * Author: gaojin
