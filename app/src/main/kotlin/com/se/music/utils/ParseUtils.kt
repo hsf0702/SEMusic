@@ -71,7 +71,7 @@ fun parseCursorToArtistEntityList(id: Int, cursor: Cursor, list: ArrayList<Artis
                     , cursor.getInt(LS_ID_NUMBER_OF_TRACKS)
                     , cursor.getInt(LS_ID_INDEX)
                     , cursor.getString(LS_ARTIST_KEY))
-            artistEntity.imageId = ImageStore.instance.query(cursor.getString(LS_ARTIST_KEY)) ?: Null
+            artistEntity.imageId = ImageStore.instance.query(cursor.getString(LS_ID_ARTIST).hashCode()) ?: Null
             list.add(artistEntity)
         }
     }
@@ -88,7 +88,7 @@ fun parseCursorToAlbumEntityList(id: Int, cursor: Cursor, list: ArrayList<AlbumE
                     , cursor.getInt(LA_SONG_NUMBER)
                     , cursor.getString(LA_ARTIST)
                     , cursor.getString(LA_ALBUM_KEY))
-            albumEntity.imageUrl = ImageStore.instance.query(cursor.getString(LA_ALBUM_KEY)) ?: Null
+            albumEntity.imageUrl = ImageStore.instance.query(cursor.getString(LA_ALBUM).hashCode()) ?: Null
             list.add(albumEntity)
         }
     }

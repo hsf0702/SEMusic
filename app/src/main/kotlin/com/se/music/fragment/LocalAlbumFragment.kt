@@ -42,7 +42,7 @@ class LocalAlbumFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor>
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        albumListAdapter = AlbumListAdapter(context!!, list, loaderManager)
+        albumListAdapter = AlbumListAdapter(context!!, list, mLoaderManager)
         mRecyclerView.run {
             layoutManager = LinearLayoutManager(activity)
             setHasFixedSize(true)

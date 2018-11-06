@@ -3,7 +3,9 @@ package com.se.music.online.recommend
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.FragmentActivity
+import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
+import com.se.music.base.BaseActivity
 import com.se.music.base.mvp.BaseModel
 import com.se.music.base.mvp.MvpPresenter
 import com.se.music.online.model.RecommendListModel
@@ -17,7 +19,7 @@ import retrofit2.Call
 class OnLineRecommendModel(presenter: MvpPresenter, modelId: Int) : BaseModel<RecommendListModel>(presenter, modelId) {
 
     override fun load() {
-        (getActivity() as FragmentActivity).supportLoaderManager.initLoader(getId(), null, buildRecommendListCallBack())
+        LoaderManager.getInstance(getActivity() as BaseActivity).initLoader(getId(), null, buildRecommendListCallBack())
     }
 
     private fun buildRecommendListCallBack(): CallLoaderCallbacks<RecommendListModel> {

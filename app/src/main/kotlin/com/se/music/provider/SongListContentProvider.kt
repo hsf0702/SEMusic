@@ -46,7 +46,7 @@ class SongListContentProvider : ContentProvider() {
         val rowId = db.insert(SL_TABLE_NAME, null, values)
         if (rowId > 0) {
             val rowUri = ContentUris.withAppendedId(SL_CONTENT_URI, rowId)
-            context.contentResolver.notifyChange(rowUri, null)
+            context?.contentResolver?.notifyChange(rowUri, null)
             return rowUri
         }
         throw SQLException("Failed to insert row into" + uri + "嘤嘤嘤")
@@ -57,7 +57,7 @@ class SongListContentProvider : ContentProvider() {
         val db = dbHelper!!.readableDatabase
         queryBuilder.tables = SL_TABLE_NAME
         val c = queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder)
-        c.setNotificationUri(context.contentResolver, uri)
+        c.setNotificationUri(context?.contentResolver, uri)
         return c
     }
 
@@ -65,7 +65,7 @@ class SongListContentProvider : ContentProvider() {
         val db = dbHelper!!.writableDatabase
         val count: Int
         count = db.update(SL_TABLE_NAME, values, selection, selectionArgs)
-        context.contentResolver.notifyChange(uri, null)
+        context?.contentResolver?.notifyChange(uri, null)
         return count
     }
 
@@ -73,7 +73,7 @@ class SongListContentProvider : ContentProvider() {
         val db = dbHelper!!.writableDatabase
         val count: Int
         count = db.delete(SL_TABLE_NAME, selection, selectionArgs)
-        context.contentResolver.notifyChange(uri, null)
+        context?.contentResolver?.notifyChange(uri, null)
         return count
     }
 

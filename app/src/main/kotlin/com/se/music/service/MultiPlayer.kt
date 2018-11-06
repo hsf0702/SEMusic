@@ -24,7 +24,7 @@ class MultiPlayer(service: MediaService, private val mHandler: Handler) {
     private val handler = Handler()
 
     var isPlayerPrepared = false
-    var isNextPlayerPrepared = false
+    private var isNextPlayerPrepared = false
     /**
      * 播放器是否初始化
      */
@@ -66,7 +66,6 @@ class MultiPlayer(service: MediaService, private val mHandler: Handler) {
     }
 
     private val errorListener = MediaPlayer.OnErrorListener { _, what, extra ->
-        Log.w(MediaService.TAG, "Music Server Error what: $what extra: $extra")
         when (what) {
             MediaPlayer.MEDIA_ERROR_SERVER_DIED -> {
                 isInitialized = false

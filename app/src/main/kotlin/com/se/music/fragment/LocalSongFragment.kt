@@ -11,14 +11,14 @@ import androidx.loader.content.Loader
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.se.music.R
+import com.se.music.adapter.MusicListAdapter
 import com.se.music.base.BaseFragment
 import com.se.music.entity.MusicEntity
 import com.se.music.provider.metadata.infoMusic
 import com.se.music.provider.metadata.localMusicUri
 import com.se.music.provider.metadata.songSelection
-import com.se.music.utils.QUERY_LOCAL_SONG
 import com.se.music.singleton.SharePreferencesUtils
-import com.se.music.adapter.MusicListAdapter
+import com.se.music.utils.QUERY_LOCAL_SONG
 import com.se.music.utils.parseCursorToMusicEntityList
 
 
@@ -47,7 +47,7 @@ class LocalSongFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor> 
         mRecyclerView.layoutManager = LinearLayoutManager(activity)
         mRecyclerView.setHasFixedSize(true)
         mRecyclerView.adapter = adapter
-        loaderManager.initLoader(QUERY_LOCAL_SONG, null, this)
+        mLoaderManager.initLoader(QUERY_LOCAL_SONG, null, this)
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {

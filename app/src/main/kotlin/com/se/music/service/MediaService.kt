@@ -270,7 +270,7 @@ class MediaService : Service() {
 
     fun getAlbumPic(): String? {
         synchronized(this) {
-            return ImageStore.instance.query(currentMusicEntity?.albumKey)
+            return ImageStore.instance.query(currentMusicEntity?.albumName.hashCode())
         }
     }
 

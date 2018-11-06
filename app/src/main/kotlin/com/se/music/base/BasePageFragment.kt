@@ -11,6 +11,7 @@ import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentManager
+import androidx.loader.app.LoaderManager
 import com.se.music.R
 
 /**
@@ -29,6 +30,7 @@ abstract class BasePageFragment : BaseFragment() {
         mToolBar = linearLayout.findViewById(R.id.base_toolbar)
         mTitle = linearLayout.findViewById(R.id.toolbar_title)
         statusBar = linearLayout.findViewById(R.id.fake_status_bar)
+        mLoaderManager = LoaderManager.getInstance(this)
         fm = fragmentManager!!
 
         setHasOptionsMenu(true)

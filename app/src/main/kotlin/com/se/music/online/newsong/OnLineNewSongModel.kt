@@ -3,7 +3,9 @@ package com.se.music.online.newsong
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.FragmentActivity
+import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
+import com.se.music.base.BaseActivity
 import com.se.music.base.mvp.BaseModel
 import com.se.music.base.mvp.MvpPresenter
 import com.se.music.online.model.ExpressInfoModel
@@ -17,7 +19,7 @@ import retrofit2.Call
 class OnLineNewSongModel(presenter: MvpPresenter, modelId: Int) : BaseModel<ExpressInfoModel>(presenter, modelId) {
 
     override fun load() {
-        (getActivity() as FragmentActivity).supportLoaderManager.initLoader(getId(), null, buildExpressInfoCallBack())
+        LoaderManager.getInstance(getActivity() as BaseActivity).initLoader(getId(), null, buildExpressInfoCallBack())
     }
 
     private fun buildExpressInfoCallBack(): CallLoaderCallbacks<ExpressInfoModel> {
@@ -29,7 +31,6 @@ class OnLineNewSongModel(presenter: MvpPresenter, modelId: Int) : BaseModel<Expr
             override fun onSuccess(loader: Loader<*>, data: ExpressInfoModel) {
                 dispatchData(data)
             }
-
 
             override fun onFailure(loader: Loader<*>, throwable: Throwable) {
                 Log.e("OnLineNewSongModel", throwable.toString())

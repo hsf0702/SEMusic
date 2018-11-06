@@ -30,6 +30,7 @@ class LastFmCommonInterceptor : Interceptor {
     }
 }
 
+@Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class TingCommonInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val oldRequest = chain.request()

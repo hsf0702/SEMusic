@@ -17,7 +17,7 @@ class ImageStore {
         const val IMAGE_KEY = "key"
         const val IMAGE_VALUE = "image_value"
         private const val IMAGE_TABLE_CREATE = "create table " + MusicDBHelper.IMAGE_TABLE +
-                " (" + IMAGE_KEY + " varchar(128), " +
+                " (" + IMAGE_KEY + " int, " +
                 IMAGE_VALUE + " varchar(50)," +
                 "PRIMARY KEY (" + IMAGE_KEY + ")" +
                 ");"
@@ -36,8 +36,8 @@ class ImageStore {
      * 添加图片缓存
      */
     @Synchronized
-    fun addImage(key: String, imageValue: String) {
-        if (key.isEmpty() || imageValue.isEmpty()) {
+    fun addImage(key: Int, imageValue: String) {
+        if (imageValue.isEmpty()) {
             return
         }
         val database = MusicDBHelper.instance.writableDatabase
@@ -77,13 +77,12 @@ class ImageStore {
      * 查询图片缓存
      */
     @Synchronized
-    fun query(key: String?): String? {
+    fun query(key: Int): String? {
         val database = MusicDBHelper.instance.writableDatabase
         database.beginTransaction()
         var imageValue: String? = null
         try {
-            val value = key?.replace("'", "")
-            val sql = "SELECT $IMAGE_VALUE FROM ${MusicDBHelper.IMAGE_TABLE} WHERE key='$value'"
+            val sql = "SELECT $IMAGE_VALUE FROM ${MusicDBHelper.IMAGE_TABLE} WHERE key='$key'"
             val cursor = database.rawQuery(sql, null)
             if (cursor.moveToFirst()) {
                 imageValue = cursor.getString(0)
@@ -100,7 +99,7 @@ class ImageStore {
      * 删除图片缓存
      */
     @Synchronized
-    fun delete(key: String) {
+    fun delete(key: Int) {
         val database = MusicDBHelper.instance.writableDatabase
         database.beginTransaction()
         try {

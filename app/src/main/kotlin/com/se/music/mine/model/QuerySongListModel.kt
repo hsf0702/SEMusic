@@ -32,6 +32,6 @@ class QuerySongListModel(presenter: MvpPresenter, private val modelId: Int) : Ba
     }
 
     override fun load() {
-        (getActivity() as BaseActivity).supportLoaderManager.initLoader(modelId, null, this)
+        LoaderManager.getInstance(getActivity() as BaseActivity).initLoader(modelId, null, this)
     }
 }

@@ -2,6 +2,8 @@ package com.se.music.singleton
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.core.content.edit
+import com.se.music.base.Null
 import com.se.music.utils.ALBUM_A_Z
 import com.se.music.utils.ARTIST_A_Z
 import com.se.music.utils.SONG_A_Z
@@ -27,25 +29,25 @@ class SharePreferencesUtils {
 
 
     fun getArtistSortOrder(): String {
-        return mPreferences.getString(ARTIST_SORT_ORDER, ARTIST_A_Z)
+        return mPreferences.getString(ARTIST_SORT_ORDER, ARTIST_A_Z) ?: Null
     }
 
     fun getSongSortOrder(): String {
-        return mPreferences.getString(SONG_SORT_ORDER, SONG_A_Z)
+        return mPreferences.getString(SONG_SORT_ORDER, SONG_A_Z) ?: Null
     }
 
     fun getAlbumSortOrder(): String {
-        return mPreferences.getString(ALBUM_SORT_ORDER, ALBUM_A_Z)
+        return mPreferences.getString(ALBUM_SORT_ORDER, ALBUM_A_Z) ?: Null
     }
 
     fun setPlayLink(id: Long, link: String) {
-        val editor = mPreferences.edit()
-        editor.putString(id.toString() + "", link)
-        editor.apply()
+        mPreferences.edit {
+            putString(id.toString() + "", link)
+        }
     }
 
     fun getPlayLink(id: Long): String {
-        return mPreferences.getString(id.toString() + "", null)
+        return mPreferences.getString(id.toString(), null) ?: Null
     }
 
     fun getDownMusicBit(): Int {

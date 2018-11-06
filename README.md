@@ -21,3 +21,9 @@
 - Kotlin反射的使用
 - Kotlin对Null的处理（个人理解）
 - kotlin拓展函数
+---
+![](screenshot/main_mine_tab.png) ![](screenshot/main_music_tab.png)
+
+![](screenshot/play_album.png) ![](screenshot/play_lrc.png)
+
+![](screenshot/play_song_info.png) ![](screenshot/song_list.png)

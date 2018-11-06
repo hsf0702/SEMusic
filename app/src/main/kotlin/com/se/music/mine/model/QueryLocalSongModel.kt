@@ -20,7 +20,7 @@ import com.se.music.singleton.SharePreferencesUtils
 class QueryLocalSongModel(presenter: MvpPresenter, private var modelId: Int, private var from: Int) : BaseModel<Cursor>(presenter, modelId)
         , LoaderManager.LoaderCallbacks<Cursor> {
     override fun load() {
-        (getActivity() as BaseActivity).supportLoaderManager.initLoader(modelId, null, this)
+        LoaderManager.getInstance(getActivity() as BaseActivity).initLoader(modelId, null, this)
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {

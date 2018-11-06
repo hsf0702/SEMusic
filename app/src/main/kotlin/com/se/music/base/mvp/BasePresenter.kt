@@ -20,7 +20,7 @@ class BasePresenter(private var page: MvpPage) : MvpPresenter {
     private val modelTypeMap = SparseArray<KType>()
 
     init {
-        if (page !is Fragment && page !is android.app.Fragment && page !is Activity) {
+        if (page !is Fragment && page !is Activity) {
             throw IllegalArgumentException("FoodMvpPage must be implemented by Activity or Fragment")
         }
     }

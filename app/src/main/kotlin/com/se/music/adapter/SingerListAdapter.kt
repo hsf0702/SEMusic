@@ -58,7 +58,7 @@ class SingerListAdapter constructor(private val context: Context, private val li
                     holder.singerAvatar.loadUrl(imageId.getMediumImageUrl(), R.drawable.default_singer_avatar)
                     list[position].imageId = imageId
                     //添加图片缓存
-                    ImageStore.instance.addImage(list[position].artistKey, imageId)
+                    ImageStore.instance.addImage(list[position].artistName.hashCode(), imageId)
                 }
             }
 

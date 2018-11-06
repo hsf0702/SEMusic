@@ -39,7 +39,7 @@ class AlbumListAdapter constructor(private val context: Context, private val lis
         holder.albumName.text = albumEntity.albumName
         holder.albumSongCount.text = "${albumEntity.numberOfSongs}首"
 
-        val imageId = ImageStore.instance.query(albumEntity.albumName)
+        val imageId = ImageStore.instance.query(albumEntity.albumName.hashCode())
         if (imageId?.isEmpty() != false) {
             loaderManager.initLoader(generateLoaderId(), null, buildAlbumCallBacks(context, holder.albumPic, albumEntity))
         } else {
@@ -59,7 +59,7 @@ class AlbumListAdapter constructor(private val context: Context, private val lis
                 val imageId = get(0).imgUrl.getImageId()
                 imageView.loadUrl(imageId.getMegaImageUrl(), R.drawable.default_album_avatar)
                 //添加图片缓存
-                ImageStore.instance.addImage(albumEntity.albumName, imageId)
+                ImageStore.instance.addImage(albumEntity.albumName.hashCode(), imageId)
             }
         }
 

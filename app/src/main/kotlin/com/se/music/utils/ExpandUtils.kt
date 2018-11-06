@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
-import com.bumptech.glide.Glide
+import com.se.music.GlideApp
 
 /**
  *Author: gaojin
@@ -17,13 +17,14 @@ fun ViewGroup.inflate(layoutRes: Int): View {
 }
 
 fun ImageView.loadUrl(url: String?) {
-    Glide.with(context)
+    GlideApp.with(context)
             .load(url)
             .into(this)
 }
 
 fun ImageView.loadUrl(url: String?, @DrawableRes drawableRes: Int) {
-    Glide.with(context)
+    GlideApp.with(context)
             .load(url)
+            .placeholder(drawableRes)
             .into(this)
 }

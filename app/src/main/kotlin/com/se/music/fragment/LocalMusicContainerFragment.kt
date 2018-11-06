@@ -60,7 +60,7 @@ class LocalMusicContainerFragment : BasePageFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setTitle(context!!.getString(R.string.local_music_title))
-        loaderManager.run {
+        mLoaderManager.run {
             initLoader(QUERY_LOCAL_SONG, null, buildLocalMusicCallBack())
             initLoader(QUERY_LOCAL_SINGER, null, buildLocalSingerCallBack())
             initLoader(QUERY_LOCAL_ALBUM, null, buildLocalAlbumCallBack())

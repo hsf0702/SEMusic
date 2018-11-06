@@ -8,14 +8,14 @@ import android.widget.TextView
 import androidx.loader.content.Loader
 import com.se.music.R
 import com.se.music.base.BaseFragment
+import com.se.music.entity.OtherVersionInfo
+import com.se.music.entity.SimilarSongInfo
 import com.se.music.retrofit.MusicRetrofit
 import com.se.music.retrofit.callback.CallLoaderCallbacks
 import com.se.music.service.MusicPlayer
-import com.se.music.entity.OtherVersionInfo
-import com.se.music.entity.SimilarSongInfo
-import com.se.music.view.PlayingSongRelatedInfoView
 import com.se.music.utils.GET_RELATED_SONG
 import com.se.music.utils.GET_SIMILAR_SONG
+import com.se.music.view.PlayingSongRelatedInfoView
 import retrofit2.Call
 
 /**
@@ -71,8 +71,10 @@ class SongInfoFragment : BaseFragment() {
         songInfo.text = resources.getText(R.string.playing_song_info)
 
         if (!MusicPlayer.getTrackName().isEmpty()) {
-            loaderManager.restartLoader(GET_RELATED_SONG, null, buildRelatedSongCallback(MusicPlayer.getTrackName()))
-            loaderManager.restartLoader(GET_SIMILAR_SONG, null, buildSimilarSongCallback(MusicPlayer.getTrackName(), MusicPlayer.getArtistName()))
+            mLoaderManager.run {
+                restartLoader(GET_RELATED_SONG, null, buildRelatedSongCallback(MusicPlayer.getTrackName()))
+                restartLoader(GET_SIMILAR_SONG, null, buildSimilarSongCallback(MusicPlayer.getTrackName(), MusicPlayer.getArtistName()))
+            }
         }
     }
 
